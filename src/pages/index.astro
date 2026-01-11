@@ -618,6 +618,12 @@ const TEAMS_GOAL = 10;
         padding-top: 80px;
       }
 
+      /* Form panel content always visible (no fade-in animation) */
+      .panel--form .panel-content {
+        opacity: 1;
+        transform: none;
+      }
+
       .panel--form .panel-headline {
         font-size: clamp(2.6rem, 9vw, 4.5rem);
         margin-bottom: 12px;
