@@ -100,6 +100,56 @@ function appendByHeaders(sheet, data) {
   sheet.appendRow(row);
 }
 
+// GET endpoint - returns list of registered teams for "Who's In" display
+function doGet(e) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheetName = getSheetName();
+    const sh = ss.getSheetByName(sheetName);
+
+    if (!sh || sh.getLastRow() < 2) {
+      return json({ teams: [] }, 200);
+    }
+
+    const headers = getExistingHeaders(sh);
+    const teamNameIdx = headers.indexOf("teamName");
+    const p1NameIdx = headers.indexOf("p1Name");
+    const p2NameIdx = headers.indexOf("p2Name");
+    const statusIdx = headers.indexOf("status");
+
+    if (teamNameIdx === -1 || p1NameIdx === -1 || p2NameIdx === -1) {
+      return json({ teams: [], error: "missing_headers" }, 200);
+    }
+
+    const dataRange = sh.getRange(2, 1, sh.getLastRow() - 1, headers.length);
+    const rows = dataRange.getValues();
+
+    const teams = rows
+      .filter(row => {
+        // Only include registered teams (not cancelled, etc.)
+        const status = statusIdx >= 0 ? String(row[statusIdx]).toLowerCase() : "registered";
+        return status === "registered" || status === "confirmed";
+      })
+      .map(row => {
+        const teamName = String(row[teamNameIdx]).trim();
+        // Only use first names for privacy
+        const p1First = String(row[p1NameIdx]).trim().split(" ")[0];
+        const p2First = String(row[p2NameIdx]).trim().split(" ")[0];
+        return {
+          name: teamName,
+          players: `${p1First} & ${p2First}`
+        };
+      })
+      .filter(team => team.name); // Remove empty entries
+
+    return json({ teams: teams }, 200);
+
+  } catch (err) {
+    console.error(err);
+    return json({ teams: [], error: String(err) }, 500);
+  }
+}
+
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents || "{}");
