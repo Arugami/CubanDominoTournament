@@ -12,10 +12,10 @@ const TEAMS_GOAL = 10;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cuban Domino Tournament | Mr Garcia Cigars</title>
+    <title>Cuban Domino League | Tournament I</title>
     <meta
       name="description"
-      content="Register your team for the Cuban Domino Tournament at Mr Garcia Cigars. $50 per team, top 4 advance to playoffs. Winner takes all."
+      content="Cuban Domino League presents Tournament I at Mr Garcia Cigars. January 31, 2025. $50 per team, top 4 advance. Winner takes all."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -263,10 +263,170 @@ const TEAMS_GOAL = 10;
         transform: translateY(0);
       }
 
+      /* ========================================
+         BRAND LOCKUP - Cuban Domino League
+         ======================================== */
+      .brand-lockup {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 24px;
+        animation: fadeInDown 1s ease-out;
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .brand-name {
+        font-family: "Bodoni Moda", "Didot", serif;
+        font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+        font-weight: 400;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: var(--brass);
+        text-shadow: 0 2px 10px rgba(212, 165, 116, 0.5);
+        margin-bottom: 8px;
+        position: relative;
+        padding: 0 20px;
+      }
+
+      /* Decorative lines flanking brand name */
+      .brand-name::before,
+      .brand-name::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 40px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--brass), transparent);
+      }
+
+      .brand-name::before {
+        right: 100%;
+        margin-right: 8px;
+      }
+
+      .brand-name::after {
+        left: 100%;
+        margin-left: 8px;
+      }
+
+      .brand-presents {
+        font-family: "Bodoni Moda", "Didot", serif;
+        font-size: clamp(0.85rem, 2vw, 1.1rem);
+        font-style: italic;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 0.15em;
+        text-transform: lowercase;
+      }
+
+      /* Event Title - TOURNAMENT I */
+      .event-title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 24px;
+        animation: fadeInUp 1s ease-out 0.3s both;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .event-name {
+        font-family: "Bodoni Moda", "Didot", serif;
+        font-size: clamp(2.2rem, 11vw, 8rem);
+        font-weight: 900;
+        font-optical-sizing: auto;
+        line-height: 0.85;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        text-shadow:
+          0 2px 4px rgba(0, 0, 0, 0.9),
+          0 4px 20px rgba(0, 0, 0, 0.7),
+          0 8px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      @media (min-width: 768px) {
+        .event-name {
+          letter-spacing: 0.08em;
+        }
+      }
+
+      .event-numeral {
+        font-family: "Bodoni Moda", "Didot", serif;
+        font-size: clamp(5rem, 25vw, 14rem);
+        font-weight: 900;
+        line-height: 0.75;
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 50%, #8b4513 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(0 4px 20px rgba(183, 106, 59, 0.5));
+        position: relative;
+      }
+
+      /* Metallic shine effect on numeral */
+      .event-numeral::after {
+        content: "I";
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: linear-gradient(
+          135deg,
+          transparent 20%,
+          rgba(255, 255, 255, 0.4) 40%,
+          rgba(255, 255, 255, 0.4) 60%,
+          transparent 80%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shine 3s ease-in-out infinite;
+      }
+
+      @keyframes shine {
+        0%, 100% { opacity: 0; }
+        50% { opacity: 1; }
+      }
+
+      /* Hero subtitle adjustment */
+      .hero-subtitle {
+        font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        animation: fadeInUp 1s ease-out 0.6s both;
+      }
+
+      .hero-subtitle .dot {
+        color: var(--copper);
+        margin: 0 12px;
+      }
+
       /* Typography - Bodoni Moda Black for vintage cigar lounge elegance */
       .panel-headline {
         font-family: "Bodoni Moda", "Didot", "Times New Roman", serif;
-        font-size: clamp(3.2rem, 12vw, 6.5rem);
+        font-size: clamp(2.2rem, 10vw, 6.5rem);
         font-weight: 900;
         font-optical-sizing: auto;
         line-height: 1;
@@ -278,10 +438,25 @@ const TEAMS_GOAL = 10;
         letter-spacing: -0.02em;
       }
 
-      /* Panel 3 crescendo - extra tension per Paula Scher */
+      /* Panel 3 crescendo - extra tension */
       .panel:nth-child(3) .panel-headline {
-        letter-spacing: 0.03em;
-        font-size: clamp(3.5rem, 13vw, 7rem);
+        letter-spacing: 0;
+        font-size: clamp(2.4rem, 11vw, 7rem);
+      }
+
+      @media (min-width: 768px) {
+        .panel-headline {
+          font-size: clamp(3.2rem, 12vw, 6.5rem);
+        }
+
+        .panel:nth-child(3) .panel-headline {
+          letter-spacing: 0.03em;
+          font-size: clamp(3.5rem, 13vw, 7rem);
+        }
+      }
+
+      .nowrap {
+        white-space: nowrap;
       }
 
       .panel-headline .accent {
@@ -804,20 +979,93 @@ const TEAMS_GOAL = 10;
           font-size: 12px;
         }
       }
+
+      /* ========================================
+         BRAND FOOTER
+         ======================================== */
+      .brand-footer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-top: 48px;
+        padding-top: 32px;
+        border-top: 1px solid rgba(183, 106, 59, 0.2);
+      }
+
+      .brand-footer__logo {
+        font-family: "Bodoni Moda", "Didot", serif;
+        font-size: 1.8rem;
+        font-weight: 900;
+        letter-spacing: 0.15em;
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+      }
+
+      /* Decorative dots around logo */
+      .brand-footer__logo::before,
+      .brand-footer__logo::after {
+        content: "◆";
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.4rem;
+        color: var(--copper);
+        -webkit-text-fill-color: var(--copper);
+      }
+
+      .brand-footer__logo::before {
+        right: calc(100% + 12px);
+      }
+
+      .brand-footer__logo::after {
+        left: calc(100% + 12px);
+      }
+
+      .brand-footer__text {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.4);
+        letter-spacing: 0.05em;
+      }
+
+      .brand-footer__tagline {
+        font-family: "Bodoni Moda", "Didot", serif;
+        font-style: italic;
+        font-size: 0.95rem;
+        color: rgba(212, 165, 116, 0.6);
+        letter-spacing: 0.08em;
+      }
+
+      @media (max-width: 640px) {
+        .brand-footer {
+          margin-top: 36px;
+          padding-top: 24px;
+        }
+      }
     </style>
   </head>
   <body>
     <main class="story">
-      <!-- Panel 1: The Invitation -->
+      <!-- Panel 1: Brand Introduction -->
       <section class="panel panel--hero" id="heroPanel">
         <div class="panel-bg panel-bg--hero" style="background-image: url('/FRAMES/frame-hero.webp')"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content">
-          <h1 class="panel-headline">¿Que <span class="accent">Bola</span>?</h1>
-          <p class="panel-subtitle">Hudson County's First Cuban Domino Tournament</p>
+          <div class="brand-lockup">
+            <span class="brand-name">Cuban Domino League</span>
+            <span class="brand-presents">presents</span>
+          </div>
+          <h1 class="event-title">
+            <span class="event-name">Tournament</span>
+            <span class="event-numeral">I</span>
+          </h1>
+          <p class="hero-subtitle">January 31, 2025<span class="dot">•</span>Mr Garcia Cigars</p>
         </div>
         <div class="scroll-indicator">
-          <span>Scroll</span>
+          <span>Enter</span>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
@@ -840,7 +1088,7 @@ const TEAMS_GOAL = 10;
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-3.webp')"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content">
-          <h2 class="panel-headline">Bring Your <span class="accent">A-Game</span></h2>
+          <h2 class="panel-headline">Bring Your <span class="accent nowrap">A-Game</span> Asere</h2>
           <p class="panel-subtitle">$50 Entry<span class="dot">•</span>Top 4 Advance</p>
         </div>
       </section>
@@ -865,8 +1113,8 @@ const TEAMS_GOAL = 10;
       <section class="panel panel--form">
         <div class="panel-bg-gradient"></div>
         <div class="panel-content">
-          <h2 class="panel-headline panel-headline--form">Lock In Your <span class="accent">Spot</span></h2>
-          <p class="panel-subtitle">Limited to 10 teams</p>
+          <h2 class="panel-headline panel-headline--form">Join The <span class="accent">League</span></h2>
+          <p class="panel-subtitle">Tournament I • Limited to 10 Teams</p>
 
           <!-- Progress Tracker -->
           <div class="progress-tracker">
@@ -959,8 +1207,14 @@ const TEAMS_GOAL = 10;
           </div>
 
           <p class="footer-note">
-            Questions? Email <a href="mailto:EFelipe1992@gmail.com">EFelipe1992@gmail.com</a> or visit <a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a>
+            Questions? Email <a href="mailto:Erik@CubanDominoLeague.com">Erik@CubanDominoLeague.com</a> or visit <a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a>
           </p>
+
+          <footer class="brand-footer">
+            <span class="brand-footer__logo">CDL</span>
+            <span class="brand-footer__text">© 2025 Cuban Domino League</span>
+            <span class="brand-footer__tagline">La mesa te espera</span>
+          </footer>
         </div>
       </section>
     </main>
@@ -1135,8 +1389,8 @@ const TEAMS_GOAL = 10;
       let isPlaying = false;
       let hasInteracted = false;
 
-      // Set very low volume
-      bgMusic.volume = 0.15;
+      // Set very low volume (8% - subtle background ambiance)
+      bgMusic.volume = 0.08;
 
       musicToggle.addEventListener('click', () => {
         if (!hasInteracted) {
@@ -1155,7 +1409,7 @@ const TEAMS_GOAL = 10;
           // Play with fade in
           bgMusic.volume = 0;
           bgMusic.play().then(() => {
-            fadeAudio(bgMusic, 0.15, 500);
+            fadeAudio(bgMusic, 0.08, 500);
             musicToggle.classList.add('is-playing');
             isPlaying = true;
           }).catch(err => {
