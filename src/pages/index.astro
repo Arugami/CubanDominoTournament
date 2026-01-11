@@ -131,6 +131,25 @@ const TEAMS_GOAL = 10;
       }
 
       @media (max-width: 768px) {
+        /* Smooth momentum scrolling on iOS */
+        .story {
+          -webkit-overflow-scrolling: touch;
+          touch-action: pan-y;
+          scroll-snap-type: y mandatory;
+        }
+
+        /* Disable parallax bg overhang on mobile for performance */
+        .panel-bg {
+          inset: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        /* Disable hero scroll transitions on mobile */
+        .panel--hero .panel-bg {
+          transition: none;
+        }
+
         .panel--hero .panel-bg::before {
           background: linear-gradient(
             90deg,
@@ -860,12 +879,13 @@ const TEAMS_GOAL = 10;
       // First panel starts in view
       allPanels[0]?.classList.add('in-view');
 
-      // Hero "walking in" scroll effect
+      // Hero "walking in" scroll effect - desktop only
       const heroPanel = document.getElementById('heroPanel');
       const storyContainer = document.querySelector('.story');
       const heroBg = heroPanel?.querySelector('.panel-bg');
+      const isDesktop = window.innerWidth > 768;
 
-      if (heroPanel && storyContainer && heroBg) {
+      if (heroPanel && storyContainer && heroBg && isDesktop) {
         storyContainer.addEventListener('scroll', () => {
           const scrollY = storyContainer.scrollTop;
           const heroHeight = heroPanel.offsetHeight;
