@@ -1,21 +1,112 @@
 // Apps Script (Code.gs)
 // Deploy as Web App: Execute as "Me", Access "Anyone"
 
-const SHEET_NAME = "Registrations";
-const SHARED_SECRET = "REPLACE_WITH_LONG_RANDOM";
-const RESEND_API_KEY = "re_314juMRW_CporJFQsbRcDXg25bPmgXGyi";
-const FROM_EMAIL = "Cuban Domino League <quebola@cubandominoleague.com>";
-const HOST_EMAILS = [
-  "EFelipe1992@gmail.com",
-  "jordan@arugami.com"
+const DEFAULT_SHEET_NAME = "Registrations";
+const DEFAULT_FROM_EMAIL = "Cuban Domino League <no-reply@cubandominoleague.com>";
+const DESIRED_HEADERS = [
+  "createdAt",
+  "teamName",
+  "p1Name",
+  "p1Email",
+  "p1Phone",
+  "p2Name",
+  "p2Email",
+  "p2Phone",
+  "notes",
+  "status",
+  "source",
 ];
+
+function getScriptProp(name, fallback) {
+  const value = PropertiesService.getScriptProperties().getProperty(name);
+  if (value !== null && value !== undefined && String(value).trim()) return String(value).trim();
+  return fallback;
+}
+
+function requireScriptProp(name) {
+  const value = getScriptProp(name, null);
+  if (!value) throw new Error(`missing_property_${name}`);
+  return value;
+}
+
+function getHostEmails() {
+  const raw = getScriptProp("HOST_EMAILS", "");
+  if (!raw) return [];
+  return raw
+    .split(",")
+    .map((email) => String(email).trim())
+    .filter(Boolean);
+}
+
+function getSheetName() {
+  return getScriptProp("SHEET_NAME", DEFAULT_SHEET_NAME);
+}
+
+function getFromEmail() {
+  return getScriptProp("FROM_EMAIL", DEFAULT_FROM_EMAIL);
+}
+
+function normalizeHeader(value) {
+  return String(value || "").trim();
+}
+
+function getExistingHeaders(sheet) {
+  const lastCol = sheet.getLastColumn();
+  if (lastCol < 1) return [];
+  const values = sheet.getRange(1, 1, 1, lastCol).getValues()[0] || [];
+  return values.map(normalizeHeader);
+}
+
+function ensureSheetHeaders(sheet) {
+  const lastRow = sheet.getLastRow();
+
+  if (lastRow < 1) {
+    sheet.appendRow(DESIRED_HEADERS);
+    return DESIRED_HEADERS.slice();
+  }
+
+  const existing = getExistingHeaders(sheet);
+  const isBlank = existing.length === 0 || existing.every((h) => h.length === 0);
+  if (isBlank) {
+    sheet.getRange(1, 1, 1, DESIRED_HEADERS.length).setValues([DESIRED_HEADERS]);
+    return DESIRED_HEADERS.slice();
+  }
+
+  const set = new Set(existing);
+  let changed = false;
+  for (const header of DESIRED_HEADERS) {
+    if (!set.has(header)) {
+      existing.push(header);
+      set.add(header);
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    sheet.getRange(1, 1, 1, existing.length).setValues([existing]);
+  }
+
+  return existing;
+}
+
+function appendByHeaders(sheet, data) {
+  const headers = ensureSheetHeaders(sheet);
+  const row = new Array(headers.length).fill("");
+  headers.forEach((header, idx) => {
+    if (Object.prototype.hasOwnProperty.call(data, header)) {
+      row[idx] = data[header];
+    }
+  });
+  sheet.appendRow(row);
+}
 
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents || "{}");
 
     // Simple auth
-    if (body.secret !== SHARED_SECRET) {
+    const sharedSecret = requireScriptProp("SHARED_SECRET");
+    if (body.secret !== sharedSecret) {
       return json({ ok: false, error: "unauthorized" }, 401);
     }
 
@@ -25,7 +116,7 @@ function doPost(e) {
     }
 
     // Validate required fields
-    const required = ["teamName","p1Name","p1Email","p1Phone","p2Name","p2Email","p2Phone"];
+    const required = ["teamName","p1Name","p1Email","p1Phone","p2Name","p2Email","p2Phone","ruleConfirm"];
     for (const k of required) {
       if (!String(body[k] || "").trim()) {
         return json({ ok: false, error: `missing_${k}` }, 400);
@@ -34,32 +125,31 @@ function doPost(e) {
 
     // Append to sheet
     const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sh = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
-
+    const sheetName = getSheetName();
+    const sh = ss.getSheetByName(sheetName) || ss.insertSheet(sheetName);
     const createdAt = new Date();
-    const row = [
-      createdAt.toISOString(),
-      body.teamName.trim(),
-      body.p1Name.trim(),
-      body.p1Email.trim(),
-      body.p1Phone.trim(),
-      body.p2Name.trim(),
-      body.p2Email.trim(),
-      body.p2Phone.trim(),
-      (body.notes || "").trim(),
-      "registered",
-      "landing",
-    ];
-    sh.appendRow(row);
+    appendByHeaders(sh, {
+      createdAt: createdAt.toISOString(),
+      teamName: body.teamName.trim(),
+      p1Name: body.p1Name.trim(),
+      p1Email: body.p1Email.trim(),
+      p1Phone: body.p1Phone.trim(),
+      p2Name: body.p2Name.trim(),
+      p2Email: body.p2Email.trim(),
+      p2Phone: body.p2Phone.trim(),
+      notes: (body.notes || "").trim(),
+      status: "registered",
+      source: "landing",
+    });
 
     // Send confirmation emails to players
     const subject = "Cuban Domino Tournament - Registration Confirmed";
     const htmlBody = buildConfirmationEmailHTML(body);
 
-    sendEmailViaResend(body.p1Email, subject, htmlBody);
+    sendEmail(body.p1Email, subject, htmlBody);
 
     if (body.p2Email && body.p2Email !== body.p1Email) {
-      sendEmailViaResend(body.p2Email, subject, htmlBody);
+      sendEmail(body.p2Email, subject, htmlBody);
     }
 
     // NOTIFY HOST - sends you an email for every registration
@@ -73,9 +163,28 @@ function doPost(e) {
   }
 }
 
-function sendEmailViaResend(to, subject, html) {
+function sendEmail(to, subject, html) {
+  const resendApiKey = getScriptProp("RESEND_API_KEY", "");
+  if (resendApiKey) {
+    return sendEmailViaResend({
+      apiKey: resendApiKey,
+      from: getFromEmail(),
+      to,
+      subject,
+      html,
+    });
+  }
+
+  return GmailApp.sendEmail(to, subject, stripHtml(html), { htmlBody: html });
+}
+
+function stripHtml(html) {
+  return String(html || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function sendEmailViaResend({ apiKey, from, to, subject, html }) {
   const payload = {
-    from: FROM_EMAIL,
+    from,
     to: [to],
     subject: subject,
     html: html
@@ -85,7 +194,7 @@ function sendEmailViaResend(to, subject, html) {
     method: "POST",
     contentType: "application/json",
     headers: {
-      "Authorization": "Bearer " + RESEND_API_KEY
+      "Authorization": "Bearer " + apiKey
     },
     payload: JSON.stringify(payload),
     muteHttpExceptions: true
@@ -94,7 +203,8 @@ function sendEmailViaResend(to, subject, html) {
   const response = UrlFetchApp.fetch("https://api.resend.com/emails", options);
   const result = JSON.parse(response.getContentText());
 
-  if (response.getResponseCode() !== 200) {
+  const code = response.getResponseCode();
+  if (code < 200 || code >= 300) {
     console.error("Resend error:", result);
     throw new Error("Email failed: " + JSON.stringify(result));
   }
@@ -197,8 +307,9 @@ function sendHostNotification(body, timestamp) {
 </body>
 </html>`;
 
-  HOST_EMAILS.forEach(email => {
-    sendEmailViaResend(email, subject, html);
+  const hostEmails = getHostEmails();
+  hostEmails.forEach((email) => {
+    sendEmail(email, subject, html);
   });
 }
 
@@ -211,13 +322,16 @@ function json(obj, code) {
 // Optional: Run this to test sheet access
 function testSheetAccess() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sh = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+  const sheetName = getSheetName();
+  const sh = ss.getSheetByName(sheetName) || ss.insertSheet(sheetName);
+  ensureSheetHeaders(sh);
   Logger.log("Sheet name: " + sh.getName());
   Logger.log("Test passed!");
 }
 
 // Test Resend connection
 function testResend() {
-  sendEmailViaResend("jordan@arugami.com", "Test from Cuban Domino League", "<h1>It works!</h1><p>Resend is configured correctly.</p>");
+  const to = requireScriptProp("TEST_EMAIL");
+  sendEmail(to, "Test from Cuban Domino League", "<h1>It works!</h1><p>Email is configured correctly.</p>");
   Logger.log("Test email sent!");
 }

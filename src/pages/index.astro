@@ -1,7 +1,4 @@
 ---
-const APP_SCRIPT_URL = import.meta.env.PUBLIC_APP_SCRIPT_URL;
-const SECRET = import.meta.env.PUBLIC_SIGNUP_SECRET;
-
 // Update this number manually when teams sign up
 const TEAMS_REGISTERED = 4;
 const TEAMS_GOAL = 10;
@@ -1086,7 +1083,7 @@ const TEAMS_GOAL = 10;
             <span class="event-name">Tournament</span>
             <span class="event-numeral">I</span>
           </h1>
-          <p class="hero-subtitle">January 31, 2025<span class="dot">•</span><a href="https://share.google/6jjMO29Eau3P8pkO8" target="_blank" rel="noreferrer">Mr Garcia Cigars</a></p>
+          <p class="hero-subtitle">January 31, 2025<span class="dot">•</span><a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a></p>
         </div>
         <div class="scroll-indicator">
           <span>Enter</span>
@@ -1233,7 +1230,7 @@ const TEAMS_GOAL = 10;
           <p class="footer-note">
             Questions? Email <a href="mailto:Erik@CubanDominoLeague.com">Erik@CubanDominoLeague.com</a>
             <br>
-            Venue: <a href="https://share.google/6jjMO29Eau3P8pkO8" target="_blank" rel="noreferrer">Mr Garcia Cigars</a> — 74th & Broadway
+            Venue: <a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a> — 74th & Broadway
           </p>
 
           <footer class="brand-footer">
@@ -1264,7 +1261,7 @@ const TEAMS_GOAL = 10;
       <source src="/audio/background-music.mp3" type="audio/mpeg">
     </audio>
 
-    <script define:vars={{ APP_SCRIPT_URL, SECRET, TEAMS_REGISTERED, TEAMS_GOAL }}>
+    <script define:vars={{ TEAMS_REGISTERED, TEAMS_GOAL }}>
       // Panel parallax and content animations
       const allPanels = document.querySelectorAll('.panel');
 
@@ -1373,28 +1370,21 @@ const TEAMS_GOAL = 10;
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
+        if (!form.reportValidity()) return;
         statusEl.textContent = "Submitting…";
         submitBtn.disabled = true;
 
         const payload = Object.fromEntries(new FormData(form).entries());
-        payload.secret = "" + SECRET;
-        payload.venueUrl = "https://mrgarciacigars.com/";
-
-        if (!payload.secret || !APP_SCRIPT_URL) {
-          statusEl.textContent = "Missing signup configuration.";
-          submitBtn.disabled = false;
-          return;
-        }
 
         try {
-          const response = await fetch(APP_SCRIPT_URL, {
+          const response = await fetch("/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
 
           const data = await response.json().catch(() => ({}));
-          if (response.ok && data.ok) {
+          if (data && data.ok) {
             form.reset();
             form.style.display = "none";
             successEl.style.display = "block";
