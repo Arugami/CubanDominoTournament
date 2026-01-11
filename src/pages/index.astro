@@ -42,6 +42,11 @@ const TEAMS_GOAL = 10;
         padding: 0;
       }
 
+      html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+      }
+
       html {
         scroll-behavior: smooth;
       }
@@ -50,12 +55,12 @@ const TEAMS_GOAL = 10;
         font-family: "IBM Plex Sans", system-ui, sans-serif;
         background: #0a0705;
         color: #fff;
-        overflow-x: hidden;
       }
 
       /* Scroll Container */
       .story {
         height: 100vh;
+        overflow-x: hidden;
         overflow-y: scroll;
         scroll-snap-type: y mandatory;
       }
@@ -70,6 +75,7 @@ const TEAMS_GOAL = 10;
         align-items: center;
         justify-content: center;
         padding: 24px;
+        overflow: hidden; /* Prevent horizontal scroll from parallax bg */
       }
 
       .panel-bg {
