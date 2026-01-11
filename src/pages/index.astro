@@ -426,6 +426,20 @@ const TEAMS_GOAL = 10;
         margin: 0 12px;
       }
 
+      .hero-subtitle a,
+      .panel-subtitle a {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        transition: border-color 0.2s, color 0.2s;
+      }
+
+      .hero-subtitle a:hover,
+      .panel-subtitle a:hover {
+        color: var(--brass);
+        border-bottom-color: var(--brass);
+      }
+
       /* Typography - Bodoni Moda Black for vintage cigar lounge elegance */
       .panel-headline {
         font-family: "Bodoni Moda", "Didot", "Times New Roman", serif;
@@ -612,7 +626,7 @@ const TEAMS_GOAL = 10;
       .panel--form {
         min-height: 100vh;
         height: auto;
-        padding: 60px 24px;
+        padding: 60px 24px 100px;
         align-items: center;
         justify-content: flex-start;
         padding-top: 80px;
@@ -1072,7 +1086,7 @@ const TEAMS_GOAL = 10;
             <span class="event-name">Tournament</span>
             <span class="event-numeral">I</span>
           </h1>
-          <p class="hero-subtitle">January 31, 2025<span class="dot">•</span>Mr Garcia Cigars</p>
+          <p class="hero-subtitle">January 31, 2025<span class="dot">•</span><a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a></p>
         </div>
         <div class="scroll-indicator">
           <span>Enter</span>
@@ -1089,7 +1103,7 @@ const TEAMS_GOAL = 10;
         <div class="panel-content">
           <h2 class="panel-headline">Your Seat's <span class="accent">Waiting</span></h2>
           <p class="panel-subtitle panel-subtitle--attitude">...We're not.</p>
-          <p class="panel-subtitle panel-subtitle--details">Mr Garcia Cigars<span class="dot">•</span>January 31st<span class="dot">•</span>7pm</p>
+          <p class="panel-subtitle panel-subtitle--details"><a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a><span class="dot">•</span>January 31st<span class="dot">•</span>7pm</p>
         </div>
       </section>
 
@@ -1217,7 +1231,9 @@ const TEAMS_GOAL = 10;
           </div>
 
           <p class="footer-note">
-            Questions? Email <a href="mailto:Erik@CubanDominoLeague.com">Erik@CubanDominoLeague.com</a> or visit <a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a>
+            Questions? Email <a href="mailto:Erik@CubanDominoLeague.com">Erik@CubanDominoLeague.com</a>
+            <br>
+            Venue: <a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a> — 74th & Broadway
           </p>
 
           <footer class="brand-footer">
