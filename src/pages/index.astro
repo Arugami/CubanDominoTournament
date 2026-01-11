@@ -69,7 +69,9 @@ const TEAMS_GOAL = 10;
       /* Panel Base */
       .panel {
         min-height: 100vh;
+        height: 100vh;
         scroll-snap-align: start;
+        scroll-snap-stop: always;
         position: relative;
         display: flex;
         flex-direction: column;
@@ -609,6 +611,7 @@ const TEAMS_GOAL = 10;
       /* Form Panel */
       .panel--form {
         min-height: 100vh;
+        height: auto;
         padding: 60px 24px;
         align-items: center;
         justify-content: flex-start;
