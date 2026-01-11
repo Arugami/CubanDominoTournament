@@ -8,7 +8,7 @@
 ## 🔴 CRITICAL — Before Tournament I (Jan 31)
 
 ### Registration & Teams
-- [ ] Get first team registered (proof of concept)
+- [x] Get first team registered (proof of concept) ✅
 - [ ] Reach 5 teams (halfway)
 - [ ] Reach 10 teams (full tournament)
 - [ ] Create waitlist system if we exceed capacity
@@ -204,6 +204,15 @@
 - [x] Environment variables set in Cloudflare (APP_SCRIPT_URL, APP_SCRIPT_SECRET, VENUE_URL)
 - [x] Custom domain migrated to new Git-connected project
 - [x] Old direct-upload project deleted
+- [x] **First team registered!** (proof of concept verified)
+- [x] Email confirmation system working (Resend API only - no Gmail fallback)
+- [x] Host notification emails working
+- [x] Gmail fallback removed (unprofessional - sends from personal email)
+- [x] Bug documentation folder created (`DOCS/BUGS/`)
+- [x] Registration bug fixed (email errors no longer crash registration)
+- [x] Troubleshooting documentation created (TROUBLESHOOTING.md)
+- [x] Email routing configured (Erik@cubandominoleague.com → efelipe1992@gmail.com)
+- [x] Contact email added to confirmation emails
 
 ---
 
@@ -260,3 +269,36 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 **Last Updated:** January 11, 2025
 
 *"Your seat's waiting."*
+
+---
+
+## Recent Session Notes (Jan 11, 2025)
+
+### Registration System Bug Fix
+**Problem:** Form submissions were failing with 500 errors when email delivery failed (bounced addresses, invalid emails, etc.)
+
+**Root Cause:** The `doPost()` function in Apps Script treated email sending as blocking - if Resend returned an error, the entire registration would fail.
+
+**Solution:** Wrapped all `sendEmail()` calls in try/catch blocks. Registration now succeeds even if email delivery fails. Errors are logged but don't crash the request.
+
+**Documentation:** See `TROUBLESHOOTING.md` for full details and future debugging tips.
+
+### Email Setup
+| Purpose | Address | Forwards To |
+|---------|---------|-------------|
+| Transactional (sends from) | `no-reply@cubandominoleague.com` | N/A |
+| Contact (questions) | `Erik@cubandominoleague.com` | efelipe1992@gmail.com |
+
+**Note:** Erik needs to click the Cloudflare verification email to activate routing.
+
+**Confirmation emails now say:** "Questions? Email us at Erik@cubandominoleague.com"
+
+### Gmail Fallback Removal (Jan 11, 2025)
+**Problem:** Gmail fallback in `Code.gs` would send from personal email if Resend wasn't configured.
+
+**Solution:** Removed Gmail fallback entirely. If `RESEND_API_KEY` is not set, email fails (safely - registration still saves per previous fix).
+
+**Files changed:**
+- `apps-script/Code.gs` - Removed `GmailApp.sendEmail()` fallback, added `checkResendConfig()` helper
+- `TROUBLESHOOTING.md` - Updated to reference new `DOCS/BUGS/` folder
+- Created `DOCS/BUGS/` folder with structured bug documentation

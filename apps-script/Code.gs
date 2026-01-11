@@ -123,7 +123,7 @@ function doPost(e) {
       }
     }
 
-    // Append to sheet
+    // Append to sheet FIRST (most important - don't lose the registration!)
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const sheetName = getSheetName();
     const sh = ss.getSheetByName(sheetName) || ss.insertSheet(sheetName);
@@ -142,18 +142,30 @@ function doPost(e) {
       source: "landing",
     });
 
-    // Send confirmation emails to players
+    // Send confirmation emails to players (don't fail registration if email fails)
     const subject = "Cuban Domino Tournament - Registration Confirmed";
     const htmlBody = buildConfirmationEmailHTML(body);
 
-    sendEmail(body.p1Email, subject, htmlBody);
+    try {
+      sendEmail(body.p1Email, subject, htmlBody);
+    } catch (emailErr) {
+      console.error("Failed to send email to p1:", body.p1Email, emailErr);
+    }
 
     if (body.p2Email && body.p2Email !== body.p1Email) {
-      sendEmail(body.p2Email, subject, htmlBody);
+      try {
+        sendEmail(body.p2Email, subject, htmlBody);
+      } catch (emailErr) {
+        console.error("Failed to send email to p2:", body.p2Email, emailErr);
+      }
     }
 
     // NOTIFY HOST - sends you an email for every registration
-    sendHostNotification(body, createdAt);
+    try {
+      sendHostNotification(body, createdAt);
+    } catch (hostErr) {
+      console.error("Failed to send host notification:", hostErr);
+    }
 
     return json({ ok: true }, 200);
 
@@ -165,17 +177,17 @@ function doPost(e) {
 
 function sendEmail(to, subject, html) {
   const resendApiKey = getScriptProp("RESEND_API_KEY", "");
-  if (resendApiKey) {
-    return sendEmailViaResend({
-      apiKey: resendApiKey,
-      from: getFromEmail(),
-      to,
-      subject,
-      html,
-    });
+  if (!resendApiKey) {
+    throw new Error("RESEND_API_KEY not configured - email cannot be sent");
   }
 
-  return GmailApp.sendEmail(to, subject, stripHtml(html), { htmlBody: html });
+  return sendEmailViaResend({
+    apiKey: resendApiKey,
+    from: getFromEmail(),
+    to,
+    subject,
+    html,
+  });
 }
 
 function stripHtml(html) {
@@ -205,7 +217,7 @@ function sendEmailViaResend({ apiKey, from, to, subject, html }) {
 
   const code = response.getResponseCode();
   if (code < 200 || code >= 300) {
-    console.error("Resend error:", result);
+    console.error("Resend error for " + to + ":", result);
     throw new Error("Email failed: " + JSON.stringify(result));
   }
 
@@ -259,7 +271,7 @@ function buildConfirmationEmailHTML(body) {
     ${body.notes ? `<p style="font-size: 14px; color: #888;">Notes: ${body.notes}</p>` : ''}
 
     <div style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid #3d2e26;">
-      <p style="margin: 0 0 16px 0; color: #888; font-size: 14px;">Questions? Reply to this email.</p>
+      <p style="margin: 0 0 16px 0; color: #888; font-size: 14px;">Questions? Email us at <a href="mailto:Erik@cubandominoleague.com" style="color: #d4a574;">Erik@cubandominoleague.com</a></p>
       <a href="https://mrgarciacigars.com/" style="display: inline-block; background: linear-gradient(135deg, #b76a3b 0%, #d4a574 100%); color: #1c130f; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">View Venue</a>
     </div>
 
@@ -319,7 +331,11 @@ function json(obj, code) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// Optional: Run this to test sheet access
+// ============================================
+// HELPER FUNCTIONS - Run these manually
+// ============================================
+
+// Run this to test sheet access
 function testSheetAccess() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheetName = getSheetName();
@@ -329,9 +345,55 @@ function testSheetAccess() {
   Logger.log("Test passed!");
 }
 
-// Test Resend connection
+// Run this to test Resend email
 function testResend() {
   const to = requireScriptProp("TEST_EMAIL");
   sendEmail(to, "Test from Cuban Domino League", "<h1>It works!</h1><p>Email is configured correctly.</p>");
-  Logger.log("Test email sent!");
+  Logger.log("Test email sent to: " + to);
+}
+
+// Run this to check current properties
+function testProperties() {
+  const props = PropertiesService.getScriptProperties().getAll();
+  // Mask sensitive values
+  const masked = {};
+  for (const key in props) {
+    const val = props[key];
+    if (key.includes("SECRET") || key.includes("API_KEY")) {
+      masked[key] = val.substring(0, 7) + "..." + val.substring(val.length - 4);
+    } else {
+      masked[key] = val;
+    }
+  }
+  Logger.log("All properties: " + JSON.stringify(masked, null, 2));
+}
+
+// Run this ONCE to set all properties (update the values first!)
+function setProperties() {
+  PropertiesService.getScriptProperties().setProperties({
+    "SHARED_SECRET": "QIW/fso0Gp5hRL/JJnEfIqjstwyG6VEeFFL8csK2J6M=",
+    "RESEND_API_KEY": "re_cNLmAjP9_Dz5AQNGjXV8uotP5ax2gYkzt",
+    "HOST_EMAILS": "EFelipe1992@gmail.com,jordan@arugami.com",
+    "TEST_EMAIL": "jordan@arugami.com"
+  });
+  Logger.log("All properties set!");
+}
+
+// Run this to update just the Resend API key
+function updateResendKey() {
+  PropertiesService.getScriptProperties().setProperty(
+    "RESEND_API_KEY",
+    "re_cNLmAjP9_Dz5AQNGjXV8uotP5ax2gYkzt"
+  );
+  Logger.log("Resend API key updated!");
+}
+
+// Run this to check if Resend is configured
+function checkResendConfig() {
+  const key = getScriptProp("RESEND_API_KEY", "");
+  if (!key) {
+    Logger.log("❌ RESEND_API_KEY is NOT configured - emails will fail!");
+  } else {
+    Logger.log("✅ RESEND_API_KEY is configured");
+  }
 }
