@@ -1272,10 +1272,11 @@ const TEAMS_GOAL = 10;
           right: 16px;
           padding: 10px 14px;
           font-size: 12px;
+          transition: opacity 0.3s ease;
         }
 
-        /* Hide music toggle when form panel is in view */
-        body:has(.panel--form.in-view) .music-toggle {
+        /* Hidden state applied via JS on mobile when form is in view */
+        .music-toggle.hidden-on-form {
           opacity: 0;
           pointer-events: none;
         }
@@ -1609,6 +1610,27 @@ const TEAMS_GOAL = 10;
       // First panel starts in view
       allPanels[0]?.classList.add('in-view');
 
+      // Hide music toggle on mobile when form panel is in view
+      const formPanelEl = document.querySelector('.panel--form');
+      const musicToggleEl = document.getElementById('musicToggle');
+
+      if (formPanelEl && musicToggleEl) {
+        const formObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            // Only apply on mobile (768px or less)
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+              if (entry.isIntersecting) {
+                musicToggleEl.classList.add('hidden-on-form');
+              } else {
+                musicToggleEl.classList.remove('hidden-on-form');
+              }
+            }
+          });
+        }, { threshold: 0.3 });
+
+        formObserver.observe(formPanelEl);
+      }
 
       // Hero "walking in" scroll effect - desktop only
       const heroPanel = document.getElementById('heroPanel');
