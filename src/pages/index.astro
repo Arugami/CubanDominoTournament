@@ -1937,7 +1937,7 @@ const TEAMS_GOAL = 10;
     </button>
 
     <!-- Background Audio -->
-    <audio id="bgMusic" loop preload="metadata" playsinline webkit-playsinline>
+    <audio id="bgMusic" loop preload="auto" playsinline webkit-playsinline crossorigin="anonymous">
       <source src="/AUDIO/background-music.mp3" type="audio/mpeg">
     </audio>
 
@@ -2144,16 +2144,10 @@ const TEAMS_GOAL = 10;
         }
       });
 
-      // Music Toggle - with debugging
+      // Music Toggle - iOS workaround: start muted, unmute after play
       const musicToggle = document.getElementById('musicToggle');
       const bgMusic = document.getElementById('bgMusic');
       let isPlaying = false;
-
-      bgMusic.volume = 1.0; // Full volume for testing
-
-      // Debug: log audio state
-      bgMusic.addEventListener('error', (e) => alert('Audio error: ' + bgMusic.error?.message));
-      bgMusic.addEventListener('playing', () => console.log('Audio is playing, currentTime:', bgMusic.currentTime));
 
       musicToggle.addEventListener('click', function() {
         musicToggle.classList.add('collapsed');
@@ -2163,19 +2157,21 @@ const TEAMS_GOAL = 10;
           musicToggle.classList.remove('is-playing');
           isPlaying = false;
         } else {
-          const playPromise = bgMusic.play();
-          if (playPromise) {
-            playPromise.then(() => {
-              // Check if actually playing
-              setTimeout(() => {
-                alert('Playing: ' + !bgMusic.paused + ', Time: ' + bgMusic.currentTime.toFixed(2) + ', Vol: ' + bgMusic.volume);
-              }, 500);
-            }).catch(err => {
-              alert('Play failed: ' + err.message);
-            });
-          }
-          musicToggle.classList.add('is-playing');
-          isPlaying = true;
+          // iOS workaround: start muted, play, then unmute
+          bgMusic.muted = true;
+          bgMusic.play().then(() => {
+            bgMusic.muted = false;
+            bgMusic.volume = 0.3;
+            musicToggle.classList.add('is-playing');
+            isPlaying = true;
+          }).catch(() => {
+            // Fallback: try direct play
+            bgMusic.muted = false;
+            bgMusic.volume = 0.3;
+            bgMusic.play();
+            musicToggle.classList.add('is-playing');
+            isPlaying = true;
+          });
         }
       });
 
