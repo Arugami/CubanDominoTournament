@@ -2144,91 +2144,26 @@ const TEAMS_GOAL = 10;
         }
       });
 
-      // Music Toggle
+      // Music Toggle - Simple version
       const musicToggle = document.getElementById('musicToggle');
       const bgMusic = document.getElementById('bgMusic');
       let isPlaying = false;
-      let hasInteracted = false;
-      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      let audioContext = null;
 
-      // Set initial volume (higher for mobile)
-      bgMusic.volume = isIOS ? 0.5 : 0.08;
+      bgMusic.volume = 0.3;
 
-      // Create AudioContext for iOS (helps unlock audio)
-      function unlockAudio() {
-        if (!audioContext) {
-          audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioContext.state === 'suspended') {
-          audioContext.resume();
-        }
-      }
-
-      // Handle music toggle
-      function handleMusicToggle(e) {
-        e.preventDefault();
-
-        if (!hasInteracted) {
-          hasInteracted = true;
-          musicToggle.classList.add('collapsed');
-          // Unlock audio context on first interaction
-          unlockAudio();
-        }
+      musicToggle.addEventListener('click', function() {
+        // Collapse label after first tap
+        musicToggle.classList.add('collapsed');
 
         if (isPlaying) {
-          // Stop playing
           bgMusic.pause();
           musicToggle.classList.remove('is-playing');
           isPlaying = false;
         } else {
-          // Start playing - higher volume for iOS
-          bgMusic.volume = isIOS ? 0.5 : 0.08;
-
-          // Load fresh for iOS/Safari
-          if (isIOS || isSafari) {
-            bgMusic.load();
-          }
-
-          // Play audio
-          const playPromise = bgMusic.play();
-
-          if (playPromise !== undefined) {
-            playPromise.then(() => {
-              musicToggle.classList.add('is-playing');
-              isPlaying = true;
-
-              // Desktop only: fade in effect
-              if (!isIOS && !isSafari) {
-                bgMusic.volume = 0;
-                fadeAudio(bgMusic, 0.08, 500);
-              }
-            }).catch(err => {
-              console.log('Audio play failed:', err);
-              // Show error state - don't pretend it's playing
-              alert('Audio blocked. Check your mute switch or try again.');
-            });
-          } else {
-            // Fallback for older browsers
-            musicToggle.classList.add('is-playing');
-            isPlaying = true;
-          }
+          bgMusic.play();
+          musicToggle.classList.add('is-playing');
+          isPlaying = true;
         }
-      }
-
-      // Prevent double-firing on touch devices
-      let lastTouchTime = 0;
-
-      musicToggle.addEventListener('touchend', function(e) {
-        lastTouchTime = Date.now();
-        handleMusicToggle(e);
-      }, { passive: false });
-
-      musicToggle.addEventListener('click', function(e) {
-        // Skip if this click came from a touch (within 500ms)
-        if (Date.now() - lastTouchTime < 500) return;
-        handleMusicToggle(e);
       });
 
       // Smooth volume fade
