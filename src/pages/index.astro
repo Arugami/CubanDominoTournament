@@ -60,6 +60,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Scroll Container */
       .story {
         height: 100vh;
+        height: 100dvh; /* iOS Safari fix - uses actual visible viewport */
         overflow-x: hidden;
         overflow-y: scroll;
         scroll-snap-type: y mandatory;
@@ -69,7 +70,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Panel Base */
       .panel {
         min-height: 100vh;
+        min-height: 100dvh;
         height: 100vh;
+        height: 100dvh;
         scroll-snap-align: start;
         scroll-snap-stop: always;
         position: relative;
@@ -1614,6 +1617,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Form Panel */
       .panel--form {
         min-height: 100vh;
+        min-height: 100dvh;
         height: auto;
         padding: 60px 24px 100px;
         align-items: center;
