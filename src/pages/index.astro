@@ -2153,8 +2153,8 @@ const TEAMS_GOAL = 10;
       const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
       let audioContext = null;
 
-      // Set initial volume
-      bgMusic.volume = 0.08;
+      // Set initial volume (higher for mobile)
+      bgMusic.volume = isIOS ? 0.5 : 0.08;
 
       // Create AudioContext for iOS (helps unlock audio)
       function unlockAudio() {
@@ -2183,8 +2183,8 @@ const TEAMS_GOAL = 10;
           musicToggle.classList.remove('is-playing');
           isPlaying = false;
         } else {
-          // Start playing
-          bgMusic.volume = 0.08;
+          // Start playing - higher volume for iOS
+          bgMusic.volume = isIOS ? 0.5 : 0.08;
 
           // Load fresh for iOS/Safari
           if (isIOS || isSafari) {
@@ -2206,9 +2206,8 @@ const TEAMS_GOAL = 10;
               }
             }).catch(err => {
               console.log('Audio play failed:', err);
-              // Visual feedback even if audio fails
-              musicToggle.classList.add('is-playing');
-              isPlaying = true;
+              // Show error state - don't pretend it's playing
+              alert('Audio blocked. Check your mute switch or try again.');
             });
           } else {
             // Fallback for older browsers
@@ -2218,12 +2217,17 @@ const TEAMS_GOAL = 10;
         }
       }
 
-      // Use touchend for iOS (more reliable than click)
-      musicToggle.addEventListener('touchend', handleMusicToggle, { passive: false });
-      // Fallback to click for non-touch devices
+      // Prevent double-firing on touch devices
+      let lastTouchTime = 0;
+
+      musicToggle.addEventListener('touchend', function(e) {
+        lastTouchTime = Date.now();
+        handleMusicToggle(e);
+      }, { passive: false });
+
       musicToggle.addEventListener('click', function(e) {
-        // Prevent double-firing on touch devices
-        if (e.pointerType === 'touch') return;
+        // Skip if this click came from a touch (within 500ms)
+        if (Date.now() - lastTouchTime < 500) return;
         handleMusicToggle(e);
       });
 
