@@ -72,7 +72,7 @@
 - [ ] Announce Tournament II date
 - [ ] Start Tournament II registration
 - [ ] Build email list
-- [ ] Community WhatsApp or Discord?
+- [x] Community chat — **"La Mesa" built into website!**
 
 ### Brand Development
 - [ ] Brand guidelines document (colors, fonts, usage)
@@ -213,6 +213,14 @@
 - [x] Troubleshooting documentation created (TROUBLESHOOTING.md)
 - [x] Email routing configured (Erik@cubandominoleague.com → efelipe1992@gmail.com)
 - [x] Contact email added to confirmation emails
+- [x] **"Who's In So Far"** — Live display of registered teams on form panel
+- [x] **"La Mesa" Live Chat** — Real-time chat using Supabase for pre-tournament hype
+- [x] Website copy finalized (panels 2-4 reviewed by Dream Team)
+- [x] Player personas created (6 personas: Landy, Maria Elena, Danny, Carmen, Alex, Gaby)
+- [x] Cuban pixel avatars (7 options: domino, cigar, cafecito, carro, palma, bandera, conga)
+- [x] Chat reactions (🔥😂👏💪🌴)
+- [x] Pinned messages feature
+- [x] Panel 5 Spanish tagline: "La mesa te espera"
 
 ---
 
@@ -266,9 +274,24 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 11, 2025
+**Last Updated:** January 12, 2026
 
-*"Your seat's waiting."*
+*"La mesa te espera."*
+
+---
+
+## Recent Session Notes (Jan 12, 2026)
+
+### Chat Features Added
+New "La Mesa" chat features require Supabase schema update. Run in SQL Editor:
+```sql
+ALTER TABLE messages
+ADD COLUMN IF NOT EXISTS avatar TEXT DEFAULT 'domino',
+ADD COLUMN IF NOT EXISTS reactions JSONB DEFAULT '{}',
+ADD COLUMN IF NOT EXISTS is_pinned BOOLEAN DEFAULT false;
+```
+
+Migration file: `supabase/migrations/20260112045342_add_chat_features.sql`
 
 ---
 
