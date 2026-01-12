@@ -37,11 +37,13 @@ Browser Form → Cloudflare Pages Function → Google Apps Script → Google She
 - `APP_SCRIPT_URL` - Google Apps Script Web App URL
 - `APP_SCRIPT_SECRET` - Shared secret for auth (must match Apps Script)
 - `VENUE_URL` - Venue link included in emails
+- `PUBLIC_SUPABASE_URL` (optional) - Enables realtime chat widget
+- `PUBLIC_SUPABASE_ANON_KEY` (optional) - Enables realtime chat widget
 
 ### Apps Script Properties
 - `SHARED_SECRET` - Must match `APP_SCRIPT_SECRET`
 - `HOST_EMAILS` - Comma-separated admin notification emails
-- `RESEND_API_KEY` (optional) - Uses Resend API; falls back to GmailApp
+- `RESEND_API_KEY` (optional) - If set, uses Resend API; otherwise GmailApp is used
 
 ### Registration Counter
 Update `TEAMS_REGISTERED` and `TEAMS_GOAL` in `index.astro` frontmatter (lines 2-3) to change the progress display.

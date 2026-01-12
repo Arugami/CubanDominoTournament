@@ -50,6 +50,15 @@ APP_SCRIPT_SECRET="REPLACE_WITH_SAME_LONG_RANDOM"
 VENUE_URL="https://mrgarciacigars.com/"
 ```
 
+### Optional: realtime chat
+
+If you want to enable the realtime chat widget on the landing page, set:
+
+```
+PUBLIC_SUPABASE_URL="https://YOUR_PROJECT_REF.supabase.co"
+PUBLIC_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
+```
+
 ## 4) Build + deploy
 
 Build the site and deploy the `dist` folder.

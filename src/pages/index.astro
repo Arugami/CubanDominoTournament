@@ -736,20 +736,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-weight: 600;
         position: relative;
         top: 1px;
+        color: var(--brass);
       }
 
       .chat-toggle__icon {
         width: 8px;
         height: 8px;
-        background: var(--gold);
+        background: var(--brass);
         border-radius: 50%;
-        box-shadow: 0 0 10px var(--gold);
+        box-shadow: 0 0 10px var(--brass);
         animation: soulPulse 4s infinite;
       }
 
       @keyframes soulPulse {
-        0%, 100% { opacity: 0.6; box-shadow: 0 0 5px var(--gold); }
-        50% { opacity: 1; box-shadow: 0 0 15px var(--gold), 0 0 30px rgba(255, 215, 0, 0.4); }
+        0%, 100% { opacity: 0.6; box-shadow: 0 0 5px var(--brass); }
+        50% { opacity: 1; box-shadow: 0 0 15px var(--brass), 0 0 30px rgba(212, 165, 116, 0.4); }
       }
 
       .chat-toggle__badge {
@@ -920,24 +921,216 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          opacity: 0.8; 
       }
       
-      /* Replacing Pixel Art with Abstract "Essence" */
+      /* Cuban Pixel Art Avatars */
       .avatar-domino {
-        background-color: var(--bone);
-        mask-image: radial-gradient(circle, black 60%, transparent 60%);
-        -webkit-mask-image: radial-gradient(circle, black 60%, transparent 60%);
-      }
-      
-      .avatar-cigar {
-        background-color: var(--copper);
-        mask-image: linear-gradient(45deg, black 100%, transparent 0);
-        -webkit-mask-image: linear-gradient(45deg, black 100%, transparent 0);
+        width: 14px;
+        height: 20px;
+        background: var(--bone);
         border-radius: 2px;
-        width: 8px; height: 20px;
+        position: relative;
+        box-shadow: inset 0 0 0 1px var(--ink);
       }
-      
-      .avatar-palm {
-        background-color: #3d5c3a; /* Muted Forest Green */
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      .avatar-domino::before,
+      .avatar-domino::after {
+        content: '';
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: var(--ink);
+        border-radius: 50%;
+      }
+      .avatar-domino::before {
+        top: 3px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .avatar-domino::after {
+        bottom: 3px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: -3px -3px 0 var(--ink), 3px 3px 0 var(--ink);
+      }
+
+      .avatar-cigar {
+        width: 20px;
+        height: 6px;
+        background: linear-gradient(90deg, #8B4513 0%, #A0522D 70%, #CD853F 85%, #FF6B35 100%);
+        border-radius: 1px 3px 3px 1px;
+        position: relative;
+      }
+      .avatar-cigar::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3px;
+        height: 100%;
+        background: #654321;
+        border-radius: 1px 0 0 1px;
+      }
+      .avatar-cigar::after {
+        content: '';
+        position: absolute;
+        right: -2px;
+        top: 1px;
+        width: 4px;
+        height: 4px;
+        background: radial-gradient(circle, #ff4500 30%, transparent 70%);
+        filter: blur(1px);
+        animation: emberGlow 1.5s ease-in-out infinite;
+      }
+      @keyframes emberGlow {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+
+      .avatar-cafecito {
+        width: 12px;
+        height: 14px;
+        background: var(--bone);
+        border-radius: 0 0 3px 3px;
+        position: relative;
+        box-shadow: inset 0 -6px 0 #3d2314;
+      }
+      .avatar-cafecito::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -1px;
+        right: -1px;
+        height: 3px;
+        background: var(--bone);
+        border-radius: 2px 2px 0 0;
+      }
+      .avatar-cafecito::after {
+        content: '';
+        position: absolute;
+        right: -5px;
+        top: 2px;
+        width: 5px;
+        height: 8px;
+        border: 2px solid var(--bone);
+        border-left: none;
+        border-radius: 0 4px 4px 0;
+      }
+
+      .avatar-carro {
+        width: 20px;
+        height: 10px;
+        background: #dc143c;
+        border-radius: 4px 4px 0 0;
+        position: relative;
+      }
+      .avatar-carro::before {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 2px;
+        width: 4px;
+        height: 4px;
+        background: #333;
+        border-radius: 50%;
+        box-shadow: 10px 0 0 #333;
+      }
+      .avatar-carro::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 3px;
+        width: 5px;
+        height: 4px;
+        background: rgba(135, 206, 235, 0.7);
+        border-radius: 1px;
+        box-shadow: 7px 0 0 rgba(135, 206, 235, 0.7);
+      }
+
+      .avatar-palma {
+        width: 16px;
+        height: 20px;
+        position: relative;
+      }
+      .avatar-palma::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 10px;
+        background: linear-gradient(to bottom, #8B7355, #654321);
+        border-radius: 1px;
+      }
+      .avatar-palma::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 16px;
+        height: 12px;
+        background: radial-gradient(ellipse at center bottom, #228B22 0%, #006400 60%, transparent 70%);
+      }
+
+      .avatar-bandera {
+        width: 18px;
+        height: 12px;
+        background: linear-gradient(to bottom,
+          #002590 0%, #002590 20%,
+          #fff 20%, #fff 40%,
+          #002590 40%, #002590 60%,
+          #fff 60%, #fff 80%,
+          #002590 80%, #002590 100%);
+        position: relative;
+        border-radius: 1px;
+      }
+      .avatar-bandera::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 0;
+        height: 0;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        border-left: 8px solid #cc0d0d;
+      }
+      .avatar-bandera::after {
+        content: '★';
+        position: absolute;
+        left: 1px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 5px;
+        color: #fff;
+        line-height: 1;
+      }
+
+      .avatar-conga {
+        width: 12px;
+        height: 18px;
+        background: linear-gradient(to bottom, #8B4513 0%, #A0522D 50%, #8B4513 100%);
+        border-radius: 2px 2px 4px 4px;
+        position: relative;
+      }
+      .avatar-conga::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -1px;
+        right: -1px;
+        height: 4px;
+        background: var(--bone);
+        border-radius: 50%;
+      }
+      .avatar-conga::after {
+        content: '';
+        position: absolute;
+        top: 6px;
+        left: 1px;
+        right: 1px;
+        height: 2px;
+        background: #654321;
+        box-shadow: 0 4px 0 #654321;
       }
 
       .chat-message__content-wrapper {
@@ -987,6 +1180,158 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-shadow: 0 1px 2px rgba(0,0,0,0.5);
       }
 
+      /* Reactions */
+      .chat-message__reactions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+        align-items: center;
+      }
+
+      .reaction-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .reaction-chip:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      .reaction-chip--active {
+        background: rgba(212, 165, 116, 0.2);
+        border-color: var(--brass);
+        color: var(--brass);
+      }
+
+      .reaction-add {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        background: transparent;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        font-size: 0.85rem;
+        line-height: 1;
+        transition: all 0.2s;
+        opacity: 0;
+      }
+      .chat-message:hover .reaction-add {
+        opacity: 1;
+      }
+      .reaction-add:hover {
+        border-color: var(--brass);
+        color: var(--brass);
+        background: rgba(212, 165, 116, 0.1);
+      }
+
+      /* Reaction Picker */
+      .reaction-picker {
+        position: fixed;
+        display: none;
+        gap: 4px;
+        padding: 8px 12px;
+        background: rgba(28, 19, 15, 0.98);
+        border: 1px solid rgba(212, 165, 116, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+      .reaction-picker.is-open {
+        display: flex;
+      }
+      .reaction-picker button {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        background: transparent;
+        border: none;
+        border-radius: 4px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .reaction-picker button:hover {
+        background: rgba(212, 165, 116, 0.2);
+        transform: scale(1.2);
+      }
+
+      /* Pinned Messages */
+      .chat-message--pinned {
+        background: rgba(212, 165, 116, 0.08);
+        border-left: 2px solid var(--brass);
+        margin-left: -8px;
+        padding-left: 8px;
+        position: relative;
+      }
+      .pinned-badge {
+        position: absolute;
+        top: -8px;
+        right: 8px;
+        font-size: 0.65rem;
+        color: var(--brass);
+        background: rgba(28, 19, 15, 0.95);
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid rgba(212, 165, 116, 0.3);
+      }
+
+      /* Pin Button */
+      .chat-message__header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .pin-btn {
+        background: transparent;
+        border: none;
+        font-size: 0.7rem;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s, transform 0.2s;
+        padding: 2px;
+        filter: grayscale(1);
+      }
+      .chat-message:hover .pin-btn {
+        opacity: 0.5;
+      }
+      .pin-btn:hover {
+        opacity: 1 !important;
+        transform: scale(1.2);
+        filter: grayscale(0);
+      }
+      .pin-btn--active {
+        opacity: 1 !important;
+        filter: grayscale(0);
+      }
+
+      /* Pinned Section */
+      .pinned-section {
+        background: rgba(212, 165, 116, 0.05);
+        border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+      }
+      .pinned-section__label {
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.7rem;
+        color: var(--brass);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 8px 16px;
+        opacity: 0.7;
+      }
+
       .chat-empty {
         text-align: center;
         color: rgba(255, 255, 255, 0.3);
@@ -1026,7 +1371,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .chat-input:focus {
-        border-color: var(--gold);
+        border-color: var(--brass);
       }
 
       .chat-send {
@@ -1102,13 +1447,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .avatar-selector {
         display: flex;
-        gap: 24px;
-        margin-bottom: 40px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 32px;
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
       }
       
       .avatar-option {
-        width: 48px;
-        height: 48px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         cursor: pointer;
         position: relative;
@@ -1169,7 +1519,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
       
       .chat-identity__select:focus {
-        border-bottom-color: var(--gold);
+        border-bottom-color: var(--brass);
       }
       
       .chat-identity__btn {
@@ -1762,8 +2112,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .email-reminder a:hover {
-        color: var(--gold);
-        border-bottom-color: var(--gold);
+        color: var(--brass);
+        border-bottom-color: var(--brass);
       }
 
       /* Footer */
@@ -2262,17 +2612,26 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="chat-identity__subtitle">Take your seat at the table.</p>
           
           <div class="avatar-selector">
-            <div class="avatar-option selected" data-avatar="domino">
+            <div class="avatar-option selected" data-avatar="domino" title="Dominó">
               <div class="avatar-option-img avatar-domino"></div>
-              <div class="check-mark"></div>
             </div>
-            <div class="avatar-option" data-avatar="cigar">
+            <div class="avatar-option" data-avatar="cigar" title="Cigarro">
               <div class="avatar-option-img avatar-cigar"></div>
-              <div class="check-mark"></div>
             </div>
-            <div class="avatar-option" data-avatar="palm">
-              <div class="avatar-option-img avatar-palm"></div>
-              <div class="check-mark"></div>
+            <div class="avatar-option" data-avatar="cafecito" title="Cafecito">
+              <div class="avatar-option-img avatar-cafecito"></div>
+            </div>
+            <div class="avatar-option" data-avatar="carro" title="Carro">
+              <div class="avatar-option-img avatar-carro"></div>
+            </div>
+            <div class="avatar-option" data-avatar="palma" title="Palma">
+              <div class="avatar-option-img avatar-palma"></div>
+            </div>
+            <div class="avatar-option" data-avatar="bandera" title="Bandera">
+              <div class="avatar-option-img avatar-bandera"></div>
+            </div>
+            <div class="avatar-option" data-avatar="conga" title="Conga">
+              <div class="avatar-option-img avatar-conga"></div>
             </div>
           </div>
 
@@ -2290,7 +2649,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <div class="chat-messages" id="chatMessages">
             <div class="chat-empty">The table is quiet.</div>
           </div>
-          
+
+          <!-- Reaction Picker (floating) -->
+          <div class="reaction-picker" id="reactionPicker">
+            <button data-emoji="🔥" title="Fuego">🔥</button>
+            <button data-emoji="😂" title="Jaja">😂</button>
+            <button data-emoji="👏" title="Respeto">👏</button>
+            <button data-emoji="💪" title="Fuerza">💪</button>
+            <button data-emoji="🌴" title="Cuba">🌴</button>
+          </div>
+
           <div class="chat-input-area" id="chatInputArea">
             <input type="text" class="chat-input" id="chatInput" placeholder="Speak..." maxlength="500">
             <button class="chat-send" id="chatSend" disabled>
@@ -2562,42 +2930,97 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         });
       }
 
-      // DOM elements
+      // ========================================
+      // CHAT WIDGET LOGIC
+      // ========================================
       const chatWidget = document.getElementById('chatWidget');
       const chatToggle = document.getElementById('chatToggle');
       const chatPanel = document.getElementById('chatPanel');
       const chatClose = document.getElementById('chatClose');
-      const chatIdentityEl = document.getElementById('chatIdentity');
-      const chatMessages = document.getElementById('chatMessages');
-      const chatInputArea = document.getElementById('chatInputArea');
       const chatInput = document.getElementById('chatInput');
       const chatSend = document.getElementById('chatSend');
-      const chatBadge = document.getElementById('chatBadge');
-      const chatTeamSelect = document.getElementById('chatTeamSelect');
-      const chatPlayerSelect = document.getElementById('chatPlayerSelect');
-      const chatJoinBtn = document.getElementById('chatJoinBtn');
+      const chatMessages = document.getElementById('chatMessages');
+      const chatIdentityScreen = document.getElementById('chatIdentity');
       const chatBodyContainer = document.getElementById('chatBodyContainer');
-      const avatarOptions = document.querySelectorAll('.avatar-option');
+      const chatBadge = document.getElementById('chatBadge');
 
-      // Toggle chat panel
-      chatToggle.addEventListener('click', () => {
-        chatOpen = !chatOpen;
-        chatPanel.classList.toggle('is-open', chatOpen);
-        if (chatOpen) {
-          unreadCount = 0;
+      // Haptics Helper
+      const vibrate = (pattern = 5) => {
+        if (navigator.vibrate) navigator.vibrate(pattern);
+      };
+
+      // Toggle Chat & Scroll Lock
+      function toggleChat() {
+        const isOpen = chatPanel.style.display === 'flex';
+        
+        if (isOpen) {
+          // Close
+          chatPanel.classList.remove('is-open');
+          setTimeout(() => {
+             chatPanel.style.display = 'none';
+             document.body.style.overflow = ''; // Unlock scroll
+          }, 300);
+          vibrate(5);
+        } else {
+          // Open
+          chatPanel.style.display = 'flex';
+          // Force reflow
+          void chatPanel.offsetWidth;
+          chatPanel.classList.add('is-open');
           chatBadge.style.display = 'none';
-          if (chatIdentity) {
-            chatInput.focus();
+          unreadCount = 0;
+          
+          if (window.innerWidth <= 768) {
+            document.body.style.overflow = 'hidden'; // Lock scroll on mobile
+          }
+          vibrate(10);
+          
+          // Focus input if joined
+          if (chatBodyContainer.style.display !== 'none') {
+             setTimeout(() => chatInput.focus(), 100);
           }
         }
-      });
+      }
 
-      chatClose.addEventListener('click', () => {
-        chatOpen = false;
-        chatPanel.classList.remove('is-open');
-      });
+      chatToggle.addEventListener('click', toggleChat);
+      chatClose.addEventListener('click', toggleChat);
 
+      // Swipe to Close (Mobile)
+      let touchStartY = 0;
+      let touchEndY = 0;
+
+      chatPanel.addEventListener('touchstart', (e) => {
+        touchStartY = e.changedTouches[0].screenY;
+      }, {passive: true});
+
+      chatPanel.addEventListener('touchmove', (e) => {
+         // Prevent closing if scrolling messages
+         if (chatMessages.contains(e.target) && chatMessages.scrollTop > 0) return;
+         touchEndY = e.changedTouches[0].screenY;
+      }, {passive: true});
+
+      chatPanel.addEventListener('touchend', (e) => {
+        touchEndY = e.changedTouches[0].screenY;
+        const swipeDistance = touchEndY - touchStartY;
+        
+        // If swiped down more than 100px (and not scrolling messages)
+        if (swipeDistance > 100 && (!chatMessages.contains(e.target) || chatMessages.scrollTop <= 0)) {
+           toggleChat(); // Close
+        }
+      });
+      
+      // Prevent background scroll when touching the chat on mobile
+      chatPanel.addEventListener('touchmove', (e) => {
+         if (!chatMessages.contains(e.target)) {
+            e.preventDefault();
+         }
+      }, {passive: false});
+
+
+      // Identity State (Continued)
+      
       // Avatar selection
+      const avatarOptions = document.querySelectorAll('.avatar-option');
       avatarOptions.forEach(opt => {
         opt.addEventListener('click', () => {
           avatarOptions.forEach(o => o.classList.remove('selected'));
@@ -2607,6 +3030,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       });
 
       // Team selection handler
+      const chatTeamSelect = document.getElementById('chatTeamSelect');
+      const chatPlayerSelect = document.getElementById('chatPlayerSelect');
+      const chatJoinBtn = document.getElementById('chatJoinBtn');
+
       chatTeamSelect.addEventListener('change', (e) => {
         const selectedOption = e.target.selectedOptions[0];
         if (selectedOption && selectedOption.value) {
@@ -2642,7 +3069,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       });
 
       function showChatInterface() {
-        chatIdentityEl.style.display = 'none';
+        chatIdentityScreen.style.display = 'none';
         chatBodyContainer.style.display = 'flex'; // Use flex for the container
         chatSend.disabled = false;
 
@@ -2686,7 +3113,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           return;
         }
 
-        chatMessages.innerHTML = messages.map(msg => createMessageHTML(msg)).join('');
+        // Separate pinned and regular messages
+        const pinned = messages.filter(m => m.is_pinned);
+        const regular = messages.filter(m => !m.is_pinned);
+
+        let html = '';
+
+        // Show pinned messages section if any
+        if (pinned.length > 0) {
+          html += '<div class="pinned-section"><div class="pinned-section__label">📌 Pinned</div>';
+          html += pinned.map(msg => createMessageHTML(msg)).join('');
+          html += '</div>';
+        }
+
+        // Show regular messages
+        html += regular.map(msg => createMessageHTML(msg)).join('');
+
+        chatMessages.innerHTML = html;
 
         // Scroll to bottom
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -2698,28 +3141,45 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         for (let i = 0; i < name.length; i++) {
           hash = name.charCodeAt(i) + ((hash << 5) - hash);
         }
-        const avatars = ['domino', 'cigar', 'palm'];
+        const avatars = ['domino', 'cigar', 'cafecito', 'carro', 'palma', 'bandera', 'conga'];
         return avatars[Math.abs(hash) % avatars.length];
       }
 
       function createMessageHTML(msg) {
         const isSelf = chatIdentity && msg.team_name === chatIdentity.teamName && msg.player_name === chatIdentity.playerName;
         const selfClass = isSelf ? 'chat-message--self' : '';
-        
-        // Determine avatar
-        const avatarType = isSelf ? (chatIdentity.avatar || 'domino') : getHashAvatar(msg.player_name);
-        
+        const pinnedClass = msg.is_pinned ? 'chat-message--pinned' : '';
+
+        // Use stored avatar, fallback to hash for old messages
+        const avatarType = msg.avatar || (isSelf ? (chatIdentity.avatar || 'domino') : getHashAvatar(msg.player_name));
+
+        // Parse reactions
+        const reactions = msg.reactions || {};
+        const reactionHTML = Object.entries(reactions).map(([emoji, users]) => {
+          const count = users.length;
+          const userReacted = chatIdentity && users.includes(`${chatIdentity.teamName}_${chatIdentity.playerName}`);
+          return count > 0 ? `<button class="reaction-chip ${userReacted ? 'reaction-chip--active' : ''}" data-emoji="${emoji}" data-msg-id="${msg.id}">${emoji} ${count}</button>` : '';
+        }).join('');
+
         return `
-          <div class="chat-message ${selfClass}">
+          <div class="chat-message ${selfClass} ${pinnedClass}" data-msg-id="${msg.id}">
+            ${msg.is_pinned ? '<div class="pinned-badge">📌</div>' : ''}
             <div class="chat-message__avatar">
               <div class="avatar-option-img avatar-${avatarType}"></div>
             </div>
             <div class="chat-message__content-wrapper">
               <div class="chat-message__header">
                 <span class="chat-message__author">${escapeHtml(msg.player_name)}</span>
-                <span class="chat-message__time">${formatTime(msg.created_at)}</span>
+                <span class="chat-message__header-actions">
+                  <button class="pin-btn ${msg.is_pinned ? 'pin-btn--active' : ''}" data-msg-id="${msg.id}" title="${msg.is_pinned ? 'Unpin' : 'Pin'}">📌</button>
+                  <span class="chat-message__time">${formatTime(msg.created_at)}</span>
+                </span>
               </div>
               <div class="chat-message__content">${escapeHtml(msg.content)}</div>
+              <div class="chat-message__reactions">
+                ${reactionHTML}
+                <button class="reaction-add" data-msg-id="${msg.id}">+</button>
+              </div>
             </div>
           </div>
         `;
@@ -2793,7 +3253,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             .insert({
               team_name: chatIdentity.teamName,
               player_name: chatIdentity.playerName,
-              content: content
+              content: content,
+              avatar: chatIdentity.avatar || 'domino'
             });
 
           if (error) throw error;
@@ -2821,6 +3282,165 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       chatInput.addEventListener('input', () => {
         chatSend.disabled = !chatInput.value.trim();
       });
+
+      // ========================================
+      // REACTIONS - Handle emoji reactions
+      // ========================================
+      const reactionPicker = document.getElementById('reactionPicker');
+      let activeMessageId = null;
+
+      // Position and show reaction picker
+      function showReactionPicker(msgId, buttonEl) {
+        activeMessageId = msgId;
+        const rect = buttonEl.getBoundingClientRect();
+
+        // Position above the button
+        reactionPicker.style.left = rect.left + 'px';
+        reactionPicker.style.top = (rect.top - 50) + 'px';
+        reactionPicker.classList.add('is-open');
+      }
+
+      function hideReactionPicker() {
+        reactionPicker.classList.remove('is-open');
+        activeMessageId = null;
+      }
+
+      // Handle clicks on + button to show picker
+      chatMessages.addEventListener('click', async (e) => {
+        const addBtn = e.target.closest('.reaction-add');
+        const chipBtn = e.target.closest('.reaction-chip');
+
+        if (addBtn) {
+          e.stopPropagation();
+          const msgId = addBtn.dataset.msgId;
+          if (activeMessageId === msgId) {
+            hideReactionPicker();
+          } else {
+            showReactionPicker(msgId, addBtn);
+          }
+        } else if (chipBtn) {
+          // Toggle reaction on existing chip
+          e.stopPropagation();
+          const msgId = chipBtn.dataset.msgId;
+          const emoji = chipBtn.dataset.emoji;
+          await toggleReaction(msgId, emoji);
+        } else {
+          hideReactionPicker();
+        }
+      });
+
+      // Handle emoji selection from picker
+      reactionPicker.addEventListener('click', async (e) => {
+        const btn = e.target.closest('button');
+        if (btn && activeMessageId) {
+          const emoji = btn.dataset.emoji;
+          await toggleReaction(activeMessageId, emoji);
+          hideReactionPicker();
+        }
+      });
+
+      // Close picker when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!reactionPicker.contains(e.target) && !e.target.closest('.reaction-add')) {
+          hideReactionPicker();
+        }
+      });
+
+      // Toggle a reaction on a message
+      async function toggleReaction(msgId, emoji) {
+        if (!supabase || !chatIdentity) return;
+
+        const userId = `${chatIdentity.teamName}_${chatIdentity.playerName}`;
+
+        try {
+          // Get current message
+          const { data: msg, error: fetchError } = await supabase
+            .from('messages')
+            .select('reactions')
+            .eq('id', msgId)
+            .single();
+
+          if (fetchError) throw fetchError;
+
+          const reactions = msg.reactions || {};
+          const users = reactions[emoji] || [];
+
+          // Toggle user's reaction
+          const userIndex = users.indexOf(userId);
+          if (userIndex > -1) {
+            users.splice(userIndex, 1);
+          } else {
+            users.push(userId);
+          }
+
+          // Update or remove the emoji
+          if (users.length > 0) {
+            reactions[emoji] = users;
+          } else {
+            delete reactions[emoji];
+          }
+
+          // Save to Supabase
+          const { error: updateError } = await supabase
+            .from('messages')
+            .update({ reactions })
+            .eq('id', msgId);
+
+          if (updateError) throw updateError;
+
+          // Re-render messages to show updated reactions
+          loadMessages();
+
+        } catch (err) {
+          console.error('Failed to toggle reaction:', err);
+        }
+      }
+
+      // ========================================
+      // PINNED MESSAGES - Handle pinning
+      // ========================================
+
+      // Handle pin button clicks
+      chatMessages.addEventListener('click', async (e) => {
+        const pinBtn = e.target.closest('.pin-btn');
+        if (pinBtn) {
+          e.stopPropagation();
+          const msgId = pinBtn.dataset.msgId;
+          await togglePin(msgId);
+        }
+      });
+
+      // Toggle pin on a message
+      async function togglePin(msgId) {
+        if (!supabase || !chatIdentity) return;
+
+        try {
+          // Get current message
+          const { data: msg, error: fetchError } = await supabase
+            .from('messages')
+            .select('is_pinned')
+            .eq('id', msgId)
+            .single();
+
+          if (fetchError) throw fetchError;
+
+          const newPinState = !msg.is_pinned;
+
+          // Save to Supabase
+          const { error: updateError } = await supabase
+            .from('messages')
+            .update({ is_pinned: newPinState })
+            .eq('id', msgId);
+
+          if (updateError) throw updateError;
+
+          // Re-render messages
+          loadMessages();
+
+        } catch (err) {
+          console.error('Failed to toggle pin:', err);
+        }
+      }
     </script>
   </body>
 </html>

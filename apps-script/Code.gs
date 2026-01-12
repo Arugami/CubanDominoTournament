@@ -227,17 +227,17 @@ function doPost(e) {
 
 function sendEmail(to, subject, html) {
   const resendApiKey = getScriptProp("RESEND_API_KEY", "");
-  if (!resendApiKey) {
-    throw new Error("RESEND_API_KEY not configured - email cannot be sent");
+  if (resendApiKey) {
+    return sendEmailViaResend({
+      apiKey: resendApiKey,
+      from: getFromEmail(),
+      to,
+      subject,
+      html,
+    });
   }
 
-  return sendEmailViaResend({
-    apiKey: resendApiKey,
-    from: getFromEmail(),
-    to,
-    subject,
-    html,
-  });
+  return GmailApp.sendEmail(to, subject, stripHtml(html), { htmlBody: html });
 }
 
 function stripHtml(html) {
@@ -410,32 +410,14 @@ function testProperties() {
   for (const key in props) {
     const val = props[key];
     if (key.includes("SECRET") || key.includes("API_KEY")) {
-      masked[key] = val.substring(0, 7) + "..." + val.substring(val.length - 4);
+      const s = String(val || "");
+      if (s.length <= 12) masked[key] = "***";
+      else masked[key] = s.substring(0, 7) + "..." + s.substring(s.length - 4);
     } else {
       masked[key] = val;
     }
   }
   Logger.log("All properties: " + JSON.stringify(masked, null, 2));
-}
-
-// Run this ONCE to set all properties (update the values first!)
-function setProperties() {
-  PropertiesService.getScriptProperties().setProperties({
-    "SHARED_SECRET": "QIW/fso0Gp5hRL/JJnEfIqjstwyG6VEeFFL8csK2J6M=",
-    "RESEND_API_KEY": "re_cNLmAjP9_Dz5AQNGjXV8uotP5ax2gYkzt",
-    "HOST_EMAILS": "EFelipe1992@gmail.com,jordan@arugami.com",
-    "TEST_EMAIL": "jordan@arugami.com"
-  });
-  Logger.log("All properties set!");
-}
-
-// Run this to update just the Resend API key
-function updateResendKey() {
-  PropertiesService.getScriptProperties().setProperty(
-    "RESEND_API_KEY",
-    "re_cNLmAjP9_Dz5AQNGjXV8uotP5ax2gYkzt"
-  );
-  Logger.log("Resend API key updated!");
 }
 
 // Run this to check if Resend is configured
