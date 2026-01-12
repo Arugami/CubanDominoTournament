@@ -2135,12 +2135,17 @@ const TEAMS_GOAL = 10;
       const bgMusic = document.getElementById('bgMusic');
       let isPlaying = false;
       let hasInteracted = false;
-      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
       // Set volume
       bgMusic.volume = 0.08;
 
-      musicToggle.addEventListener('click', () => {
+      // iOS requires load() to be called first in some cases
+      if (isIOS) {
+        bgMusic.load();
+      }
+
+      musicToggle.addEventListener('click', function() {
         if (!hasInteracted) {
           hasInteracted = true;
           musicToggle.classList.add('collapsed');
@@ -2148,37 +2153,30 @@ const TEAMS_GOAL = 10;
 
         if (isPlaying) {
           // Stop playing
-          if (isMobileDevice) {
-            // Mobile: immediate stop
-            bgMusic.pause();
-          } else {
-            // Desktop: fade out
-            fadeAudio(bgMusic, 0, 300, () => {
-              bgMusic.pause();
-            });
-          }
+          bgMusic.pause();
           musicToggle.classList.remove('is-playing');
           isPlaying = false;
         } else {
           // Start playing
-          if (isMobileDevice) {
-            // Mobile: direct play at full volume (no fade tricks)
-            bgMusic.volume = 0.08;
-            bgMusic.play().then(() => {
+          bgMusic.volume = 0.08;
+
+          // For iOS, we need synchronous play in the gesture handler
+          const playPromise = bgMusic.play();
+
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
               musicToggle.classList.add('is-playing');
               isPlaying = true;
+
+              // Desktop: fade in after play starts
+              if (!isIOS) {
+                bgMusic.volume = 0;
+                fadeAudio(bgMusic, 0.08, 500);
+              }
             }).catch(err => {
               console.log('Audio play failed:', err);
-            });
-          } else {
-            // Desktop: fade in
-            bgMusic.volume = 0;
-            bgMusic.play().then(() => {
-              fadeAudio(bgMusic, 0.08, 500);
-              musicToggle.classList.add('is-playing');
-              isPlaying = true;
-            }).catch(err => {
-              console.log('Audio play failed:', err);
+              // Try one more time with user gesture
+              bgMusic.play();
             });
           }
         }
