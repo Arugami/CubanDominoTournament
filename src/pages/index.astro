@@ -2,6 +2,9 @@
 // Update this number manually when teams sign up
 const TEAMS_REGISTERED = 0;
 const TEAMS_GOAL = 10;
+
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 ---
 
 <!doctype html>
@@ -680,303 +683,263 @@ const TEAMS_GOAL = 10;
         font-size: 0.9rem;
       }
 
-      /* Chat Widget - Sidekick / Y2K Tech Lux Style */
+      /* Chat Widget - The Sacred Table (Amber Glass & Brass) */
       .chat-widget {
         position: fixed;
         bottom: 24px;
         right: 24px;
         z-index: 1000;
-        font-family: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
-        filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+        font-family: "IBM Plex Sans", sans-serif;
+        filter: drop-shadow(0 20px 40px rgba(10, 5, 2, 0.6));
       }
 
+      /* Toggle Button - The Seal */
       .chat-toggle {
         display: flex;
         align-items: center;
-        gap: 8px;
-        /* Matte Black Hardshell Finish */
-        background: cubic-bezier(0.4, 0, 0.2, 1);
-        background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 100%);
-        color: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 20px 4px 20px 20px; /* Asymmetric "device" feel */
-        padding: 12px 18px;
-        font-size: 0.85rem;
-        font-weight: 700;
+        gap: 12px;
+        background: rgba(28, 19, 15, 0.95);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: var(--brass);
+        border: 1px solid var(--muted);
+        border-radius: 2px;
+        padding: 12px 24px;
         cursor: pointer;
-        box-shadow:
-          0 4px 10px rgba(0, 0, 0, 0.5),
-          inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         position: relative;
         overflow: hidden;
       }
 
-      .chat-toggle::after {
+      /* Double border effect for menu/sacred feel */
+      .chat-toggle::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 50%;
-        background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+        inset: 3px;
+        border: 1px solid rgba(212, 165, 116, 0.3); /* Low opacity brass */
         pointer-events: none;
       }
 
       .chat-toggle:hover {
         transform: translateY(-2px);
-        background: linear-gradient(180deg, #444 0%, #222 100%);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2);
+        border-color: var(--brass);
+        background: rgba(40, 25, 20, 0.98);
+        box-shadow: 0 8px 30px rgba(212, 165, 116, 0.15); /* Warm glow */
       }
 
-      .chat-toggle:active {
-        transform: translateY(1px);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+      .chat-toggle__text {
+        font-family: "Bodoni Moda", serif;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        font-size: 0.85rem;
+        font-weight: 600;
+        position: relative;
+        top: 1px;
       }
 
       .chat-toggle__icon {
-        width: 14px;
-        height: 14px;
-        background: #ff9500; /* Amber LED */
+        width: 8px;
+        height: 8px;
+        background: var(--gold);
         border-radius: 50%;
-        box-shadow: 0 0 10px #ff9500;
-        animation: ledPulse 3s infinite;
+        box-shadow: 0 0 10px var(--gold);
+        animation: soulPulse 4s infinite;
       }
-      
-      @keyframes ledPulse {
-        0%, 100% { opacity: 0.8; box-shadow: 0 0 8px #ff9500; }
-        50% { opacity: 1; box-shadow: 0 0 15px #ff9500; }
+
+      @keyframes soulPulse {
+        0%, 100% { opacity: 0.6; box-shadow: 0 0 5px var(--gold); }
+        50% { opacity: 1; box-shadow: 0 0 15px var(--gold), 0 0 30px rgba(255, 215, 0, 0.4); }
       }
 
       .chat-toggle__badge {
-        background: #ff3b30;
-        color: white;
-        font-size: 0.7rem;
-        padding: 2px 6px;
-        border-radius: 4px;
-        margin-left: 6px;
-        font-weight: 800;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        background: var(--copper);
+        color: #fff;
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.75rem;
+        min-width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-left: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
       }
 
-      /* Device Container */
+      /* Chat Panel - The Vessel */
       .chat-panel {
         position: absolute;
-        bottom: 70px; /* Swivel up */
+        bottom: 80px;
         right: 0;
-        width: 320px;
-        height: 480px;
-        /* Hiptop Body */
-        background: #222;
-        border: 2px solid #333;
-        border-radius: 24px;
+        width: 360px;
+        height: 520px;
+        background: rgba(20, 14, 11, 0.92); /* Deep Tobacco */
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--muted);
         display: none;
         flex-direction: column;
         overflow: hidden;
         box-shadow: 
           0 20px 50px rgba(0,0,0,0.8),
-          inset 0 1px 0 rgba(255,255,255,0.15);
-        transform-origin: bottom right;
+          inset 0 0 100px rgba(0,0,0,0.5); /* Inner vignette */
+        transform-origin: bottom center;
+        border-radius: 2px;
+      }
+
+      /* Inner Gold Border */
+      .chat-panel::after {
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        pointer-events: none;
+        z-index: 10;
       }
 
       .chat-panel.is-open {
         display: flex;
-        animation: deviceSwivel 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: ritualOpen 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      @keyframes deviceSwivel {
+      @keyframes ritualOpen {
         from {
           opacity: 0;
-          transform: rotate(15deg) translateY(100px) scale(0.8);
+          transform: translateY(20px) scale(0.98);
         }
         to {
           opacity: 1;
-          transform: rotate(0) translateY(0) scale(1);
+          transform: translateY(0) scale(1);
         }
       }
 
-      /* Screen Bezel & Header */
+      /* Header - The Inscription */
       .chat-header {
         display: flex;
-        justify-content: space-between;
+        justify-content: center; /* Symmetry */
         align-items: center;
-        padding: 12px 16px;
-        background: #1a1a1a; /* Darker bezel */
-        border-bottom: 2px solid #000;
+        padding: 24px 24px 16px;
         position: relative;
-      }
-      
-      /* Glossy plastic effect on header */
-      .chat-header::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; height: 50%;
-        background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
-        pointer-events: none;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.1);
       }
 
       .chat-header__title {
-        font-weight: 800;
-        font-size: 0.85rem;
-        color: #888;
+        font-family: "Bodoni Moda", serif;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--brass);
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        letter-spacing: 0.2em;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        position: relative;
       }
       
-      .chat-header__title span.brand {
-        color: #fff;
-      }
-
-      .chat-header__controls {
-        display: flex;
-        gap: 8px;
-      }
-
-      .control-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #333;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
-        border: 1px solid #444;
-      }
-      .control-dot.active {
-        background: #ff9500;
-        box-shadow: 0 0 8px #ff9500;
-        border-color: #ffaa33;
+      /* Fancy underlines/accents */
+      .chat-header__title::after {
+        content: "";
+        display: block;
+        width: 24px;
+        height: 1px;
+        background: var(--copper);
+        margin: 8px auto 0;
+        opacity: 0.6;
       }
 
       .chat-header__close {
+        position: absolute;
+        right: 16px;
+        top: 16px;
         background: transparent;
         border: none;
-        color: #666;
+        color: rgba(255, 255, 255, 0.4);
         cursor: pointer;
-        font-size: 1.2rem;
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.5rem;
         line-height: 1;
-        transition: color 0.2s;
-        padding: 0 4px;
+        transition: color 0.3s;
+        z-index: 20;
       }
-      .chat-header__close:hover { color: #fff; }
+      .chat-header__close:hover { color: var(--brass); }
 
-      /* The "Screen" */
+      /* Content Area */
       .chat-body-container {
         flex: 1;
-        background: #101010; /* Deep black screen */
-        position: relative;
         display: flex;
         flex-direction: column;
-        /* Screen inset shadow */
-        box-shadow: inset 0 0 20px rgba(0,0,0,1);
-        margin: 0 4px; /* Bezel gaps */
-        border-radius: 4px;
-        border: 1px solid #333;
-        overflow: hidden;
-      }
-
-      /* Scanlines */
-      .chat-body-container::after {
-        content: " ";
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-        z-index: 2;
-        background-size: 100% 2px, 3px 100%;
-        pointer-events: none;
-      }
-
-      .chat-statusbar {
-        background: rgba(255, 149, 0, 0.1);
-        color: #ff9500;
-        font-size: 0.65rem;
-        padding: 4px 8px;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px solid rgba(255, 149, 0, 0.2);
+        position: relative;
       }
 
       .chat-messages {
         flex: 1;
         overflow-y: auto;
-        padding: 12px;
+        padding: 20px;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 20px;
         scrollbar-width: thin;
-        scrollbar-color: #333 #111;
+        scrollbar-color: var(--muted) transparent;
       }
       
-      .chat-messages::-webkit-scrollbar { width: 6px; }
-      .chat-messages::-webkit-scrollbar-track { background: #111; }
-      .chat-messages::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+      .chat-messages::-webkit-scrollbar { width: 4px; }
+      .chat-messages::-webkit-scrollbar-track { background: transparent; }
+      .chat-messages::-webkit-scrollbar-thumb { background: var(--muted); }
 
-      /* Message Styling */
+      /* Message Styling - The Script */
       .chat-message {
         display: flex;
         align-items: flex-start;
-        gap: 10px;
-        animation: messagePop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        gap: 16px;
+        animation: fadeUp 0.4s ease-out;
       }
       
-      @keyframes messagePop {
-        from { opacity: 0; transform: translateY(5px) scale(0.95); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       .chat-message__avatar {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         flex-shrink: 0;
-        border-radius: 6px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        image-rendering: pixelated;
-        position: relative;
-        overflow: hidden;
+        border-radius: 50%;
+        border: 1px solid var(--brass);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.3);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       }
       
-      /* Avatar Glow */
-      .chat-message__avatar::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
-        border-radius: 6px;
+      /* Simple Icon placeholders - SVG driven usually, using CSS shapes for now or minimal content */
+      .avatar-option-img {
+         width: 16px; 
+         height: 16px;
+         background-size: contain; 
+         background-repeat: no-repeat;
+         opacity: 0.8; 
       }
-
-      /* Pixel Art SVG Data URIs */
+      
+      /* Replacing Pixel Art with Abstract "Essence" */
       .avatar-domino {
-        background-color: #e0e0e0;
-        background-image: 
-          radial-gradient(circle at 30% 30%, black 3px, transparent 3.5px), 
-          radial-gradient(circle at 70% 70%, black 3px, transparent 3.5px),
-          linear-gradient(45deg, transparent 48%, black 48%, black 52%, transparent 52%);
+        background-color: var(--bone);
+        mask-image: radial-gradient(circle, black 60%, transparent 60%);
+        -webkit-mask-image: radial-gradient(circle, black 60%, transparent 60%);
       }
       
       .avatar-cigar {
-        background-color: #3e2723;
-        background-image: 
-          linear-gradient(90deg, #5d4037 10%, #4e342e 10%, #4e342e 80%, #795548 80%),
-          radial-gradient(circle at 90% 50%, #ff5722 2px, transparent 4px);
+        background-color: var(--copper);
+        mask-image: linear-gradient(45deg, black 100%, transparent 0);
+        -webkit-mask-image: linear-gradient(45deg, black 100%, transparent 0);
+        border-radius: 2px;
+        width: 8px; height: 20px;
       }
       
       .avatar-palm {
-        background-color: #006064;
-        background-image: 
-          radial-gradient(circle at 50% 120%, #795548 10px, transparent 11px),
-          radial-gradient(ellipse at 50% 40%, #43a047 15px, transparent 15px);
+        background-color: #3d5c3a; /* Muted Forest Green */
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
       }
-      
+
       .chat-message__content-wrapper {
         flex: 1;
         min-width: 0;
@@ -986,244 +949,269 @@ const TEAMS_GOAL = 10;
         display: flex;
         align-items: baseline;
         justify-content: space-between;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
       }
 
       .chat-message__author {
-        font-family: "IBM Plex Mono", monospace;
-        font-size: 0.75rem;
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.8rem;
         font-weight: 700;
-        color: #ff9500; /* Amber Text */
-        letter-spacing: -0.02em;
+        color: var(--brass); /* Default Gold/Brass */
+        letter-spacing: 0.05em;
       }
       
-      .chat-message--self .chat-message__author { color: #00e5ff; /* Cyan for self */ }
+      /* Self is highlighted in Gold/Ochún */
+      .chat-message--self .chat-message__author { 
+        color: var(--gold); 
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+      }
+      
+      /* Others in Copper */
+      .chat-message:not(.chat-message--self) .chat-message__author {
+        color: var(--copper);
+      }
 
       .chat-message__time {
-        font-size: 0.6rem;
-        color: #555;
-        font-family: monospace;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.3);
+        letter-spacing: 0.05em;
       }
 
       .chat-message__content {
-        color: #ccc;
-        font-family: "Verdana", sans-serif;
-        font-size: 0.85rem;
-        line-height: 1.35;
-        word-wrap: break-word;
+        color: rgba(248, 239, 230, 0.9); /* Cream */
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        font-weight: 300;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
       }
 
       .chat-empty {
         text-align: center;
-        color: #444;
-        padding: 40px 20px;
-        font-family: monospace;
-        font-size: 0.75rem;
-        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+        margin-top: 40px;
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
       }
 
-      /* Input Area = Physical Keyboard Deck */
+      /* Input Area - The Ledger */
       .chat-input-area {
-        background: #161616;
-        padding: 12px;
+        padding: 20px;
         display: flex;
-        gap: 8px;
-        border-top: 1px solid #222;
-        border-radius: 0 0 20px 20px;
+        gap: 16px;
+        border-top: 1px solid rgba(212, 165, 116, 0.1);
+        background: rgba(0, 0, 0, 0.2);
       }
 
       .chat-input {
         flex: 1;
-        background: #000;
-        border: 1px solid #333;
-        border-radius: 4px;
-        padding: 8px 10px;
-        color: #fff;
-        font-family: "Verdana", sans-serif;
-        font-size: 0.85rem;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 8px 0;
+        color: var(--cream);
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.9rem;
         outline: none;
-        box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        transition: border-color 0.3s;
+        border-radius: 0;
+      }
+
+      .chat-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+        font-style: italic;
       }
 
       .chat-input:focus {
-        border-color: #ff9500;
-        box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 0 5px rgba(255, 149, 0, 0.2);
+        border-color: var(--gold);
       }
 
       .chat-send {
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, #444 0%, #222 100%);
-        border: 1px solid #555;
-        border-bottom-color: #111;
-        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: transparent;
+        border: 1px solid var(--brass);
+        color: var(--brass);
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        box-shadow: 0 3px 0 #111, 0 4px 5px rgba(0,0,0,0.5);
-        transition: all 0.1s;
+        transition: all 0.3s;
       }
 
-      .chat-send svg { width: 16px; height: 16px; opacity: 0.8; }
+      .chat-send svg { 
+        width: 16px; height: 16px; 
+        fill: currentColor;
+        stroke: none;
+      }
 
-      .chat-send:active {
-        transform: translateY(3px);
-        box-shadow: 0 0 0 #111, inset 0 2px 5px rgba(0,0,0,0.5);
+      .chat-send:not(:disabled):hover {
+        background: var(--brass);
+        color: #000;
+        box-shadow: 0 0 15px rgba(212, 165, 116, 0.4);
       }
       
-      .chat-send:hover {
-        background: linear-gradient(135deg, #555 0%, #333 100%);
+      .chat-send:disabled {
+        border-color: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.1);
+        cursor: not-allowed;
       }
 
-      /* Identity / Character Select */
+      /* Identity Screen - The Initiation */
       .chat-identity {
-        padding: 30px 20px;
-        background: #111;
+        padding: 40px;
         display: flex;
         flex-direction: column;
         align-items: center;
         height: 100%;
-        color: #fff;
+        text-align: center;
+        justify-content: center;
       }
       
       .identity-header {
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.85rem;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: #666;
-        font-size: 0.7rem;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #333;
-        padding-bottom: 8px;
-        width: 100%;
-        text-align: center;
+        color: var(--copper);
+        margin-bottom: 30px;
+        opacity: 0.8;
       }
 
       .chat-identity__title {
-        font-weight: 800;
-        color: #fff;
-        font-size: 1.1rem;
-        margin-bottom: 4px;
-        font-family: "IBM Plex Mono", monospace;
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.8rem;
+        color: var(--brass);
+        margin-bottom: 8px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-shadow: 0 4px 20px rgba(0,0,0,0.5);
       }
       
       .chat-identity__subtitle {
-        color: #666;
-        font-size: 0.8rem;
-        margin-bottom: 24px;
+        color: rgba(255, 255, 255, 0.6);
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 300;
+        margin-bottom: 40px;
       }
 
       .avatar-selector {
         display: flex;
-        gap: 16px;
-        margin-bottom: 24px;
+        gap: 24px;
+        margin-bottom: 40px;
       }
       
       .avatar-option {
-        width: 56px;
-        height: 56px;
-        border-radius: 12px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
         cursor: pointer;
         position: relative;
-        background: #222;
-        border: 2px solid #333;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.2s;
-        box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        transition: all 0.3s;
       }
       
       .avatar-option:hover { 
-        border-color: #666;
-        transform: translateY(-2px);
+        transform: scale(1.1);
+        border-color: var(--cream);
       }
       
       .avatar-option.selected {
-        background: #1a1a1a;
-        border-color: #ff9500;
-        box-shadow: 0 0 15px rgba(255, 149, 0, 0.3);
+        border-color: var(--gold);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+        background: rgba(255, 215, 0, 0.05);
       }
       
-      .avatar-option .check-mark {
+      .avatar-option::after {
+        /* Glow dot instead of checkmark */
+        content: '';
         position: absolute;
-        top: -6px;
-        right: -6px;
-        width: 18px;
-        height: 18px;
-        background: #ff9500;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        width: 4px; height: 4px;
+        background: var(--gold);
         border-radius: 50%;
-        color: black;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        opacity: 0;
-        transform: scale(0);
-        transition: all 0.2s;
-        border: 2px solid #111;
+        transition: transform 0.3s;
       }
       
-      .avatar-option.selected .check-mark {
-        opacity: 1;
-        transform: scale(1);
+      .avatar-option.selected::after {
+        transform: translateX(-50%) scale(1);
       }
+      
+      .avatar-option .check-mark { display: none; } /* Hide old checkmark */
 
       .chat-identity__select {
         width: 100%;
-        padding: 12px;
-        background: #000;
-        color: #fff;
-        border: 1px solid #333;
-        border-radius: 8px;
-        font-family: "Verdana", sans-serif;
-        font-size: 0.9rem;
-        appearance: none; /* Custom dropdown arrow could be added */
-        margin-bottom: 12px;
-        box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        margin-bottom: 16px;
+        background: rgba(0, 0, 0, 0.3);
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--cream);
+        padding: 12px 0;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 1rem;
+        outline: none;
+        text-align: center;
+        text-align-last: center;
+        border-radius: 0;
+        -webkit-appearance: none;
+        cursor: pointer;
+      }
+      
+      .chat-identity__select:focus {
+        border-bottom-color: var(--gold);
       }
       
       .chat-identity__btn {
-        width: 100%;
-        background: linear-gradient(135deg, #ff9500 0%, #ff5e00 100%);
-        color: #000;
-        border: none;
-        border-radius: 8px;
-        padding: 14px;
-        font-weight: 800;
-        font-family: "IBM Plex Mono", monospace;
-        letter-spacing: 0.05em;
+        margin-top: 24px;
+        background: transparent;
+        border: 1px solid var(--brass);
+        color: var(--brass);
+        padding: 14px 32px;
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.9rem;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
         cursor: pointer;
-        box-shadow: 0 4px 10px rgba(255, 94, 0, 0.3);
-        transition: all 0.2s;
-        margin-top: 8px;
+        transition: all 0.3s;
       }
       
       .chat-identity__btn:not(:disabled):hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(255, 94, 0, 0.4);
-      }
-      
-      .chat-identity__btn:active {
-        transform: translateY(1px);
-        box-shadow: 0 2px 5px rgba(255, 94, 0, 0.3);
+        background: var(--brass);
+        color: #0d0906; /* Dark ink */
+        box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
       }
       
       .chat-identity__btn:disabled {
-        background: #333;
-        color: #666;
+        border-color: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.1);
         cursor: not-allowed;
-        box-shadow: none;
       }
 
-      /* Mobile adjustments - Full screen "Device" */
+      /* Mobile */
       @media (max-width: 768px) {
         .chat-widget {
           bottom: 16px;
           right: 16px;
+          left: 16px; /* Centered button area */
+          display: flex;
+          justify-content: flex-end; /* Or center if preferred, keeping right for thumb */
+        }
+
+        /* Make toggle bigger / easier to tap */
+        .chat-toggle {
+          padding: 14px 28px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.6);
         }
 
         .chat-panel {
@@ -1232,19 +1220,38 @@ const TEAMS_GOAL = 10;
           left: 0;
           right: 0;
           width: 100%;
-          height: 80vh; /* Slide up partially */
-          max-width: none;
+          height: 92dvh; /* Use dynamic viewport height for mobile browsers */
           border-radius: 20px 20px 0 0;
           border-bottom: none;
+          box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
         }
         
         .chat-panel.is-open {
-          animation: slideUpMobile 0.3s ease-out;
+          animation: slideUpMobile 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         @keyframes slideUpMobile {
           from { transform: translateY(100%); }
           to { transform: translateY(0); }
+        }
+        
+        .chat-header {
+           padding: 16px 20px; /* Tighter padding */
+           min-height: 60px;
+        }
+        
+        .chat-header__title {
+           font-size: 0.9rem;
+        }
+
+        /* Adjust input area for safe areas (iPhone Home Bar) */
+        .chat-input-area {
+          padding: 16px 20px max(16px, env(safe-area-inset-bottom));
+          background: rgba(20, 14, 11, 0.95); /* Opaque background behind input */
+        }
+        
+        .chat-send {
+          width: 44px; height: 44px; /* Larger tap target */
         }
       }
 
@@ -2027,7 +2034,7 @@ const TEAMS_GOAL = 10;
         <div class="panel-overlay"></div>
         <div class="panel-content">
           <h2 class="panel-headline">Every ficha <span class="accent">led here</span></h2>
-          <p class="panel-subtitle panel-subtitle--italic">It's finally time</p>
+          <p class="panel-whisper">It's finally time</p>
         </div>
       </section>
 
@@ -2232,71 +2239,63 @@ const TEAMS_GOAL = 10;
       <source src="/AUDIO/background-music.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Chat Widget -->
+    <!-- Chat Widget - The Sacred Table -->
     <div class="chat-widget" id="chatWidget">
-      <button class="chat-toggle" id="chatToggle">
+      <div class="chat-toggle" id="chatToggle">
         <span class="chat-toggle__icon"></span>
-        <span>Salida</span>
+        <span class="chat-toggle__text">La Mesa</span>
         <span class="chat-toggle__badge" id="chatBadge" style="display: none;">0</span>
-      </button>
+      </div>
 
       <div class="chat-panel" id="chatPanel">
         <div class="chat-header">
           <span class="chat-header__title">
-            <span class="brand">SIDEKICK</span> // CHAT
+            The Table
           </span>
-          <div class="chat-header__controls">
-            <div class="control-dot active"></div>
-            <div class="control-dot"></div>
-          </div>
           <button class="chat-header__close" id="chatClose">×</button>
         </div>
 
-        <!-- Identity selection (shown first time) -->
+        <!-- Identity selection -->
         <div class="chat-identity" id="chatIdentity">
-          <div class="identity-header">System Login</div>
-          <p class="chat-identity__title">IDENTIFY</p>
-          <p class="chat-identity__subtitle">Select your avatar & team</p>
+          <div class="identity-header">Est. 2025</div>
+          <p class="chat-identity__title">Identify</p>
+          <p class="chat-identity__subtitle">Take your seat at the table.</p>
           
           <div class="avatar-selector">
             <div class="avatar-option selected" data-avatar="domino">
               <div class="avatar-option-img avatar-domino"></div>
-              <div class="check-mark">✓</div>
+              <div class="check-mark"></div>
             </div>
             <div class="avatar-option" data-avatar="cigar">
               <div class="avatar-option-img avatar-cigar"></div>
-              <div class="check-mark">✓</div>
+              <div class="check-mark"></div>
             </div>
             <div class="avatar-option" data-avatar="palm">
               <div class="avatar-option-img avatar-palm"></div>
-              <div class="check-mark">✓</div>
+              <div class="check-mark"></div>
             </div>
           </div>
 
           <select class="chat-identity__select" id="chatTeamSelect">
-            <option value="">Select Team...</option>
+            <option value="">Select Team</option>
           </select>
           <select class="chat-identity__select" id="chatPlayerSelect" style="display: none;">
-            <option value="">Select Name...</option>
+            <option value="">Select Name</option>
           </select>
-          <button class="chat-identity__btn" id="chatJoinBtn" disabled>Initialize</button>
+          <button class="chat-identity__btn" id="chatJoinBtn" disabled>Enter</button>
         </div>
 
         <!-- Chat Screen Area -->
         <div class="chat-body-container" id="chatBodyContainer" style="display: none;">
-          <div class="chat-statusbar">
-            <span>Online</span>
-            <span>GPRS</span>
-          </div>
           <div class="chat-messages" id="chatMessages">
-            <div class="chat-empty">-- NO MESSAGES --</div>
+            <div class="chat-empty">The table is quiet.</div>
           </div>
           
           <div class="chat-input-area" id="chatInputArea">
-            <input type="text" class="chat-input" id="chatInput" placeholder="Type message..." maxlength="500">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Speak..." maxlength="500">
             <button class="chat-send" id="chatSend" disabled>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+              <svg viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
               </svg>
             </button>
           </div>
@@ -2304,7 +2303,7 @@ const TEAMS_GOAL = 10;
       </div>
     </div>
 
-    <script define:vars={{ TEAMS_REGISTERED, TEAMS_GOAL }}>
+    <script define:vars={{ TEAMS_REGISTERED, TEAMS_GOAL, SUPABASE_URL, SUPABASE_ANON_KEY }}>
       // Panel parallax and content animations
       const allPanels = document.querySelectorAll('.panel');
 
@@ -2478,7 +2477,6 @@ const TEAMS_GOAL = 10;
       // ========================================
       // WHO'S IN - Load registered teams
       // ========================================
-      const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxopiRk6CkmsMXIfcyh7G1kRATp6AITSZWl78uBFlWNbd1T2_mHvVcm9_AnJJHfOg8b/exec';
       let registeredTeams = [];
 
       async function loadTeams() {
@@ -2486,7 +2484,7 @@ const TEAMS_GOAL = 10;
         const chatTeamSelect = document.getElementById('chatTeamSelect');
 
         try {
-          const response = await fetch(APPS_SCRIPT_URL);
+          const response = await fetch('/api/teams');
           const data = await response.json();
           registeredTeams = data.teams || [];
 
@@ -2524,9 +2522,6 @@ const TEAMS_GOAL = 10;
       // ========================================
       // CHAT - Supabase real-time chat
       // ========================================
-      const SUPABASE_URL = 'https://tqvtqezidxodvuxkttug.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxdnRxZXppZHhvZHZ1eGt0dHVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxNzEzOTIsImV4cCI6MjA4Mzc0NzM5Mn0.qd93btCuZixx24oOMR0SRZwFJkf1NCk4fFiZD8e0LsU';
-
       // Chat state (declare early so it's available)
       let chatIdentity = JSON.parse(localStorage.getItem('cdl_chat_identity') || 'null');
       let unreadCount = 0;
@@ -2555,15 +2550,17 @@ const TEAMS_GOAL = 10;
         return !!supabase;
       }
 
-      // Load Supabase and initialize
-      loadSupabaseScript().then(() => {
-        if (initSupabase() && chatIdentity) {
-          loadMessages();
-          subscribeToMessages();
-        }
-      }).catch(err => {
-        console.error('Failed to load Supabase:', err);
-      });
+      // Load Supabase and initialize (only if configured)
+      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+        loadSupabaseScript().then(() => {
+          if (initSupabase() && chatIdentity) {
+            loadMessages();
+            subscribeToMessages();
+          }
+        }).catch(err => {
+          console.error('Failed to load Supabase:', err);
+        });
+      }
 
       // DOM elements
       const chatWidget = document.getElementById('chatWidget');
@@ -2709,14 +2706,13 @@ const TEAMS_GOAL = 10;
         const isSelf = chatIdentity && msg.team_name === chatIdentity.teamName && msg.player_name === chatIdentity.playerName;
         const selfClass = isSelf ? 'chat-message--self' : '';
         
-        // Determine avatar: if it's us, use stored choice. If other, deterministically hash their name to an avatar.
-        // (Since we aren't storing avatar in DB yet)
+        // Determine avatar
         const avatarType = isSelf ? (chatIdentity.avatar || 'domino') : getHashAvatar(msg.player_name);
         
         return `
           <div class="chat-message ${selfClass}">
             <div class="chat-message__avatar">
-              <div class="avatar-option-img avatar-${avatarType}" style="width:100%; height:100%;"></div>
+              <div class="avatar-option-img avatar-${avatarType}"></div>
             </div>
             <div class="chat-message__content-wrapper">
               <div class="chat-message__header">
