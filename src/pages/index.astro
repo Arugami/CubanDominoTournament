@@ -1602,13 +1602,14 @@ const TEAMS_GOAL = 10;
           right: 16px;
           padding: 10px 14px;
           font-size: 12px;
-          transition: opacity 0.3s ease;
+          transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
-        /* Hidden state applied via JS on mobile when form is in view */
-        .music-toggle.hidden-on-form {
+        /* Hidden when scrolled past hero on mobile */
+        .music-toggle.hidden-past-hero {
           opacity: 0;
           pointer-events: none;
+          transform: translateY(-10px);
         }
       }
 
@@ -1922,8 +1923,7 @@ const TEAMS_GOAL = 10;
     </button>
 
     <!-- Background Audio -->
-    <audio id="bgMusic" loop preload="none">
-      <!-- Add your Cuban instrumental music file here -->
+    <audio id="bgMusic" loop preload="metadata">
       <source src="/AUDIO/background-music.mp3" type="audio/mpeg">
     </audio>
 
@@ -1990,26 +1990,27 @@ const TEAMS_GOAL = 10;
       // First panel starts in view
       allPanels[0]?.classList.add('in-view');
 
-      // Hide music toggle on mobile when form panel is in view
-      const formPanelEl = document.querySelector('.panel--form');
+      // Mobile music toggle visibility - only show on hero
+      const heroPanelEl = document.querySelector('.panel--hero');
       const musicToggleEl = document.getElementById('musicToggle');
 
-      if (formPanelEl && musicToggleEl) {
-        const formObserver = new IntersectionObserver((entries) => {
+      if (musicToggleEl && heroPanelEl) {
+        const heroObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
-            // Only apply on mobile (768px or less)
             const isMobile = window.innerWidth <= 768;
             if (isMobile) {
               if (entry.isIntersecting) {
-                musicToggleEl.classList.add('hidden-on-form');
+                // Hero is visible - show music toggle
+                musicToggleEl.classList.remove('hidden-past-hero');
               } else {
-                musicToggleEl.classList.remove('hidden-on-form');
+                // Hero is not visible - hide music toggle
+                musicToggleEl.classList.add('hidden-past-hero');
               }
             }
           });
         }, { threshold: 0.3 });
 
-        formObserver.observe(formPanelEl);
+        heroObserver.observe(heroPanelEl);
       }
 
       // Hero "walking in" scroll effect - desktop only
@@ -2134,8 +2135,9 @@ const TEAMS_GOAL = 10;
       const bgMusic = document.getElementById('bgMusic');
       let isPlaying = false;
       let hasInteracted = false;
+      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-      // Set very low volume (8% - subtle background ambiance)
+      // Set volume
       bgMusic.volume = 0.08;
 
       musicToggle.addEventListener('click', () => {
@@ -2145,22 +2147,40 @@ const TEAMS_GOAL = 10;
         }
 
         if (isPlaying) {
-          // Fade out
-          fadeAudio(bgMusic, 0, 300, () => {
+          // Stop playing
+          if (isMobileDevice) {
+            // Mobile: immediate stop
             bgMusic.pause();
-          });
+          } else {
+            // Desktop: fade out
+            fadeAudio(bgMusic, 0, 300, () => {
+              bgMusic.pause();
+            });
+          }
           musicToggle.classList.remove('is-playing');
           isPlaying = false;
         } else {
-          // Play with fade in
-          bgMusic.volume = 0;
-          bgMusic.play().then(() => {
-            fadeAudio(bgMusic, 0.08, 500);
-            musicToggle.classList.add('is-playing');
-            isPlaying = true;
-          }).catch(err => {
-            console.log('Audio play failed:', err);
-          });
+          // Start playing
+          if (isMobileDevice) {
+            // Mobile: direct play at full volume (no fade tricks)
+            bgMusic.volume = 0.08;
+            bgMusic.play().then(() => {
+              musicToggle.classList.add('is-playing');
+              isPlaying = true;
+            }).catch(err => {
+              console.log('Audio play failed:', err);
+            });
+          } else {
+            // Desktop: fade in
+            bgMusic.volume = 0;
+            bgMusic.play().then(() => {
+              fadeAudio(bgMusic, 0.08, 500);
+              musicToggle.classList.add('is-playing');
+              isPlaying = true;
+            }).catch(err => {
+              console.log('Audio play failed:', err);
+            });
+          }
         }
       });
 
