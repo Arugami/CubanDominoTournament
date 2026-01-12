@@ -515,28 +515,29 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-size: clamp(2.2rem, 10vw, 6.5rem);
         font-weight: 900;
         font-optical-sizing: auto;
-        line-height: 1;
+        line-height: 1.1;
         margin-bottom: 20px;
         text-shadow:
           0 2px 4px rgba(0, 0, 0, 0.9),
           0 4px 20px rgba(0, 0, 0, 0.7),
           0 8px 40px rgba(0, 0, 0, 0.5);
-        letter-spacing: -0.02em;
+        letter-spacing: 0.06em;
       }
 
       /* Panel 3 crescendo - extra tension */
       .panel:nth-child(3) .panel-headline {
-        letter-spacing: 0;
+        letter-spacing: 0.04em;
         font-size: clamp(2.4rem, 11vw, 7rem);
       }
 
       @media (min-width: 768px) {
         .panel-headline {
           font-size: clamp(3.2rem, 12vw, 6.5rem);
+          letter-spacing: 0.08em;
         }
 
         .panel:nth-child(3) .panel-headline {
-          letter-spacing: 0.03em;
+          letter-spacing: 0.06em;
           font-size: clamp(3.5rem, 13vw, 7rem);
         }
       }
@@ -2563,32 +2564,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         </div>
       </section>
 
-      <!-- Panel 2: The Call -->
+      <!-- Panel 2: The Welcome -->
       <section class="panel">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-2.webp')"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content">
-          <h2 class="panel-headline">You've been <span class="accent">training</span></h2>
-          <p class="panel-whisper">your whole life</p>
+          <h2 class="panel-headline"><span class="accent">We</span> have been<br>expecting you</h2>
         </div>
       </section>
 
-      <!-- Panel 3: The Payoff -->
+      <!-- Panel 3: The Call -->
       <section class="panel">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-3.webp')"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content">
-          <h2 class="panel-headline">Every ficha <span class="accent">led here</span></h2>
+          <h2 class="panel-headline"><span class="accent">We've</span> watched you train</h2>
           <p class="panel-whisper">It's finally time</p>
         </div>
       </section>
 
-      <!-- Panel 4: Winner Takes All (Visual Climax) -->
+      <!-- Panel 4: Winner Takes All -->
       <section class="panel">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-4.webp')"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content">
-          <h2 class="panel-headline">Winning Team <span class="accent">Takes All</span></h2>
+          <h2 class="panel-headline">Winner <span class="accent">Takes All</span></h2>
         </div>
         <div class="scroll-indicator">
           <span>Rules</span>
@@ -2717,7 +2717,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
               <label>
                 Your Name
-                <input name="playerName" required placeholder="Juan Dominguez" />
+                <input name="playerName" required placeholder="Desi Arnaz" />
               </label>
 
               <label>
