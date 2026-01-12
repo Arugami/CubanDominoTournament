@@ -5,16 +5,12 @@ interface Env {
 }
 
 type RegistrationPayload = {
-  teamName?: string;
-  p1Name?: string;
-  p1Email?: string;
-  p1Phone?: string;
-  p2Name?: string;
-  p2Email?: string;
-  p2Phone?: string;
+  playerName?: string;
+  email?: string;
+  phone?: string;
   notes?: string;
   ruleConfirm?: string;
-  company?: string;
+  company?: string; // honeypot
 };
 
 function json(data: unknown, init?: ResponseInit) {
@@ -40,16 +36,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "invalid_json" }, { status: 400 });
   }
 
+  // Honeypot check - bots fill this, humans don't
   if (clean(body.company)) return json({ ok: true });
 
+  // Validate required fields for individual sign-up
   const requiredFields: Array<keyof RegistrationPayload> = [
-    "teamName",
-    "p1Name",
-    "p1Email",
-    "p1Phone",
-    "p2Name",
-    "p2Email",
-    "p2Phone",
+    "playerName",
+    "email",
+    "phone",
     "ruleConfirm",
   ];
 
@@ -57,25 +51,19 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     if (!clean(body[field])) return json({ ok: false, error: `missing_${field}` }, { status: 400 });
   }
 
-  const p1Email = clean(body.p1Email);
-  const p2Email = clean(body.p2Email);
-
-  if (!isEmail(p1Email)) return json({ ok: false, error: "invalid_p1Email" }, { status: 400 });
-  if (!isEmail(p2Email)) return json({ ok: false, error: "invalid_p2Email" }, { status: 400 });
+  const email = clean(body.email);
+  if (!isEmail(email)) return json({ ok: false, error: "invalid_email" }, { status: 400 });
 
   const appScriptUrl = env.APP_SCRIPT_URL;
   const secret = env.APP_SCRIPT_SECRET;
   if (!appScriptUrl || !secret) return json({ ok: false, error: "missing_server_env" }, { status: 500 });
 
+  // Individual player registration payload
   const payload = {
     secret,
-    teamName: clean(body.teamName),
-    p1Name: clean(body.p1Name),
-    p1Email,
-    p1Phone: clean(body.p1Phone),
-    p2Name: clean(body.p2Name),
-    p2Email,
-    p2Phone: clean(body.p2Phone),
+    playerName: clean(body.playerName),
+    email,
+    phone: clean(body.phone),
     notes: clean(body.notes),
     ruleConfirm: clean(body.ruleConfirm),
     venueUrl: env.VENUE_URL || "https://mrgarciacigars.com/",

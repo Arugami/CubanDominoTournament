@@ -45,7 +45,8 @@
 - [ ] B-roll shot list (cigars, cafecito, atmosphere)
 
 ### Brand & Design
-- [ ] Finalize CDL logo
+- [ ] **Create CDL logo/brandmark** — Needed for hero page top-left corner (see session 2026-01-12). Currently using "Cuban Domino League presents" text but logo would clean up hierarchy.
+- [ ] Finalize CDL logo usage guidelines
 - [ ] Create social media templates
 - [ ] Event poster/graphic
 - [ ] Player name tags/cards
@@ -151,7 +152,7 @@
 - [ ] Venue layout diagram
 
 ### Herb Lubalin (Brand Identity)
-- [ ] Logo concepts
+- [ ] **CDL logo concepts** — Priority! Needed for hero page and all branding
 - [ ] Typography system
 - [ ] Color specifications
 - [ ] Logo usage guidelines
@@ -261,6 +262,6 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 11, 2026
+**Last Updated:** January 12, 2026
 
 *"Your seat's waiting."*

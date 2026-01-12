@@ -1,17 +1,16 @@
 // Apps Script (Code.gs)
 // Deploy as Web App: Execute as "Me", Access "Anyone"
+// Updated for CDL:1 La Salida - Individual Player Registration
 
 const DEFAULT_SHEET_NAME = "Registrations";
 const DEFAULT_FROM_EMAIL = "Cuban Domino League <no-reply@cubandominoleague.com>";
+
+// Individual player registration headers
 const DESIRED_HEADERS = [
   "createdAt",
-  "teamName",
-  "p1Name",
-  "p1Email",
-  "p1Phone",
-  "p2Name",
-  "p2Email",
-  "p2Phone",
+  "playerName",
+  "email",
+  "phone",
   "notes",
   "status",
   "source",
@@ -100,39 +99,80 @@ function appendByHeaders(sheet, data) {
   sheet.appendRow(row);
 }
 
-// GET endpoint - returns list of registered teams for "Who's In" display
+// GET endpoint - returns list of registered players for "Who's In" display
 function doGet(e) {
   try {
+    const action = e.parameter.action || "teams"; // Default to teams for backward compatibility
+
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const sheetName = getSheetName();
     const sh = ss.getSheetByName(sheetName);
 
     if (!sh || sh.getLastRow() < 2) {
-      return json({ teams: [] }, 200);
+      return action === "players" ? json({ players: [] }, 200) : json({ teams: [] }, 200);
     }
 
     const headers = getExistingHeaders(sh);
+    const statusIdx = headers.indexOf("status");
+    const dataRange = sh.getRange(2, 1, sh.getLastRow() - 1, headers.length);
+    const rows = dataRange.getValues();
+
+    // Filter to only registered/confirmed players
+    const filteredRows = rows.filter(row => {
+      const status = statusIdx >= 0 ? String(row[statusIdx]).toLowerCase() : "registered";
+      return status === "registered" || status === "confirmed";
+    });
+
+    // Return individual players for CDL:1 La Salida
+    if (action === "players") {
+      const playerNameIdx = headers.indexOf("playerName");
+
+      if (playerNameIdx === -1) {
+        // Fallback: try old format with p1Name/p2Name
+        const p1NameIdx = headers.indexOf("p1Name");
+        const p2NameIdx = headers.indexOf("p2Name");
+
+        if (p1NameIdx === -1) {
+          return json({ players: [], error: "missing_headers" }, 200);
+        }
+
+        // Convert old team format to individual players
+        const players = [];
+        filteredRows.forEach(row => {
+          const p1Name = String(row[p1NameIdx]).trim();
+          const p2Name = p2NameIdx >= 0 ? String(row[p2NameIdx]).trim() : "";
+          if (p1Name) players.push({ name: p1Name.split(" ")[0] }); // First name only
+          if (p2Name) players.push({ name: p2Name.split(" ")[0] });
+        });
+
+        return json({ players: players }, 200);
+      }
+
+      // New individual player format
+      const players = filteredRows
+        .map(row => {
+          const playerName = String(row[playerNameIdx]).trim();
+          // Only use first name for privacy
+          const firstName = playerName.split(" ")[0];
+          return { name: firstName };
+        })
+        .filter(player => player.name);
+
+      return json({ players: players }, 200);
+    }
+
+    // Legacy: Return teams format (for backward compatibility)
     const teamNameIdx = headers.indexOf("teamName");
     const p1NameIdx = headers.indexOf("p1Name");
     const p2NameIdx = headers.indexOf("p2Name");
-    const statusIdx = headers.indexOf("status");
 
     if (teamNameIdx === -1 || p1NameIdx === -1 || p2NameIdx === -1) {
       return json({ teams: [], error: "missing_headers" }, 200);
     }
 
-    const dataRange = sh.getRange(2, 1, sh.getLastRow() - 1, headers.length);
-    const rows = dataRange.getValues();
-
-    const teams = rows
-      .filter(row => {
-        // Only include registered teams (not cancelled, etc.)
-        const status = statusIdx >= 0 ? String(row[statusIdx]).toLowerCase() : "registered";
-        return status === "registered" || status === "confirmed";
-      })
+    const teams = filteredRows
       .map(row => {
         const teamName = String(row[teamNameIdx]).trim();
-        // Only use first names for privacy
         const p1First = String(row[p1NameIdx]).trim().split(" ")[0];
         const p2First = String(row[p2NameIdx]).trim().split(" ")[0];
         return {
@@ -140,13 +180,13 @@ function doGet(e) {
           players: `${p1First} & ${p2First}`
         };
       })
-      .filter(team => team.name); // Remove empty entries
+      .filter(team => team.name);
 
     return json({ teams: teams }, 200);
 
   } catch (err) {
     console.error(err);
-    return json({ teams: [], error: String(err) }, 500);
+    return json({ players: [], teams: [], error: String(err) }, 500);
   }
 }
 
@@ -165,8 +205,8 @@ function doPost(e) {
       return json({ ok: true }, 200);
     }
 
-    // Validate required fields
-    const required = ["teamName","p1Name","p1Email","p1Phone","p2Name","p2Email","p2Phone","ruleConfirm"];
+    // Validate required fields - individual player registration
+    const required = ["playerName", "email", "phone", "ruleConfirm"];
     for (const k of required) {
       if (!String(body[k] || "").trim()) {
         return json({ ok: false, error: `missing_${k}` }, 400);
@@ -180,37 +220,25 @@ function doPost(e) {
     const createdAt = new Date();
     appendByHeaders(sh, {
       createdAt: createdAt.toISOString(),
-      teamName: body.teamName.trim(),
-      p1Name: body.p1Name.trim(),
-      p1Email: body.p1Email.trim(),
-      p1Phone: body.p1Phone.trim(),
-      p2Name: body.p2Name.trim(),
-      p2Email: body.p2Email.trim(),
-      p2Phone: body.p2Phone.trim(),
+      playerName: body.playerName.trim(),
+      email: body.email.trim(),
+      phone: body.phone.trim(),
       notes: (body.notes || "").trim(),
       status: "registered",
       source: "landing",
     });
 
-    // Send confirmation emails to players (don't fail registration if email fails)
-    const subject = "Cuban Domino Tournament - Registration Confirmed";
+    // Send confirmation email to player
+    const subject = "CDL:1 La Salida - You're Registered!";
     const htmlBody = buildConfirmationEmailHTML(body);
 
     try {
-      sendEmail(body.p1Email, subject, htmlBody);
+      sendEmail(body.email, subject, htmlBody);
     } catch (emailErr) {
-      console.error("Failed to send email to p1:", body.p1Email, emailErr);
+      console.error("Failed to send email to player:", body.email, emailErr);
     }
 
-    if (body.p2Email && body.p2Email !== body.p1Email) {
-      try {
-        sendEmail(body.p2Email, subject, htmlBody);
-      } catch (emailErr) {
-        console.error("Failed to send email to p2:", body.p2Email, emailErr);
-      }
-    }
-
-    // NOTIFY HOST - sends you an email for every registration
+    // NOTIFY HOST
     try {
       sendHostNotification(body, createdAt);
     } catch (hostErr) {
@@ -286,8 +314,9 @@ function buildConfirmationEmailHTML(body) {
   <div style="max-width: 500px; margin: 0 auto; background: linear-gradient(135deg, #2a1f1a 0%, #1c130f 100%); border-radius: 16px; padding: 40px; border: 1px solid #3d2e26;">
 
     <div style="text-align: center; margin-bottom: 32px;">
-      <h1 style="font-size: 28px; color: #d4a574; margin: 0 0 8px 0;">You're In! 🌴</h1>
-      <p style="color: #b76a3b; margin: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Registration Confirmed</p>
+      <p style="color: #b76a3b; margin: 0 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 3px;">CDL:1</p>
+      <h1 style="font-size: 32px; color: #d4a574; margin: 0 0 8px 0; font-style: italic;">La Salida</h1>
+      <p style="color: #b76a3b; margin: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">You're In!</p>
     </div>
 
     <div style="background: rgba(183, 106, 59, 0.1); border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid rgba(183, 106, 59, 0.2);">
@@ -298,24 +327,26 @@ function buildConfirmationEmailHTML(body) {
         <strong style="color: #d4a574;">📍 Location:</strong> Mr Garcia Cigars (74th & Broadway)
       </p>
       <p style="margin: 0; font-size: 16px;">
-        <strong style="color: #d4a574;">🎯 Entry:</strong> $50 per team ($25 per person)
+        <strong style="color: #d4a574;">🎯 Entry:</strong> $25 per player (cash on arrival)
       </p>
     </div>
 
     <div style="margin-bottom: 24px;">
-      <h2 style="color: #d4a574; font-size: 18px; margin: 0 0 16px 0; border-bottom: 1px solid #3d2e26; padding-bottom: 8px;">Team: ${body.teamName}</h2>
+      <h2 style="color: #d4a574; font-size: 18px; margin: 0 0 16px 0; border-bottom: 1px solid #3d2e26; padding-bottom: 8px;">Registration Details</h2>
       <p style="margin: 0 0 8px 0; font-size: 16px;">
-        <span style="color: #b76a3b;">Player 1:</span> ${body.p1Name} — ${body.p1Phone}
+        <span style="color: #b76a3b;">Name:</span> ${body.playerName}
       </p>
       <p style="margin: 0; font-size: 16px;">
-        <span style="color: #b76a3b;">Player 2:</span> ${body.p2Name} — ${body.p2Phone}
+        <span style="color: #b76a3b;">Phone:</span> ${body.phone}
       </p>
     </div>
 
     <div style="background: rgba(212, 165, 116, 0.1); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #d4a574;"><strong>Format:</strong> Play to 150 points</p>
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #d4a574;"><strong>Playoffs:</strong> Top 4 teams advance</p>
-      <p style="margin: 0; font-size: 14px; color: #d4a574;"><strong>Prize:</strong> Winner takes all! 🏆</p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #d4a574;"><strong>How it works:</strong></p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">1. Show up solo</p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">2. Get drafted into a team (fantasy draft style)</p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">3. Play to 150 points</p>
+      <p style="margin: 0; font-size: 14px; color: #d4a574;"><strong>🏆 Winning team takes the pot!</strong></p>
     </div>
 
     ${body.notes ? `<p style="font-size: 14px; color: #888;">Notes: ${body.notes}</p>` : ''}
@@ -325,14 +356,14 @@ function buildConfirmationEmailHTML(body) {
       <a href="https://mrgarciacigars.com/" style="display: inline-block; background: linear-gradient(135deg, #b76a3b 0%, #d4a574 100%); color: #1c130f; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">View Venue</a>
     </div>
 
-    <p style="text-align: center; margin-top: 32px; font-size: 20px;">See you at the tables! 🌴</p>
+    <p style="text-align: center; margin-top: 32px; font-size: 20px;">La mesa te espera. 🌴</p>
   </div>
 </body>
 </html>`;
 }
 
 function sendHostNotification(body, timestamp) {
-  const subject = `🌴 New Registration: ${body.teamName}`;
+  const subject = `🌴 New Player: ${body.playerName}`;
 
   const html = `
 <!DOCTYPE html>
@@ -342,23 +373,13 @@ function sendHostNotification(body, timestamp) {
 </head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5;">
   <div style="max-width: 500px; margin: 0 auto; background: white; border-radius: 8px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-    <h2 style="color: #b76a3b; margin: 0 0 16px 0;">New Team Registered! 🌴</h2>
+    <h2 style="color: #b76a3b; margin: 0 0 16px 0;">New Player Registered! 🌴</h2>
     <p style="color: #666; margin: 0 0 24px 0;">${timestamp.toLocaleString()}</p>
 
-    <h3 style="color: #333; margin: 0 0 8px 0;">Team: ${body.teamName}</h3>
-
     <div style="background: #f9f9f9; padding: 16px; border-radius: 8px; margin: 16px 0;">
-      <p style="margin: 0 0 8px 0;"><strong>Player 1:</strong></p>
-      <p style="margin: 0 0 4px 0; color: #333;">${body.p1Name}</p>
-      <p style="margin: 0 0 4px 0; color: #666;">${body.p1Email}</p>
-      <p style="margin: 0; color: #666;">${body.p1Phone}</p>
-    </div>
-
-    <div style="background: #f9f9f9; padding: 16px; border-radius: 8px; margin: 16px 0;">
-      <p style="margin: 0 0 8px 0;"><strong>Player 2:</strong></p>
-      <p style="margin: 0 0 4px 0; color: #333;">${body.p2Name}</p>
-      <p style="margin: 0 0 4px 0; color: #666;">${body.p2Email}</p>
-      <p style="margin: 0; color: #666;">${body.p2Phone}</p>
+      <p style="margin: 0 0 8px 0;"><strong>Name:</strong> ${body.playerName}</p>
+      <p style="margin: 0 0 8px 0;"><strong>Email:</strong> ${body.email}</p>
+      <p style="margin: 0;"><strong>Phone:</strong> ${body.phone}</p>
     </div>
 
     ${body.notes ? `<p style="color: #666;">Notes: ${body.notes}</p>` : ''}
@@ -398,7 +419,7 @@ function testSheetAccess() {
 // Run this to test Resend email
 function testResend() {
   const to = requireScriptProp("TEST_EMAIL");
-  sendEmail(to, "Test from Cuban Domino League", "<h1>It works!</h1><p>Email is configured correctly.</p>");
+  sendEmail(to, "Test from CDL:1 La Salida", "<h1>It works!</h1><p>Email is configured correctly.</p>");
   Logger.log("Test email sent to: " + to);
 }
 
