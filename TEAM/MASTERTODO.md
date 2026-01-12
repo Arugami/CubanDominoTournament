@@ -72,7 +72,7 @@
 - [ ] Announce Tournament II date
 - [ ] Start Tournament II registration
 - [ ] Build email list
-- [ ] Community WhatsApp or Discord?
+- [x] Community chat (Built into website!)
 
 ### Brand Development
 - [ ] Brand guidelines document (colors, fonts, usage)
@@ -204,6 +204,10 @@
 - [x] Environment variables set in Cloudflare (APP_SCRIPT_URL, APP_SCRIPT_SECRET, VENUE_URL)
 - [x] Custom domain migrated to new Git-connected project
 - [x] Old direct-upload project deleted
+- [x] **"Who's In So Far"** - Live display of registered teams on form panel
+- [x] **Live Tournament Chat** - Real-time chat using Supabase for pre-tournament hype
+- [x] Website copy finalized (all panels reviewed by Dream Team)
+- [x] Music toggle hides on mobile when form is visible
 
 ---
 
@@ -257,6 +261,6 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 11, 2025
+**Last Updated:** January 11, 2026
 
 *"Your seat's waiting."*
