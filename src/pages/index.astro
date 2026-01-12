@@ -2649,10 +2649,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             </div>
 
             <div class="rule-card">
-              <div class="rule-card__icon">🎰</div>
+              <div class="rule-card__icon">🤝</div>
               <div class="rule-card__content">
-                <p class="rule-card__title">Fantasy Draft</p>
-                <p class="rule-card__desc">Teams formed night of event</p>
+                <p class="rule-card__title">Teams Assigned</p>
+                <p class="rule-card__desc">Paired by host before event</p>
               </div>
             </div>
           </div>
@@ -2662,7 +2662,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
 
           <p class="rules-footer">
-            Sign up solo. Get drafted. <span class="rules-footer__emphasis">Take the pot.</span>
+            Sign up solo. Get paired. <span class="rules-footer__emphasis">Take the pot.</span>
           </p>
         </div>
       </section>
@@ -2691,17 +2691,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <div class="progress-bar">
               <div class="progress-fill" id="progressFill" style="width: 0%"></div>
             </div>
-            <p class="progress-cta">16 spots. Fantasy draft night of.</p>
+            <p class="progress-cta">16 spots. Teams paired before event.</p>
           </div>
 
           <!-- Form -->
           <div class="form-shell">
             <div class="form-intro">
-              <p>Register yourself. Teams drafted night of event.</p>
+              <p>Register yourself. Teams assigned before event.</p>
               <ul>
                 <li>$25 cash on arrival</li>
                 <li>Games to 150 points</li>
-                <li>Fantasy draft for teams</li>
+                <li>Teams paired by host</li>
               </ul>
             </div>
 
@@ -2737,7 +2737,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
               <label class="checkbox">
                 <input name="ruleConfirm" type="checkbox" required />
-                I understand teams are formed via fantasy draft night of event.
+                I understand teams are assigned by host before event.
               </label>
 
               <button type="submit" id="submitBtn">Register — $25</button>
@@ -3295,13 +3295,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         chatJoinBtn.disabled = !e.target.value;
       });
 
-      // Join chat handler - Free Agent status until fantasy draft
+      // Join chat handler - Free Agent status until team assignment
       chatJoinBtn.addEventListener('click', () => {
         const playerName = chatPlayerSelect.value;
         // Using selectedAvatar from global state
 
         if (playerName) {
-          // All players are Free Agents until the fantasy draft
+          // All players are Free Agents until the team assignment
           chatIdentity = { teamName: null, playerName, avatar: selectedAvatar, status: 'free_agent' };
           localStorage.setItem('cdl_chat_identity', JSON.stringify(chatIdentity));
           showChatInterface();
