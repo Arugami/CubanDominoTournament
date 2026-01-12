@@ -1531,15 +1531,10 @@ const TEAMS_GOAL = 10;
         background: rgba(28, 19, 15, 1);
       }
 
-      /* Better touch feedback for iOS */
-      @media (hover: none) and (pointer: coarse) {
+      /* Hide music toggle on mobile */
+      @media (max-width: 768px) {
         .music-toggle {
-          -webkit-tap-highlight-color: transparent;
-          touch-action: manipulation;
-        }
-        .music-toggle:active {
-          transform: scale(0.92);
-          opacity: 0.9;
+          display: none !important;
         }
       }
 
@@ -1619,12 +1614,6 @@ const TEAMS_GOAL = 10;
           transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
-        /* Hidden when scrolled past hero on mobile */
-        .music-toggle.hidden-past-hero {
-          opacity: 0;
-          pointer-events: none;
-          transform: translateY(-10px);
-        }
       }
 
       /* ========================================
@@ -1936,8 +1925,8 @@ const TEAMS_GOAL = 10;
       <span class="music-toggle__label">Tap for music</span>
     </button>
 
-    <!-- Background Audio -->
-    <audio id="bgMusic" loop preload="auto" playsinline webkit-playsinline crossorigin="anonymous">
+    <!-- Background Audio (desktop only) -->
+    <audio id="bgMusic" loop preload="none">
       <source src="/AUDIO/background-music.mp3" type="audio/mpeg">
     </audio>
 
@@ -2004,28 +1993,6 @@ const TEAMS_GOAL = 10;
       // First panel starts in view
       allPanels[0]?.classList.add('in-view');
 
-      // Mobile music toggle visibility - only show on hero
-      const heroPanelEl = document.querySelector('.panel--hero');
-      const musicToggleEl = document.getElementById('musicToggle');
-
-      if (musicToggleEl && heroPanelEl) {
-        const heroObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            const isMobile = window.innerWidth <= 768;
-            if (isMobile) {
-              if (entry.isIntersecting) {
-                // Hero is visible - show music toggle
-                musicToggleEl.classList.remove('hidden-past-hero');
-              } else {
-                // Hero is not visible - hide music toggle
-                musicToggleEl.classList.add('hidden-past-hero');
-              }
-            }
-          });
-        }, { threshold: 0.3 });
-
-        heroObserver.observe(heroPanelEl);
-      }
 
       // Hero "walking in" scroll effect - desktop only
       const heroPanel = document.getElementById('heroPanel');
@@ -2144,10 +2111,12 @@ const TEAMS_GOAL = 10;
         }
       });
 
-      // Music Toggle - iOS workaround: start muted, unmute after play
+      // Music Toggle - Desktop only
       const musicToggle = document.getElementById('musicToggle');
       const bgMusic = document.getElementById('bgMusic');
       let isPlaying = false;
+
+      bgMusic.volume = 0.08;
 
       musicToggle.addEventListener('click', function() {
         musicToggle.classList.add('collapsed');
@@ -2157,21 +2126,21 @@ const TEAMS_GOAL = 10;
           musicToggle.classList.remove('is-playing');
           isPlaying = false;
         } else {
-          // iOS workaround: start muted, play, then unmute
-          bgMusic.muted = true;
-          bgMusic.play().then(() => {
-            bgMusic.muted = false;
-            bgMusic.volume = 0.3;
-            musicToggle.classList.add('is-playing');
-            isPlaying = true;
-          }).catch(() => {
-            // Fallback: try direct play
-            bgMusic.muted = false;
-            bgMusic.volume = 0.3;
-            bgMusic.play();
-            musicToggle.classList.add('is-playing');
-            isPlaying = true;
-          });
+          bgMusic.volume = 0;
+          bgMusic.play();
+          // Fade in
+          let vol = 0;
+          const fadeIn = setInterval(() => {
+            vol += 0.004;
+            if (vol >= 0.08) {
+              bgMusic.volume = 0.08;
+              clearInterval(fadeIn);
+            } else {
+              bgMusic.volume = vol;
+            }
+          }, 25);
+          musicToggle.classList.add('is-playing');
+          isPlaying = true;
         }
       });
 
