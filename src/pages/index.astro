@@ -833,66 +833,56 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         right: 24px;
         z-index: 1000;
         font-family: "IBM Plex Sans", sans-serif;
-        filter: drop-shadow(0 20px 40px rgba(10, 5, 2, 0.6));
+        /* Don't use filter on container: it breaks `position: fixed` descendants on iOS Safari */
       }
 
-      /* Toggle Button - The Seal (George: It should DEMAND attention) */
+      /* Toggle Button - Floating Pill */
       .chat-toggle {
         display: flex;
         align-items: center;
-        gap: 12px;
-        background: rgba(28, 19, 15, 0.95);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        gap: 10px;
+        background: rgba(28, 19, 15, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         color: var(--brass);
-        border: 1px solid var(--muted);
-        border-radius: 2px;
-        padding: 12px 24px;
+        border: none;
+        border-radius: 50px; /* Full pill shape */
+        padding: 14px 24px;
         cursor: pointer;
         box-shadow:
-          0 4px 20px rgba(0, 0, 0, 0.4),
-          0 0 0 0 rgba(212, 165, 116, 0);
+          0 4px 24px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(212, 165, 116, 0.15),
+          0 0 30px rgba(212, 165, 116, 0.08);
         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         position: relative;
         overflow: hidden;
-        animation: tableBreathing 4s ease-in-out infinite;
+        animation: pillGlow 3s ease-in-out infinite;
       }
 
-      /* The table is calling - breathing glow */
-      @keyframes tableBreathing {
+      /* Soft breathing glow */
+      @keyframes pillGlow {
         0%, 100% {
           box-shadow:
-            0 4px 20px rgba(0, 0, 0, 0.4),
-            0 0 20px rgba(212, 165, 116, 0.1),
-            inset 0 0 20px rgba(212, 165, 116, 0.02);
-          border-color: var(--muted);
+            0 4px 24px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(212, 165, 116, 0.15),
+            0 0 30px rgba(212, 165, 116, 0.08);
         }
         50% {
           box-shadow:
-            0 4px 25px rgba(0, 0, 0, 0.5),
-            0 0 35px rgba(212, 165, 116, 0.2),
-            inset 0 0 25px rgba(212, 165, 116, 0.05);
-          border-color: rgba(212, 165, 116, 0.5);
+            0 6px 32px rgba(0, 0, 0, 0.6),
+            0 0 0 1px rgba(212, 165, 116, 0.25),
+            0 0 50px rgba(212, 165, 116, 0.15);
         }
       }
 
-      /* Double border effect for menu/sacred feel */
-      .chat-toggle::before {
-        content: '';
-        position: absolute;
-        inset: 3px;
-        border: 1px solid rgba(212, 165, 116, 0.3); /* Low opacity brass */
-        pointer-events: none;
-      }
-
       .chat-toggle:hover {
-        transform: translateY(-2px);
-        border-color: var(--brass);
-        background: rgba(40, 25, 20, 0.98);
+        transform: translateY(-3px) scale(1.02);
+        background: rgba(35, 24, 18, 0.95);
         box-shadow:
-          0 8px 30px rgba(212, 165, 116, 0.2),
-          0 0 40px rgba(212, 165, 116, 0.15);
-        animation: none; /* Stop breathing on hover - you've answered */
+          0 8px 40px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(212, 165, 116, 0.4),
+          0 0 60px rgba(212, 165, 116, 0.2);
+        animation: none;
       }
 
       .chat-toggle__text {
@@ -945,11 +935,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Chat Panel - The Vessel */
       .chat-panel {
-        position: absolute;
-        bottom: 80px;
-        right: 16px; /* Wes: exactly 16px from edge */
-        width: 360px;
-        height: 520px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
         /* Layered atmosphere - cigar lounge feel (fully opaque) */
         background:
           /* Vignette */
@@ -959,25 +952,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           /* Warm brass tint base - fully opaque */
           linear-gradient(180deg, rgb(28, 19, 15) 0%, rgb(20, 14, 11) 100%);
         background-blend-mode: normal, overlay, normal;
-        border: 1px solid var(--muted);
+        border: none;
+        border-radius: 0;
         display: none;
         flex-direction: column;
         overflow: hidden;
-        box-shadow:
-          0 20px 50px rgba(0,0,0,0.8),
-          inset 0 0 100px rgba(0,0,0,0.5); /* Inner vignette */
-        transform-origin: bottom center;
-        border-radius: 2px;
-      }
-
-      /* Inner Gold Border */
-      .chat-panel::after {
-        content: "";
-        position: absolute;
-        inset: 4px;
-        border: 1px solid rgba(212, 165, 116, 0.2);
-        pointer-events: none;
-        z-index: 10;
+        box-shadow: none;
+        z-index: 9999; /* Above everything */
       }
 
       /* Subtle wood grain accent on left edge */
@@ -1601,6 +1582,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Identity Screen - Centered Cluster Layout */
       .chat-identity {
         padding: 40px 24px;
+        padding-top: 80px; /* Push content down from header */
         padding-bottom: max(48px, calc(env(safe-area-inset-bottom) + 32px));
         display: flex;
         flex-direction: column;
@@ -1724,19 +1706,26 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Flag selector - Card fan layout with overlap */
       .avatar-selector {
         display: flex;
-        flex-wrap: nowrap; /* Single row always */
-        justify-content: center;
+        flex-wrap: nowrap;
+        justify-content: flex-start; /* Align left for scroll */
         align-items: center;
-        gap: 0; /* Overlap via negative margin */
-        margin: 24px 0; /* Controlled spacing above/below */
-        padding: 16px 0;
-        overflow: visible;
+        gap: 12px; /* Space between flags */
+        margin: 24px 0;
+        padding: 16px 24px;
+        overflow-x: auto; /* Enable horizontal scroll */
+        overflow-y: visible;
         max-width: 100%;
         width: 100%;
         box-sizing: border-box;
         position: relative;
         z-index: 1;
-        flex-grow: 0; /* Don't expand - stay compact */
+        flex-grow: 0;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+        /* Fade edges hint */
+        mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
       }
       .avatar-selector::-webkit-scrollbar { display: none; }
 
@@ -1752,103 +1741,50 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;
         user-select: none;
         touch-action: manipulation;
-        /* Card-fan overlap effect */
-        margin-left: -6px;
+        scroll-snap-align: center;
         z-index: 1;
       }
 
-      .avatar-option:first-child {
-        margin-left: 0;
-      }
-
-      /* Hover: pop up and separate */
+      /* Hover: pop up */
       .avatar-option:hover {
-        transform: translateY(-6px) scale(1.12);
+        transform: translateY(-4px) scale(1.1);
         z-index: 10;
-        margin-left: 2px;
-        margin-right: 8px;
       }
 
       .avatar-option:active {
-        background: transparent;
+        transform: scale(0.95);
       }
 
       /* PLANT YOUR FLAG - selected state */
       .avatar-option.selected {
-        transform: translateY(-10px) scale(1.2);
+        transform: translateY(-6px) scale(1.15);
         z-index: 20;
-        margin-left: 6px;
-        margin-right: 6px;
       }
 
       /* Non-selected flags fade when one is selected */
       .avatar-selector:has(.selected) .avatar-option:not(.selected) {
         opacity: 0.5;
-        transform: scale(0.9);
-        filter: grayscale(0.2);
+        transform: scale(0.85);
+        filter: grayscale(0.3);
       }
 
       .avatar-selector:has(.selected) .avatar-option:not(.selected):hover {
-        opacity: 0.8;
-        transform: translateY(-4px) scale(1.0);
+        opacity: 0.9;
+        transform: translateY(-3px) scale(1.0);
         filter: grayscale(0);
       }
 
-      /* Warm glow behind selected flag */
-      .avatar-option.selected::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 80px;
-        height: 80px;
-        background: radial-gradient(
-          circle,
-          rgba(212, 165, 116, 0.35) 0%,
-          rgba(212, 165, 116, 0.15) 40%,
-          transparent 70%
-        );
-        filter: blur(8px);
-        z-index: -1;
-        animation: selectedGlow 2.5s ease-in-out infinite;
-        pointer-events: none;
+      /* Selected flag - clean, no glow, just lift */
+      .avatar-option.selected {
+        /* No box-shadow glow - clean look */
       }
 
-      @keyframes selectedGlow {
-        0%, 100% {
-          opacity: 0.8;
-          transform: translate(-50%, -50%) scale(1);
-        }
-        50% {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1.1);
-        }
-      }
-
-      /* Glow dot under selected flag */
-      .avatar-option::after {
-        content: '';
-        position: absolute;
-        bottom: -16px;
-        left: 50%;
-        transform: translateX(-50%) scale(0);
-        width: 6px;
-        height: 6px;
-        background: var(--brass);
-        border-radius: 50%;
-        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 0 14px rgba(212, 165, 116, 0.8);
-      }
-
-      .avatar-option.selected::after {
-        transform: translateX(-50%) scale(1);
-      }
+      /* No glow dot - clean minimal look */
 
       .avatar-option .check-mark { display: none; }
 
@@ -2013,22 +1949,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         /* Make toggle bigger / easier to tap */
         .chat-toggle {
-          padding: 14px 28px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+          padding: 14px 24px;
         }
 
         .chat-panel {
           position: fixed;
+          top: 0;
           bottom: 0;
           left: 0;
           right: 0;
           width: 100%;
-          height: 100dvh; /* Full height - the table commands the room */
+          height: 100dvh;
           max-height: 100dvh;
-          border-radius: 0; /* Full screen, no rounded corners */
-          border-bottom: none;
+          border-radius: 0;
+          border: none;
           box-shadow: none;
-          overflow: hidden; /* Prevent any horizontal scroll */
+          overflow: hidden;
         }
 
         .chat-panel.is-open {
@@ -2097,11 +2033,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .avatar-option {
           width: 44px;
           height: 44px;
-          margin-left: -4px; /* Tighter overlap on mobile */
-        }
-
-        .avatar-option:first-child {
-          margin-left: 0;
         }
 
         /* Identity screen mobile - centered cluster */
@@ -2133,10 +2064,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .avatar-selector {
-          margin: 16px 0 20px 0; /* Controlled spacing */
-          gap: 0;
-          padding: 12px 0;
-          flex-grow: 0; /* Don't expand */
+          margin: 16px 0 20px 0;
+          gap: 10px;
+          padding: 12px 20px;
+          flex-grow: 0;
         }
 
         .chat-identity__input {
@@ -3370,11 +3301,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="chat-identity__subtitle">Represent.</p>
 
           <div class="avatar-selector">
+            <!-- Caribbean & Latin America -->
             <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
               <span class="avatar-flag-pixel">🇨🇺</span>
-            </div>
-            <div class="avatar-option" data-avatar="usa" title="USA">
-              <span class="avatar-flag-pixel">🇺🇸</span>
             </div>
             <div class="avatar-option" data-avatar="pr" title="Puerto Rico">
               <span class="avatar-flag-pixel">🇵🇷</span>
@@ -3382,14 +3311,69 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <div class="avatar-option" data-avatar="dr" title="Dominican Republic">
               <span class="avatar-flag-pixel">🇩🇴</span>
             </div>
+            <div class="avatar-option" data-avatar="jamaica" title="Jamaica">
+              <span class="avatar-flag-pixel">🇯🇲</span>
+            </div>
+            <div class="avatar-option" data-avatar="haiti" title="Haiti">
+              <span class="avatar-flag-pixel">🇭🇹</span>
+            </div>
+            <div class="avatar-option" data-avatar="mexico" title="Mexico">
+              <span class="avatar-flag-pixel">🇲🇽</span>
+            </div>
             <div class="avatar-option" data-avatar="venezuela" title="Venezuela">
               <span class="avatar-flag-pixel">🇻🇪</span>
             </div>
             <div class="avatar-option" data-avatar="colombia" title="Colombia">
               <span class="avatar-flag-pixel">🇨🇴</span>
             </div>
+            <div class="avatar-option" data-avatar="panama" title="Panama">
+              <span class="avatar-flag-pixel">🇵🇦</span>
+            </div>
+            <div class="avatar-option" data-avatar="nicaragua" title="Nicaragua">
+              <span class="avatar-flag-pixel">🇳🇮</span>
+            </div>
+            <div class="avatar-option" data-avatar="honduras" title="Honduras">
+              <span class="avatar-flag-pixel">🇭🇳</span>
+            </div>
+            <div class="avatar-option" data-avatar="brazil" title="Brazil">
+              <span class="avatar-flag-pixel">🇧🇷</span>
+            </div>
+            <div class="avatar-option" data-avatar="argentina" title="Argentina">
+              <span class="avatar-flag-pixel">🇦🇷</span>
+            </div>
+            <div class="avatar-option" data-avatar="peru" title="Peru">
+              <span class="avatar-flag-pixel">🇵🇪</span>
+            </div>
+            <div class="avatar-option" data-avatar="ecuador" title="Ecuador">
+              <span class="avatar-flag-pixel">🇪🇨</span>
+            </div>
+            <div class="avatar-option" data-avatar="chile" title="Chile">
+              <span class="avatar-flag-pixel">🇨🇱</span>
+            </div>
+            <!-- North America & Europe -->
+            <div class="avatar-option" data-avatar="usa" title="USA">
+              <span class="avatar-flag-pixel">🇺🇸</span>
+            </div>
+            <div class="avatar-option" data-avatar="canada" title="Canada">
+              <span class="avatar-flag-pixel">🇨🇦</span>
+            </div>
             <div class="avatar-option" data-avatar="spain" title="Spain">
               <span class="avatar-flag-pixel">🇪🇸</span>
+            </div>
+            <div class="avatar-option" data-avatar="italy" title="Italy">
+              <span class="avatar-flag-pixel">🇮🇹</span>
+            </div>
+            <div class="avatar-option" data-avatar="france" title="France">
+              <span class="avatar-flag-pixel">🇫🇷</span>
+            </div>
+            <div class="avatar-option" data-avatar="germany" title="Germany">
+              <span class="avatar-flag-pixel">🇩🇪</span>
+            </div>
+            <div class="avatar-option" data-avatar="uk" title="United Kingdom">
+              <span class="avatar-flag-pixel">🇬🇧</span>
+            </div>
+            <div class="avatar-option" data-avatar="portugal" title="Portugal">
+              <span class="avatar-flag-pixel">🇵🇹</span>
             </div>
           </div>
 
