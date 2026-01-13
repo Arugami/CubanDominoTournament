@@ -1598,15 +1598,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         cursor: not-allowed;
       }
 
-      /* Identity Screen - La Mesa */
+      /* Identity Screen - Centered Cluster Layout */
       .chat-identity {
-        padding: 48px 24px 40px;
+        padding: 40px 24px;
+        padding-bottom: max(48px, calc(env(safe-area-inset-bottom) + 32px));
         display: flex;
         flex-direction: column;
         align-items: center;
         height: 100%;
         text-align: center;
-        justify-content: center;
+        justify-content: center; /* CENTER the whole cluster */
+        gap: 0;
         overflow: hidden;
         width: 100%;
         box-sizing: border-box;
@@ -1681,32 +1683,42 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .chat-identity__title {
         font-family: "Bodoni Moda", serif;
-        font-size: 1.8rem; /* BIGGER - own the space */
+        font-size: 2rem;
         color: var(--brass);
-        margin-bottom: 10px;
+        margin-bottom: 0;
         font-weight: 700;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
         text-shadow:
-          0 0 40px rgba(212, 165, 116, 0.25),
-          0 4px 24px rgba(0, 0, 0, 0.7);
+          0 0 40px rgba(212, 165, 116, 0.2),
+          0 4px 24px rgba(0, 0, 0, 0.6);
         position: relative;
         z-index: 1;
-        /* Slight asymmetry for tension */
-        transform: translateX(-2%);
+      }
+
+      /* Accent line under title - modern touch */
+      .chat-identity__title::after {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 1px;
+        background: var(--brass);
+        margin: 16px auto 0;
+        opacity: 0.4;
       }
 
       .chat-identity__subtitle {
-        color: rgba(255, 255, 255, 0.55);
         font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.85rem;
-        font-weight: 300;
-        margin-bottom: 32px;
-        letter-spacing: 0.02em;
+        font-size: 0.7rem;
+        font-weight: 400;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--brass);
+        opacity: 0.5;
+        margin-top: 16px;
+        margin-bottom: 0;
         position: relative;
         z-index: 1;
-        /* Counter-asymmetry */
-        transform: translateX(2%);
       }
 
       /* Flag selector - Card fan layout with overlap */
@@ -1716,7 +1728,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: center;
         align-items: center;
         gap: 0; /* Overlap via negative margin */
-        margin-bottom: 36px;
+        margin: 24px 0; /* Controlled spacing above/below */
         padding: 16px 0;
         overflow: visible;
         max-width: 100%;
@@ -1724,6 +1736,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         box-sizing: border-box;
         position: relative;
         z-index: 1;
+        flex-grow: 0; /* Don't expand - stay compact */
       }
       .avatar-selector::-webkit-scrollbar { display: none; }
 
@@ -1909,13 +1922,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 1;
       }
 
-      /* Button - DEAL ME IN with domino slam energy */
+      /* Button - Modern full-width feel */
       .chat-identity__btn {
-        margin-top: 8px;
+        margin-top: 24px; /* Fixed spacing, not auto */
+        width: 100%;
+        max-width: 280px;
         background: transparent;
-        border: 2px solid var(--brass);
+        border: 1px solid var(--brass); /* Thinner, more refined */
         color: var(--brass);
-        padding: 16px 44px;
+        padding: 18px 44px;
         font-family: "Bodoni Moda", serif;
         font-size: 0.85rem;
         letter-spacing: 0.2em;
@@ -2089,10 +2104,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           margin-left: 0;
         }
 
-        /* Identity screen mobile fixes */
+        /* Identity screen mobile - centered cluster */
         .chat-identity {
-          justify-content: flex-start;
-          padding: 28px 20px max(32px, calc(env(safe-area-inset-bottom) + 20px));
+          justify-content: center; /* Keep centered on mobile too */
+          padding: max(28px, calc(env(safe-area-inset-top) + 16px)) 20px max(32px, calc(env(safe-area-inset-bottom) + 20px));
           overflow-y: auto;
           overflow-x: hidden;
         }
@@ -2113,30 +2128,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .chat-identity__subtitle {
-          margin-bottom: 24px;
+          margin-bottom: 0; /* Let space-between handle it */
           transform: none;
         }
 
         .avatar-selector {
-          margin-bottom: 28px;
+          margin: 16px 0 20px 0; /* Controlled spacing */
           gap: 0;
           padding: 12px 0;
+          flex-grow: 0; /* Don't expand */
         }
 
         .chat-identity__input {
           max-width: 240px;
-          margin-bottom: 6px;
+          margin-bottom: 4px;
         }
 
         .chat-identity__register-hint {
-          margin-bottom: 16px;
+          margin-bottom: 0;
           font-size: 0.7rem;
         }
 
         .chat-identity__btn {
-          padding: 14px 36px;
+          width: 100%;
+          max-width: 260px;
+          padding: 16px 36px;
           font-size: 0.8rem;
           min-height: 48px;
+          margin-top: 20px; /* Fixed spacing */
         }
       }
 
