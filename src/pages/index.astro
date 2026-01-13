@@ -950,17 +950,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         right: 16px; /* Wes: exactly 16px from edge */
         width: 360px;
         height: 520px;
-        /* Layered atmosphere - cigar lounge feel */
+        /* Layered atmosphere - cigar lounge feel (fully opaque) */
         background:
           /* Vignette */
           radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%),
           /* Subtle noise texture for aged paper feel */
           url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),
-          /* Warm brass tint base */
-          linear-gradient(180deg, rgba(28, 19, 15, 0.96) 0%, rgba(20, 14, 11, 0.98) 100%);
+          /* Warm brass tint base - fully opaque */
+          linear-gradient(180deg, rgb(28, 19, 15) 0%, rgb(20, 14, 11) 100%);
         background-blend-mode: normal, overlay, normal;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
         border: 1px solid var(--muted);
         display: none;
         flex-direction: column;
@@ -1600,121 +1598,223 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         cursor: not-allowed;
       }
 
-      /* Identity Screen - The Initiation */
+      /* Identity Screen - La Mesa */
       .chat-identity {
-        padding: 24px 20px 32px; /* Wes: reduced, intentional */
+        padding: 48px 24px 40px;
         display: flex;
         flex-direction: column;
         align-items: center;
         height: 100%;
         text-align: center;
         justify-content: center;
-        overflow: hidden; /* Prevent horizontal scroll */
+        overflow: hidden;
         width: 100%;
         box-sizing: border-box;
+        position: relative;
+        /* Warm vignette atmosphere */
+        background:
+          radial-gradient(ellipse at 50% 30%, rgba(212, 165, 116, 0.06) 0%, transparent 50%),
+          radial-gradient(ellipse at center, transparent 0%, rgba(10, 7, 5, 0.8) 100%);
       }
+
+      /* Subtle grain texture overlay */
+      .chat-identity::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.025;
+        pointer-events: none;
+        mix-blend-mode: overlay;
+      }
+
+      /* CDL Watermark - bold but barely there, like La Salida */
+      .chat-identity::after {
+        content: 'CDL';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Bodoni Moda", serif;
+        font-size: 14rem;
+        font-style: italic;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: rgba(212, 165, 116, 0.012);
+        pointer-events: none;
+        line-height: 0.9;
+      }
+
+      /* Staggered entry animations */
+      .chat-identity > * {
+        opacity: 0;
+        transform: translateY(16px);
+        animation: identityFadeUp 0.5s ease-out forwards;
+      }
+
+      @keyframes identityFadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .chat-identity__title { animation-delay: 0ms; }
+      .chat-identity__subtitle { animation-delay: 80ms; }
+      .avatar-selector { animation-delay: 200ms; }
+      .chat-identity__select { animation-delay: 320ms; }
+      .chat-identity__input { animation-delay: 320ms; }
+      .chat-identity__register-hint { animation-delay: 400ms; }
+      .chat-identity__btn { animation-delay: 480ms; }
 
       .identity-header {
         font-family: "Bodoni Moda", serif;
         font-size: 0.7rem;
-        letter-spacing: 0.15em;
-        font-variant: small-caps; /* Wes: small-caps */
-        color: var(--copper);
-        margin-bottom: 20px;
-        opacity: 0.5;
+        letter-spacing: 0.25em;
+        font-variant: small-caps;
+        color: var(--brass);
+        margin-bottom: 28px;
+        opacity: 0.6;
+        position: relative;
+        z-index: 1;
       }
 
       .chat-identity__title {
         font-family: "Bodoni Moda", serif;
-        font-size: 1.4rem; /* Reduced for mobile */
+        font-size: 1.8rem; /* BIGGER - own the space */
         color: var(--brass);
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         font-weight: 700;
-        letter-spacing: 0.08em;
-        text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-shadow:
+          0 0 40px rgba(212, 165, 116, 0.25),
+          0 4px 24px rgba(0, 0, 0, 0.7);
+        position: relative;
+        z-index: 1;
+        /* Slight asymmetry for tension */
+        transform: translateX(-2%);
       }
 
       .chat-identity__subtitle {
-        color: rgba(255, 255, 255, 0.6);
+        color: rgba(255, 255, 255, 0.55);
         font-family: "IBM Plex Sans", sans-serif;
         font-size: 0.85rem;
         font-weight: 300;
-        margin-bottom: 28px;
+        margin-bottom: 32px;
+        letter-spacing: 0.02em;
+        position: relative;
+        z-index: 1;
+        /* Counter-asymmetry */
+        transform: translateX(2%);
       }
 
-      /* Flag grid - 7 flags in single centered row (desktop) */
+      /* Flag selector - Card fan layout with overlap */
       .avatar-selector {
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap; /* Single row always */
         justify-content: center;
-        gap: 14px;
-        margin-bottom: 28px;
-        padding: 12px 0;
+        align-items: center;
+        gap: 0; /* Overlap via negative margin */
+        margin-bottom: 36px;
+        padding: 16px 0;
         overflow: visible;
         max-width: 100%;
         width: 100%;
         box-sizing: border-box;
+        position: relative;
+        z-index: 1;
       }
       .avatar-selector::-webkit-scrollbar { display: none; }
 
       .avatar-option {
-        width: 52px;
-        height: 52px;
+        width: 48px;
+        height: 48px;
         flex-shrink: 0;
         border-radius: 50%;
         cursor: pointer;
         position: relative;
         background: transparent;
-        border: none; /* No visible border - pure glow */
+        border: none;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        scroll-snap-align: center;
+        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;
         user-select: none;
         touch-action: manipulation;
+        /* Card-fan overlap effect */
+        margin-left: -6px;
+        z-index: 1;
       }
 
+      .avatar-option:first-child {
+        margin-left: 0;
+      }
+
+      /* Hover: pop up and separate */
       .avatar-option:hover {
-        transform: scale(1.15);
+        transform: translateY(-6px) scale(1.12);
+        z-index: 10;
+        margin-left: 2px;
+        margin-right: 8px;
       }
 
       .avatar-option:active {
         background: transparent;
       }
 
-      /* Selection glow - uses ::before pseudo-element for true soft ambient glow */
+      /* PLANT YOUR FLAG - selected state */
       .avatar-option.selected {
-        background: transparent;
+        transform: translateY(-10px) scale(1.2);
+        z-index: 20;
+        margin-left: 6px;
+        margin-right: 6px;
       }
 
+      /* Non-selected flags fade when one is selected */
+      .avatar-selector:has(.selected) .avatar-option:not(.selected) {
+        opacity: 0.5;
+        transform: scale(0.9);
+        filter: grayscale(0.2);
+      }
+
+      .avatar-selector:has(.selected) .avatar-option:not(.selected):hover {
+        opacity: 0.8;
+        transform: translateY(-4px) scale(1.0);
+        filter: grayscale(0);
+      }
+
+      /* Warm glow behind selected flag */
       .avatar-option.selected::before {
         content: '';
         position: absolute;
-        inset: 0;
-        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80px;
+        height: 80px;
         background: radial-gradient(
-          circle at 50% 50%,
-          rgba(212, 165, 116, 0.22) 0%,
-          rgba(212, 165, 116, 0.12) 42%,
-          rgba(212, 165, 116, 0.0) 72%
+          circle,
+          rgba(212, 165, 116, 0.35) 0%,
+          rgba(212, 165, 116, 0.15) 40%,
+          transparent 70%
         );
-        opacity: 0.95;
-        transform: scale(1.02);
-        animation: candleGlow 3s ease-in-out infinite;
+        filter: blur(8px);
+        z-index: -1;
+        animation: selectedGlow 2.5s ease-in-out infinite;
         pointer-events: none;
       }
 
-      @keyframes candleGlow {
+      @keyframes selectedGlow {
         0%, 100% {
-          opacity: 0.9;
-          transform: scale(1.02);
+          opacity: 0.8;
+          transform: translate(-50%, -50%) scale(1);
         }
         50% {
           opacity: 1;
-          transform: scale(1.06);
+          transform: translate(-50%, -50%) scale(1.1);
         }
       }
 
@@ -1722,22 +1822,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .avatar-option::after {
         content: '';
         position: absolute;
-        bottom: -14px;
+        bottom: -16px;
         left: 50%;
         transform: translateX(-50%) scale(0);
-        width: 5px;
-        height: 5px;
+        width: 6px;
+        height: 6px;
         background: var(--brass);
         border-radius: 50%;
         transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 0 12px rgba(212, 165, 116, 0.7);
+        box-shadow: 0 0 14px rgba(212, 165, 116, 0.8);
       }
 
       .avatar-option.selected::after {
         transform: translateX(-50%) scale(1);
       }
 
-      .avatar-option .check-mark { display: none; } /* Hide old checkmark */
+      .avatar-option .check-mark { display: none; }
 
       .chat-identity__select {
         width: 100%;
@@ -1761,55 +1861,111 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-bottom-color: var(--brass);
       }
 
+      /* Input field - Vintage guestbook feel */
       .chat-identity__input {
         width: 100%;
-        max-width: 280px;
-        margin: 0 auto 12px;
-        background: rgba(0, 0, 0, 0.3);
-        border: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        max-width: 260px;
+        margin: 0 auto 8px;
+        background: linear-gradient(
+          135deg,
+          rgba(212, 165, 116, 0.06) 0%,
+          rgba(183, 106, 59, 0.03) 100%
+        );
+        border: 1px solid rgba(212, 165, 116, 0.15);
+        border-bottom: 2px solid var(--brass);
+        border-radius: 3px; /* Sharp, vintage - not rounded */
         color: var(--cream);
-        padding: 14px 16px;
-        font-family: "IBM Plex Sans", sans-serif;
-        font-size: 16px; /* Prevent iOS zoom on focus */
-        border-radius: 8px;
+        padding: 14px 20px;
+        font-family: "IBM Plex Serif", "IBM Plex Sans", serif;
+        font-size: 16px;
+        font-style: italic;
         outline: none;
         text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
       }
       .chat-identity__input:focus {
-        border-bottom-color: var(--brass);
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(212, 165, 116, 0.1);
+        border-color: rgba(212, 165, 116, 0.3);
+        border-bottom-color: var(--gold);
+        box-shadow:
+          0 0 0 1px rgba(212, 165, 116, 0.2),
+          0 8px 24px rgba(0, 0, 0, 0.4);
       }
       .chat-identity__input::placeholder {
-        color: rgba(255, 255, 255, 0.4);
+        color: rgba(212, 165, 116, 0.45);
         font-style: italic;
       }
 
+      /* Helper/hint text */
+      .chat-identity__register-hint {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.35);
+        margin-bottom: 20px;
+        font-family: "IBM Plex Sans", sans-serif;
+        letter-spacing: 0.03em;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Button - DEAL ME IN with domino slam energy */
       .chat-identity__btn {
-        margin-top: 20px;
+        margin-top: 8px;
         background: transparent;
-        border: 1px solid var(--brass);
+        border: 2px solid var(--brass);
         color: var(--brass);
-        padding: 16px 40px;
+        padding: 16px 44px;
         font-family: "Bodoni Moda", serif;
         font-size: 0.85rem;
-        letter-spacing: 0.15em;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        min-height: 48px; /* Touch target */
+        min-height: 52px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
       }
-      
-      .chat-identity__btn:not(:disabled):hover {
+
+      /* Brass fill sweep on hover */
+      .chat-identity__btn::before {
+        content: '';
+        position: absolute;
+        inset: 0;
         background: var(--brass);
-        color: #0d0906; /* Dark ink */
-        box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: -1;
       }
-      
+
+      .chat-identity__btn:not(:disabled):hover::before {
+        transform: scaleX(1);
+      }
+
+      .chat-identity__btn:not(:disabled):hover {
+        color: #0d0906;
+        border-color: var(--brass);
+        transform: scale(1.02);
+        box-shadow: 0 0 30px rgba(212, 165, 116, 0.35);
+      }
+
+      /* SLAM effect on click - like slamming a domino */
+      .chat-identity__btn:not(:disabled):active {
+        transform: scale(0.95) translateY(2px);
+        transition: transform 0.08s ease-out;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      }
+
       .chat-identity__btn:disabled {
         border-color: rgba(255, 255, 255, 0.1);
-        color: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.15);
         cursor: not-allowed;
+      }
+
+      .chat-identity__btn:disabled::before {
+        display: none;
       }
 
       .chat-identity__register-hint {
@@ -1875,18 +2031,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .chat-header {
-          /* Safe area for notch/island */
-          padding: max(20px, calc(env(safe-area-inset-top) + 12px)) 20px 16px;
-          min-height: 60px;
+          /* Safe area for notch/Dynamic Island - generous padding */
+          padding: max(28px, calc(env(safe-area-inset-top) + 20px)) 20px 14px;
+          min-height: 56px;
         }
 
         .chat-header__title {
-          font-size: 0.9rem;
+          font-size: 0.85rem;
         }
 
         /* Close button needs safe area too */
         .chat-header__close {
-          top: max(16px, calc(env(safe-area-inset-top) + 8px));
+          top: max(24px, calc(env(safe-area-inset-top) + 16px));
           width: 44px;
           height: 44px;
           display: flex;
@@ -1924,8 +2080,63 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         /* Avatar options need good tap targets */
         .avatar-option {
-          width: 56px;
-          height: 56px;
+          width: 44px;
+          height: 44px;
+          margin-left: -4px; /* Tighter overlap on mobile */
+        }
+
+        .avatar-option:first-child {
+          margin-left: 0;
+        }
+
+        /* Identity screen mobile fixes */
+        .chat-identity {
+          justify-content: flex-start;
+          padding: 28px 20px max(32px, calc(env(safe-area-inset-bottom) + 20px));
+          overflow-y: auto;
+          overflow-x: hidden;
+        }
+
+        /* CDL watermark - adjusted for mobile */
+        .chat-identity::after {
+          font-size: 10rem;
+        }
+
+        .identity-header {
+          margin-bottom: 20px;
+        }
+
+        .chat-identity__title {
+          font-size: 1.5rem;
+          margin-bottom: 6px;
+          transform: none; /* Remove asymmetry on mobile */
+        }
+
+        .chat-identity__subtitle {
+          margin-bottom: 24px;
+          transform: none;
+        }
+
+        .avatar-selector {
+          margin-bottom: 28px;
+          gap: 0;
+          padding: 12px 0;
+        }
+
+        .chat-identity__input {
+          max-width: 240px;
+          margin-bottom: 6px;
+        }
+
+        .chat-identity__register-hint {
+          margin-bottom: 16px;
+          font-size: 0.7rem;
+        }
+
+        .chat-identity__btn {
+          padding: 14px 36px;
+          font-size: 0.8rem;
+          min-height: 48px;
         }
       }
 
@@ -3129,16 +3340,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="chat-header">
           <div class="chat-header__drag-handle"></div>
           <div class="chat-header__title-group">
-            <span class="chat-header__title">The Table</span>
-            <span class="chat-header__subtitle">Est. 2025</span>
+            <span class="chat-header__title">La Mesa</span>
           </div>
           <button class="chat-header__close" id="chatClose">×</button>
         </div>
 
-        <!-- Identity selection - The Initiation -->
+        <!-- Identity selection -->
         <div class="chat-identity" id="chatIdentity">
           <p class="chat-identity__title">Take Your Seat</p>
-          <p class="chat-identity__subtitle">Plant your flag. Announce yourself.</p>
+          <p class="chat-identity__subtitle">Represent.</p>
 
           <div class="avatar-selector">
             <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
@@ -3171,7 +3381,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="chat-identity__register-hint" id="chatRegisterHint">
             Don't see your name? <a href="#signup" class="chat-identity__register-link" id="chatRegisterLink">Register first</a>
           </p>
-          <button class="chat-identity__btn" id="chatJoinBtn" disabled>Deal Me In</button>
+          <button class="chat-identity__btn" id="chatJoinBtn" disabled>Enter</button>
         </div>
 
         <!-- Chat Screen Area -->

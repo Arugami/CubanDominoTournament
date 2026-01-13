@@ -209,6 +209,11 @@
 - [x] **Live Tournament Chat** - Real-time chat using Supabase for pre-tournament hype
 - [x] Website copy finalized (all panels reviewed by Dream Team)
 - [x] Music toggle hides on mobile when form is visible
+- [x] **Chat enhancements** - @mention highlighting, pixel flag avatars, reactions, pinned messages
+- [x] **Registration form cleanup** - Removed redundant copy, simplified UX
+- [x] **Rules panel** - Added "Your move." footer
+- [x] **Local dev setup** - .env and .dev.vars for full local testing with Supabase
+- [x] **Supabase schema updated** - avatar, reactions, is_pinned columns added
 
 ---
 
@@ -262,6 +267,6 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 12, 2026
+**Last Updated:** January 12, 2026 (evening session)
 
 *"Your seat's waiting."*

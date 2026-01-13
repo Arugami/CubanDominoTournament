@@ -63,24 +63,24 @@
 ## Team Files
 
 ### Executive
-- [Dana White — CEO](./CEO/dana-white.md)
-- [Jay-Z — Chief Brand Officer](./Chief%20Brand%20Officer/jay-z.md)
+- [Dana White — CEO](./ceo-dana-white.md)
+- [Jay-Z — Chief Brand Officer](./chief-brand-officer-jay-z.md)
 
 ### Operations
-- [José Raúl Capablanca — Commissioner](./Commissioner/jose-raul-capablanca.md)
-- [Benny Binion — Head of Tournament Ops](./Head%20of%20Tournament%20Ops/benny-binion.md)
+- [José Raúl Capablanca — Commissioner](./commissioner-jose-raul-capablanca.md)
+- [Benny Binion — Head of Tournament Ops](./head-of-tournament-ops-benny-binion.md)
 
 ### Creative
-- [Herb Lubalin — Brand Identity Director](./Brand%20Identity%20Director/herb-lubalin.md)
-- [George Lois — Advertising Director](./Advertising%20Director/george-lois.md)
-- [Wes Anderson — Visual Style Director](./Visual%20Style%20Director/wes-anderson.md)
-- [Wifredo Lam — Artistic Director](./Artistic%20Director/wifredo-lam.md)
+- [Herb Lubalin — Brand Identity Director](./brand-identity-director-herb-lubalin.md)
+- [George Lois — Advertising Director](./advertising-director-george-lois.md)
+- [Wes Anderson — Visual Style Director](./visual-style-director-wes-anderson.md)
+- [Wifredo Lam — Artistic Director](./artistic-director-wifredo-lam.md)
 
 ### Marketing
-- [Daisy Expósito-Ulla — Head of Marketing](./Head%20of%20Marketing/daisy-exposito-ulla.md)
+- [Daisy Expósito-Ulla — Head of Marketing](./head-of-marketing-daisy-exposito-ulla.md)
 
 ### Production
-- [Steve Lipscomb — Head of Broadcast & Production](./Head%20of%20Broadcast%20%26%20Production/steve-lipscomb.md)
+- [Steve Lipscomb — Head of Broadcast & Production](./head-of-broadcast-and-production-steve-lipscomb.md)
 
 ---
 
