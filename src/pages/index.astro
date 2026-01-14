@@ -1015,6 +1015,123 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: fadeIn 2s ease-out 0.5s both;
       }
 
+      /* ========================================
+         TYPOGRAPHY CRESCENDO - The Story Arc
+         Panel 2: Whisper → Panel 3: Build → Panel 4: Slam
+         ======================================== */
+
+      /* Panel 2: THE WHISPER - A nod from across the room */
+      .panel-content--whisper {
+        justify-content: flex-end;
+        align-items: flex-start;
+        padding-bottom: 12vh;
+        padding-left: 6vw;
+      }
+
+      .whisper-greeting {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(1.3rem, 4.5vw, 2.2rem);
+        color: var(--cream);
+        letter-spacing: 0.1em;
+        text-shadow:
+          0 2px 20px rgba(0, 0, 0, 1),
+          0 4px 40px rgba(0, 0, 0, 0.8),
+          0 0 60px rgba(0, 0, 0, 0.6);
+        animation: fadeIn 1.5s ease-out 0.3s both;
+      }
+
+      /* Panel 3: THE BUILD - Stakes revealed, tension rising */
+      .panel-content--build {
+        justify-content: center;
+        align-items: flex-start;
+        padding-left: 8vw;
+        gap: 8px;
+      }
+
+      .build-setup {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+        color: var(--cream);
+        opacity: 0.7;
+        letter-spacing: 0.08em;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
+        animation: fadeInUp 0.8s ease-out 0.2s both;
+      }
+
+      .build-payoff {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(2.2rem, 8vw, 4.5rem);
+        color: var(--brass);
+        letter-spacing: 0.04em;
+        line-height: 1.1;
+        text-shadow:
+          0 4px 20px rgba(0, 0, 0, 0.9),
+          0 0 60px rgba(212, 165, 116, 0.3);
+        animation: fadeInUp 0.8s ease-out 0.4s both;
+        margin: 0;
+      }
+
+      /* Panel 4: THE SLAM - Winner takes all, the table flip */
+      .panel-content--slam {
+        justify-content: center;
+        align-items: center;
+      }
+
+      .slam-headline {
+        font-family: "Bodoni Moda", serif;
+        font-weight: 900;
+        font-size: clamp(3.5rem, 14vw, 9rem);
+        color: var(--cream);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        line-height: 0.95;
+        text-align: center;
+        text-shadow:
+          0 4px 20px rgba(0, 0, 0, 0.95),
+          0 8px 40px rgba(0, 0, 0, 0.7),
+          0 0 80px rgba(212, 165, 116, 0.25);
+        animation: slamIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        margin: 0;
+      }
+
+      @keyframes slamIn {
+        0% {
+          opacity: 0;
+          transform: scale(1.1) translateY(-20px);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      /* Mobile adjustments for crescendo */
+      @media (max-width: 768px) {
+        .panel-content--whisper {
+          padding-bottom: 20vh;
+          padding-left: 6vw;
+        }
+
+        .panel-content--build {
+          padding-left: 6vw;
+          padding-right: 6vw;
+        }
+
+        .build-payoff {
+          font-size: clamp(1.8rem, 10vw, 3.5rem);
+        }
+
+        .slam-headline {
+          font-size: clamp(2.8rem, 16vw, 6rem);
+        }
+      }
+
       .panel-subtitle--attitude {
         font-style: italic;
         text-transform: none;
@@ -1950,8 +2067,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          =========================================== */
       .mesa-ticker {
         height: 46px;
-        background: #0a0604;
-        border-top: 1px solid rgba(212, 165, 116, 0.3);
+        /* Tobias: "Dark UI needs fog - layers of smoke, not a black wall" */
+        background: linear-gradient(
+          90deg,
+          #0a0604 0%,
+          #0d0806 25%,
+          #0a0604 50%,
+          #0d0806 75%,
+          #0a0604 100%
+        );
+        border-top: 1px solid rgba(212, 165, 116, 0.2);
         display: flex;
         position: fixed;
         bottom: 0;
@@ -1959,10 +2084,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         right: 0;
         overflow: hidden;
         z-index: 10002; /* Highest, remains above chat panel shadow */
-        box-shadow: 
+        box-shadow:
           0 -4px 24px rgba(0,0,0,0.6),
-          inset 0 2px 5px rgba(0, 0, 0, 0.8),
-          inset 0 -1px 2px rgba(212, 165, 116, 0.05); /* Tobias: Recessed inner shadow */
+          inset 0 2px 8px rgba(0, 0, 0, 0.9),
+          inset 0 -1px 3px rgba(212, 165, 116, 0.03); /* Tobias: Deeper recess */
         transition: background 0.3s ease;
       }
 
@@ -2011,24 +2136,27 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* "LA MESA" badge on left - ESPN urgency with CDL feel */
+      /* "LA MESA" badge on left - Tobias: "The room is alive" */
       .mesa-ticker__badge {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        padding: 0 14px;
-        background: #cc0000;
+        padding: 0 16px;
+        background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
         color: #ffffff;
         font-family: 'IBM Plex Sans', system-ui, sans-serif;
         font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.1em;
         flex-shrink: 0;
         position: relative;
         z-index: 3;
-        box-shadow: 4px 0 10px rgba(0,0,0,0.3);
+        box-shadow:
+          4px 0 15px rgba(0,0,0,0.5),
+          inset 0 1px 0 rgba(255,255,255,0.15), /* Tobias: Inner light */
+          0 0 20px rgba(204, 0, 0, 0.3); /* Warm glow */
       }
 
       .mesa-ticker__badge-dot {
@@ -2139,7 +2267,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         align-items: center;
         height: 100%;
-        animation: tickerScroll 24s linear infinite; /* Tobias: Slowed down for "breath" */
+        animation: tickerScroll 45s linear infinite; /* Slow, languid pace */
         white-space: nowrap;
       }
 
@@ -2155,11 +2283,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .mesa-ticker__item {
         display: inline-flex;
         align-items: center;
-        gap: 14px; /* Tobias: Breath between name and action */
-        padding: 0 40px; /* Tobias: Wider margins - each whisper needs space */
+        gap: 12px;
+        padding: 0 100px; /* Generous - each item floats in space */
         font-family: 'IBM Plex Sans', system-ui, sans-serif;
         transition: all 0.3s ease;
-        animation: tickerItemEntrance 0.5s ease-out forwards;
       }
 
       @keyframes tickerItemEntrance {
@@ -2176,69 +2303,79 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.08em;
       }
 
-      /* The Action - the whisper that follows */
+      /* The Action - Tobias: "the whisper that follows" */
       .mesa-ticker__item-action {
-        color: rgba(255, 255, 255, 0.4);
-        font-size: 0.7rem;
-        font-weight: 500;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.35);
+        font-size: 0.65rem;
+        font-weight: 400;
+        font-style: italic;
+        letter-spacing: 0.05em;
+        text-transform: lowercase; /* Whispers don't shout */
       }
 
       /* ===========================================
          EVENT TYPES - Color is the indicator
          No icons. Just presence and warmth.
+         :global() needed for JS-generated content
          =========================================== */
 
       /* Registration = warm brass presence, the main event */
-      .ticker-event--register .mesa-ticker__item-name {
-        color: var(--brass);
+      :global(.ticker-event--register) .mesa-ticker__item-name,
+      :global(.ticker-event--register .mesa-ticker__item-name) {
+        color: var(--brass) !important;
         text-shadow: 0 0 20px rgba(212, 165, 116, 0.5);
       }
-      .ticker-event--register .mesa-ticker__item-action {
-        color: rgba(212, 165, 116, 0.5);
+      :global(.ticker-event--register) .mesa-ticker__item-action,
+      :global(.ticker-event--register .mesa-ticker__item-action) {
+        color: rgba(212, 165, 116, 0.5) !important;
       }
 
       /* Chat = ambient white, someone speaking */
-      .ticker-event--chat .mesa-ticker__item-name {
-        color: rgba(255, 255, 255, 0.9);
+      :global(.ticker-event--chat) .mesa-ticker__item-name,
+      :global(.ticker-event--chat .mesa-ticker__item-name) {
+        color: rgba(255, 255, 255, 0.9) !important;
       }
-      .ticker-event--chat .mesa-ticker__item-action {
-        color: rgba(255, 255, 255, 0.35);
+      :global(.ticker-event--chat) .mesa-ticker__item-action,
+      :global(.ticker-event--chat .mesa-ticker__item-action) {
+        color: rgba(255, 255, 255, 0.35) !important;
       }
 
       /* Update = copper accent, announcements */
-      .ticker-event--update .mesa-ticker__item-name {
-        color: var(--copper);
+      :global(.ticker-event--update) .mesa-ticker__item-name,
+      :global(.ticker-event--update .mesa-ticker__item-name) {
+        color: var(--copper) !important;
         text-shadow: 0 0 15px rgba(183, 106, 59, 0.4);
       }
-      .ticker-event--update .mesa-ticker__item-action {
-        color: rgba(183, 106, 59, 0.6);
+      :global(.ticker-event--update) .mesa-ticker__item-action,
+      :global(.ticker-event--update .mesa-ticker__item-action) {
+        color: rgba(183, 106, 59, 0.6) !important;
       }
 
       /* Spots = structural metadata, quieter */
-      .ticker-event--spots {
+      :global(.ticker-event--spots) {
         opacity: 0.5;
       }
-      .ticker-event--spots .mesa-ticker__item-name {
+      :global(.ticker-event--spots) .mesa-ticker__item-name,
+      :global(.ticker-event--spots .mesa-ticker__item-name) {
         font-weight: 500;
         font-size: 0.75rem;
         letter-spacing: 0.1em;
       }
 
+      /* Separators - barely visible pauses */
       .mesa-ticker__separator {
         color: var(--brass);
-        padding: 0 20px;
-        font-size: 0.6rem;
-        opacity: 0.5;
+        padding: 0 40px;
+        font-size: 0.35rem;
+        opacity: 0.15;
       }
 
       /* Live count in scroll */
       .mesa-ticker__live {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 0 24px;
+        gap: 10px;
+        padding: 0 100px;
         font-family: 'IBM Plex Sans', system-ui, sans-serif;
         font-size: 0.8rem;
       }
@@ -3742,6 +3879,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: none;
       }
 
+      .payment-note {
+        text-align: center;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.85rem;
+        color: var(--brass);
+        opacity: 0.7;
+        margin-top: 12px;
+        letter-spacing: 0.05em;
+      }
+
       .status {
         min-height: 24px;
         color: rgba(255, 255, 255, 0.7);
@@ -4536,36 +4683,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         </div>
       </section>
 
-      <!-- Panel 2: The Welcome -->
-      <section class="panel">
+      <!-- Panel 2: The Whisper -->
+      <section class="panel panel--whisper">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-2.webp')"></div>
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
-        <div class="panel-content">
-          <h2 class="panel-headline">Que Bola <span class="accent--italic">Asere</span></h2>
-          <p class="panel-whisper">We've been expecting you</p>
+        <div class="panel-content panel-content--whisper">
+          <p class="whisper-greeting">Que Bola Asere</p>
         </div>
         <div class="smoke-layer"></div>
       </section>
 
-      <!-- Panel 3: The Call -->
-      <section class="panel">
+      <!-- Panel 3: The Build -->
+      <section class="panel panel--build">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-3.webp')"></div>
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
-        <div class="panel-content">
-          <h2 class="panel-headline">You didn't learn this game</h2>
-          <p class="panel-whisper">You inherited it!</p>
+        <div class="panel-content panel-content--build">
+          <p class="build-setup">You didn't learn this game</p>
+          <h2 class="build-payoff">You inherited it.</h2>
         </div>
       </section>
 
-      <!-- Panel 4: Winner Takes All -->
-      <section class="panel">
+      <!-- Panel 4: The Slam -->
+      <section class="panel panel--slam">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-4.webp')"></div>
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
-        <div class="panel-content">
-          <h2 class="panel-headline">Winner Takes All</h2>
+        <div class="panel-content panel-content--slam">
+          <h2 class="slam-headline">Winner<br>Takes All</h2>
         </div>
         <div class="scroll-indicator">
           <span>Rules</span>
@@ -4685,7 +4831,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
                 </div>
               </label>
 
-              <button type="submit" id="submitBtn">Claim Your Seat — $25</button>
+              <button type="submit" id="submitBtn">Claim Your Seat</button>
+              <p class="payment-note">$25 cash on arrival</p>
               <p class="status" id="status" aria-live="polite"></p>
             </form>
           </div>
@@ -6165,18 +6312,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </span>
         `);
 
-        // Add recent events (up to 8) - skip join events (noise)
-        // No icons - color is the indicator
+        // Add recent events (up to 8) - only registrations and updates
+        // No chat events - ticker is for key moments only
         tickerEvents
-          .filter(event => event.type !== 'join')
+          .filter(event => event.type === 'register' || event.type === 'update')
           .slice(0, 8)
           .forEach(event => {
             let actionText = '';
             let eventClass = `ticker-event--${event.type}`;
 
-            if (event.type === 'chat') actionText = 'speaking';
-            if (event.type === 'register') actionText = 'REGISTERED';
-            if (event.type === 'update') actionText = 'UPDATE';
+            // Tobias: Color IS the message. Minimal text.
+            if (event.type === 'chat') actionText = '';
+            if (event.type === 'register') actionText = '';
+            if (event.type === 'update') actionText = '';
 
             items.push(`
               <span class="mesa-ticker__item ${eventClass}">
@@ -6186,11 +6334,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             `);
           });
 
-        // If no events and no users, show waiting message
+        // If no events and no users, show ambient waiting state
         if (items.length <= 1 && liveCount === 0) {
           items.push(`
             <span class="mesa-ticker__item">
-              <span class="mesa-ticker__item-action">Waiting for the table to fill...</span>
+              <span class="mesa-ticker__item-action">the table awaits...</span>
             </span>
           `);
         }
