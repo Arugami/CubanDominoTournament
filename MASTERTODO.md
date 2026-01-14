@@ -254,6 +254,13 @@
 - [x] **Tournament updates in ticker** — Copper color for alerts ("Registration closes Friday", "$500 prize pool")
 - [x] **Chat events removed from ticker** — Focus on key moments (registrations + updates only)
 - [x] **La Mesa button registration gate** — Unregistered users scroll to signup form on click
+- [x] **Loading screen immersive enhancements** — Film grain, vignette edges, staggered letter reveal
+- [x] **Letters ARE the light source** — 6-layer stacked text-shadow bloom, divider glow, subtle ambient fog
+- [x] **Mobile form panel redesign** — Single viewport experience, everything visible on first snap
+- [x] **Footer scroll-snap fix** — Added `scroll-padding-bottom` for ticker clearance
+- [x] **Form headline mobile placement** — "La mesa te espera" compact at top on mobile
+- [x] **Scarcity indicator below button** — Small "X seats remain" under Claim Your Seat on mobile
+- [x] **Footer tagline removed** — Cleaner footer without "La mesa te espera" tagline
 
 ---
 
@@ -307,9 +314,93 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 14, 2026 (Ticker Redesign Session)
+**Last Updated:** January 14, 2026 (Mobile Form Panel Redesign)
 
 *"La mesa te espera."*
+
+---
+
+## Recent Session Notes (Jan 14, 2026) — Mobile Form Panel Redesign
+
+### The Problem
+Mobile users (90% of traffic) had to scroll twice on the form panel:
+1. First snap: See form + button
+2. Second scroll: Massive empty void before seeing footer
+
+### Tobias van Schneider's Direction
+> "Don't fight scroll-snap. Embrace it. One viewport, everything visible, nothing hidden."
+
+### Solution: Single Viewport Experience
+Everything fits on one screen on mobile:
+- **Headline compact** — "La mesa te espera" at clamp(1.6rem, 7vw, 2.2rem)
+- **Top scarcity badge hidden** — Moved below button
+- **Button scarcity** — Small "X seats remain" below Claim Your Seat
+- **Footer always visible** — Contact info + CDL branding on same screen
+- **Notes field hidden** — Saves vertical space on mobile
+
+### Technical Changes
+1. `scroll-padding-bottom: 46px` on `.story` for ticker clearance
+2. `.form-header` shown on mobile (was hidden)
+3. `.form-scarcity` hidden on mobile
+4. New `.button-scarcity` element below submit button
+5. Footer compact: inline layout, smaller text
+6. Removed scroll-hint-divider (wasn't solving the problem)
+
+### Iterations
+1. **30vh margin** — Too much empty void
+2. **Scroll-hint divider** — Decorative but didn't fix the UX
+3. **15vh margin** — Still awkward
+4. **Single viewport** — Final solution, everything visible
+
+---
+
+## Recent Session Notes (Jan 14, 2026) — Loading Screen Refinement
+
+### The Problem
+Initial loading screen had a single circular radial gradient glow behind the CDL letters. Looked like a "brown cloud" or "flashlight" — not atmospheric.
+
+### Tobias van Schneider's Direction
+> "Dark UI is about depth, not darkness. It's layers of smoke, not a black wall."
+
+The key insight: **The letters ARE the light source.** Light should emanate FROM them, not exist behind them as a separate blob.
+
+### Implementation (3 iterations)
+
+**Attempt 1: Three fog layers**
+- Deep (copper), mid (brass), near (amber) at different scales
+- Different breathing animation speeds (8s/5s/3s)
+- Still looked like a brown cloud
+
+**Attempt 2: Letters as light source**
+- 6-layer stacked text-shadow bloom on each letter
+- Colors progress: bright amber → brass → copper
+- Divider gets 3-layer box-shadow glow
+- Single subtle ambient fog layer (support, not main event)
+
+### Final CSS Approach
+```css
+.cdl-tile__letter {
+  text-shadow:
+    0 0 10px rgba(232, 190, 140, 1),
+    0 0 20px rgba(232, 190, 140, 0.9),
+    0 0 40px rgba(212, 165, 116, 0.8),
+    0 0 80px rgba(212, 165, 116, 0.5),
+    0 0 120px rgba(183, 106, 59, 0.4),
+    0 0 200px rgba(183, 106, 59, 0.2);
+}
+```
+
+### Immersive Enhancements Added
+1. **Film grain** — SVG noise texture via `::before` pseudo-element (4% opacity)
+2. **Vignette** — Radial gradient via `::after` pseudo-element (dark edges)
+3. **Staggered letter reveal** — C (0.2s) → D (0.5s) → L (0.8s) with blur-to-sharp
+4. **Divider scaleX reveal** — Horizontal line expands from center
+
+### Key Learnings
+- Text-shadow stacking creates more organic bloom than background gradients
+- Brighter base color (#e8be8c vs #d4a574) makes letters feel like they emit light
+- Ambient fog should support, not compete — very low opacity (0.08)
+- The Three.js approach was abandoned after multiple attempts — CSS is simpler and more effective
 
 ---
 
