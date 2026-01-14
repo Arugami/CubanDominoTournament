@@ -1118,19 +1118,38 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          Scene 3: The Stakes (winner takes all)
          ======================================== */
 
-      /* SCENE 1: THE WHISPER - He's talking to you */
-      /* Override parent panel flex to position at bottom-left */
+      /* ================================================
+         SCENE 1: THE CINEMATIC FRAME
+         Letterbox bars create intentional text zones.
+         This is CINEMA, not a legibility hack.
+         Top = His greeting. Bottom = The tension.
+         Center = The man, unobstructed.
+         ================================================ */
+
       .panel--whisper {
-        justify-content: flex-end;
-        align-items: flex-start;
-        padding-bottom: 14vh; /* Space above La Mesa */
+        justify-content: center;
+        align-items: center;
+        padding: 0;
       }
 
-      .panel-content--whisper {
-        text-align: left;
-        max-width: none;
-        width: auto;
-        padding: 0 6vw;
+      /* TOP LETTERBOX - The Greeting descends from darkness */
+      .whisper-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        padding: 5vh 6vw 12vh;
+        background: linear-gradient(
+          to bottom,
+          rgba(10, 7, 5, 0.98) 0%,
+          rgba(10, 7, 5, 0.9) 30%,
+          rgba(10, 7, 5, 0.6) 60%,
+          rgba(10, 7, 5, 0) 100%
+        );
+        display: flex;
+        justify-content: center;
+        pointer-events: none;
       }
 
       .whisper-greeting {
@@ -1139,25 +1158,39 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-weight: 400;
         font-size: clamp(2.4rem, 9vw, 4rem);
         color: var(--cream);
-        letter-spacing: 0.06em;
-        /* Heavy shadow halo for legibility */
-        text-shadow:
-          0 0 8px rgba(0, 0, 0, 1),
-          0 0 15px rgba(0, 0, 0, 1),
-          0 0 30px rgba(0, 0, 0, 1),
-          0 0 50px rgba(0, 0, 0, 0.9),
-          0 2px 40px rgba(0, 0, 0, 1);
+        letter-spacing: 0.08em;
+        text-align: center;
         opacity: 0;
-        margin-bottom: 2vh;
+        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
       }
 
-      /* Narrative sequence - conversational, like dialogue */
+      /* BOTTOM LETTERBOX - The narrative rises from shadow */
+      .whisper-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        padding: 12vh 6vw 14vh; /* Extra bottom for La Mesa */
+        background: linear-gradient(
+          to top,
+          rgba(10, 7, 5, 0.98) 0%,
+          rgba(10, 7, 5, 0.9) 30%,
+          rgba(10, 7, 5, 0.6) 60%,
+          rgba(10, 7, 5, 0) 100%
+        );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        pointer-events: none;
+      }
+
       .whisper-narrative {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 0.8vh;
-        margin-top: 1vh;
+        align-items: center;
+        gap: 1.2vh;
       }
 
       .whisper-line {
@@ -1166,36 +1199,28 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-weight: 400;
         color: var(--brass);
         opacity: 0;
-        letter-spacing: 0.04em;
-        /* Heavy shadow halo */
-        text-shadow:
-          0 0 6px rgba(0, 0, 0, 1),
-          0 0 12px rgba(0, 0, 0, 1),
-          0 0 25px rgba(0, 0, 0, 0.95),
-          0 0 40px rgba(0, 0, 0, 0.9),
-          0 2px 30px rgba(0, 0, 0, 1);
+        letter-spacing: 0.05em;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
       }
 
+      /* Typography crescendo - each word grows, tension builds */
       .whisper-line--watching {
-        font-size: clamp(1.1rem, 4vw, 1.6rem);
-        color: rgba(212, 165, 116, 0.9);
-        margin-bottom: 1vh;
+        font-size: clamp(1.1rem, 4vw, 1.5rem);
+        color: rgba(212, 165, 116, 0.85);
       }
 
-      /* Each word GROWS - building to revelation */
       .whisper-line--train {
-        font-size: clamp(1.4rem, 5vw, 2.2rem);
-        margin-bottom: 0.8vh;
+        font-size: clamp(1.4rem, 5.5vw, 2rem);
       }
 
       .whisper-line--learn {
-        font-size: clamp(1.6rem, 6vw, 2.6rem);
-        margin-bottom: 0.8vh;
+        font-size: clamp(1.7rem, 6.5vw, 2.5rem);
       }
 
       .whisper-line--wait {
-        font-size: clamp(1.8rem, 7vw, 3rem);
+        font-size: clamp(2rem, 8vw, 3.2rem);
         color: var(--cream);
+        letter-spacing: 0.08em;
       }
 
       /* Cinematic animations - slow, deliberate, weighted */
@@ -1463,33 +1488,33 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Mobile adjustments for cinematic panels */
       @media (max-width: 768px) {
-        .panel--whisper {
-          padding-bottom: 16vh; /* Space above La Mesa on mobile */
+        /* Cinematic frame - tighter on mobile */
+        .whisper-top {
+          padding: 4vh 5vw 10vh;
         }
 
-        .panel-content--whisper {
-          padding: 0 5vw;
+        .whisper-bottom {
+          padding: 10vh 5vw 16vh; /* Extra space for La Mesa */
         }
 
         .whisper-greeting {
-          font-size: clamp(2rem, 10vw, 3rem);
-          margin-bottom: 2.5vh;
+          font-size: clamp(2rem, 10vw, 3.2rem);
         }
 
         .whisper-line--watching {
-          font-size: clamp(1rem, 4.5vw, 1.4rem);
+          font-size: clamp(1rem, 4.5vw, 1.3rem);
         }
 
         .whisper-line--train {
-          font-size: clamp(1.2rem, 5.5vw, 1.8rem);
+          font-size: clamp(1.2rem, 5.5vw, 1.7rem);
         }
 
         .whisper-line--learn {
-          font-size: clamp(1.4rem, 6.5vw, 2.2rem);
+          font-size: clamp(1.5rem, 6.5vw, 2.1rem);
         }
 
         .whisper-line--wait {
-          font-size: clamp(1.6rem, 8vw, 2.6rem);
+          font-size: clamp(1.8rem, 8vw, 2.8rem);
         }
 
         .panel-content--build {
@@ -5372,13 +5397,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         </div>
       </section>
 
-      <!-- Panel 2: The Whisper -->
+      <!-- Panel 2: The Cinematic Frame -->
       <section class="panel panel--whisper" id="panelWhisper">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-2.webp')"></div>
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
-        <div class="panel-content panel-content--whisper">
+
+        <!-- TOP LETTERBOX - His greeting descends from darkness -->
+        <div class="whisper-top">
           <p class="whisper-greeting">Que Bola Asere</p>
+        </div>
+
+        <!-- BOTTOM LETTERBOX - The tension rises from shadow -->
+        <div class="whisper-bottom">
           <div class="whisper-narrative">
             <p class="whisper-line whisper-line--watching">We've been watching you...</p>
             <p class="whisper-line whisper-line--train">...train</p>
@@ -5386,6 +5417,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <p class="whisper-line whisper-line--wait">...wait.</p>
           </div>
         </div>
+
         <div class="smoke-layer"></div>
       </section>
 
