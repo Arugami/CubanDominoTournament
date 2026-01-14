@@ -5936,33 +5936,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       // First panel is always in view
       allPanels[0]?.classList.add('in-view');
 
-      // Narrative scroll-lock for Panel 2 (whisper)
-      const whisperPanel = document.getElementById('panelWhisper');
-      const storyContainer = document.querySelector('.story');
-      let narrativeHasPlayed = false;
-
-      const narrativeObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !narrativeHasPlayed) {
-            narrativeHasPlayed = true;
-
-            // Lock scroll during narrative sequence
-            document.body.classList.add('scroll-lock-active');
-            storyContainer.style.overflowY = 'hidden';
-
-            // Unlock after sequence completes (~7 seconds - last word at 5.5s + breathing room)
-            setTimeout(() => {
-              document.body.classList.remove('scroll-lock-active');
-              storyContainer.style.overflowY = '';
-            }, 7000);
-          }
-        });
-      }, { threshold: 0.7 });
-
-      if (whisperPanel) {
-        narrativeObserver.observe(whisperPanel);
-      }
-
       // Progress counter animation
       const playerCountEl = document.getElementById("playerCount");
       const spotsLeftEl = document.getElementById("spotsLeft");
