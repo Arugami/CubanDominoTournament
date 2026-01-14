@@ -272,30 +272,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: scale(1);
       }
 
-      /* Table Coordinates (Branding Anchor) */
+      /* Table Coordinates (Branding Anchor) - HIDDEN */
       .hero-anchor {
-        position: absolute;
-        bottom: 40px;
-        right: 40px;
-        font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.6rem;
-        text-transform: uppercase;
-        letter-spacing: 0.3em;
-        color: rgba(212, 165, 116, 0.35);
-        z-index: 10;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 4px;
-      }
-
-      .hero-anchor__coord {
-        font-weight: 500;
-      }
-
-      .hero-anchor__status {
-        font-weight: 600;
-        color: rgba(212, 165, 116, 0.5);
+        display: none; /* Removed - was appearing above ticker */
       }
 
       @media (max-width: 768px) {
