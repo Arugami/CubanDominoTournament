@@ -1139,7 +1139,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 5vh 6vw 12vh;
+        padding: 2.5vh 6vw 12vh; /* Tighter to top - deeper in darkness */
         background: linear-gradient(
           to bottom,
           rgba(10, 7, 5, 0.98) 0%,
@@ -1280,6 +1280,54 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           opacity: 1;
           transform: translateY(0) scale(1);
           filter: blur(0);
+        }
+      }
+
+      /* Scroll indicator - appears after narrative completes */
+      .whisper-scroll-hint {
+        position: absolute;
+        bottom: 18vh; /* Above La Mesa */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 11;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .whisper-scroll-hint__chevron {
+        width: 20px;
+        height: 20px;
+        border-right: 2px solid var(--brass);
+        border-bottom: 2px solid var(--brass);
+        transform: rotate(45deg);
+        opacity: 0.5;
+      }
+
+      .panel--whisper.in-view .whisper-scroll-hint {
+        animation: scrollHintReveal 1s ease-out 7s forwards;
+      }
+
+      .panel--whisper.in-view .whisper-scroll-hint__chevron {
+        animation: scrollHintBounce 2s ease-in-out 8s infinite;
+      }
+
+      @keyframes scrollHintReveal {
+        0% {
+          opacity: 0;
+          transform: translateX(-50%) translateY(-10px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
+      }
+
+      @keyframes scrollHintBounce {
+        0%, 100% {
+          transform: rotate(45deg) translateY(0);
+        }
+        50% {
+          transform: rotate(45deg) translateY(5px);
         }
       }
 
@@ -1490,7 +1538,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       @media (max-width: 768px) {
         /* Cinematic frame - tighter on mobile */
         .whisper-top {
-          padding: 4vh 5vw 10vh;
+          padding: 2vh 5vw 10vh; /* Tighter to top edge */
         }
 
         .whisper-bottom {
@@ -1515,6 +1563,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         .whisper-line--wait {
           font-size: clamp(1.8rem, 8vw, 2.8rem);
+        }
+
+        .whisper-scroll-hint {
+          bottom: 20vh; /* Higher on mobile for La Mesa */
         }
 
         .panel-content--build {
@@ -2552,7 +2604,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-shrink: 0;
         position: relative;
         z-index: 3;
-        opacity: 1; /* Ensure full visibility by default */
         box-shadow:
           4px 0 15px rgba(0,0,0,0.5),
           inset 0 1px 0 rgba(255,255,255,0.15), /* Tobias: Inner light */
@@ -2672,7 +2723,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         will-change: transform;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
-        opacity: 1; /* Ensure full visibility by default */
+      }
+
+      /* Explicit visibility when NOT dimmed - Safari fix */
+      .mesa-ticker:not(.ticker-dimmed) .mesa-ticker__track,
+      .mesa-ticker:not(.ticker-dimmed) .mesa-ticker__badge {
+        opacity: 1 !important;
       }
 
       .mesa-ticker__track:hover {
@@ -5418,6 +5474,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
         </div>
 
+        <!-- Scroll hint - for the dumb dumbs -->
+        <div class="whisper-scroll-hint">
+          <div class="whisper-scroll-hint__chevron"></div>
+        </div>
+
         <div class="smoke-layer"></div>
       </section>
 
@@ -6543,6 +6604,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       const chatBackdrop = document.getElementById('chatBackdrop');
       const mesaTicker = document.getElementById('mesaTicker');
+
+      // DEBUG: Track ticker class changes
+      if (mesaTicker) {
+        const tickerObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              console.log('[TICKER DEBUG] Class changed:', mesaTicker.className);
+              console.log('[TICKER DEBUG] Has ticker-dimmed:', mesaTicker.classList.contains('ticker-dimmed'));
+            }
+          });
+        });
+        tickerObserver.observe(mesaTicker, { attributes: true });
+        console.log('[TICKER DEBUG] Initial class:', mesaTicker.className);
+      }
 
       // Toggle Chat & Scroll Lock
       function toggleChat() {
