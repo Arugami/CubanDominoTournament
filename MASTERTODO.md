@@ -249,6 +249,11 @@
 - [x] **Rules grid 2-column on mobile** — Preserved 2-column layout instead of stacking
 - [x] **iOS chat header fixed** — Added solid background for La Mesa header visibility
 - [x] **Hero-anchor coordinates removed** — Deleted "23.1136° N, 82.3666° W" element above ticker
+- [x] **Ticker redesigned with Tobias principles** — Simplified to essentials: live count, spots left, registrations, updates
+- [x] **Ticker infinite scroll fix** — `tickerInitialized` flag prevents animation resets, GPU-optimized with `will-change`
+- [x] **Tournament updates in ticker** — Copper color for alerts ("Registration closes Friday", "$500 prize pool")
+- [x] **Chat events removed from ticker** — Focus on key moments (registrations + updates only)
+- [x] **La Mesa button registration gate** — Unregistered users scroll to signup form on click
 
 ---
 
@@ -302,9 +307,42 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 14, 2026
+**Last Updated:** January 14, 2026 (Ticker Redesign Session)
 
 *"La mesa te espera."*
+
+---
+
+## Recent Session Notes (Jan 14, 2026) — Ticker Redesign Session
+
+### Ticker Simplification (Tobias van Schneider principles)
+Radically simplified the ticker following Tobias's "less is more" approach:
+
+**What shows now:**
+- **Live count**: "● 0 at the table" (green pulsing dot)
+- **Spots remaining**: "16 spots left" (white)
+- **Tournament updates**: "Registration closes Friday" (copper)
+- **Registrations**: "ALEX TORRES just joined" (brass with action text)
+
+**What was removed:**
+- Chat events (too noisy)
+- Separators (used spacing instead)
+- Complex event type system
+
+### Infinite Scroll Fix
+- Added `tickerInitialized` flag to prevent animation resets
+- GPU optimization with `will-change: transform` and `backface-visibility: hidden`
+- Content duplicated with spacers for seamless loop
+- Scroll speed: 28s (comfortable reading pace)
+
+### Registration Gate
+La Mesa button now gates unregistered users:
+- Click scrolls to registration form if not registered
+- Chat only accessible after signup
+- Encourages conversion
+
+### CSS Scoping Fix
+Discovered Astro CSS scoping issue - JS-generated elements don't get `data-astro-cid` attributes. Fixed by wrapping all ticker styles in `:global()`.
 
 ---
 
