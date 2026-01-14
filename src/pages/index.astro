@@ -2267,7 +2267,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         align-items: center;
         height: 100%;
-        animation: tickerScroll 30s linear infinite;
+        animation: tickerScroll 12s linear infinite;
         white-space: nowrap;
       }
 
@@ -2338,6 +2338,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0.5;
         margin-left: 6px;
         text-transform: lowercase;
+      }
+
+      /* Tournament updates - copper, attention */
+      :global(.ticker-update) {
+        color: var(--copper);
+        text-shadow: 0 0 15px rgba(183, 106, 59, 0.4);
+        text-transform: none;
+        font-weight: 500;
       }
 
       /* Input Area - The Ledger (lighter at bottom - where the action happens) */
@@ -3325,177 +3333,202 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* ========================================
-         RULES PANEL - CDL:1 La Salida
+         RULES PANEL - "The Ledger"
+         La Ley - The Law of the Table
          ======================================== */
       .panel--rules {
-        background: linear-gradient(
-          180deg,
-          #0d0906 0%,
-          #1a120d 40%,
-          #0d0906 100%
-        );
+        background:
+          radial-gradient(ellipse at 50% 20%, rgba(28, 19, 15, 0.3) 0%, transparent 50%),
+          linear-gradient(180deg, #0a0705 0%, #1a120d 30%, #0d0906 100%);
       }
 
       .panel--rules .panel-content {
-        max-width: 700px;
+        max-width: 600px;
       }
 
+      /* Header - "La Ley" dominates */
       .rules-header {
         text-align: center;
-        margin-bottom: 40px;
+        margin-bottom: 36px;
       }
 
-      .rules-header__event {
-        font-family: "Bodoni Moda", serif;
-        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-        letter-spacing: 0.3em;
+      .rules-header__badge {
+        display: inline-block;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
-        color: var(--brass);
-        margin-bottom: 8px;
-      }
-
-      .rules-header__event-number {
-        font-family: "Bodoni Moda", serif;
-        font-size: clamp(2.5rem, 10vw, 4.5rem);
-        font-weight: 900;
-        letter-spacing: 0.05em;
-        color: var(--cream);
-        line-height: 1;
-        margin-bottom: 0;
-      }
-
-      .rules-header__event-name {
-        font-family: "Bodoni Moda", serif;
-        font-size: clamp(1.8rem, 6vw, 2.8rem);
-        font-weight: 400;
-        font-style: italic;
-        color: var(--brass);
+        color: var(--tobacco);
+        background: var(--brass);
+        padding: 6px 16px;
+        border-radius: 2px;
         margin-bottom: 16px;
       }
 
       .rules-header__title {
-        font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.75rem;
-        font-weight: 500;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        color: var(--brass);
-        opacity: 0.7;
-        margin-bottom: 24px;
+        font-family: "Bodoni Moda", serif;
+        font-size: clamp(3rem, 12vw, 5rem);
+        font-weight: 400;
+        font-style: italic;
+        color: var(--cream);
+        letter-spacing: 0.02em;
+        line-height: 1;
+        margin: 0 0 8px 0;
+        text-shadow:
+          0 4px 20px rgba(0, 0, 0, 0.8),
+          0 0 60px rgba(212, 165, 116, 0.15);
       }
 
       .rules-header__subtitle {
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.5);
-        letter-spacing: 0.15em;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 400;
+        letter-spacing: 0.25em;
         text-transform: uppercase;
+        color: var(--brass);
+        opacity: 0.6;
+        margin: 0;
       }
 
+      /* Grid - The Ledger */
       .rules-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr); /* Always 2 columns, even on mobile */
-        gap: 16px;
-        margin-bottom: 32px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 28px;
       }
 
+      /* Rule Cards - Leather ledger feel */
       .rule-card {
-        background: 
-          linear-gradient(rgba(28, 19, 15, 0.4), rgba(28, 19, 15, 0.4)),
-          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-        border: 1px solid rgba(183, 106, 59, 0.12);
-        border-radius: 12px;
-        padding: 18px 24px;
+        background:
+          linear-gradient(180deg, rgba(30, 22, 16, 0.7) 0%, rgba(18, 12, 8, 0.9) 100%),
+          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+        border: 1px solid rgba(183, 106, 59, 0.15);
+        border-top-color: rgba(212, 165, 116, 0.2);
+        border-radius: 3px;
+        padding: 16px 14px;
         text-align: center;
         transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         opacity: 0;
-        transform: scale(0.95) translateY(10px);
+        transform: translateY(10px);
         position: relative;
-        overflow: hidden;
+        box-shadow:
+          0 1px 0 rgba(212, 165, 116, 0.08) inset,
+          0 8px 24px rgba(0, 0, 0, 0.4);
       }
 
-      /* Tobias: The Slam (Entrance) */
+      /* Inner border accent */
+      .rule-card::before {
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border: 1px solid rgba(212, 165, 116, 0.04);
+        border-radius: 2px;
+        pointer-events: none;
+      }
+
+      /* Primary rules - brass accent */
+      .rule-card--primary {
+        border-left: 3px solid var(--brass);
+        background:
+          linear-gradient(180deg, rgba(35, 25, 18, 0.8) 0%, rgba(20, 14, 10, 0.95) 100%),
+          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+      }
+
+      .rule-card--primary .rule-card__title {
+        color: var(--brass);
+      }
+
+      /* Entrance animation */
       .panel.in-view .rule-card {
-        animation: ruleSlam 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation: ruleSlam 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
 
       @keyframes ruleSlam {
-        from { 
-          opacity: 0; 
-          transform: scale(0.95) translateY(15px);
-          filter: blur(4px);
+        from {
+          opacity: 0;
+          transform: translateY(12px);
         }
-        to { 
-          opacity: 1; 
-          transform: scale(1) translateY(0);
-          filter: blur(0);
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
 
-      /* Staggered entry for rhythm */
+      /* Staggered entry */
       .rule-card:nth-child(1) { animation-delay: 0.1s; }
-      .rule-card:nth-child(2) { animation-delay: 0.2s; }
-      .rule-card:nth-child(3) { animation-delay: 0.3s; }
-      .rule-card:nth-child(4) { animation-delay: 0.4s; }
-      .rule-card:nth-child(5) { animation-delay: 0.5s; }
-      .rule-card:nth-child(6) { animation-delay: 0.6s; }
+      .rule-card:nth-child(2) { animation-delay: 0.15s; }
+      .rule-card:nth-child(3) { animation-delay: 0.2s; }
+      .rule-card:nth-child(4) { animation-delay: 0.25s; }
+      .rule-card:nth-child(5) { animation-delay: 0.3s; }
+      .rule-card:nth-child(6) { animation-delay: 0.35s; }
 
       .rule-card:hover {
-        background: 
-          linear-gradient(rgba(28, 19, 15, 0.6), rgba(28, 19, 15, 0.6)),
-          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
         border-color: rgba(212, 165, 116, 0.3);
-        transform: translateY(-4px) scale(1.01); /* Tobias: The Lift */
-        box-shadow: 
+        transform: translateY(-2px);
+        box-shadow:
+          0 1px 0 rgba(212, 165, 116, 0.1) inset,
           0 12px 32px rgba(0, 0, 0, 0.5),
-          0 0 15px rgba(212, 165, 116, 0.1);
+          0 0 20px rgba(212, 165, 116, 0.08);
+      }
+
+      .rule-card--primary:hover {
+        border-left-color: var(--copper);
       }
 
       .rule-card__title {
         font-family: "Bodoni Moda", serif;
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 500;
+        font-style: italic;
         color: var(--cream);
         letter-spacing: 0.02em;
         margin-bottom: 4px;
+        margin: 0 0 4px 0;
       }
 
       .rule-card__desc {
         font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.5);
         letter-spacing: 0.01em;
+        margin: 0;
       }
 
+      /* Divider */
       .rules-divider {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 16px;
-        margin: 32px 0;
+        gap: 20px;
+        margin: 24px 0;
       }
 
       .rules-divider::before,
       .rules-divider::after {
         content: '';
         height: 1px;
-        width: 60px;
-        background: linear-gradient(90deg, transparent, var(--copper), transparent);
+        width: 50px;
+        background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.3), transparent);
       }
 
       .rules-divider__domino {
-        font-size: 1.5rem;
-        opacity: 0.6;
+        font-size: 1.8rem;
+        opacity: 0.5;
+        filter: grayscale(0.3);
       }
 
+      /* Footer - "Respect the table." */
       .rules-footer {
         text-align: center;
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 0.9rem;
-      }
-
-      .rules-footer__emphasis {
+        font-family: "Bodoni Moda", serif;
+        font-size: clamp(1.1rem, 4vw, 1.4rem);
+        font-style: italic;
         color: var(--brass);
-        font-weight: 600;
+        letter-spacing: 0.05em;
+        margin: 0;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
       }
 
       @media (min-width: 600px) {
@@ -3514,38 +3547,47 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           margin-bottom: 20px;
         }
 
+        .rules-header__badge {
+          font-size: 0.6rem;
+          padding: 5px 12px;
+        }
+
         .rules-header__title {
-          font-size: clamp(2rem, 7vw, 3rem);
+          font-size: clamp(2rem, 10vw, 3rem);
+        }
+
+        .rules-header__subtitle {
+          font-size: 0.65rem;
+          letter-spacing: 0.15em;
         }
 
         .rules-grid {
-          gap: 10px;
+          gap: 8px;
           margin-bottom: 16px;
         }
 
         .rule-card {
-          padding: 14px 16px;
-          gap: 12px;
-          border-radius: 12px;
-        }
-
-        .rule-card__icon {
-          width: 40px;
-          height: 40px;
-          font-size: 1.4rem;
-          border-radius: 10px;
+          padding: 12px 14px;
         }
 
         .rule-card__title {
-          font-size: 0.9rem;
+          font-size: 0.85rem;
         }
 
         .rule-card__desc {
-          font-size: 0.75rem;
+          font-size: 0.68rem;
+        }
+
+        .rules-divider {
+          margin: 16px 0;
+        }
+
+        .rules-divider__domino {
+          font-size: 1.4rem;
         }
 
         .rules-footer {
-          font-size: 0.8rem;
+          font-size: 1rem;
         }
       }
 
@@ -4652,33 +4694,36 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         </div>
       </section>
 
-      <!-- Panel 5: Rules -->
+      <!-- Panel 5: Rules - "The Ledger" -->
       <section class="panel panel--rules">
         <div class="panel-content">
           <div class="rules-header">
-            <div class="rules-header__event-number">CDL 1</div>
-            <p class="rules-header__event-name">La Ley</p>
+            <span class="rules-header__badge">CDL 1</span>
+            <h2 class="rules-header__title">La Ley</h2>
+            <p class="rules-header__subtitle">The Law of the Table</p>
           </div>
 
           <div class="rules-grid">
-            <div class="rule-card">
+            <!-- Primary Rules - The essentials -->
+            <div class="rule-card rule-card--primary">
               <p class="rule-card__title">Race to 150</p>
               <p class="rule-card__desc">First team to 150 points wins</p>
             </div>
 
+            <div class="rule-card rule-card--primary">
+              <p class="rule-card__title">The Buy-In</p>
+              <p class="rule-card__desc">$25 Cash on arrival</p>
+            </div>
+
+            <!-- Secondary Rules -->
             <div class="rule-card">
               <p class="rule-card__title">5 Doubles? Dead Hand</p>
-              <p class="rule-card__desc">Reshuffle if you draw 5+ doubles</p>
+              <p class="rule-card__desc">Reshuffle if you draw 5+</p>
             </div>
 
             <div class="rule-card">
               <p class="rule-card__title">Tie Breaker</p>
               <p class="rule-card__desc">The opener loses the turn</p>
-            </div>
-
-            <div class="rule-card">
-              <p class="rule-card__title">The Buy-In</p>
-              <p class="rule-card__desc">$25 Cash on arrival</p>
             </div>
 
             <div class="rule-card">
@@ -4696,9 +4741,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <span class="rules-divider__domino">🁣</span>
           </div>
 
-          <p class="rules-footer">
-            <span class="rules-footer__emphasis">Respect the table.</span>
-          </p>
+          <p class="rules-footer">Respect the table.</p>
         </div>
       </section>
 
@@ -6128,11 +6171,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       function initTickerMock() {
         const mockEvents = [
           { type: 'register', playerName: 'Alex Torres' },
-          { type: 'join', playerName: 'Maria Elena' },
-          { type: 'chat', playerName: 'Danny Rodriguez' },
-          { type: 'update', playerName: 'Tournament' },
           { type: 'register', playerName: 'Carmen Ruiz' },
-          { type: 'join', playerName: 'Gaby Fernandez' }
+          { type: 'update', playerName: 'Registration closes Friday' },
+          { type: 'register', playerName: 'Danny Rodriguez' },
+          { type: 'register', playerName: 'Maria Elena' },
+          { type: 'update', playerName: 'Prize pool increased to $500' }
         ];
         
         tickerEvents = mockEvents;
@@ -6233,10 +6276,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         const spotsRemaining = PLAYERS_GOAL - PLAYERS_REGISTERED;
         items.push(`<span class="ticker-item ticker-spots">${spotsRemaining} spots left</span>`);
 
+        // Tournament updates (copper, important)
+        tickerEvents
+          .filter(event => event.type === 'update')
+          .slice(0, 2)
+          .forEach(event => {
+            items.push(`<span class="ticker-item ticker-update">${escapeHtml(event.playerName)}</span>`);
+          });
+
         // Recent registrations with action
         tickerEvents
           .filter(event => event.type === 'register')
-          .slice(0, 5)
+          .slice(0, 4)
           .forEach(event => {
             items.push(`<span class="ticker-item ticker-name">${escapeHtml(event.playerName)}<span class="ticker-action">just joined</span></span>`);
           });
@@ -6247,7 +6298,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         const content = items.join('');
-        tickerTrack.innerHTML = content + content;
+        const newHTML = content + content;
+        // Only update if content changed (prevents animation reset)
+        if (tickerTrack.innerHTML !== newHTML) {
+          tickerTrack.innerHTML = newHTML;
+        }
       }
 
       function leaveMesaPresence() {
