@@ -5431,103 +5431,135 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       function initLoadingThreeJS() {
+        console.log('🏗️ Initializing Three.js Loading Screen...');
+        
+        if (typeof THREE === 'undefined') {
+          console.warn('⚠️ Three.js not yet loaded, retrying...');
+          setTimeout(initLoadingThreeJS, 100);
+          return;
+        }
+
         const canvas = document.getElementById('loadingCanvas');
-        if (!canvas) return;
-
-        // Renderer
-        loadingRenderer = new THREE.WebGLRenderer({
-          canvas,
-          antialias: true,
-          alpha: true,
-          powerPreference: 'low-power'
-        });
-        loadingRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        loadingRenderer.setSize(window.innerWidth, window.innerHeight);
-
-        // Scene
-        loadingScene = new THREE.Scene();
-        loadingScene.fog = new THREE.FogExp2(0x1a120d, 0.002);
-
-        // Camera
-        loadingCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        loadingCamera.position.z = 5;
-
-        // Lights
-        const ambientLight = new THREE.AmbientLight(0xd4a574, 0.2);
-        loadingScene.add(ambientLight);
-
-        const pointLight = new THREE.PointLight(0xd4a574, 1, 10);
-        pointLight.position.set(0, 0, 2);
-        loadingScene.add(pointLight);
-
-        // Layer 1: Smoke/Fog Atmosphere
-        const smokeTexture = createSmokeTexture();
-        const smokeMaterial = new THREE.MeshBasicMaterial({
-          map: smokeTexture,
-          transparent: true,
-          opacity: 0.1,
-          depthWrite: false,
-          blending: THREE.AdditiveBlending
-        });
-        const smokeGeometry = new THREE.PlaneGeometry(10, 10);
-        for (let i = 0; i < 5; i++) {
-          const plane = new THREE.Mesh(smokeGeometry, smokeMaterial);
-          plane.position.set((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10, -2 - Math.random() * 2);
-          plane.rotation.z = Math.random() * Math.PI * 2;
-          loadingScene.add(plane);
-          loadingSmokePlanes.push(plane);
+        if (!canvas) {
+          console.warn('⚠️ Loading canvas not found, retrying...');
+          setTimeout(initLoadingThreeJS, 100);
+          return;
         }
 
-        // Layer 2: Light Rays
-        const rayTexture = createRayTexture();
-        const rayMaterial = new THREE.SpriteMaterial({
-          map: rayTexture,
-          transparent: true,
-          opacity: 0.4,
-          blending: THREE.AdditiveBlending
-        });
-        loadingLightRays = new THREE.Sprite(rayMaterial);
-        loadingLightRays.scale.set(8, 8, 1);
-        loadingLightRays.position.z = -1;
-        loadingScene.add(loadingLightRays);
+        try {
+          // Renderer
+          loadingRenderer = new THREE.WebGLRenderer({
+            canvas,
+            antialias: true,
+            alpha: true,
+            powerPreference: 'high-performance'
+          });
+          loadingRenderer.setPixelRatio(window.devicePixelRatio);
+          loadingRenderer.setSize(window.innerWidth, window.innerHeight);
+          loadingRenderer.setClearColor(0x000000, 0);
 
-        // Layer 3: 3D Domino Tile
-        const tileGeometry = new THREE.BoxGeometry(1, 2, 0.1);
-        const tileMaterial = new THREE.MeshStandardMaterial({
-          color: 0xd4a574,
-          metalness: 0.7,
-          roughness: 0.3
-        });
-        loadingDomino = new THREE.Mesh(tileGeometry, tileMaterial);
-        loadingScene.add(loadingDomino);
+          // Scene
+          loadingScene = new THREE.Scene();
+          // Subtle fog that doesn't completely hide things
+          loadingScene.fog = new THREE.FogExp2(0x1a120d, 0.001);
 
-        // Layer 4: Floating Particles
-        const particleCount = window.innerWidth < 768 ? 50 : 100;
-        const particleGeometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-        const opacities = new Float32Array(particleCount);
+          // Camera
+          loadingCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+          loadingCamera.position.z = 6;
 
-        for (let i = 0; i < particleCount; i++) {
-          positions[i * 3] = (Math.random() - 0.5) * 10;
-          positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
-          positions[i * 3 + 2] = (Math.random() - 0.5) * 5;
-          opacities[i] = Math.random();
+          // Lights
+          // Stronger ambient light to see the materials
+          const ambientLight = new THREE.AmbientLight(0xd4a574, 0.4);
+          loadingScene.add(ambientLight);
+
+          // Stronger point light for highlights
+          const pointLight = new THREE.PointLight(0xd4a574, 2, 20);
+          pointLight.position.set(2, 2, 5);
+          loadingScene.add(pointLight);
+
+          const backLight = new THREE.PointLight(0xb76a3b, 1, 20);
+          backLight.position.set(-2, -2, -2);
+          loadingScene.add(backLight);
+
+          // Layer 1: Smoke/Fog Atmosphere
+          const smokeTexture = createSmokeTexture();
+          const smokeMaterial = new THREE.MeshBasicMaterial({
+            map: smokeTexture,
+            transparent: true,
+            opacity: 0.2, // Increased opacity
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide
+          });
+          const smokeGeometry = new THREE.PlaneGeometry(12, 12);
+          for (let i = 0; i < 6; i++) {
+            const plane = new THREE.Mesh(smokeGeometry, smokeMaterial);
+            plane.position.set(
+              (Math.random() - 0.5) * 8,
+              (Math.random() - 0.5) * 8,
+              -3 - Math.random() * 3
+            );
+            plane.rotation.z = Math.random() * Math.PI * 2;
+            loadingScene.add(plane);
+            loadingSmokePlanes.push(plane);
+          }
+
+          // Layer 2: Light Rays
+          const rayTexture = createRayTexture();
+          const rayMaterial = new THREE.SpriteMaterial({
+            map: rayTexture,
+            transparent: true,
+            opacity: 0.6, // Increased opacity
+            blending: THREE.AdditiveBlending,
+            color: 0xd4a574
+          });
+          loadingLightRays = new THREE.Sprite(rayMaterial);
+          loadingLightRays.scale.set(10, 10, 1);
+          loadingLightRays.position.z = -2;
+          loadingScene.add(loadingLightRays);
+
+          // Layer 3: 3D Domino Tile
+          // Slightly larger and more forward
+          const tileGeometry = new THREE.BoxGeometry(1.2, 2.4, 0.15);
+          const tileMaterial = new THREE.MeshStandardMaterial({
+            color: 0xd4a574,
+            metalness: 0.8,
+            roughness: 0.2,
+            emissive: 0xd4a574,
+            emissiveIntensity: 0.05
+          });
+          loadingDomino = new THREE.Mesh(tileGeometry, tileMaterial);
+          loadingDomino.position.z = -1; // Positioned behind CSS letters
+          loadingScene.add(loadingDomino);
+
+          // Layer 4: Floating Particles
+          const particleCount = window.innerWidth < 768 ? 60 : 120;
+          const particleGeometry = new THREE.BufferGeometry();
+          const positions = new Float32Array(particleCount * 3);
+
+          for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 12;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 12;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+          }
+
+          particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+          const particleMaterial = new THREE.PointsMaterial({
+            color: 0xd4a574,
+            size: 0.04, // Larger particles
+            transparent: true,
+            opacity: 0.7,
+            blending: THREE.AdditiveBlending
+          });
+          loadingParticles = new THREE.Points(particleGeometry, particleMaterial);
+          loadingScene.add(loadingParticles);
+
+          window.addEventListener('resize', onLoadingResize);
+          console.log('✅ Three.js Loading Screen Active');
+          animateLoading();
+        } catch (err) {
+          console.error('❌ Failed to init Three.js:', err);
         }
-
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const particleMaterial = new THREE.PointsMaterial({
-          color: 0xd4a574,
-          size: 0.02,
-          transparent: true,
-          opacity: 0.5
-        });
-        loadingParticles = new THREE.Points(particleGeometry, particleMaterial);
-        loadingScene.add(loadingParticles);
-
-        // Resize handler
-        window.addEventListener('resize', onLoadingResize);
-
-        animateLoading();
       }
 
       function onLoadingResize() {
