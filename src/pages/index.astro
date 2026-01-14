@@ -82,9 +82,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Hypnotic glow behind logo */
       .cdl-tile__glow {
         position: absolute;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(212, 165, 116, 0.15) 0%, transparent 70%);
+        width: 350px;
+        height: 350px;
+        background: radial-gradient(circle, rgba(212, 165, 116, 0.2) 0%, transparent 70%);
         border-radius: 50%;
         animation: glowPulse 4s ease-in-out infinite;
         pointer-events: none;
@@ -92,14 +92,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       @keyframes glowPulse {
         0%, 100% { transform: scale(1); opacity: 0.6; }
-        50% { transform: scale(1.3); opacity: 1; }
+        50% { transform: scale(1.4); opacity: 1; }
       }
 
       /* The Tile Logo */
       @keyframes tileAppear {
         0% {
           opacity: 0;
-          transform: scale(0.8);
+          transform: scale(0.9);
         }
         100% {
           opacity: 1;
@@ -112,7 +112,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-direction: column;
         align-items: center;
         gap: 0;
-        animation: tileAppear 1s ease-out forwards, tileBreathe 6s ease-in-out 1s infinite;
+        animation: tileAppear 1s ease-out forwards, tileBreathe 5s ease-in-out 1s infinite;
         position: relative;
         padding: 20px 0;
       }
@@ -120,10 +120,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Subtle breathing animation */
       @keyframes tileBreathe {
         0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.02); }
+        50% { transform: scale(1.03); }
       }
 
-      /* Staggered letter arrangement - LARGER */
+      /* Letter arrangement - BIG and dominant */
       .cdl-tile__upper {
         display: flex;
         flex-direction: column;
@@ -136,50 +136,54 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: 96px;
+        font-size: 100px;
         color: #d4a574;
         line-height: 1;
         letter-spacing: 0;
         text-shadow:
-          0 0 40px rgba(212, 165, 116, 0.5),
-          0 0 80px rgba(212, 165, 116, 0.3);
-        animation: letterShimmer 3s ease-in-out infinite;
+          0 0 60px rgba(212, 165, 116, 0.8),
+          0 0 120px rgba(212, 165, 116, 0.4);
+        animation: letterGlow 3s ease-in-out infinite;
       }
 
-      @keyframes letterShimmer {
-        0%, 100% { text-shadow: 0 0 40px rgba(212, 165, 116, 0.5), 0 0 80px rgba(212, 165, 116, 0.3); }
-        50% { text-shadow: 0 0 60px rgba(212, 165, 116, 0.8), 0 0 100px rgba(212, 165, 116, 0.5); }
+      @keyframes letterGlow {
+        0%, 100% {
+          text-shadow: 0 0 40px rgba(212, 165, 116, 0.6), 0 0 80px rgba(212, 165, 116, 0.3);
+        }
+        50% {
+          text-shadow: 0 0 80px rgba(212, 165, 116, 1), 0 0 140px rgba(212, 165, 116, 0.6);
+        }
       }
 
       .cdl-tile__letter--c {
         align-self: flex-start;
-        margin-left: 12px;
+        margin-left: 10px;
         animation-delay: 0s;
       }
 
       .cdl-tile__letter--d {
         align-self: flex-end;
-        margin-right: 12px;
-        margin-top: -30px;
-        animation-delay: 0.5s;
+        margin-right: 10px;
+        margin-top: -32px;
+        animation-delay: 0.2s;
       }
 
       .cdl-tile__letter--l {
-        animation-delay: 1s;
+        animation-delay: 0.4s;
       }
 
+      /* The divider - elegant brass line */
       .cdl-tile__divider {
         width: 100%;
-        height: 2px;
+        height: 1px;
         background: linear-gradient(90deg, transparent 0%, #d4a574 50%, transparent 100%);
-        opacity: 0.8;
         margin: 20px 0;
         animation: dividerGlow 3s ease-in-out infinite;
       }
 
       @keyframes dividerGlow {
-        0%, 100% { opacity: 0.5; box-shadow: 0 0 10px rgba(212, 165, 116, 0.3); }
-        50% { opacity: 1; box-shadow: 0 0 20px rgba(212, 165, 116, 0.6); }
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
       }
 
       .cdl-tile__lower {
@@ -4367,6 +4371,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.02em;
       }
 
+      .event-payment {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.1rem;
+        font-style: italic;
+        color: var(--brass);
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(212, 165, 116, 0.2);
+      }
+
       /* Divider */
       .success-divider {
         display: flex;
@@ -4610,6 +4624,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Mobile form panel - single scroll to footer */
       @media (max-width: 768px) {
         .progress-tracker {
+          display: none;
+        }
+
+        /* Hide edition text on mobile - headline is enough */
+        .form-header__edition {
+          display: none;
+        }
+
+        /* Hide Notes field on mobile - it's optional and saves space */
+        .label--optional {
           display: none;
         }
 
@@ -5103,14 +5127,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
                 </div>
               </label>
 
-              <!-- Button + $25 badge -->
-              <div class="form-action">
-                <button type="submit" id="submitBtn">Claim Your Seat</button>
-                <div class="payment-badge">
-                  <span class="payment-badge__amount">$25</span>
-                  <span class="payment-badge__note">cash on arrival</span>
-                </div>
-              </div>
+              <button type="submit" id="submitBtn">Claim Your Seat</button>
               <p class="status" id="status" aria-live="polite"></p>
             </form>
           </div>
@@ -5176,6 +5193,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="event-date">January 31, 2025</div>
         <div class="event-venue">Mr Garcia Cigars</div>
         <div class="event-time">Doors open at 6PM</div>
+        <div class="event-payment">$25 cash on arrival</div>
       </div>
 
       <!-- Tagline -->
