@@ -4039,13 +4039,32 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         color: rgba(255, 255, 255, 0.6);
       }
 
+      /* Footer Section - pushed below fold on mobile */
+      .form-footer-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding-top: 40px;
+        padding-bottom: 100px; /* Clearance for ticker */
+      }
+
+      /* On mobile, push footer to next "screen" */
+      @media (max-width: 768px) {
+        .form-footer-section {
+          margin-top: 30vh; /* Push below the fold - requires one swipe */
+          padding-top: 60px;
+          padding-bottom: 80px;
+        }
+      }
+
       /* Footer Contact - Strengthened visibility */
       .footer-contact {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 20px;
-        margin-top: 32px;
+        margin-top: 0;
         flex-wrap: wrap;
       }
 
@@ -5128,23 +5147,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             </form>
           </div>
 
-          <!-- Strengthened footer -->
-          <div class="footer-contact">
-            <div class="footer-contact__item">
-              <span class="footer-contact__label">Direct Line</span>
-              <a href="mailto:Erik@CubanDominoLeague.com" class="footer-contact__link">Erik@CubanDominoLeague.com</a>
+          <!-- Footer section - pushed below fold on mobile -->
+          <div class="form-footer-section">
+            <div class="footer-contact">
+              <div class="footer-contact__item">
+                <span class="footer-contact__label">Direct Line</span>
+                <a href="mailto:Erik@CubanDominoLeague.com" class="footer-contact__link">Erik@CubanDominoLeague.com</a>
+              </div>
+              <div class="footer-contact__divider">◆</div>
+              <div class="footer-contact__item">
+                <span class="footer-contact__label">Venue</span>
+                <a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer" class="footer-contact__link">Mr Garcia Cigars</a>
+              </div>
             </div>
-            <div class="footer-contact__divider">◆</div>
-            <div class="footer-contact__item">
-              <span class="footer-contact__label">Venue</span>
-              <a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer" class="footer-contact__link">Mr Garcia Cigars</a>
-            </div>
-          </div>
 
-          <footer class="brand-footer">
-            <span class="brand-footer__logo">CDL</span>
-            <span class="brand-footer__text">© 2025 Cuban Domino League</span>
-          </footer>
+            <footer class="brand-footer">
+              <span class="brand-footer__logo">CDL</span>
+              <span class="brand-footer__text">© 2025 Cuban Domino League</span>
+            </footer>
+          </div>
         </div>
       </section>
     </main>
