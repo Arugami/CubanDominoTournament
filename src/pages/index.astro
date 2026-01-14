@@ -1119,12 +1119,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          ======================================== */
 
       /* SCENE 1: THE WHISPER - He's talking to you */
-      .panel-content--whisper {
+      /* Override parent panel flex to position at bottom-left */
+      .panel--whisper {
         justify-content: flex-end;
         align-items: flex-start;
-        text-align: left;
-        padding: 0 6vw;
         padding-bottom: 14vh; /* Space above La Mesa */
+      }
+
+      .panel-content--whisper {
+        text-align: left;
+        max-width: none;
+        width: auto;
+        padding: 0 6vw;
       }
 
       .whisper-greeting {
@@ -1457,12 +1463,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Mobile adjustments for cinematic panels */
       @media (max-width: 768px) {
-        .panel-content--whisper {
-          justify-content: flex-end;
-          align-items: flex-start;
-          text-align: left;
-          padding: 0 5vw;
+        .panel--whisper {
           padding-bottom: 16vh; /* Space above La Mesa on mobile */
+        }
+
+        .panel-content--whisper {
+          padding: 0 5vw;
         }
 
         .whisper-greeting {
