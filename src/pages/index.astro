@@ -111,6 +111,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .cdl-tile__letter {
         font-family: "Bodoni Moda", serif;
+        font-style: italic;
         font-weight: 400;
         font-size: 64px;
         color: #d4a574;
@@ -868,18 +869,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
       }
 
-      /* Hero tagline - supporting, recedes */
+      /* Hero tagline - supporting, recedes
+         43 chars × 1.1 (letter-spacing) = 47 units
+         To fit 90vw: font-size = 90vw/47 ≈ 1.9vw */
       .hero-tagline {
         font-family: "Bodoni Moda", serif;
-        font-size: clamp(0.65rem, 1.6vw, 0.85rem);
+        font-size: clamp(0.42rem, 1.9vw, 0.85rem);
         font-weight: 400;
         color: var(--cream);
         text-transform: uppercase;
-        letter-spacing: 0.35em;
+        letter-spacing: 0.1em;
         margin-top: 32px;
         margin-bottom: 10px;
         opacity: 0.7;
         text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
+        white-space: nowrap;
       }
 
       /* Hero subtitle - practical info, fades */
