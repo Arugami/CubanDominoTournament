@@ -1133,10 +1133,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-size: clamp(2.8rem, 10vw, 5rem);
         color: var(--cream);
         letter-spacing: 0.08em;
+        /* Heavy shadow halo for legibility against any background */
         text-shadow:
-          0 4px 30px rgba(0, 0, 0, 1),
-          0 8px 60px rgba(0, 0, 0, 0.8),
-          0 0 100px rgba(212, 165, 116, 0.2);
+          0 0 8px rgba(0, 0, 0, 1),
+          0 0 15px rgba(0, 0, 0, 1),
+          0 0 30px rgba(0, 0, 0, 1),
+          0 0 50px rgba(0, 0, 0, 0.9),
+          0 2px 40px rgba(0, 0, 0, 1),
+          0 4px 60px rgba(0, 0, 0, 0.8);
         opacity: 0;
         margin-bottom: 3vh;
       }
@@ -1157,9 +1161,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         color: var(--brass);
         opacity: 0;
         letter-spacing: 0.06em;
+        /* Heavy shadow halo */
         text-shadow:
-          0 2px 20px rgba(0, 0, 0, 0.9),
-          0 4px 40px rgba(0, 0, 0, 0.7);
+          0 0 6px rgba(0, 0, 0, 1),
+          0 0 12px rgba(0, 0, 0, 1),
+          0 0 25px rgba(0, 0, 0, 0.95),
+          0 0 40px rgba(0, 0, 0, 0.9),
+          0 2px 30px rgba(0, 0, 0, 1);
       }
 
       .whisper-line--watching {
@@ -1258,9 +1266,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-style: italic;
         font-weight: 400;
         font-size: clamp(1.1rem, 4vw, 1.6rem);
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.6);
         letter-spacing: 0.1em;
-        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+        /* Heavy shadow halo */
+        text-shadow:
+          0 0 6px rgba(0, 0, 0, 1),
+          0 0 12px rgba(0, 0, 0, 1),
+          0 0 25px rgba(0, 0, 0, 0.95),
+          0 2px 30px rgba(0, 0, 0, 1);
         opacity: 0;
         margin-bottom: 2vh;
       }
@@ -1278,14 +1291,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-style: italic;
         font-weight: 400;
         opacity: 0;
+        /* Heavy shadow halo */
         text-shadow:
-          0 4px 30px rgba(0, 0, 0, 0.95),
-          0 8px 60px rgba(0, 0, 0, 0.7);
+          0 0 8px rgba(0, 0, 0, 1),
+          0 0 15px rgba(0, 0, 0, 1),
+          0 0 30px rgba(0, 0, 0, 0.95),
+          0 4px 40px rgba(0, 0, 0, 1);
       }
 
       .build-word--you {
         font-size: clamp(1.4rem, 5vw, 2.2rem);
-        color: rgba(212, 165, 116, 0.7);
+        color: rgba(212, 165, 116, 0.8);
         margin-bottom: 0.5vh;
       }
 
@@ -1294,10 +1310,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         color: var(--cream);
         letter-spacing: 0.02em;
         line-height: 1;
+        /* Extra heavy halo for the big word */
         text-shadow:
-          0 4px 40px rgba(0, 0, 0, 0.95),
-          0 8px 80px rgba(0, 0, 0, 0.7),
-          0 0 120px rgba(212, 165, 116, 0.5);
+          0 0 10px rgba(0, 0, 0, 1),
+          0 0 20px rgba(0, 0, 0, 1),
+          0 0 40px rgba(0, 0, 0, 1),
+          0 0 60px rgba(0, 0, 0, 0.9),
+          0 4px 50px rgba(0, 0, 0, 1);
       }
 
       .build-word--it {
@@ -2518,6 +2537,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-shrink: 0;
         position: relative;
         z-index: 3;
+        opacity: 1; /* Ensure full visibility by default */
         box-shadow:
           4px 0 15px rgba(0,0,0,0.5),
           inset 0 1px 0 rgba(255,255,255,0.15), /* Tobias: Inner light */
@@ -2637,6 +2657,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         will-change: transform;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
+        opacity: 1; /* Ensure full visibility by default */
       }
 
       .mesa-ticker__track:hover {
