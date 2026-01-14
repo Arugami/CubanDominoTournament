@@ -246,6 +246,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow-y: scroll;
         scroll-snap-type: y mandatory;
         overscroll-behavior: contain;
+        scroll-padding-bottom: 46px; /* Account for fixed ticker */
       }
 
       /* Panel Base */
@@ -476,6 +477,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           -webkit-overflow-scrolling: touch;
           touch-action: pan-y;
           scroll-snap-type: y mandatory;
+          scroll-padding-bottom: 40px; /* Mobile ticker is 40px */
         }
 
         /* Disable parallax bg overhang on mobile for performance */
@@ -4650,7 +4652,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       @media (max-width: 480px) {
         .panel--form {
           padding-top: 40px;
-          padding-bottom: 20px;
+          padding-bottom: 60px; /* Maintain clearance for ticker */
         }
 
         .panel--form .panel-headline {
@@ -5399,40 +5401,99 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <div class="chat-backdrop" id="chatBackdrop"></div>
 
     <script define:vars={{ PLAYERS_REGISTERED, PLAYERS_GOAL, SUPABASE_URL, SUPABASE_ANON_KEY }}>
-      // --- THREE.JS LOADING SCREEN ENHANCEMENT ---
-      let loadingScene, loadingCamera, loadingRenderer, loadingDomino, loadingParticles, loadingSmokePlanes = [], loadingLightRays;
+      // --- THREE.JS LOADING SCREEN - SHADER-BASED VOLUMETRIC GLOW ---
+      let loadingScene, loadingCamera, loadingRenderer, loadingParticles, loadingGlowMaterial;
       let loadingAnimationId;
 
-      function createSmokeTexture() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 128;
-        canvas.height = 128;
-        const ctx = canvas.getContext('2d');
-        const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-        gradient.addColorStop(0, 'rgba(212, 165, 116, 0.2)');
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 128, 128);
-        return new THREE.CanvasTexture(canvas);
-      }
+      // Vertex shader
+      const glowVertexShader = `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `;
 
-      function createRayTexture() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 256;
-        canvas.height = 256;
-        const ctx = canvas.getContext('2d');
-        const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
-        gradient.addColorStop(0, 'rgba(212, 165, 116, 0.3)');
-        gradient.addColorStop(0.5, 'rgba(212, 165, 116, 0.05)');
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 256, 256);
-        return new THREE.CanvasTexture(canvas);
-      }
+      // Fragment shader with Simplex noise for organic volumetric glow
+      const glowFragmentShader = `
+        uniform float time;
+        varying vec2 vUv;
+
+        // Simplex noise functions
+        vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec3 permute(vec3 x) { return mod289(((x * 34.0) + 1.0) * x); }
+
+        float snoise(vec2 v) {
+          const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                              -0.577350269189626, 0.024390243902439);
+          vec2 i  = floor(v + dot(v, C.yy));
+          vec2 x0 = v - i + dot(i, C.xx);
+          vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+          vec4 x12 = x0.xyxy + C.xxzz;
+          x12.xy -= i1;
+          i = mod289(i);
+          vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+          vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+          m = m * m;
+          m = m * m;
+          vec3 x = 2.0 * fract(p * C.www) - 1.0;
+          vec3 h = abs(x) - 0.5;
+          vec3 ox = floor(x + 0.5);
+          vec3 a0 = x - ox;
+          m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
+          vec3 g;
+          g.x = a0.x * x0.x + h.x * x0.y;
+          g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+          return 130.0 * dot(m, g);
+        }
+
+        void main() {
+          // Center UV coordinates
+          vec2 uv = vUv - 0.5;
+          float dist = length(uv);
+
+          // Multiple noise layers for organic, flowing movement
+          float n1 = snoise(uv * 3.0 + time * 0.08) * 0.5 + 0.5;
+          float n2 = snoise(uv * 6.0 - time * 0.05 + 10.0) * 0.5 + 0.5;
+          float n3 = snoise(uv * 10.0 + time * 0.03 + 20.0) * 0.5 + 0.5;
+          float noise = n1 * 0.5 + n2 * 0.35 + n3 * 0.15;
+
+          // Breathing effect - slow, hypnotic pulse
+          float breath = sin(time * 0.4) * 0.05 + 1.0;
+
+          // TIGHT radial glow - concentrated center, fades to ZERO at edges
+          // Core glow (bright center) - starts fading at 0.15, gone by 0.3
+          float coreGlow = 1.0 - smoothstep(0.0, 0.25 * breath, dist);
+          // Halo glow (softer outer ring)
+          float haloGlow = (1.0 - smoothstep(0.08, 0.4 * breath, dist)) * 0.25;
+
+          // Combined glow with subtle noise variation
+          float glow = (coreGlow + haloGlow) * (0.92 + noise * 0.08);
+
+          // Color palette: tobacco to brass
+          vec3 tobacco = vec3(0.1, 0.06, 0.04);
+          vec3 copper = vec3(0.72, 0.42, 0.23);
+          vec3 brass = vec3(0.83, 0.65, 0.46);
+
+          // Color shifts with noise
+          vec3 glowColor = mix(copper, brass, noise);
+          vec3 color = mix(tobacco, glowColor, glow);
+
+          // CRITICAL: Alpha must be ZERO at edges
+          // Use pow for sharp concentrated center
+          float alpha = pow(glow, 2.0) * 0.55;
+
+          // Hard cutoff ensures complete transparency
+          alpha *= 1.0 - smoothstep(0.3, 0.45, dist);
+
+          gl_FragColor = vec4(color, alpha);
+        }
+      `;
 
       function initLoadingThreeJS() {
         console.log('🏗️ Initializing Three.js Loading Screen...');
-        
+
         if (typeof THREE === 'undefined') {
           console.warn('⚠️ Three.js not yet loaded, retrying...');
           setTimeout(initLoadingThreeJS, 100);
@@ -5452,104 +5513,60 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             canvas,
             antialias: true,
             alpha: true,
-            powerPreference: 'high-performance'
+            powerPreference: 'low-power'
           });
-          loadingRenderer.setPixelRatio(window.devicePixelRatio);
+          loadingRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
           loadingRenderer.setSize(window.innerWidth, window.innerHeight);
           loadingRenderer.setClearColor(0x000000, 0);
 
           // Scene
           loadingScene = new THREE.Scene();
-          // Subtle fog that doesn't completely hide things
-          loadingScene.fog = new THREE.FogExp2(0x1a120d, 0.001);
 
-          // Camera
-          loadingCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-          loadingCamera.position.z = 6;
+          // Camera - orthographic for fullscreen shader
+          const aspect = window.innerWidth / window.innerHeight;
+          loadingCamera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0.1, 10);
+          loadingCamera.position.z = 1;
 
-          // Lights
-          // Stronger ambient light to see the materials
-          const ambientLight = new THREE.AmbientLight(0xd4a574, 0.4);
-          loadingScene.add(ambientLight);
-
-          // Stronger point light for highlights
-          const pointLight = new THREE.PointLight(0xd4a574, 2, 20);
-          pointLight.position.set(2, 2, 5);
-          loadingScene.add(pointLight);
-
-          const backLight = new THREE.PointLight(0xb76a3b, 1, 20);
-          backLight.position.set(-2, -2, -2);
-          loadingScene.add(backLight);
-
-          // Layer 1: Smoke/Fog Atmosphere
-          const smokeTexture = createSmokeTexture();
-          const smokeMaterial = new THREE.MeshBasicMaterial({
-            map: smokeTexture,
+          // Volumetric Glow Shader
+          loadingGlowMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+              time: { value: 0 }
+            },
+            vertexShader: glowVertexShader,
+            fragmentShader: glowFragmentShader,
             transparent: true,
-            opacity: 0.2, // Increased opacity
-            depthWrite: false,
             blending: THREE.AdditiveBlending,
-            side: THREE.DoubleSide
+            depthWrite: false
           });
-          const smokeGeometry = new THREE.PlaneGeometry(12, 12);
-          for (let i = 0; i < 6; i++) {
-            const plane = new THREE.Mesh(smokeGeometry, smokeMaterial);
-            plane.position.set(
-              (Math.random() - 0.5) * 8,
-              (Math.random() - 0.5) * 8,
-              -3 - Math.random() * 3
-            );
-            plane.rotation.z = Math.random() * Math.PI * 2;
-            loadingScene.add(plane);
-            loadingSmokePlanes.push(plane);
-          }
 
-          // Layer 2: Light Rays
-          const rayTexture = createRayTexture();
-          const rayMaterial = new THREE.SpriteMaterial({
-            map: rayTexture,
-            transparent: true,
-            opacity: 0.6, // Increased opacity
-            blending: THREE.AdditiveBlending,
-            color: 0xd4a574
-          });
-          loadingLightRays = new THREE.Sprite(rayMaterial);
-          loadingLightRays.scale.set(10, 10, 1);
-          loadingLightRays.position.z = -2;
-          loadingScene.add(loadingLightRays);
+          const glowPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(4, 4),
+            loadingGlowMaterial
+          );
+          glowPlane.position.z = -1;
+          loadingScene.add(glowPlane);
 
-          // Layer 3: 3D Domino Tile
-          // Slightly larger and more forward
-          const tileGeometry = new THREE.BoxGeometry(1.2, 2.4, 0.15);
-          const tileMaterial = new THREE.MeshStandardMaterial({
-            color: 0xd4a574,
-            metalness: 0.8,
-            roughness: 0.2,
-            emissive: 0xd4a574,
-            emissiveIntensity: 0.05
-          });
-          loadingDomino = new THREE.Mesh(tileGeometry, tileMaterial);
-          loadingDomino.position.z = -1; // Positioned behind CSS letters
-          loadingScene.add(loadingDomino);
-
-          // Layer 4: Floating Particles
-          const particleCount = window.innerWidth < 768 ? 60 : 120;
+          // Floating Particles - improved settings
+          const particleCount = window.innerWidth < 768 ? 80 : 150;
           const particleGeometry = new THREE.BufferGeometry();
           const positions = new Float32Array(particleCount * 3);
+          const sizes = new Float32Array(particleCount);
 
           for (let i = 0; i < particleCount; i++) {
-            positions[i * 3] = (Math.random() - 0.5) * 12;
-            positions[i * 3 + 1] = (Math.random() - 0.5) * 12;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+            positions[i * 3] = (Math.random() - 0.5) * 4;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 4;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 2 - 0.5;
+            sizes[i] = Math.random() * 0.015 + 0.005;
           }
 
           particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
           const particleMaterial = new THREE.PointsMaterial({
             color: 0xd4a574,
-            size: 0.04, // Larger particles
+            size: 0.02,
             transparent: true,
-            opacity: 0.7,
-            blending: THREE.AdditiveBlending
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true
           });
           loadingParticles = new THREE.Points(particleGeometry, particleMaterial);
           loadingScene.add(loadingParticles);
@@ -5564,7 +5581,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       function onLoadingResize() {
         if (!loadingRenderer || !loadingCamera) return;
-        loadingCamera.aspect = window.innerWidth / window.innerHeight;
+        const aspect = window.innerWidth / window.innerHeight;
+        loadingCamera.left = -aspect;
+        loadingCamera.right = aspect;
         loadingCamera.updateProjectionMatrix();
         loadingRenderer.setSize(window.innerWidth, window.innerHeight);
       }
@@ -5575,34 +5594,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         const time = Date.now() * 0.001;
 
-        // Smoke animation
-        loadingSmokePlanes.forEach((plane, i) => {
-          plane.rotation.z += 0.001 * (i + 1);
-          plane.position.y += Math.sin(time * 0.2 + i) * 0.002;
-        });
-
-        // Light rays pulse
-        if (loadingLightRays) {
-          loadingLightRays.material.opacity = 0.2 + Math.sin(time * 2) * 0.1;
-          const s = 8 + Math.sin(time) * 0.5;
-          loadingLightRays.scale.set(s, s, 1);
+        // Update shader time uniform
+        if (loadingGlowMaterial) {
+          loadingGlowMaterial.uniforms.time.value = time;
         }
 
-        // Domino animation
-        if (loadingDomino) {
-          loadingDomino.rotation.y = Math.sin(time) * 0.05;
-          loadingDomino.rotation.x = Math.cos(time * 0.5) * 0.03;
-          const scale = 1 + Math.sin(time * 2) * 0.01;
-          loadingDomino.scale.set(scale, scale, scale);
-        }
-
-        // Particles animation
+        // Particles animation - slow drift
         if (loadingParticles) {
           const positions = loadingParticles.geometry.attributes.position.array;
           for (let i = 0; i < positions.length; i += 3) {
-            positions[i + 1] += 0.005; // Upward drift
-            positions[i] += Math.sin(time + i) * 0.002; // Sway
-            if (positions[i + 1] > 5) positions[i + 1] = -5;
+            positions[i + 1] += 0.002; // Slow upward drift
+            positions[i] += Math.sin(time * 0.5 + i) * 0.0005; // Gentle sway
+            if (positions[i + 1] > 2) positions[i + 1] = -2;
           }
           loadingParticles.geometry.attributes.position.needsUpdate = true;
         }
@@ -5613,7 +5616,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       function cleanupLoadingThreeJS() {
         cancelAnimationFrame(loadingAnimationId);
         window.removeEventListener('resize', onLoadingResize);
-        
+
         if (loadingRenderer) {
           loadingRenderer.dispose();
           loadingRenderer.forceContextLoss();
@@ -5626,12 +5629,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (object.geometry) object.geometry.dispose();
           if (object.material) {
             if (Array.isArray(object.material)) {
-              object.material.forEach(mat => {
-                if (mat.map) mat.map.dispose();
-                mat.dispose();
-              });
+              object.material.forEach(mat => mat.dispose());
             } else {
-              if (object.material.map) object.material.map.dispose();
               object.material.dispose();
             }
           }
@@ -5640,10 +5639,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         loadingScene = null;
         loadingCamera = null;
         loadingRenderer = null;
-        loadingDomino = null;
         loadingParticles = null;
-        loadingSmokePlanes = [];
-        loadingLightRays = null;
+        loadingGlowMaterial = null;
       }
 
       // Start Three.js when script runs
