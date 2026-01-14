@@ -480,6 +480,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Tobias: Smoke Layer - Foreground Atmosphere */
+      /* z-index: 3 - BELOW text (z-index 10+) but above fog (z-index 1) */
       .smoke-layer {
         position: absolute;
         inset: -10%;
@@ -487,7 +488,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         height: 120%;
         background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
         pointer-events: none;
-        z-index: 10;
+        z-index: 3;
         opacity: 0;
         mix-blend-mode: screen;
         transition: opacity 4s ease;
@@ -706,10 +707,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
 
+      /* z-index: 2 - BELOW text (z-index 10+) */
       .panel-overlay {
         position: absolute;
         inset: 0;
-        background: 
+        background:
           radial-gradient(
             circle at 50% 50%,
             transparent 20%,
@@ -724,7 +726,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             rgba(0, 0, 0, 0.7) 100%
           );
         pointer-events: none;
-        z-index: 10;
+        z-index: 2;
       }
 
       .panel--form .panel-overlay {
@@ -1157,11 +1159,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-style: italic;
         font-weight: 400;
         font-size: clamp(2.4rem, 9vw, 4rem);
-        color: var(--cream);
+        color: #fff; /* Pure white for maximum brightness */
         letter-spacing: 0.08em;
         text-align: center;
         opacity: 0;
-        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+        /* Warm glow to make it pop against the dark letterbox */
+        text-shadow:
+          0 0 20px rgba(212, 165, 116, 0.4),
+          0 0 40px rgba(212, 165, 116, 0.2),
+          0 4px 20px rgba(0, 0, 0, 0.5);
       }
 
       /* BOTTOM LETTERBOX - The narrative rises from shadow */
@@ -1284,19 +1290,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Scroll indicator - appears after narrative completes */
+      /* Part of flex flow inside whisper-bottom, not absolutely positioned */
       .whisper-scroll-hint {
-        position: absolute;
-        bottom: 18vh; /* Above La Mesa */
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 11;
+        margin-top: 3vh;
         opacity: 0;
         pointer-events: none;
+        display: flex;
+        justify-content: center;
       }
 
       .whisper-scroll-hint__chevron {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         border-right: 2px solid var(--brass);
         border-bottom: 2px solid var(--brass);
         transform: rotate(45deg);
@@ -1314,11 +1319,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       @keyframes scrollHintReveal {
         0% {
           opacity: 0;
-          transform: translateX(-50%) translateY(-10px);
+          transform: translateY(-8px);
         }
         100% {
           opacity: 1;
-          transform: translateX(-50%) translateY(0);
+          transform: translateY(0);
         }
       }
 
@@ -1327,7 +1332,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           transform: rotate(45deg) translateY(0);
         }
         50% {
-          transform: rotate(45deg) translateY(5px);
+          transform: rotate(45deg) translateY(4px);
         }
       }
 
@@ -1563,10 +1568,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         .whisper-line--wait {
           font-size: clamp(1.8rem, 8vw, 2.8rem);
-        }
-
-        .whisper-scroll-hint {
-          bottom: 20vh; /* Higher on mobile for La Mesa */
         }
 
         .panel-content--build {
@@ -5472,11 +5473,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <p class="whisper-line whisper-line--learn">...learn</p>
             <p class="whisper-line whisper-line--wait">...wait.</p>
           </div>
-        </div>
-
-        <!-- Scroll hint - for the dumb dumbs -->
-        <div class="whisper-scroll-hint">
-          <div class="whisper-scroll-hint__chevron"></div>
+          <!-- Scroll hint - appears after narrative, guides the uninitiated -->
+          <div class="whisper-scroll-hint">
+            <div class="whisper-scroll-hint__chevron"></div>
+          </div>
         </div>
 
         <div class="smoke-layer"></div>
@@ -5675,8 +5675,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         </div>
       </section>
     </main>
+    </div>
 
-    <!-- Success Overlay (outside main for position:fixed to work) -->
+    <!-- Success Overlay (outside scroll container for position:fixed to work reliably on iOS Safari) -->
     <div class="success" id="success">
       <!-- Domino Hero Element -->
       <div class="domino-container">
@@ -5996,6 +5997,43 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // First panel is always in view
       allPanels[0]?.classList.add('in-view');
+
+      // Scroll-lock for Panel 2 narrative sequence
+      // Prevents scrolling until all animations complete (~7 seconds)
+      const whisperPanel = document.getElementById('panelWhisper');
+      let narrativeLocked = false;
+      let narrativeHasPlayed = false;
+
+      function preventScroll(e) {
+        if (narrativeLocked) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+
+      const narrativeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !narrativeHasPlayed) {
+            narrativeHasPlayed = true;
+            narrativeLocked = true;
+
+            // Add event listeners to prevent scroll
+            document.addEventListener('wheel', preventScroll, { passive: false });
+            document.addEventListener('touchmove', preventScroll, { passive: false });
+
+            // Unlock after animations complete (last word at 5.5s + 1s + scroll hint at 7s + buffer)
+            setTimeout(() => {
+              narrativeLocked = false;
+              document.removeEventListener('wheel', preventScroll);
+              document.removeEventListener('touchmove', preventScroll);
+            }, 7500);
+          }
+        });
+      }, { threshold: 0.6 });
+
+      if (whisperPanel) {
+        narrativeObserver.observe(whisperPanel);
+      }
 
       // Progress counter animation
       const playerCountEl = document.getElementById("playerCount");

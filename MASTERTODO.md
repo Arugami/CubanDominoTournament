@@ -261,6 +261,11 @@
 - [x] **Form headline mobile placement** — "La mesa te espera" compact at top on mobile
 - [x] **Scarcity indicator below button** — Small "X seats remain" under Claim Your Seat on mobile
 - [x] **Footer tagline removed** — Cleaner footer without "La mesa te espera" tagline
+- [x] **Hero typography redesign** — UFC-style CDL I brass badge, removed redundant "Cuban Domino League presents"
+- [x] **Championship tagline styling** — Decorative brass lines framing "THE FIRST CUBAN DOMINO LEAGUE CHAMPIONSHIP"
+- [x] **Ticker CSS :has() removal** — Removed Safari-incompatible :has() selectors causing dimming issues
+- [x] **Ticker explicit visibility rules** — Added :not(.ticker-dimmed) CSS with !important to force full opacity
+- [x] **Ticker debug logging** — MutationObserver tracks class changes for Safari debugging
 
 ---
 
@@ -314,9 +319,61 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 14, 2026 (Mobile Form Panel Redesign)
+**Last Updated:** January 14, 2026 (Hero Redesign + Ticker Safari Fix)
 
 *"La mesa te espera."*
+
+---
+
+## Recent Session Notes (Jan 14, 2026) — Hero Redesign + Ticker Safari Fix
+
+### Hero Section Redesign (Tobias van Schneider critique)
+
+**Problems identified:**
+1. "Cuban Domino League presents" too quiet/invisible
+2. "CDL 1" floating with no visual relationship to main title
+3. Subtitle "THE FIRST CUBAN DOMINO LEAGUE CHAMPIONSHIP" felt redundant
+4. Too many elements competing with "La Salida"
+
+**Solution: UFC-style tournament badge**
+- Removed "Cuban Domino League presents" entirely (redundant with CDL branding)
+- Created brass gradient badge for "CDL I" (like UFC 1, UFC 2, etc.)
+- Badge sits above "La Salida" as a tournament marker
+- Championship tagline now has decorative brass lines framing it
+
+**New hierarchy:**
+1. **CDL I badge** — Brass gradient, all caps, subtle shadow
+2. **La Salida** — Dominates, unchanged
+3. **Championship stamp** — Brass lines frame "THE FIRST CUBAN DOMINO LEAGUE CHAMPIONSHIP"
+4. **Date/Venue** — Unchanged
+
+### Ticker Safari Dimming Bug
+
+**Symptoms on iPhone Safari:**
+1. Page loads → ticker is dimmed (~50% opacity)
+2. Scroll to panel 2 → ticker suddenly undims
+3. ~5 seconds later → dims again and stays dimmed
+
+**Root cause investigation:**
+- CSS `:has(.chat-panel.is-open)` selectors were misbehaving in Safari
+- Safari's `:has()` support is inconsistent and can trigger false positives
+
+**Fixes applied:**
+1. **Removed all `:has()` ticker rules** — No more CSS reliance on `:has()` for ticker dimming
+2. **Added explicit `:not(.ticker-dimmed)` rules** — With `!important` to force full opacity
+3. **JS-only class toggling** — `openChat()` and `toggleChat()` now manage `ticker-dimmed` class
+4. **Debug logging** — MutationObserver tracks class changes for diagnosis
+
+**CSS approach:**
+```css
+/* Force visibility unless explicitly dimmed */
+.mesa-ticker:not(.ticker-dimmed) .mesa-ticker__track,
+.mesa-ticker:not(.ticker-dimmed) .mesa-ticker__badge {
+  opacity: 1 !important;
+}
+```
+
+**Status:** Fix deployed, awaiting iPhone testing. Debug logs will reveal if class is being added unexpectedly.
 
 ---
 
