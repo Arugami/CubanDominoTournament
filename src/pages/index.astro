@@ -94,6 +94,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background-repeat: no-repeat;
       }
 
+      /* Film grain overlay - "Like photos from 1978" — Wes Anderson
+         2-3% noise - not visible, but felt. Memory texture. */
+      .panel-bg::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.03'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 2;
+        mix-blend-mode: overlay;
+        opacity: 0.5;
+      }
+
       /* Panel in view - no transform effects */
       .panel.in-view .panel-bg {
         /* Clean, stable backgrounds */
@@ -229,6 +242,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .panel--hero .brand-lockup,
       .panel--hero .event-title,
+      .panel--hero .event-edition,
       .panel--hero .hero-tagline,
       .panel--hero .hero-subtitle,
       .panel--hero .event-numeral {
@@ -236,12 +250,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: none !important;
       }
 
-      /* Stagger the fade-in timing */
+      /* Stagger the fade-in timing - CDL I leads, then title follows */
       .panel--hero .brand-lockup { animation-delay: 0.05s !important; }
-      .panel--hero .event-title { animation-delay: 0.15s !important; }
-      .panel--hero .event-numeral { animation-delay: 0.2s !important; }
-      .panel--hero .hero-tagline { animation-delay: 0.25s !important; }
-      .panel--hero .hero-subtitle { animation-delay: 0.35s !important; }
+      .panel--hero .event-edition { animation-delay: 0.12s !important; }
+      .panel--hero .event-title { animation-delay: 0.2s !important; }
+      .panel--hero .event-numeral { animation-delay: 0.25s !important; }
+      .panel--hero .hero-tagline { animation-delay: 0.35s !important; }
+      .panel--hero .hero-subtitle { animation-delay: 0.45s !important; }
 
       /* Kill any ::after shine effects on hero text */
       .panel--hero .event-numeral::after {
@@ -366,8 +381,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-size: clamp(0.85rem, 2vw, 1.1rem);
         font-style: italic;
         font-weight: 400;
-        color: rgba(255, 255, 255, 0.6);
-        letter-spacing: 0.15em;
+        color: rgba(248, 239, 230, 0.75); /* warm beige/cream */
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+        letter-spacing: 0.14em;
         text-transform: lowercase;
       }
 
@@ -376,8 +392,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0;
-        margin-bottom: 24px;
+        gap: 12px;
+        margin-bottom: 18px;
         animation: fadeInUp 1s ease-out 0.3s both;
       }
 
@@ -427,10 +443,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* La Salida specific styling */
       .event-numeral--salida {
-        font-size: clamp(3rem, 16vw, 10rem);
+        font-size: clamp(2.8rem, 14vw, 8.6rem);
         font-style: italic;
-        font-weight: 700;
-        letter-spacing: 0.02em;
+        font-weight: 650;
+        letter-spacing: 0.01em;
         line-height: 0.9;
         -webkit-font-smoothing: antialiased;
         text-rendering: geometricPrecision;
@@ -464,7 +480,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         50% { opacity: 1; }
       }
 
-      /* Hero tagline - "The First Cuban Domino League Championship" */
+      /* Event edition - CDL 1 (fight-card, grounded) */
+      .event-edition {
+        display: inline-block;
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        font-size: clamp(0.78rem, 2.2vw, 0.95rem);
+        font-weight: 800;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        margin: 0 0 8px;
+        opacity: 0.95;
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
+      }
+
+      /* Hero tagline */
       .hero-tagline {
         font-family: "IBM Plex Sans", system-ui, sans-serif;
         font-size: clamp(0.7rem, 1.5vw, 0.85rem);
@@ -827,138 +856,196 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Chat Widget - The Sacred Table (Amber Glass & Brass) */
+      .chat-widget--hidden {
+        display: none !important;
+      }
+
       .chat-widget {
         position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 1000;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10001; /* Must be higher than chat-backdrop (10000) */
         font-family: "IBM Plex Sans", sans-serif;
-        /* Don't use filter on container: it breaks `position: fixed` descendants on iOS Safari */
+        background: transparent;
+        pointer-events: none; /* Allow interaction with content behind ticker */
+      }
+      .chat-widget > * {
+        pointer-events: auto; /* Re-enable for children */
       }
 
-      /* Toggle Button - Floating Pill */
+      /* ===========================================
+         THE BONE LANGUAGE - Domino Tile Button
+         "Put the bone in their face." — George Lois
+         =========================================== */
       .chat-toggle {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 10px;
-        background: rgba(28, 19, 15, 0.9);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        color: var(--brass);
+        justify-content: flex-end;
+        gap: 0;
+        width: 84px;
+        height: 135px;
+        background: linear-gradient(
+          180deg,
+          #f5f0e6 0%,
+          #e8e0d0 50%,
+          #ddd5c5 100%
+        );
         border: none;
-        border-radius: 50px; /* Full pill shape */
-        padding: 14px 24px;
+        border-radius: 14px;
+        padding: 0;
         cursor: pointer;
         box-shadow:
-          0 4px 24px rgba(0, 0, 0, 0.5),
-          0 0 0 1px rgba(212, 165, 116, 0.15),
-          0 0 30px rgba(212, 165, 116, 0.08);
-        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          0 8px 32px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(212, 165, 116, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.5),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         position: relative;
-        overflow: hidden;
-        animation: pillGlow 3s ease-in-out infinite;
+        overflow: visible;
+        animation: boneHeartbeat 3s ease-in-out infinite;
       }
 
-      /* Soft breathing glow */
-      @keyframes pillGlow {
+      /* Heartbeat pulse - the bone is alive */
+      @keyframes boneHeartbeat {
         0%, 100% {
+          transform: scale(1);
           box-shadow:
-            0 4px 24px rgba(0, 0, 0, 0.5),
-            0 0 0 1px rgba(212, 165, 116, 0.15),
-            0 0 30px rgba(212, 165, 116, 0.08);
+            0 8px 32px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(212, 165, 116, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            inset 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
         50% {
+          transform: scale(1.02);
           box-shadow:
-            0 6px 32px rgba(0, 0, 0, 0.6),
-            0 0 0 1px rgba(212, 165, 116, 0.25),
-            0 0 50px rgba(212, 165, 116, 0.15);
+            0 10px 40px rgba(0, 0, 0, 0.55),
+            0 0 0 1px rgba(212, 165, 116, 0.5),
+            0 0 30px rgba(212, 165, 116, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            inset 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
+      }
+
+      /* Domino pip pattern - 5 pips like the "5" side of a die */
+      .chat-toggle::before {
+        content: '';
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 54px;
+        height: 54px;
+        background:
+          radial-gradient(circle at 25% 25%, rgba(183, 106, 59, 0.45) 6px, transparent 6px),
+          radial-gradient(circle at 75% 25%, rgba(183, 106, 59, 0.45) 6px, transparent 6px),
+          radial-gradient(circle at 50% 50%, rgba(183, 106, 59, 0.45) 6px, transparent 6px),
+          radial-gradient(circle at 25% 75%, rgba(183, 106, 59, 0.45) 6px, transparent 6px),
+          radial-gradient(circle at 75% 75%, rgba(183, 106, 59, 0.45) 6px, transparent 6px);
+        pointer-events: none;
+      }
+
+      /* Horizontal divider line - the bone's spine */
+      .chat-toggle::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        right: 10px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(183, 106, 59, 0.4) 15%,
+          rgba(183, 106, 59, 0.4) 85%,
+          transparent 100%
+        );
+        pointer-events: none;
       }
 
       .chat-toggle:hover {
-        transform: translateY(-3px) scale(1.02);
-        background: rgba(35, 24, 18, 0.95);
-        box-shadow:
-          0 8px 40px rgba(0, 0, 0, 0.6),
-          0 0 0 1px rgba(212, 165, 116, 0.4),
-          0 0 60px rgba(212, 165, 116, 0.2);
         animation: none;
+        transform: translateY(-6px) scale(1.05);
+        box-shadow:
+          0 16px 48px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(212, 165, 116, 0.6),
+          0 0 60px rgba(212, 165, 116, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.5),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.1);
       }
 
       .chat-toggle__text {
         font-family: "Bodoni Moda", serif;
         text-transform: uppercase;
-        letter-spacing: 0.15em;
-        font-size: 0.85rem;
-        font-weight: 600;
-        position: relative;
-        top: 1px;
-        color: var(--brass);
+        letter-spacing: 0.1em;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--copper);
+        padding: 8px 6px 14px;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
       }
 
+      /* Hide the old pulsing dot - pips are the new icon */
       .chat-toggle__icon {
-        width: 8px;
-        height: 8px;
-        background: var(--brass);
-        border-radius: 50%;
-        box-shadow: 0 0 10px var(--brass);
-        animation: soulPulse 3s infinite;
-      }
-
-      @keyframes soulPulse {
-        0%, 100% {
-          opacity: 0.5;
-          box-shadow: 0 0 5px var(--brass);
-          transform: scale(1);
-        }
-        50% {
-          opacity: 1;
-          box-shadow: 0 0 15px var(--brass), 0 0 30px rgba(212, 165, 116, 0.5);
-          transform: scale(1.1);
-        }
+        display: none;
       }
 
       .chat-toggle__badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
         background: var(--copper);
         color: #fff;
         font-family: "Bodoni Moda", serif;
         font-size: 0.75rem;
-        min-width: 18px;
-        height: 18px;
+        min-width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-        margin-left: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        box-shadow: 0 3px 12px rgba(0,0,0,0.5);
+        border: 2px solid #f5f0e6;
       }
 
       /* Chat Panel - The Vessel */
       .chat-panel {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: 100vh;
-        height: 100dvh;
-        /* Layered atmosphere - cigar lounge feel (fully opaque) */
+        bottom: 0; 
+        right: 24px;
+        width: 400px;
+        height: 600px;
+        max-height: 80vh;
         background:
-          /* Vignette */
           radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%),
-          /* Subtle noise texture for aged paper feel */
           url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),
-          /* Warm brass tint base - fully opaque */
           linear-gradient(180deg, rgb(28, 19, 15) 0%, rgb(20, 14, 11) 100%);
         background-blend-mode: normal, overlay, normal;
-        border: none;
-        border-radius: 0;
-        display: none;
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 16px 16px 0 0;
+        display: flex;
         flex-direction: column;
         overflow: hidden;
-        box-shadow: none;
-        z-index: 9999; /* Above everything */
+        box-shadow: 0 -12px 48px rgba(0,0,0,0.6);
+        z-index: 10001; /* Higher than ticker */
+        transform: translateY(100%);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+        opacity: 0;
+        padding-bottom: 40px; /* Space for ticker underneath */
+        pointer-events: none; /* Prevent interaction when closed */
+      }
+
+      @media (max-width: 768px) {
+        .chat-panel {
+          right: 0;
+          left: 0;
+          width: 100%;
+          bottom: 0;
+          height: 80vh;
+          border-radius: 20px 20px 0 0;
+          padding-bottom: 34px;
+        }
       }
 
       /* Subtle wood grain accent on left edge */
@@ -981,35 +1068,33 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .chat-panel.is-open {
-        display: flex;
-        animation: ritualOpen 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Wes: slight overshoot, like a door swinging open */
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto; /* Enable interaction when open */
       }
 
       .chat-panel.is-closing {
-        display: flex;
-        animation: ritualClose 0.25s ease-out forwards;
+        transform: translateY(100%);
+        opacity: 0;
+        pointer-events: none;
       }
 
-      @keyframes ritualOpen {
-        from {
-          opacity: 0;
-          transform: translateY(20px) scale(0.96);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
+      /* Background Dimming for Chat Overlay */
+      .chat-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 10000; /* Just below chat panel */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
       }
 
-      @keyframes ritualClose {
-        from {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-        to {
-          opacity: 0;
-          transform: translateY(16px) scale(0.96);
-        }
+      .chat-backdrop.is-visible {
+        opacity: 1;
+        visibility: visible;
       }
 
       /* Header - The Inscription */
@@ -1045,11 +1130,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .chat-header__title {
         font-family: "Bodoni Moda", serif;
         font-weight: 700;
-        font-size: 1rem;
+        font-size: 1.1rem;
         color: var(--brass);
         text-transform: uppercase;
         letter-spacing: 0.15em; /* Wes: precisely 0.15em */
         text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        position: relative;
+        padding-bottom: 8px;
+      }
+
+      /* Brass underline - "Like a sign above a door" — Herb Lubalin
+         LA MESA is a PLACE. You have arrived. */
+      .chat-header__title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 80px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          var(--brass) 20%,
+          var(--brass) 80%,
+          transparent 100%
+        );
+        border-radius: 1px;
       }
 
       .chat-header__subtitle {
@@ -1059,18 +1167,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0.4; /* Wes: reduce opacity to 0.4 */
         letter-spacing: 0.08em;
         font-variant: small-caps; /* Wes: small-caps, not uppercase */
-        margin-top: 2px;
+        margin-top: 6px;
       }
 
-      /* Fancy underlines/accents */
+      /* Decorative accent below subtitle */
       .chat-header__title-group::after {
         content: "";
         display: block;
-        width: 24px;
-        height: 1px;
+        width: 6px;
+        height: 6px;
         background: var(--copper);
-        margin: 8px auto 0;
-        opacity: 0.6;
+        margin: 10px auto 0;
+        opacity: 0.4;
+        border-radius: 50%;
       }
 
       .chat-header__close {
@@ -1106,8 +1215,36 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         gap: 20px;
         scrollbar-width: thin;
         scrollbar-color: var(--muted) transparent;
+        position: relative;
+        /* Warm fog gradient - tobacco smoke atmosphere (Wes: amber in the shadows) */
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.25) 0%,
+          rgba(20, 14, 11, 0.15) 30%,
+          rgba(28, 19, 15, 0.05) 70%,
+          transparent 100%
+        );
       }
-      
+
+      /* Fog layer at top - like looking through smoky room */
+      .chat-messages::before {
+        content: '';
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(
+          180deg,
+          rgba(20, 14, 11, 0.6) 0%,
+          rgba(20, 14, 11, 0.3) 50%,
+          transparent 100%
+        );
+        pointer-events: none;
+        z-index: 1;
+        margin-bottom: -60px;
+      }
+
       .chat-messages::-webkit-scrollbar { width: 4px; }
       .chat-messages::-webkit-scrollbar-track { background: transparent; }
       .chat-messages::-webkit-scrollbar-thumb { background: var(--muted); }
@@ -1158,96 +1295,81 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Message Styling - The Script (Wifredo: Messages should *arrive*, not appear) */
+      /* ===========================================
+         LA MESA MESSAGE STYLING
+         "Make them feel like they're at the table."
+         =========================================== */
+
       .chat-message {
-        display: flex;
-        align-items: flex-start;
-        gap: 16px;
-        padding: 12px;
+        padding: 14px 16px;
+        margin: 6px 0;
         border-radius: 12px;
-        background: rgba(212, 165, 116, 0.02); /* Wes: warm brass tint */
-        animation: smokeArrival 0.5s ease-out;
-        transition: background 0.2s;
+        background: rgba(28, 19, 15, 0.5);
+        border: 1px solid rgba(212, 165, 116, 0.06);
+        animation: smokeArrival 0.4s ease-out;
+        transition: all 0.2s ease;
+        position: relative;
       }
 
       .chat-message:hover {
-        background: rgba(255, 248, 240, 0.03); /* Wes: cream-tinted hover */
+        background: rgba(28, 19, 15, 0.7);
+        border-color: rgba(212, 165, 116, 0.12);
       }
 
-      /* Others get subtle copper border */
+      /* Others - subtle left accent */
       .chat-message:not(.chat-message--self) {
-        border-left: 2px solid rgba(183, 106, 59, 0.15);
-        margin-right: 16px;
+        border-left: 3px solid rgba(183, 106, 59, 0.3);
       }
 
-      /* Self messages - Ochún's gold */
+      /* Self messages - Ochún's gold accent */
       .chat-message--self {
-        flex-direction: row-reverse;
-        text-align: right;
-        background: rgba(212, 165, 116, 0.06); /* Wes: brass tint for self */
-        border-right: 2px solid rgba(212, 165, 116, 0.25);
-        margin-left: 16px;
+        text-align: left;
+        background: rgba(212, 165, 116, 0.06);
+        border-left: 3px solid rgba(212, 165, 116, 0.4);
       }
 
-      /* Smoke entrance - like a player pulling up their chair (Wifredo) */
+      .chat-message--self:hover {
+        background: rgba(212, 165, 116, 0.1);
+      }
+
+      /* Self message author styling */
+      .chat-message--self .chat-message__author-name {
+        color: var(--brass);
+      }
+
+      /* Smoke entrance - like a player pulling up their chair */
       @keyframes smokeArrival {
         from {
           opacity: 0;
-          transform: translateY(12px);
-          filter: blur(2px);
-        }
-        60% {
-          filter: blur(0);
+          transform: translateY(8px);
         }
         to {
           opacity: 1;
           transform: translateY(0);
-          filter: blur(0);
         }
       }
 
-      /* Staggered message entry for rhythm (Wes: 0/50/100ms) */
+      /* Staggered message entry for rhythm */
       .chat-message:nth-child(3n+1) { animation-delay: 0ms; }
-      .chat-message:nth-child(3n+2) { animation-delay: 50ms; }
-      .chat-message:nth-child(3n) { animation-delay: 100ms; }
+      .chat-message:nth-child(3n+2) { animation-delay: 40ms; }
+      .chat-message:nth-child(3n) { animation-delay: 80ms; }
 
-      .chat-message__avatar {
-        width: 36px;
-        height: 36px;
-        flex-shrink: 0;
-        border-radius: 50%;
-        border: 2px solid var(--muted);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0,0,0,0.3);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        transition: all 0.3s;
-      }
-
-      /* Self avatar gets gold border and glow (Wifredo: Ochún's color) */
-      .chat-message--self .chat-message__avatar {
-        border-color: var(--brass);
-        box-shadow: 0 0 15px rgba(212, 165, 116, 0.2);
-      }
-      
-      /* Simple Icon placeholders - SVG driven usually, using CSS shapes for now or minimal content */
+      /* Avatar option image placeholders (for selector) */
       .avatar-option-img {
-         width: 16px;
-         height: 16px;
+         width: 20px;
+         height: 20px;
          background-size: contain;
       }
 
-      /* Pixel Flag Emoji Styling - retro game aesthetic */
+      /* Pixel Flag Emoji - retro game aesthetic (for selector) */
       .avatar-flag-pixel {
-        font-size: 24px;
+        font-size: 28px;
         line-height: 1;
         display: block;
         text-align: center;
         font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
         position: relative;
         z-index: 1;
-        /* Pixel art effect - sharper, more contrast */
         image-rendering: pixelated;
         image-rendering: crisp-edges;
         filter: contrast(1.15) saturate(1.3) drop-shadow(0 2px 4px rgba(0,0,0,0.4));
@@ -1262,9 +1384,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         filter: contrast(1.2) saturate(1.4) drop-shadow(0 0 8px rgba(255,215,0,0.4));
       }
 
-      /* --- RITUAL ICONS (Legacy Flag Support) --- */
+      /* Flag in chat messages - inline with name */
+      .chat-message__flag {
+        font-size: 1.1rem;
+        line-height: 1;
+        font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+      }
+
+      /* Legacy avatar-flag for selector */
       .avatar-flag {
-        font-size: 20px;
+        font-size: 24px;
         line-height: 1;
         display: block;
         text-align: center;
@@ -1279,212 +1409,105 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .chat-message__header {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: space-between;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
+        gap: 12px;
       }
 
       .chat-message__author {
         font-family: "Bodoni Moda", serif;
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
+        flex-wrap: wrap;
       }
 
-      /* Free Agent Badge */
-      .free-agent-badge {
+      /* Free Agent Pip - Single pip = "half of something, waiting for a partner"
+         "One pip is incomplete. A soul looking for its other half." — Wifredo Lam */
+      .free-agent-pip {
+        color: var(--brass);
+        font-size: 0.7rem;
+        text-shadow: 0 0 6px rgba(212, 165, 116, 0.5);
+        margin-left: 4px;
+      }
+
+      /* Author name - PROMINENT */
+      .chat-message__author-name {
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--brass);
+        letter-spacing: 0.03em;
+      }
+
+      /* Self name highlighted */
+      .chat-message--self .chat-message__author-name {
+        color: #e8c896;
+        text-shadow: 0 0 12px rgba(212, 165, 116, 0.3);
+      }
+
+      /* Others in warmer copper */
+      .chat-message:not(.chat-message--self) .chat-message__author-name {
+        color: #d4a574;
+      }
+
+      /* Timestamp - subtle, secondary */
+      .chat-message__time {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.35);
+        letter-spacing: 0.02em;
+        font-weight: 500;
+      }
+
+      /* Message content */
+      .chat-message__content {
+        color: rgba(255, 255, 255, 0.9);
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-weight: 400;
+      }
+
+      /* ===========================================
+         PINNED MESSAGES - Honored at the Table
+         =========================================== */
+      .chat-message--pinned {
+        background: rgba(212, 165, 116, 0.1);
+        border-color: rgba(212, 165, 116, 0.25);
+        border-left: 3px solid var(--brass) !important;
+      }
+      .chat-message--pinned:hover {
+        background: rgba(212, 165, 116, 0.14);
+      }
+
+      /* Pinned badge - elegant, not emoji */
+      .pinned-badge {
+        position: absolute;
+        top: -10px;
+        right: 12px;
         font-family: "IBM Plex Sans", sans-serif;
         font-size: 0.6rem;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--copper);
-        background: rgba(183, 106, 59, 0.15);
-        border: 1px solid rgba(183, 106, 59, 0.3);
-        border-radius: 4px;
-        padding: 2px 6px;
-        white-space: nowrap;
-      }
-
-      .chat-message__author-name {
-        font-family: "Bodoni Moda", serif;
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: var(--brass); /* Default Gold/Brass */
-        letter-spacing: 0.05em;
-      }
-      
-      /* Self is highlighted in Gold/Ochún */
-      .chat-message--self .chat-message__author { 
-        color: var(--gold); 
-        text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
-      }
-      
-      /* Others in Copper */
-      .chat-message:not(.chat-message--self) .chat-message__author {
-        color: var(--copper);
-      }
-
-      .chat-message__time {
-        font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.65rem;
-        color: rgba(255, 255, 255, 0.3);
-        letter-spacing: 0.05em;
-      }
-
-      .chat-message__content {
-        color: rgba(248, 239, 230, 0.9); /* Cream */
-        font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        font-weight: 300;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-      }
-
-      /* Reactions */
-      .chat-message__reactions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-top: 8px;
-        align-items: center;
-      }
-
-      .reaction-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 4px 8px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        font-size: 0.75rem;
-        color: rgba(255, 255, 255, 0.7);
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      .reaction-chip:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.2);
-      }
-      .reaction-chip--active {
-        background: rgba(212, 165, 116, 0.2);
-        border-color: var(--brass);
-        color: var(--brass);
-      }
-
-      .reaction-add {
-        width: 28px;
-        height: 28px;
-        padding: 0;
-        background: transparent;
-        border: 1px dashed rgba(255, 255, 255, 0.15);
-        border-radius: 14px;
-        color: rgba(255, 255, 255, 0.3);
-        cursor: pointer;
-        font-size: 0.9rem;
-        line-height: 1;
-        transition: all 0.2s;
-        opacity: 0.4; /* Team decision: always visible */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .chat-message:hover .reaction-add {
-        opacity: 1;
-      }
-      .reaction-add:hover {
-        border-color: var(--brass);
-        color: var(--brass);
-        background: rgba(212, 165, 116, 0.1);
-      }
-
-      /* Reaction Picker */
-      .reaction-picker {
-        position: fixed;
-        display: none;
-        gap: 4px;
-        padding: 8px 12px;
-        background: rgba(28, 19, 15, 0.98);
-        border: 1px solid rgba(212, 165, 116, 0.3);
-        border-radius: 20px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-      }
-      .reaction-picker.is-open {
-        display: flex;
-      }
-      .reaction-picker button {
-        width: 32px;
-        height: 32px;
-        padding: 0;
-        background: transparent;
-        border: none;
-        border-radius: 4px;
-        font-size: 1.1rem;
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-      .reaction-picker button:hover {
-        background: rgba(212, 165, 116, 0.2);
-        transform: scale(1.2);
-      }
-
-      /* Pinned Messages */
-      .chat-message--pinned {
-        background: rgba(212, 165, 116, 0.08);
-        border-left: 2px solid var(--brass);
-        margin-left: -8px;
-        padding-left: 8px;
-        position: relative;
-      }
-      .pinned-badge {
-        position: absolute;
-        top: -8px;
-        right: 8px;
-        font-size: 0.65rem;
+        letter-spacing: 0.1em;
         color: var(--brass);
         background: rgba(28, 19, 15, 0.95);
-        padding: 2px 6px;
-        border-radius: 4px;
+        padding: 4px 10px;
+        border-radius: 6px;
         border: 1px solid rgba(212, 165, 116, 0.3);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
 
-      /* Pin Button */
-      .chat-message__header-actions {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .pin-btn {
-        background: transparent;
-        border: none;
-        font-size: 0.75rem;
-        cursor: pointer;
-        opacity: 0.3; /* Always visible */
-        transition: opacity 0.2s, transform 0.2s;
-        padding: 4px;
-        filter: grayscale(1);
-      }
-      .chat-message:hover .pin-btn {
-        opacity: 0.6;
-      }
-      .pin-btn:hover {
-        opacity: 1 !important;
-        transform: scale(1.2);
-        filter: grayscale(0);
-      }
-      .pin-btn--active {
-        opacity: 1 !important;
-        filter: grayscale(0);
-      }
+      /* Pin functionality is admin-only (Erik via backend) */
 
       /* Pinned Section */
       .pinned-section {
-        background: rgba(212, 165, 116, 0.05);
-        border-bottom: 1px solid rgba(212, 165, 116, 0.15);
-        padding-bottom: 16px;
-        margin-bottom: 16px;
+        background: rgba(212, 165, 116, 0.04);
+        border-bottom: 1px solid rgba(212, 165, 116, 0.12);
+        padding: 12px 0 16px;
+        margin-bottom: 12px;
       }
       .pinned-section__label {
         font-family: "Bodoni Moda", serif;
@@ -1506,13 +1529,256 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.05em;
       }
 
-      /* Input Area - The Ledger */
+      /* ===========================================
+         MESA TICKER - ESPN Sports Broadcast Style
+         =========================================== */
+      .mesa-ticker {
+        height: 40px;
+        background: #0a0604;
+        border-top: 1px solid rgba(212, 165, 116, 0.3);
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+        z-index: 10002; /* Highest, remains above chat panel shadow */
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+        transition: background 0.3s ease;
+      }
+
+      /* Semi-transparent when chat is open */
+      .chat-widget:has(.chat-panel.is-open) .mesa-ticker {
+        background: rgba(10, 6, 4, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      @media (max-width: 768px) {
+        .mesa-ticker {
+          height: 34px;
+        }
+      }
+
+      /* Fixed "LIVE" badge on left - ESPN style */
+      .mesa-ticker__badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 0 16px;
+        background: #cc0000; /* ESPN Red */
+        color: #ffffff;
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 3;
+        box-shadow: 4px 0 10px rgba(0,0,0,0.3);
+      }
+
+      .mesa-ticker__badge-dot {
+        width: 8px;
+        height: 8px;
+        background: #ffffff;
+        border-radius: 50%;
+        animation: badgePulse 1.2s ease-in-out infinite;
+        box-shadow: 0 0 10px rgba(255,255,255,0.8);
+      }
+
+      @keyframes badgePulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(0.8); }
+      }
+
+      /* Scrolling content area */
+      .mesa-ticker__scroll {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Fade edge on right only */
+      .mesa-ticker__scroll::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 60px;
+        background: linear-gradient(90deg, transparent 0%, #0a0604 100%);
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      /* Chat Bubble Button in Ticker */
+      .mesa-ticker__chat-btn {
+        width: 48px;
+        height: 100%;
+        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
+        border: none;
+        color: #0a0604;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 4;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+        box-shadow: -4px 0 15px rgba(0,0,0,0.4);
+      }
+
+      .mesa-ticker__chat-btn:hover {
+        background: linear-gradient(135deg, #e8c896 0%, var(--brass) 100%);
+        transform: scale(1.05);
+      }
+
+      .mesa-ticker__chat-btn:active {
+        transform: scale(0.95);
+      }
+
+      .mesa-ticker__chat-badge {
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        background: #cc0000;
+        color: white;
+        font-size: 0.6rem;
+        font-weight: 800;
+        min-width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #0a0604;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+
+      .mesa-ticker__track {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        animation: tickerScroll 18s linear infinite;
+        white-space: nowrap;
+      }
+
+      .mesa-ticker__track:hover {
+        animation-play-state: paused;
+      }
+
+      @keyframes tickerScroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+
+      .mesa-ticker__item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 24px;
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 0.75rem;
+      }
+
+      .mesa-ticker__item-icon {
+        width: 4px;
+        height: 4px;
+        background: var(--brass);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .mesa-ticker__item-name {
+        color: #ffffff;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+
+      .mesa-ticker__item-action {
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 400;
+      }
+
+      .mesa-ticker__separator {
+        color: var(--brass);
+        padding: 0 4px;
+        font-size: 0.5rem;
+        opacity: 0.6;
+      }
+
+      /* Live count in scroll */
+      .mesa-ticker__live {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 24px;
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 0.75rem;
+      }
+
+      .mesa-ticker__live-dot {
+        width: 6px;
+        height: 6px;
+        background: #22c55e;
+        border-radius: 50%;
+        animation: livePulse 1.5s ease-in-out infinite;
+      }
+
+      @keyframes livePulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.8); }
+      }
+
+      .mesa-ticker__live-count {
+        color: #ffffff;
+        font-weight: 700;
+      }
+
+      .mesa-ticker__live-label {
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.7rem;
+      }
+
+      .mesa-ticker__live-label {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      /* Input Area - The Ledger (lighter at bottom - where the action happens) */
       .chat-input-area {
         padding: 20px;
         display: flex;
         gap: 16px;
-        border-top: 1px solid rgba(212, 165, 116, 0.1);
-        background: rgba(0, 0, 0, 0.2);
+        border-top: 1px solid rgba(212, 165, 116, 0.15);
+        background: linear-gradient(
+          180deg,
+          rgba(28, 19, 15, 0.4) 0%,
+          rgba(28, 19, 15, 0.6) 100%
+        );
+        position: relative;
+      }
+
+      /* Warm glow above input - the fog clears here */
+      .chat-input-area::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        left: 0;
+        right: 0;
+        height: 40px;
+        background: linear-gradient(
+          180deg,
+          transparent 0%,
+          rgba(183, 106, 59, 0.03) 100%
+        );
+        pointer-events: none;
       }
 
       .chat-input {
@@ -1538,44 +1804,148 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-color: var(--brass);
       }
 
+      /* Send Button - The Domino Pip
+         A solid brass pip like on a domino tile.
+         "The pip is elegant. It echoes what we built." — Wifredo Lam */
       .chat-send {
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
-        background: transparent;
-        border: 2px solid var(--brass);
-        color: var(--brass);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        background: radial-gradient(
+          circle at 35% 35%,
+          #e8c896 0%,
+          var(--brass) 40%,
+          var(--copper) 100%
+        );
+        border: none;
         cursor: pointer;
-        transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.2s ease;
+        box-shadow:
+          0 3px 8px rgba(0, 0, 0, 0.4),
+          0 1px 3px rgba(0, 0, 0, 0.3),
+          inset 0 1px 2px rgba(255, 255, 255, 0.3),
+          inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+        position: relative;
       }
 
+      /* Hide the arrow - the pip IS the button */
       .chat-send svg {
-        width: 18px;
-        height: 18px;
-        fill: currentColor;
-        stroke: none;
+        display: none;
+      }
+
+      /* Subtle pulse when ready to send */
+      .chat-send:not(:disabled) {
+        animation: pipReady 2s ease-in-out infinite;
+      }
+
+      @keyframes pipReady {
+        0%, 100% {
+          box-shadow:
+            0 3px 8px rgba(0, 0, 0, 0.4),
+            0 1px 3px rgba(0, 0, 0, 0.3),
+            inset 0 1px 2px rgba(255, 255, 255, 0.3),
+            inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+        }
+        50% {
+          box-shadow:
+            0 3px 8px rgba(0, 0, 0, 0.4),
+            0 1px 3px rgba(0, 0, 0, 0.3),
+            0 0 12px rgba(212, 165, 116, 0.4),
+            inset 0 1px 2px rgba(255, 255, 255, 0.3),
+            inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+        }
       }
 
       .chat-send:not(:disabled):hover {
-        background: var(--brass);
-        color: #0d0906;
-        box-shadow: 0 0 20px rgba(212, 165, 116, 0.4);
-        transform: scale(1.05);
+        transform: translateY(-2px);
+        box-shadow:
+          0 5px 12px rgba(0, 0, 0, 0.5),
+          0 2px 4px rgba(0, 0, 0, 0.3),
+          0 0 20px rgba(212, 165, 116, 0.3),
+          inset 0 1px 2px rgba(255, 255, 255, 0.3),
+          inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+        animation: none;
       }
 
-      /* George: SLAM effect - like slamming a domino */
+      /* SLAM - like slamming a domino on the table
+         "The slam is ritual. When you play a domino, you're declaring." — Wifredo Lam */
       .chat-send:not(:disabled):active {
-        transform: scale(0.92);
-        transition: transform 0.08s ease-out;
-        box-shadow: 0 0 25px rgba(212, 165, 116, 0.5);
+        transform: translateY(3px) scale(0.9);
+        transition: transform 0.05s ease-out;
+        box-shadow:
+          0 1px 2px rgba(0, 0, 0, 0.6),
+          0 0 0 4px rgba(212, 165, 116, 0.4),
+          0 0 30px rgba(212, 165, 116, 0.3),
+          inset 0 1px 2px rgba(255, 255, 255, 0.3),
+          inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+        animation: none;
+      }
+
+      /* Slam class for programmatic slam effect */
+      .chat-send.slamming {
+        animation: pipSlam 0.15s ease-out forwards;
+      }
+
+      @keyframes pipSlam {
+        0% {
+          transform: scale(1);
+        }
+        40% {
+          transform: translateY(4px) scale(0.85);
+        }
+        60% {
+          transform: translateY(2px) scale(0.95);
+          box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.6),
+            0 0 0 8px rgba(212, 165, 116, 0.3),
+            0 0 40px rgba(212, 165, 116, 0.4),
+            inset 0 1px 2px rgba(255, 255, 255, 0.3),
+            inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+        }
+        100% {
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* Ripple burst on send */
+      .chat-send::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        background: transparent;
+        border: 2px solid transparent;
+        transition: all 0.15s ease-out;
+        pointer-events: none;
+      }
+
+      .chat-send.slamming::after {
+        animation: pipRipple 0.3s ease-out forwards;
+      }
+
+      @keyframes pipRipple {
+        0% {
+          border-color: rgba(212, 165, 116, 0.6);
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% {
+          border-color: rgba(212, 165, 116, 0);
+          transform: scale(1.8);
+          opacity: 0;
+        }
       }
 
       .chat-send:disabled {
-        border-color: rgba(255, 255, 255, 0.1);
-        color: rgba(255, 255, 255, 0.1);
+        background: radial-gradient(
+          circle at 35% 35%,
+          rgba(255, 255, 255, 0.15) 0%,
+          rgba(255, 255, 255, 0.08) 40%,
+          rgba(255, 255, 255, 0.03) 100%
+        );
+        box-shadow:
+          0 2px 4px rgba(0, 0, 0, 0.2),
+          inset 0 1px 2px rgba(255, 255, 255, 0.05);
         cursor: not-allowed;
       }
 
@@ -1644,12 +2014,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .chat-identity__title { animation-delay: 0ms; }
-      .chat-identity__subtitle { animation-delay: 80ms; }
-      .avatar-selector { animation-delay: 200ms; }
-      .chat-identity__select { animation-delay: 320ms; }
-      .chat-identity__input { animation-delay: 320ms; }
-      .chat-identity__register-hint { animation-delay: 400ms; }
-      .chat-identity__btn { animation-delay: 480ms; }
+      .chat-identity__subtitle { animation-delay: 60ms; }
+      .mesa-live-indicator { animation-delay: 100ms; }
+      .avatar-selector { animation-delay: 140ms; }
+      .chat-identity__select { animation-delay: 180ms; }
+      .chat-identity__input { animation-delay: 180ms; }
+      .chat-identity__register-hint { animation-delay: 220ms; }
+      .chat-identity__btn { animation-delay: 260ms; }
 
       .identity-header {
         font-family: "Bodoni Moda", serif;
@@ -1703,18 +2074,61 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 1;
       }
 
-      /* Flag selector - Card fan layout with overlap */
+      /* Live player count indicator - Bone Language */
+      .mesa-live-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: rgba(212, 165, 116, 0.08);
+        border: 1px solid rgba(212, 165, 116, 0.15);
+        border-radius: 12px;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .mesa-live-dot {
+        width: 8px;
+        height: 8px;
+        background: #4ade80;
+        border-radius: 50%;
+        animation: livePulse 2s ease-in-out infinite;
+        box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+      }
+
+      @keyframes livePulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.2); }
+      }
+
+      .mesa-live-text {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.7);
+        letter-spacing: 0.02em;
+      }
+
+      .mesa-live-text span {
+        color: var(--brass);
+        font-weight: 600;
+      }
+
+      /* Flag selector - Scrollable, starts with Cuba */
       .avatar-selector {
         display: flex;
         flex-wrap: nowrap;
-        justify-content: flex-start; /* Align left for scroll */
+        justify-content: flex-start; /* Start from left so Cuba shows first */
         align-items: center;
-        gap: 12px; /* Space between flags */
-        margin: 24px 0;
-        padding: 16px 24px;
-        overflow-x: auto; /* Enable horizontal scroll */
+        gap: 12px;
+        margin: 24px auto;
+        padding: 16px 32px;
+        overflow-x: auto;
         overflow-y: visible;
-        max-width: 100%;
+        max-width: 500px; /* Reasonable constraint */
         width: 100%;
         box-sizing: border-box;
         position: relative;
@@ -1722,12 +2136,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-grow: 0;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* Firefox */
+        scrollbar-width: none;
         /* Fade edges hint */
-        mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
-        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
       }
       .avatar-selector::-webkit-scrollbar { display: none; }
+
+      .avatar-hint {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.35);
+        text-align: center;
+        margin: -8px 0 16px 0;
+        letter-spacing: 0.05em;
+        animation: identityFadeUp 0.5s ease-out 280ms forwards;
+        opacity: 0;
+      }
 
       .avatar-option {
         width: 48px;
@@ -1788,6 +2213,192 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .avatar-option .check-mark { display: none; }
 
+      /* ========================================
+         CUSTOM SELECT DROPDOWN
+         ======================================== */
+      .custom-select {
+        position: relative;
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto 16px;
+        animation: identityFadeUp 0.5s ease-out 320ms forwards;
+        opacity: 0;
+        z-index: 100;
+      }
+
+      .custom-select__trigger {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 20px;
+        background: rgba(20, 14, 10, 0.8);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 12px;
+        color: var(--cream);
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.25s ease;
+      }
+
+      .custom-select__trigger:hover {
+        border-color: rgba(212, 165, 116, 0.4);
+        background: rgba(28, 19, 15, 0.9);
+      }
+
+      .custom-select.is-open .custom-select__trigger {
+        border-color: var(--brass);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-color: transparent;
+      }
+
+      .custom-select__value {
+        flex: 1;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .custom-select__value--placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .custom-select__arrow {
+        color: var(--brass);
+        opacity: 0.6;
+        transition: transform 0.25s ease;
+        display: flex;
+        align-items: center;
+      }
+
+      .custom-select.is-open .custom-select__arrow {
+        transform: rotate(180deg);
+        opacity: 1;
+      }
+
+      .custom-select__dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(20, 14, 10, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--brass);
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        overflow: visible;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      }
+
+      .custom-select.is-open .custom-select__dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .custom-select__search {
+        padding: 12px;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+      }
+
+      .custom-select__search-input {
+        width: 100%;
+        padding: 10px 14px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: var(--cream);
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s ease;
+      }
+
+      .custom-select__search-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .custom-select__search-input:focus {
+        border-color: rgba(212, 165, 116, 0.4);
+      }
+
+      .custom-select__options {
+        list-style: none;
+        margin: 0;
+        padding: 8px 0;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      .custom-select__options::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .custom-select__options::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .custom-select__options::-webkit-scrollbar-thumb {
+        background: rgba(212, 165, 116, 0.3);
+        border-radius: 3px;
+      }
+
+      .custom-select__option {
+        padding: 14px 20px;
+        color: rgba(255, 255, 255, 0.6);
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        border-left: 3px solid transparent;
+        margin: 4px 8px;
+        border-radius: 8px;
+        background: transparent;
+      }
+
+      .custom-select__option:hover {
+        background: rgba(212, 165, 116, 0.4) !important;
+        color: #ffffff !important;
+        border-left-color: #d4a574 !important;
+        padding-left: 28px;
+      }
+
+      .custom-select__option.is-selected {
+        background: rgba(212, 165, 116, 0.2);
+        color: var(--brass);
+        border-left-color: var(--brass);
+      }
+
+      .custom-select__option.is-selected::before {
+        content: '✓';
+        color: var(--brass);
+        font-size: 0.8rem;
+      }
+
+      .custom-select__option.is-hidden {
+        display: none;
+      }
+
+      .custom-select__empty {
+        padding: 16px 20px;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.9rem;
+        text-align: center;
+        font-style: italic;
+      }
+
+      /* Hide native select when custom is present */
       .chat-identity__select {
         width: 100%;
         margin-bottom: 16px;
@@ -1858,13 +2469,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 1;
       }
 
-      /* Button - Modern full-width feel */
+      /* Button - Bone Language */
       .chat-identity__btn {
         margin-top: 24px; /* Fixed spacing, not auto */
         width: 100%;
         max-width: 280px;
         background: transparent;
-        border: 1px solid var(--brass); /* Thinner, more refined */
+        border: 1px solid var(--brass);
+        border-radius: 12px;
         color: var(--brass);
         padding: 18px 44px;
         font-family: "Bodoni Moda", serif;
@@ -1872,7 +2484,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.2em;
         text-transform: uppercase;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.25s ease;
         min-height: 52px;
         position: relative;
         overflow: hidden;
@@ -1947,9 +2559,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           justify-content: flex-end; /* Or center if preferred, keeping right for thumb */
         }
 
-        /* Make toggle bigger / easier to tap */
+        /* Make domino tile bigger on mobile / easier to tap */
         .chat-toggle {
-          padding: 14px 24px;
+          width: 72px;
+          height: 115px;
         }
 
         .chat-panel {
@@ -2010,18 +2623,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .chat-send {
           width: 48px;
           height: 48px; /* Larger tap target */
-        }
-
-        /* Touch-friendly reaction chips */
-        .reaction-chip {
-          min-height: 40px;
-          min-width: 40px;
-          padding: 8px 12px;
-        }
-
-        .reaction-add {
-          min-width: 40px;
-          min-height: 40px;
         }
 
         .pin-btn {
@@ -2090,7 +2691,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Form Panel */
+      /* Form Panel - "The form should be centered. Center it." — Wes Anderson */
       .panel--form {
         min-height: 100vh;
         min-height: 100dvh;
@@ -2105,6 +2706,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .panel--form .panel-content {
         opacity: 1;
         transform: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
       }
 
       .panel--form .panel-headline {
@@ -2426,9 +3031,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         accent-color: var(--copper);
       }
 
+      /* Submit Button - Bone Language */
       button[type="submit"] {
         border: none;
-        border-radius: 999px;
+        border-radius: 12px;
         padding: 18px 36px;
         font-weight: 700;
         font-size: 1.15rem;
@@ -2768,6 +3374,38 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.02em;
       }
 
+      /* La Mesa CTA - The reward after registration - Bone Language */
+      .success-mesa-cta {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--cream);
+        background: linear-gradient(135deg, var(--copper), #6b3020);
+        border: none;
+        border-radius: 12px;
+        padding: 16px 32px;
+        margin-top: 32px;
+        cursor: pointer;
+        letter-spacing: 0.05em;
+        box-shadow:
+          0 4px 20px rgba(143, 60, 34, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        transition: all 0.3s ease;
+        animation: fadeUp 0.6s ease-out 1s both;
+      }
+
+      .success-mesa-cta:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow:
+          0 8px 30px rgba(143, 60, 34, 0.5),
+          0 0 40px rgba(212, 165, 116, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
+
+      .success-mesa-cta:active {
+        transform: translateY(-1px) scale(1);
+      }
+
       /* Email reminder */
       .email-reminder {
         margin-top: 40px;
@@ -2787,6 +3425,119 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .email-reminder a:hover {
         color: var(--brass);
         border-bottom-color: var(--brass);
+      }
+
+      /* ========================================
+         LA MESA TUTORIAL PANEL
+         ======================================== */
+      .mesa-tutorial {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 1001;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .mesa-tutorial.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .mesa-tutorial__content {
+        background: rgba(28, 19, 15, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 12px;
+        padding: 24px;
+        max-width: 300px;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.5),
+          0 0 60px rgba(212, 165, 116, 0.08);
+      }
+
+      .mesa-tutorial__header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .mesa-tutorial__icon {
+        width: 10px;
+        height: 10px;
+        background: radial-gradient(circle at 30% 30%, var(--brass), var(--copper));
+        border-radius: 50%;
+        box-shadow: 0 0 12px rgba(212, 165, 116, 0.5);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+      }
+
+      .mesa-tutorial__title {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--brass);
+        margin: 0;
+        letter-spacing: 0.02em;
+      }
+
+      .mesa-tutorial__desc {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.5;
+        margin: 0 0 20px 0;
+      }
+
+      .mesa-tutorial__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      /* Tutorial CTA - Bone Language */
+      .mesa-tutorial__cta {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--cream);
+        background: linear-gradient(135deg, var(--copper), #6b3020);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(143, 60, 34, 0.3);
+      }
+
+      .mesa-tutorial__cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(143, 60, 34, 0.4);
+      }
+
+      .mesa-tutorial__dismiss {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.5);
+        background: transparent;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        transition: color 0.2s ease;
+      }
+
+      .mesa-tutorial__dismiss:hover {
+        color: rgba(255, 255, 255, 0.8);
       }
 
       /* Footer */
@@ -3036,6 +3787,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <span class="brand-name">Cuban Domino League</span>
             <span class="brand-presents">presents</span>
           </div>
+          <p class="event-edition">CDL 1</p>
           <h1 class="event-title">
             <span class="event-numeral event-numeral--salida">La Salida</span>
           </h1>
@@ -3254,10 +4006,30 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       </div>
       <p class="success-tagline">"Your seat's waiting."</p>
 
+      <!-- La Mesa CTA -->
+      <button class="success-mesa-cta" id="successMesaCta">
+        Pull up a chair at La Mesa →
+      </button>
+
       <!-- Email reminder -->
       <p class="email-reminder">
         Questions? <a href="mailto:Erik@cubandominoleague.com">Erik@cubandominoleague.com</a>
       </p>
+    </div>
+
+    <!-- La Mesa Tutorial Panel (shows if user dismisses success without joining) -->
+    <div class="mesa-tutorial" id="mesaTutorial">
+      <div class="mesa-tutorial__content">
+        <div class="mesa-tutorial__header">
+          <span class="mesa-tutorial__icon"></span>
+          <h3 class="mesa-tutorial__title">La Mesa</h3>
+        </div>
+        <p class="mesa-tutorial__desc">The player's table. Chat with fellow competitors before the big day.</p>
+        <div class="mesa-tutorial__actions">
+          <button class="mesa-tutorial__cta" id="tutorialMesaCta">Join the Table →</button>
+          <button class="mesa-tutorial__dismiss" id="tutorialDismiss">Maybe Later</button>
+        </div>
+      </div>
     </div>
 
     <!-- Music Toggle Button -->
@@ -3280,10 +4052,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
     <!-- Chat Widget - The Sacred Table -->
     <div class="chat-widget" id="chatWidget">
-      <div class="chat-toggle" id="chatToggle">
-        <span class="chat-toggle__icon"></span>
-        <span class="chat-toggle__text">La Mesa</span>
-        <span class="chat-toggle__badge" id="chatBadge" style="display: none;">0</span>
+      <!-- Mesa Ticker: ESPN-style activity feed -->
+      <div class="mesa-ticker" id="mesaTicker">
+        <div class="mesa-ticker__badge">
+          <span class="mesa-ticker__badge-dot"></span>
+          LIVE
+        </div>
+        <div class="mesa-ticker__scroll">
+          <div class="mesa-ticker__track" id="tickerTrack">
+            <!-- Populated by JS - duplicated for seamless loop -->
+          </div>
+        </div>
+        <button class="mesa-ticker__chat-btn" id="tickerChatBtn" title="Open La Mesa">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
+          </svg>
+          <span class="mesa-ticker__chat-badge" id="chatBadge" style="display: none;">0</span>
+        </button>
       </div>
 
       <div class="chat-panel" id="chatPanel">
@@ -3300,11 +4085,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="chat-identity__title">Take Your Seat</p>
           <p class="chat-identity__subtitle">Represent.</p>
 
+          <!-- Live player count for FOMO -->
+          <div class="mesa-live-indicator" id="mesaLiveIndicator">
+            <span class="mesa-live-dot"></span>
+            <span class="mesa-live-text"><span id="mesaPlayerCount">0</span> at the table</span>
+          </div>
+
           <div class="avatar-selector">
-            <!-- Caribbean & Latin America -->
+            <!-- Priority: Cuba, USA, then Caribbean & Latin America -->
             <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
               <span class="avatar-flag-pixel">🇨🇺</span>
             </div>
+            <div class="avatar-option" data-avatar="usa" title="USA">
+              <span class="avatar-flag-pixel">🇺🇸</span>
+            </div>
+            <!-- Caribbean -->
             <div class="avatar-option" data-avatar="pr" title="Puerto Rico">
               <span class="avatar-flag-pixel">🇵🇷</span>
             </div>
@@ -3317,6 +4112,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <div class="avatar-option" data-avatar="haiti" title="Haiti">
               <span class="avatar-flag-pixel">🇭🇹</span>
             </div>
+            <!-- Central & South America -->
             <div class="avatar-option" data-avatar="mexico" title="Mexico">
               <span class="avatar-flag-pixel">🇲🇽</span>
             </div>
@@ -3351,9 +4147,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <span class="avatar-flag-pixel">🇨🇱</span>
             </div>
             <!-- North America & Europe -->
-            <div class="avatar-option" data-avatar="usa" title="USA">
-              <span class="avatar-flag-pixel">🇺🇸</span>
-            </div>
             <div class="avatar-option" data-avatar="canada" title="Canada">
               <span class="avatar-flag-pixel">🇨🇦</span>
             </div>
@@ -3376,11 +4169,32 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <span class="avatar-flag-pixel">🇵🇹</span>
             </div>
           </div>
+          <p class="avatar-hint">Scroll to find your flag</p>
 
-          <select class="chat-identity__select" id="chatPlayerSelect">
+          <!-- Custom Dropdown -->
+          <div class="custom-select" id="customSelect">
+            <button class="custom-select__trigger" id="selectTrigger" type="button">
+              <span class="custom-select__value" id="selectValue">Select Your Name...</span>
+              <span class="custom-select__arrow">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </button>
+            <div class="custom-select__dropdown" id="selectDropdown">
+              <div class="custom-select__search">
+                <input type="text" class="custom-select__search-input" id="selectSearch" placeholder="Search..." />
+              </div>
+              <ul class="custom-select__options" id="selectOptions">
+                <!-- Options populated by JS -->
+              </ul>
+            </div>
+          </div>
+          <!-- Hidden native select for form compatibility -->
+          <select class="chat-identity__select" id="chatPlayerSelect" style="display: none;">
             <option value="">Select Your Name</option>
           </select>
-          <input type="text" class="chat-identity__input" id="chatNameInput" placeholder="Habla..." style="display: none;" />
+          <input type="text" class="chat-identity__input" id="chatNameInput" placeholder="Your name..." style="display: none;" />
           <p class="chat-identity__register-hint" id="chatRegisterHint">
             Don't see your name? <a href="#signup" class="chat-identity__register-link" id="chatRegisterLink">Register first</a>
           </p>
@@ -3393,15 +4207,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <div class="chat-empty">The table is quiet.</div>
           </div>
 
-          <!-- Reaction Picker (floating) - Team approved set -->
-          <div class="reaction-picker" id="reactionPicker">
-            <button data-emoji="🔥" title="Fuego">🔥</button>
-            <button data-emoji="😂" title="Jaja">😂</button>
-            <button data-emoji="👏" title="Respeto">👏</button>
-            <button data-emoji="💪" title="Fuerza">💪</button>
-            <button data-emoji="🌴" title="Cuba">🌴</button>
-            <button data-emoji="🀱" title="La Ficha">🀱</button>
-          </div>
 
           <div class="chat-input-area" id="chatInputArea">
             <input type="text" class="chat-input" id="chatInput" placeholder="Habla..." maxlength="500">
@@ -3414,6 +4219,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         </div>
       </div>
     </div>
+
+    <!-- Background Dimming Overlay -->
+    <div class="chat-backdrop" id="chatBackdrop"></div>
 
     <script define:vars={{ PLAYERS_REGISTERED, PLAYERS_GOAL, SUPABASE_URL, SUPABASE_ANON_KEY }}>
       // Panel parallax and content animations
@@ -3498,6 +4306,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const successEl = document.getElementById("success");
       const submitBtn = document.getElementById("submitBtn");
 
+      // DEV ONLY: Test success screen without submitting form
+      // Call window.testSuccess() from console to trigger
+      window.testSuccess = () => {
+        form.style.display = "none";
+        successEl.classList.add("is-visible");
+        localStorage.setItem('cdl_registered', 'true');
+        document.querySelector(".panel--form .panel-headline").style.display = "none";
+        document.querySelector(".progress-tracker").style.display = "none";
+        const footer = document.querySelector(".footer-note");
+        if (footer) footer.style.display = "none";
+        console.log('✅ Success screen triggered. localStorage set.');
+      };
+      // DEV ONLY: Reset registration state
+      window.testReset = () => {
+        localStorage.removeItem('cdl_registered');
+        location.reload();
+      };
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         if (!form.reportValidity()) return;
@@ -3519,6 +4345,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             form.style.display = "none";
             successEl.classList.add("is-visible");
             statusEl.textContent = "";
+            // Mark user as registered
+            localStorage.setItem('cdl_registered', 'true');
+
+            // Broadcast to ticker
+            if (supabase) {
+              supabase.channel('registrations').send({
+                type: 'broadcast',
+                event: 'new-registration',
+                payload: { playerName: payload.playerName }
+              });
+            }
+
             // Hide everything except success for clean full-screen takeover
             document.querySelector(".panel--form .panel-headline").style.display = "none";
             document.querySelector(".progress-tracker").style.display = "none";
@@ -3592,13 +4430,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       // ========================================
       let registeredPlayers = [];
 
+      // DEV ONLY: Mock players for local testing
+      const MOCK_PLAYERS = [
+        { name: 'Erik Rodriguez' },
+        { name: 'Jordan Martinez' },
+        { name: 'Carlos Fernández' },
+        { name: 'Maria Santos' },
+        { name: 'Luis Herrera' },
+        { name: 'Ana García' },
+      ];
+
       async function loadPlayers() {
         const chatPlayerSelect = document.getElementById('chatPlayerSelect');
 
         try {
           const response = await fetch('/api/players');
           const data = await response.json();
-          registeredPlayers = data.players || [];
+          // Use mock data if API returns empty or errors
+          registeredPlayers = (data.players && data.players.length > 0) ? data.players : MOCK_PLAYERS;
 
           // Update progress counter
           const playerCount = document.getElementById('playerCount');
@@ -3613,30 +4462,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           const chatRegisterHint = document.getElementById('chatRegisterHint');
 
           if (registeredPlayers.length > 0) {
-            // Show dropdown with registered players
-            if (chatPlayerSelect) {
-              chatPlayerSelect.style.display = 'block';
-              chatPlayerSelect.innerHTML = '<option value="">Select Your Name...</option>' +
-                registeredPlayers.map(player =>
-                  `<option value="${escapeHtml(player.name)}">${escapeHtml(player.name)}</option>`
-                ).join('');
-            }
+            // Show custom dropdown with registered players
+            populateCustomDropdown(registeredPlayers);
+            if (customSelect) customSelect.style.display = 'block';
+            if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
             if (chatNameInput) chatNameInput.style.display = 'none';
             if (chatRegisterHint) chatRegisterHint.innerHTML = 'Don\'t see your name? <a href="#signup" class="chat-identity__register-link">Register first</a>';
           } else {
             // No players - show text input instead
+            if (customSelect) customSelect.style.display = 'none';
             if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
             if (chatNameInput) chatNameInput.style.display = 'block';
-            if (chatRegisterHint) chatRegisterHint.textContent = 'Type your name to join the chat';
+            if (chatRegisterHint) chatRegisterHint.textContent = 'Enter the name you registered with';
           }
         } catch (err) {
-          console.error('Failed to load players:', err);
-          // On error, show text input as fallback
+          console.error('Failed to load players, using mock data:', err);
+          // On error, use mock data for local dev testing
+          registeredPlayers = MOCK_PLAYERS;
           const chatNameInput = document.getElementById('chatNameInput');
           const chatRegisterHint = document.getElementById('chatRegisterHint');
+          // Show custom dropdown with mock players
+          populateCustomDropdown(registeredPlayers);
+          if (customSelect) customSelect.style.display = 'block';
           if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
-          if (chatNameInput) chatNameInput.style.display = 'block';
-          if (chatRegisterHint) chatRegisterHint.textContent = 'Type your name to join the chat';
+          if (chatNameInput) chatNameInput.style.display = 'none';
+          if (chatRegisterHint) chatRegisterHint.innerHTML = 'Don\'t see your name? <a href="#signup" class="chat-identity__register-link">Register first</a>';
         }
       }
 
@@ -3646,6 +4496,162 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         return div.innerHTML;
       }
 
+      // ========================================
+      // CUSTOM DROPDOWN LOGIC
+      // ========================================
+      const customSelect = document.getElementById('customSelect');
+      const selectTrigger = document.getElementById('selectTrigger');
+      const selectValue = document.getElementById('selectValue');
+      const selectDropdown = document.getElementById('selectDropdown');
+      const selectOptions = document.getElementById('selectOptions');
+      const selectSearch = document.getElementById('selectSearch');
+      let selectedPlayer = null;
+
+      // Toggle dropdown
+      selectTrigger?.addEventListener('click', () => {
+        customSelect.classList.toggle('is-open');
+        if (customSelect.classList.contains('is-open')) {
+          selectSearch.focus();
+        }
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (customSelect && !customSelect.contains(e.target)) {
+          customSelect.classList.remove('is-open');
+        }
+      });
+
+      // Search/filter functionality
+      selectSearch?.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const options = selectOptions.querySelectorAll('.custom-select__option');
+        let hasVisible = false;
+
+        options.forEach(option => {
+          const name = option.textContent.toLowerCase();
+          if (name.includes(query)) {
+            option.classList.remove('is-hidden');
+            hasVisible = true;
+          } else {
+            option.classList.add('is-hidden');
+          }
+        });
+
+        // Show/hide empty state
+        let emptyEl = selectOptions.querySelector('.custom-select__empty');
+        if (!hasVisible) {
+          if (!emptyEl) {
+            emptyEl = document.createElement('li');
+            emptyEl.className = 'custom-select__empty';
+            emptyEl.textContent = 'No matches found';
+            selectOptions.appendChild(emptyEl);
+          }
+          emptyEl.style.display = 'block';
+        } else if (emptyEl) {
+          emptyEl.style.display = 'none';
+        }
+      });
+
+      // Populate custom dropdown
+      function populateCustomDropdown(players) {
+        if (!selectOptions) return;
+
+        // Hide search for small lists (less than 8 players)
+        const searchContainer = document.querySelector('.custom-select__search');
+        if (searchContainer) {
+          searchContainer.style.display = players.length < 8 ? 'none' : 'block';
+        }
+
+        selectOptions.innerHTML = players.map(player =>
+          `<li class="custom-select__option" data-value="${escapeHtml(player.name)}">${escapeHtml(player.name)}</li>`
+        ).join('');
+
+        // Add click and hover handlers to options
+        selectOptions.querySelectorAll('.custom-select__option').forEach(option => {
+          option.addEventListener('click', () => {
+            const value = option.dataset.value;
+            selectPlayer(value);
+          });
+          // JS-based hover for reliable highlighting
+          option.addEventListener('mouseenter', () => {
+            option.style.background = 'rgba(212, 165, 116, 0.4)';
+            option.style.color = '#ffffff';
+            option.style.borderLeftColor = '#d4a574';
+            option.style.paddingLeft = '28px';
+            option.style.cursor = 'pointer';
+          });
+          option.addEventListener('mouseleave', () => {
+            option.style.background = 'transparent';
+            option.style.color = 'rgba(255, 255, 255, 0.6)';
+            option.style.borderLeftColor = 'transparent';
+            option.style.paddingLeft = '20px';
+            option.style.cursor = 'pointer';
+          });
+        });
+
+        // Reset selected state
+        if (selectValue) {
+          selectValue.textContent = 'Select Your Name...';
+          selectValue.classList.add('custom-select__value--placeholder');
+        }
+        selectedPlayer = null;
+        const joinBtn = document.getElementById('chatJoinBtn');
+        if (joinBtn) joinBtn.disabled = true;
+      }
+
+      // Select a player
+      function selectPlayer(name) {
+        selectedPlayer = name;
+
+        // Update display
+        selectValue.textContent = name;
+        selectValue.classList.remove('custom-select__value--placeholder');
+
+        // Update selected state
+        selectOptions.querySelectorAll('.custom-select__option').forEach(opt => {
+          opt.classList.toggle('is-selected', opt.dataset.value === name);
+        });
+
+        // Update hidden native select for form compatibility
+        if (chatPlayerSelect) {
+          chatPlayerSelect.value = name;
+        }
+
+        // Enable the Enter button
+        const joinBtn = document.getElementById('chatJoinBtn');
+        if (joinBtn) joinBtn.disabled = false;
+
+        // Close dropdown
+        customSelect.classList.remove('is-open');
+        selectSearch.value = '';
+        selectOptions.querySelectorAll('.custom-select__option').forEach(opt => opt.classList.remove('is-hidden'));
+      }
+
+      // Keyboard navigation
+      selectSearch?.addEventListener('keydown', (e) => {
+        const visibleOptions = [...selectOptions.querySelectorAll('.custom-select__option:not(.is-hidden)')];
+        const currentIndex = visibleOptions.findIndex(opt => opt.classList.contains('is-focused'));
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const nextIndex = currentIndex < visibleOptions.length - 1 ? currentIndex + 1 : 0;
+          visibleOptions.forEach((opt, i) => opt.classList.toggle('is-focused', i === nextIndex));
+          visibleOptions[nextIndex]?.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prevIndex = currentIndex > 0 ? currentIndex - 1 : visibleOptions.length - 1;
+          visibleOptions.forEach((opt, i) => opt.classList.toggle('is-focused', i === prevIndex));
+          visibleOptions[prevIndex]?.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          const focused = visibleOptions.find(opt => opt.classList.contains('is-focused')) || visibleOptions[0];
+          if (focused) selectPlayer(focused.dataset.value);
+        } else if (e.key === 'Escape') {
+          customSelect.classList.remove('is-open');
+        }
+      });
+
       // Highlight @mentions in chat messages
       function highlightMentions(text) {
         // Match @followed by word characters (letters, numbers, spaces in names)
@@ -3654,6 +4660,55 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Load players on page load
       loadPlayers();
+
+      // ========================================
+      // MESA LIVE COUNT & CLAIMED SEATS
+      // ========================================
+      let claimedSeats = new Set(); // Players who have already joined the chat
+
+      async function loadMesaStats() {
+        const countEl = document.getElementById('mesaPlayerCount');
+        if (!countEl) return;
+
+        // Try to get active players from Supabase
+        try {
+          // Wait for Supabase to be ready
+          if (typeof supabase === 'undefined' || !supabase) {
+            // Show mock count for local dev
+            countEl.textContent = '3';
+            return;
+          }
+
+          // Get unique players who have posted messages (last 24 hours = active)
+          const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+          const { data, error } = await supabase
+            .from('messages')
+            .select('player_name')
+            .gte('created_at', oneDayAgo);
+
+          if (error) throw error;
+
+          // Get unique player names
+          const uniquePlayers = [...new Set(data.map(m => m.player_name))];
+          claimedSeats = new Set(uniquePlayers);
+
+          // Update count
+          countEl.textContent = uniquePlayers.length.toString();
+
+          // Refresh dropdown to filter out claimed seats
+          if (registeredPlayers.length > 0) {
+            const availablePlayers = registeredPlayers.filter(p => !claimedSeats.has(p.name));
+            populateCustomDropdown(availablePlayers.length > 0 ? availablePlayers : registeredPlayers);
+          }
+        } catch (err) {
+          console.error('Failed to load mesa stats:', err);
+          // Show mock count
+          countEl.textContent = '3';
+        }
+      }
+
+      // Load mesa stats after a short delay (wait for Supabase init)
+      setTimeout(loadMesaStats, 1500);
 
       // ========================================
       // CHAT - Supabase real-time chat
@@ -3712,30 +4767,103 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const chatBodyContainer = document.getElementById('chatBodyContainer');
       const chatBadge = document.getElementById('chatBadge');
 
+      // La Mesa registration flow elements
+      const successMesaCta = document.getElementById('successMesaCta');
+      const mesaTutorial = document.getElementById('mesaTutorial');
+      const tutorialMesaCta = document.getElementById('tutorialMesaCta');
+      const tutorialDismiss = document.getElementById('tutorialDismiss');
+
+      // Check if user is already registered → show La Mesa immediately
+      const isRegistered = localStorage.getItem('cdl_registered') === 'true';
+      if (isRegistered) {
+        chatWidget.classList.remove('chat-widget--hidden');
+      }
+
+      // Helper to open chat
+      function openChat() {
+        chatWidget.classList.remove('chat-widget--hidden');
+        chatPanel.style.display = 'flex';
+        void chatPanel.offsetWidth;
+        chatPanel.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      // Success CTA: Close success overlay, open chat
+      if (successMesaCta) {
+        successMesaCta.addEventListener('click', () => {
+          successEl.classList.remove('is-visible');
+          openChat();
+        });
+      }
+
+      // Track if user opened La Mesa from success screen
+      let openedFromSuccess = false;
+      if (successMesaCta) {
+        successMesaCta.addEventListener('click', () => {
+          openedFromSuccess = true;
+        });
+      }
+
+      // Show tutorial if user dismisses success without clicking La Mesa
+      // Listen for clicks outside success content area
+      if (successEl) {
+        successEl.addEventListener('click', (e) => {
+          // Only trigger if clicking the backdrop, not the content
+          if (e.target === successEl && !openedFromSuccess) {
+            successEl.classList.remove('is-visible');
+            // Show tutorial after short delay
+            setTimeout(() => {
+              if (mesaTutorial) {
+                mesaTutorial.classList.add('is-visible');
+              }
+            }, 300);
+          }
+        });
+      }
+
+      // Tutorial CTA: Join the table
+      if (tutorialMesaCta) {
+        tutorialMesaCta.addEventListener('click', () => {
+          mesaTutorial.classList.remove('is-visible');
+          openChat();
+        });
+      }
+
+      // Tutorial Dismiss: Just show the button, don't open chat
+      if (tutorialDismiss) {
+        tutorialDismiss.addEventListener('click', () => {
+          mesaTutorial.classList.remove('is-visible');
+          chatWidget.classList.remove('chat-widget--hidden');
+        });
+      }
+
       // Haptics Helper
       const vibrate = (pattern = 5) => {
         if (navigator.vibrate) navigator.vibrate(pattern);
       };
 
+      const chatBackdrop = document.getElementById('chatBackdrop');
+      const tickerChatBtn = document.getElementById('tickerChatBtn');
+
       // Toggle Chat & Scroll Lock
       function toggleChat() {
-        const isOpen = chatPanel.style.display === 'flex';
+        const isOpen = chatPanel.classList.contains('is-open');
         
         if (isOpen) {
           // Close
           chatPanel.classList.remove('is-open');
-          setTimeout(() => {
-             chatPanel.style.display = 'none';
-             document.body.style.overflow = ''; // Unlock scroll
-          }, 300);
+          chatBackdrop.classList.remove('is-visible');
+          document.body.style.overflow = ''; // Unlock scroll
           vibrate(5);
         } else {
           // Open
-          chatPanel.style.display = 'flex';
-          // Force reflow
+          chatBackdrop.classList.add('is-visible');
+          
+          // Force reflow for animation
           void chatPanel.offsetWidth;
           chatPanel.classList.add('is-open');
-          chatBadge.style.display = 'none';
+          
+          if (chatBadge) chatBadge.style.display = 'none';
           unreadCount = 0;
           
           if (window.innerWidth <= 768) {
@@ -3744,13 +4872,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           vibrate(10);
           
           // Focus input if joined
-          if (chatBodyContainer.style.display !== 'none') {
+          if (chatBodyContainer && chatBodyContainer.style.display !== 'none') {
              setTimeout(() => chatInput.focus(), 100);
           }
         }
       }
 
-      chatToggle.addEventListener('click', toggleChat);
+      tickerChatBtn.addEventListener('click', toggleChat);
+      chatBackdrop.addEventListener('click', toggleChat);
       chatClose.addEventListener('click', toggleChat);
 
       // Register link in chat - close chat and scroll to registration
@@ -3826,10 +4955,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Join chat handler - Free Agent status until team assignment
       chatJoinBtn.addEventListener('click', () => {
-        // Get name from either select or text input
-        const playerName = chatPlayerSelect.style.display !== 'none'
-          ? chatPlayerSelect.value
-          : chatNameInput.value.trim();
+        // Get name from custom dropdown, native select, or text input
+        const playerName = selectedPlayer
+          || (chatPlayerSelect.style.display !== 'none' ? chatPlayerSelect.value : null)
+          || chatNameInput.value.trim();
         // Using selectedAvatar from global state
 
         if (playerName) {
@@ -3849,6 +4978,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (supabase) {
           loadMessages();
           subscribeToMessages();
+          subscribeToRegistrations();
+          joinMesaPresence(); // Mesa Mode: Show who's at the table
         }
 
         // George: Make entrances MATTER - show announcement
@@ -3988,39 +5119,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         const emoji = FLAG_MAP[avatarType] || '🇨🇺';
 
-        // Free Agent badge HTML
-        const freeAgentBadge = isFreeAgent ? '<span class="free-agent-badge">Free Agent</span>' : '';
-
-        // Parse reactions - use player name as identifier (not team_player)
-        const reactions = msg.reactions || {};
-        const reactionHTML = Object.entries(reactions).map(([emoji, users]) => {
-          const count = users.length;
-          const userReacted = chatIdentity && users.includes(chatIdentity.playerName);
-          return count > 0 ? `<button class="reaction-chip ${userReacted ? 'reaction-chip--active' : ''}" data-emoji="${emoji}" data-msg-id="${msg.id}">${emoji} ${count}</button>` : '';
-        }).join('');
+        // Free Agent pip - single pip = "half of something, waiting for partner"
+        const freeAgentBadge = isFreeAgent ? '<span class="free-agent-pip">●</span>' : '';
 
         return `
           <div class="chat-message ${selfClass} ${pinnedClass}" data-msg-id="${msg.id}">
-            ${msg.is_pinned ? '<div class="pinned-badge">📌</div>' : ''}
-            <div class="chat-message__avatar">
-              <span class="avatar-flag">${emoji}</span>
-            </div>
+            ${msg.is_pinned ? '<div class="pinned-badge">PINNED</div>' : ''}
             <div class="chat-message__content-wrapper">
               <div class="chat-message__header">
                 <span class="chat-message__author">
+                  <span class="chat-message__flag">${emoji}</span>
                   <span class="chat-message__author-name">${escapeHtml(msg.player_name)}</span>
                   ${freeAgentBadge}
                 </span>
-                <span class="chat-message__header-actions">
-                  <button class="pin-btn ${msg.is_pinned ? 'pin-btn--active' : ''}" data-msg-id="${msg.id}" title="${msg.is_pinned ? 'Unpin' : 'Pin'}">📌</button>
-                  <span class="chat-message__time">${formatTime(msg.created_at)}</span>
-                </span>
+                <span class="chat-message__time">${formatTime(msg.created_at)}</span>
               </div>
               <div class="chat-message__content">${highlightMentions(escapeHtml(msg.content))}</div>
-              <div class="chat-message__reactions">
-                ${reactionHTML}
-                <button class="reaction-add" data-msg-id="${msg.id}">+</button>
-              </div>
             </div>
           </div>
         `;
@@ -4048,15 +5162,169 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             const msg = payload.new;
             appendMessage(msg);
 
+            // Add to ticker as "talking" activity
+            if (msg.player_name && !msg.is_pinned) {
+              addTickerEvent('chat', msg.player_name);
+              updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
+            }
+
             // Update unread count if chat is closed
-            if (!chatOpen) {
+            const isOpen = chatPanel && chatPanel.classList.contains('is-open');
+            if (!isOpen) {
               unreadCount++;
-              chatBadge.textContent = unreadCount;
-              chatBadge.style.display = 'inline-block'; // Changed to inline-block
+              if (chatBadge) {
+                chatBadge.textContent = unreadCount;
+                chatBadge.style.display = 'flex';
+              }
             }
           })
           .subscribe();
       }
+
+      // Subscribe to real-time registrations
+      function subscribeToRegistrations() {
+        if (!supabase) return;
+        supabase
+          .channel('registrations')
+          .on('broadcast', { event: 'new-registration' }, (payload) => {
+            addTickerEvent('register', payload.payload.playerName);
+            updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
+          })
+          .subscribe();
+      }
+
+      // ========================================
+      // MESA TICKER - ESPN-style activity feed
+      // ========================================
+      const tickerTrack = document.getElementById('tickerTrack');
+      let presenceChannel = null;
+      let tickerEvents = []; // Store recent events for the ticker
+
+      // Initialize ticker with mock data for preview
+      function initTickerMock() {
+        const mockEvents = [
+          { type: 'register', playerName: 'Alex Torres' },
+          { type: 'join', playerName: 'Maria Elena' },
+          { type: 'chat', playerName: 'Danny Rodriguez' },
+          { type: 'register', playerName: 'Carmen Ruiz' },
+          { type: 'join', playerName: 'Gaby Fernandez' }
+        ];
+        
+        tickerEvents = mockEvents;
+        updateTicker({});
+      }
+
+      // Show mock data initially
+      initTickerMock();
+
+      function joinMesaPresence() {
+        if (!supabase || !chatIdentity) return;
+
+        presenceChannel = supabase.channel('mesa-presence', {
+          config: {
+            presence: {
+              key: chatIdentity.playerName,
+            },
+          },
+        });
+
+        presenceChannel
+          .on('presence', { event: 'sync' }, () => {
+            const state = presenceChannel.presenceState();
+            updateTicker(state);
+          })
+          .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+            // Add join event to ticker
+            if (newPresences[0] && (!chatIdentity || newPresences[0].playerName !== chatIdentity.playerName)) {
+              addTickerEvent('join', newPresences[0].playerName);
+              updateTicker(presenceChannel.presenceState());
+            }
+          })
+          .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+            // Could add leave events if desired
+          })
+          .subscribe(async (status) => {
+            if (status === 'SUBSCRIBED') {
+              await presenceChannel.track({
+                playerName: chatIdentity.playerName,
+                teamName: chatIdentity.teamName,
+                avatar: chatIdentity.avatar,
+                joinedAt: new Date().toISOString(),
+              });
+            }
+          });
+      }
+
+      function addTickerEvent(type, playerName) {
+        tickerEvents.unshift({ type, playerName, time: Date.now() });
+        // Keep only last 10 events
+        tickerEvents = tickerEvents.slice(0, 10);
+      }
+
+      function updateTicker(state) {
+        const users = [];
+
+        // Collect all users from presence state
+        for (const [key, presences] of Object.entries(state)) {
+          if (presences.length > 0) {
+            users.push(presences[0]);
+          }
+        }
+
+        const liveCount = users.length;
+
+        // Build ticker items
+        let items = [];
+
+        // Always show live count
+        items.push(`
+          <span class="mesa-ticker__live">
+            <span class="mesa-ticker__live-dot"></span>
+            <span class="mesa-ticker__live-count">${liveCount || 0}</span>
+            <span class="mesa-ticker__live-label">at the table</span>
+          </span>
+        `);
+
+        // Add recent events (up to 8)
+        tickerEvents.slice(0, 8).forEach(event => {
+          let actionText = 'joined';
+          if (event.type === 'chat') actionText = 'speaking...';
+          if (event.type === 'register') actionText = 'registered';
+          
+          items.push(`
+            <span class="mesa-ticker__item">
+              <span class="mesa-ticker__item-icon"></span>
+              <span class="mesa-ticker__item-name">${escapeHtml(event.playerName)}</span>
+              <span class="mesa-ticker__item-action">${actionText}</span>
+            </span>
+          `);
+        });
+
+        // If no events and no users, show waiting message
+        if (items.length <= 1 && liveCount === 0) {
+          items.push(`
+            <span class="mesa-ticker__item">
+              <span class="mesa-ticker__item-action">Waiting for players...</span>
+            </span>
+          `);
+        }
+
+        // Join with separators
+        const content = items.join('<span class="mesa-ticker__separator">•</span>');
+
+        // Duplicate for seamless infinite scroll
+        tickerTrack.innerHTML = content + '<span class="mesa-ticker__separator">•</span>' + content;
+      }
+
+      function leaveMesaPresence() {
+        if (presenceChannel) {
+          presenceChannel.unsubscribe();
+          presenceChannel = null;
+        }
+      }
+
+      // Leave presence when tab closes
+      window.addEventListener('beforeunload', leaveMesaPresence);
 
       function appendMessage(msg) {
         // Remove empty state if present
@@ -4071,7 +5339,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         chatMessages.scrollTop = chatMessages.scrollHeight;
       }
 
-      // Send message
+      // Send message with THE SLAM
       async function sendMessage() {
         const content = chatInput.value.trim();
         if (!content || !chatIdentity) return;
@@ -4084,6 +5352,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             return;
           }
         }
+
+        // THE SLAM - "When you play a domino, you're declaring." — Wifredo Lam
+        chatSend.classList.add('slamming');
+        setTimeout(() => chatSend.classList.remove('slamming'), 300);
 
         chatSend.disabled = true;
         chatInput.disabled = true;
@@ -4123,119 +5395,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       chatInput.addEventListener('input', () => {
         chatSend.disabled = !chatInput.value.trim();
       });
-
-      // ========================================
-      // REACTIONS - Handle emoji reactions
-      // ========================================
-      const reactionPicker = document.getElementById('reactionPicker');
-      let activeMessageId = null;
-
-      // Position and show reaction picker
-      function showReactionPicker(msgId, buttonEl) {
-        activeMessageId = msgId;
-        const rect = buttonEl.getBoundingClientRect();
-
-        // Position above the button
-        reactionPicker.style.left = rect.left + 'px';
-        reactionPicker.style.top = (rect.top - 50) + 'px';
-        reactionPicker.classList.add('is-open');
-      }
-
-      function hideReactionPicker() {
-        reactionPicker.classList.remove('is-open');
-        activeMessageId = null;
-      }
-
-      // Handle clicks on + button to show picker
-      chatMessages.addEventListener('click', async (e) => {
-        const addBtn = e.target.closest('.reaction-add');
-        const chipBtn = e.target.closest('.reaction-chip');
-
-        if (addBtn) {
-          e.stopPropagation();
-          const msgId = addBtn.dataset.msgId;
-          if (activeMessageId === msgId) {
-            hideReactionPicker();
-          } else {
-            showReactionPicker(msgId, addBtn);
-          }
-        } else if (chipBtn) {
-          // Toggle reaction on existing chip
-          e.stopPropagation();
-          const msgId = chipBtn.dataset.msgId;
-          const emoji = chipBtn.dataset.emoji;
-          await toggleReaction(msgId, emoji);
-        } else {
-          hideReactionPicker();
-        }
-      });
-
-      // Handle emoji selection from picker
-      reactionPicker.addEventListener('click', async (e) => {
-        const btn = e.target.closest('button');
-        if (btn && activeMessageId) {
-          const emoji = btn.dataset.emoji;
-          await toggleReaction(activeMessageId, emoji);
-          hideReactionPicker();
-        }
-      });
-
-      // Close picker when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!reactionPicker.contains(e.target) && !e.target.closest('.reaction-add')) {
-          hideReactionPicker();
-        }
-      });
-
-      // Toggle a reaction on a message
-      async function toggleReaction(msgId, emoji) {
-        if (!supabase || !chatIdentity) return;
-
-        const userId = `${chatIdentity.teamName}_${chatIdentity.playerName}`;
-
-        try {
-          // Get current message
-          const { data: msg, error: fetchError } = await supabase
-            .from('messages')
-            .select('reactions')
-            .eq('id', msgId)
-            .single();
-
-          if (fetchError) throw fetchError;
-
-          const reactions = msg.reactions || {};
-          const users = reactions[emoji] || [];
-
-          // Toggle user's reaction
-          const userIndex = users.indexOf(userId);
-          if (userIndex > -1) {
-            users.splice(userIndex, 1);
-          } else {
-            users.push(userId);
-          }
-
-          // Update or remove the emoji
-          if (users.length > 0) {
-            reactions[emoji] = users;
-          } else {
-            delete reactions[emoji];
-          }
-
-          // Save to Supabase
-          const { error: updateError } = await supabase
-            .from('messages')
-            .update({ reactions })
-            .eq('id', msgId);
-
-          if (updateError) throw updateError;
-
-          // Re-render messages to show updated reactions
-          loadMessages();
-
-        } catch (err) {
-          console.error('Failed to toggle reaction:', err);
-        }
-      }
 
       // ========================================
       // PINNED MESSAGES - Handle pinning

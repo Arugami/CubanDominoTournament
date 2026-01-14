@@ -75,7 +75,8 @@
 - [x] Community chat — **"La Mesa" built into website!**
 
 ### Brand Development
-- [ ] Brand guidelines document (colors, fonts, usage)
+- [x] Brand guidelines document (colors, fonts, usage) — **DESIGN-SYSTEM.md created!**
+- [x] "The Bone Language" design system implemented
 - [ ] Tagline finalized ("Your seat's waiting" or alternative)
 - [ ] Tone of voice guide
 - [ ] Photography style guide
@@ -221,6 +222,20 @@
 - [x] Chat reactions (🔥😂👏💪🌴)
 - [x] Pinned messages feature
 - [x] Panel 5 Spanish tagline: "La mesa te espera"
+- [x] **"CDL I" tournament edition marker** — UFC-style event branding
+- [x] **La Mesa post-registration flow** — Chat unlocks after sign-up (reward system)
+- [x] **Identity screen UX redesign** — Custom dropdown, live player count, flag selector
+- [x] **"The Bone Language" design system** — Unified 12px border-radius, domino tile shape language
+- [x] **La Mesa domino tile button** — Vertical domino with pip pattern replaces generic pill
+- [x] **Hired Tobias van Schneider** — Chief Product Designer (Spotify dark UI, micro-interactions)
+- [x] **Design Team Site Review** — Full audit with Wifredo, George, Wes, Herb
+- [x] **Domino button 50% larger** — Now 84×135px with heartbeat pulse animation
+- [x] **Free Agent single pip** — Brass pip icon replaces text badge (Bone Language)
+- [x] **Chat warm fog gradient** — Darker at top, lighter where you type
+- [x] **Send button slam animation** — Scale + burst + ripple on send
+- [x] **Film grain on backgrounds** — 2-3% noise overlay for memory texture
+- [x] **Registration form centered** — Flexbox alignment per Wes Anderson
+- [x] **LA MESA brass underline** — Sign above a door feel per Herb Lubalin
 
 ---
 
@@ -274,9 +289,91 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 12, 2026
+**Last Updated:** January 13, 2026
 
 *"La mesa te espera."*
+
+---
+
+## Recent Session Notes (Jan 13, 2026) — Design Team Implementation
+
+Following Tobias van Schneider's site audit and the full design team review session, implemented the team's consensus recommendations:
+
+### Implemented Changes:
+
+1. **Domino Button 50% Larger + Heartbeat Pulse** (George, Wifredo, Tobias)
+   - Size increased from 56×90px to 84×135px
+   - Added `boneHeartbeat` animation - subtle scale pulse every 3s
+   - "Put the bone in their face." — George Lois
+
+2. **Single Pip for Free Agent** (All)
+   - Replaced text badge "Free Agent" with single brass pip
+   - "One pip is incomplete. A soul looking for its other half." — Wifredo Lam
+   - Tooltip on hover: "Looking for a partner"
+
+3. **Warm Fog Gradient in Chat** (Tobias, Wes)
+   - Added fog gradient: darker at top, lighter at bottom (where you type)
+   - "Amber in the shadows." — Wes Anderson
+   - Sticky fog layer at top of messages area
+
+4. **Send Button Slam Animation** (Tobias)
+   - Scale down to 0.9 + shadow burst + ripple on send
+   - "The slam is ritual. When you play a domino, you're declaring." — Wifredo Lam
+
+5. **Film Grain on All Backgrounds** (Wes)
+   - 2-3% noise overlay on all panel backgrounds
+   - "Like photos from 1978, lovingly preserved." — Wes Anderson
+
+6. **Center Registration Form** (Wes)
+   - Added flexbox centering to form panel content
+   - "The form should be centered. Center it." — Wes Anderson
+
+7. **Brass Underline on "LA MESA" Header** (Herb)
+   - Added brass gradient underline beneath title
+   - Decorative pip accent below subtitle
+   - "Like a sign above a door. You have arrived." — Herb Lubalin
+
+### Team Documentation Created:
+- `TEAM/chief-product-designer-tobias-van-schneider.md`
+- `TEAM/SESSIONS/tobias-site-audit-jan13.md`
+- `TEAM/SESSIONS/design-team-site-review-jan13.md`
+
+---
+
+## Recent Session Notes (Jan 13, 2026) — Bone Language
+
+### "The Bone Language" Design System
+
+Created unified design system based on the domino tile shape. All UI components now share consistent visual language.
+
+**Key Changes:**
+- **La Mesa button**: Transformed from generic pill to vertical domino tile (56×90px) with 5-pip pattern
+- **Border-radius unified**: All components now use `12px` (was mix of 0, 50px, 999px)
+- **Animation timing**: Reduced stagger delays for snappier feel (480ms → 260ms max)
+- **Component updates**:
+  - Registration form submit button
+  - Success screen CTA
+  - Tutorial panel CTA
+  - Identity screen indicator
+  - ENTER button
+
+**Documentation:** See `DESIGN-SYSTEM.md` for full brand guidelines.
+
+### La Mesa Post-Registration Flow
+
+La Mesa chat is now a "reward" after registration:
+1. Widget hidden by default for new visitors
+2. Success overlay includes CTA: "Pull up a chair at La Mesa"
+3. Tutorial panel appears for users who dismiss success
+4. `localStorage.cdl_registered` tracks registration state
+5. Previously registered users see La Mesa immediately
+
+### Identity Screen UX Improvements
+
+- Custom dropdown replaces native `<select>` for modern feel
+- "X at the table" live indicator shows player count (FOMO)
+- Flag selector with scroll hint
+- Cuba and USA flags prioritized in order
 
 ---
 
