@@ -57,6 +57,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         color: #fff;
       }
 
+      /* CSS-based scroll lock when chat is open (no JS needed) */
+      body.chat-open {
+        overflow: hidden !important;
+      }
+
+      /* Modern browsers: use :has() selector */
+      @supports selector(:has(*)) {
+        body:has(.chat-panel.is-open) {
+          overflow: hidden !important;
+        }
+      }
+
       /* Scroll Container */
       .story {
         height: 100vh;
@@ -1012,11 +1024,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Chat Panel - The Vessel */
       .chat-panel {
         position: fixed;
-        bottom: 0; 
+        bottom: 0;
         right: 24px;
         width: 400px;
         height: 600px;
         max-height: 80vh;
+        overscroll-behavior: contain; /* Prevent scroll chaining to body */
         background:
           radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%),
           url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),
@@ -1028,11 +1041,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-direction: column;
         overflow: hidden;
         box-shadow: 0 -12px 48px rgba(0,0,0,0.6);
-        z-index: 10001; /* Higher than ticker */
+        z-index: 10003; /* Above ticker (10002) */
         transform: translateY(100%);
         transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
         opacity: 0;
-        padding-bottom: 40px; /* Space for ticker underneath */
         pointer-events: none; /* Prevent interaction when closed */
       }
 
@@ -1044,7 +1056,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           bottom: 0;
           height: 80vh;
           border-radius: 20px 20px 0 0;
-          padding-bottom: 34px;
+
         }
       }
 
@@ -1236,13 +1248,32 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         height: 60px;
         background: linear-gradient(
           180deg,
-          rgba(20, 14, 11, 0.6) 0%,
-          rgba(20, 14, 11, 0.3) 50%,
+          rgba(20, 14, 11, 0.8) 0%,
+          rgba(20, 14, 11, 0.4) 50%,
           transparent 100%
         );
         pointer-events: none;
-        z-index: 1;
+        z-index: 2;
         margin-bottom: -60px;
+      }
+
+      /* Fog layer at bottom - completes the immersion */
+      .chat-messages::after {
+        content: '';
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: linear-gradient(
+          0deg,
+          rgba(20, 14, 11, 0.9) 0%,
+          rgba(20, 14, 11, 0.4) 40%,
+          transparent 100%
+        );
+        pointer-events: none;
+        z-index: 2;
+        margin-top: -80px;
       }
 
       .chat-messages::-webkit-scrollbar { width: 4px; }
@@ -1543,7 +1574,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         right: 0;
         overflow: hidden;
         z-index: 10002; /* Highest, remains above chat panel shadow */
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+        box-shadow: 
+          0 -4px 20px rgba(0,0,0,0.5),
+          inset 0 1px 3px rgba(212, 165, 116, 0.05); /* Tobias: Subtle inner shadow for depth */
         transition: background 0.3s ease;
       }
 
@@ -1552,6 +1585,37 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: rgba(10, 6, 4, 0.85);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
+      }
+      /* Dim ticker content when chat is open for focus */
+      .chat-widget:has(.chat-panel.is-open) .mesa-ticker__track,
+      .chat-widget:has(.chat-panel.is-open) .mesa-ticker__badge {
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+      }
+      /* Desktop only: restore on hover to "peek" */
+      @media (min-width: 769px) {
+        .chat-widget:has(.chat-panel.is-open) .mesa-ticker:hover .mesa-ticker__track,
+        .chat-widget:has(.chat-panel.is-open) .mesa-ticker:hover .mesa-ticker__badge {
+          opacity: 1;
+        }
+      }
+
+      /* JS Fallback for browsers without :has() support */
+      .mesa-ticker.ticker-dimmed {
+        background: rgba(10, 6, 4, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+      .mesa-ticker.ticker-dimmed .mesa-ticker__track,
+      .mesa-ticker.ticker-dimmed .mesa-ticker__badge {
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+      }
+      @media (min-width: 769px) {
+        .mesa-ticker.ticker-dimmed:hover .mesa-ticker__track,
+        .mesa-ticker.ticker-dimmed:hover .mesa-ticker__badge {
+          opacity: 1;
+        }
       }
 
       @media (max-width: 768px) {
@@ -1641,6 +1705,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: scale(0.95);
       }
 
+      /* Tobias: Unread message pulse - "The room is calling" */
+      .mesa-ticker__chat-btn.has-unread {
+        animation: chatBtnCalling 2s infinite;
+      }
+
+      @keyframes chatBtnCalling {
+        0%, 100% { box-shadow: -4px 0 15px rgba(0,0,0,0.4); }
+        50% { 
+          box-shadow: 
+            -4px 0 25px rgba(212, 165, 116, 0.4),
+            inset 0 0 10px rgba(212, 165, 116, 0.2); 
+        }
+      }
+
       .mesa-ticker__chat-badge {
         position: absolute;
         top: 2px;
@@ -1663,7 +1741,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         align-items: center;
         height: 100%;
-        animation: tickerScroll 18s linear infinite;
+        animation: tickerScroll 24s linear infinite; /* Tobias: Slowed down for "breath" */
         white-space: nowrap;
       }
 
@@ -1679,10 +1757,46 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .mesa-ticker__item {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 0 24px;
+        gap: 10px;
+        padding: 0 32px; /* Tobias: Added more spacing/breathing room */
         font-family: system-ui, -apple-system, sans-serif;
         font-size: 0.75rem;
+        transition: all 0.3s ease;
+        animation: tickerItemEntrance 0.5s ease-out forwards;
+      }
+
+      @keyframes tickerItemEntrance {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+
+      /* Visual Hierarchy for Events */
+      .ticker-event--register {
+        font-weight: 700;
+        color: var(--brass);
+      }
+      .ticker-event--register .mesa-ticker__item-name {
+        color: var(--brass);
+        text-shadow: 0 0 10px rgba(212, 165, 116, 0.3);
+      }
+
+      .ticker-event--chat .mesa-ticker__item-name {
+        color: #ffffff;
+      }
+
+      .ticker-event--join {
+        opacity: 0.8;
+      }
+
+      .ticker-event--update {
+        color: #22c55e;
+        font-weight: 700;
+        animation: eventGlow 2s ease-in-out infinite;
+      }
+
+      @keyframes eventGlow {
+        0%, 100% { text-shadow: 0 0 5px rgba(34, 197, 94, 0); }
+        50% { text-shadow: 0 0 10px rgba(34, 197, 94, 0.4); }
       }
 
       .mesa-ticker__item-icon {
@@ -1754,6 +1868,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Input Area - The Ledger (lighter at bottom - where the action happens) */
       .chat-input-area {
         padding: 20px;
+        padding-bottom: 60px; /* 40px ticker + 20px breathing room */
         display: flex;
         gap: 16px;
         border-top: 1px solid rgba(212, 165, 116, 0.15);
@@ -1763,6 +1878,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           rgba(28, 19, 15, 0.6) 100%
         );
         position: relative;
+      }
+
+      @media (max-width: 768px) {
+        .chat-input-area {
+          padding-bottom: 54px; /* 34px ticker + 20px breathing room */
+        }
       }
 
       /* Warm glow above input - the fog clears here */
@@ -4785,7 +4906,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         chatPanel.style.display = 'flex';
         void chatPanel.offsetWidth;
         chatPanel.classList.add('is-open');
-        document.body.style.overflow = 'hidden';
+        document.body.classList.add('chat-open'); // Lock scroll via CSS class
       }
 
       // Success CTA: Close success overlay, open chat
@@ -4844,33 +4965,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       const chatBackdrop = document.getElementById('chatBackdrop');
       const tickerChatBtn = document.getElementById('tickerChatBtn');
+      const mesaTicker = document.getElementById('mesaTicker');
 
       // Toggle Chat & Scroll Lock
       function toggleChat() {
         const isOpen = chatPanel.classList.contains('is-open');
-        
+
         if (isOpen) {
           // Close
           chatPanel.classList.remove('is-open');
           chatBackdrop.classList.remove('is-visible');
-          document.body.style.overflow = ''; // Unlock scroll
+          mesaTicker.classList.remove('ticker-dimmed'); // JS fallback for :has()
+          document.body.classList.remove('chat-open'); // Unlock scroll via CSS class
           vibrate(5);
         } else {
           // Open
           chatBackdrop.classList.add('is-visible');
-          
+          mesaTicker.classList.add('ticker-dimmed'); // JS fallback for :has()
+          document.body.classList.add('chat-open'); // Lock scroll via CSS class
+
           // Force reflow for animation
           void chatPanel.offsetWidth;
           chatPanel.classList.add('is-open');
-          
+
           if (chatBadge) chatBadge.style.display = 'none';
           unreadCount = 0;
-          
-          if (window.innerWidth <= 768) {
-            document.body.style.overflow = 'hidden'; // Lock scroll on mobile
-          }
+
           vibrate(10);
-          
+
           // Focus input if joined
           if (chatBodyContainer && chatBodyContainer.style.display !== 'none') {
              setTimeout(() => chatInput.focus(), 100);
@@ -5206,6 +5328,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           { type: 'register', playerName: 'Alex Torres' },
           { type: 'join', playerName: 'Maria Elena' },
           { type: 'chat', playerName: 'Danny Rodriguez' },
+          { type: 'update', playerName: 'Tournament' },
           { type: 'register', playerName: 'Carmen Ruiz' },
           { type: 'join', playerName: 'Gaby Fernandez' }
         ];
@@ -5216,6 +5339,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Show mock data initially
       initTickerMock();
+
+      // Mobile: Pause ticker on touch (since hover doesn't work on touch devices)
+      tickerTrack.addEventListener('touchstart', () => {
+        tickerTrack.style.animationPlayState = 'paused';
+      }, { passive: true });
+
+      tickerTrack.addEventListener('touchend', () => {
+        // Resume after a brief moment so user can read
+        setTimeout(() => {
+          tickerTrack.style.animationPlayState = 'running';
+        }, 1500); // 1.5s delay before resuming
+      }, { passive: true });
 
       function joinMesaPresence() {
         if (!supabase || !chatIdentity) return;
@@ -5259,10 +5394,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         tickerEvents.unshift({ type, playerName, time: Date.now() });
         // Keep only last 10 events
         tickerEvents = tickerEvents.slice(0, 10);
+
+        // Tobias: Add micro-moment feel with subtle vibration for registrations
+        if (type === 'register') {
+          vibrate([10, 30, 10]); 
+        }
       }
 
       function updateTicker(state) {
         const users = [];
+        const EVENT_ICONS = {
+          'register': '🎟️',
+          'join': '💬',
+          'chat': '🎙️',
+          'update': '🏆'
+        };
 
         // Collect all users from presence state
         for (const [key, presences] of Object.entries(state)) {
@@ -5288,12 +5434,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         // Add recent events (up to 8)
         tickerEvents.slice(0, 8).forEach(event => {
           let actionText = 'joined';
-          if (event.type === 'chat') actionText = 'speaking...';
-          if (event.type === 'register') actionText = 'registered';
+          let eventClass = `ticker-event--${event.type}`;
+          let icon = EVENT_ICONS[event.type] || '•';
+
+          if (event.type === 'chat') actionText = 'speaking';
+          if (event.type === 'register') actionText = 'REGISTERED';
+          if (event.type === 'update') actionText = 'UPDATE';
           
           items.push(`
-            <span class="mesa-ticker__item">
-              <span class="mesa-ticker__item-icon"></span>
+            <span class="mesa-ticker__item ${eventClass}">
+              <span class="mesa-ticker__item-icon">${icon}</span>
               <span class="mesa-ticker__item-name">${escapeHtml(event.playerName)}</span>
               <span class="mesa-ticker__item-action">${actionText}</span>
             </span>
@@ -5304,7 +5454,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (items.length <= 1 && liveCount === 0) {
           items.push(`
             <span class="mesa-ticker__item">
-              <span class="mesa-ticker__item-action">Waiting for players...</span>
+              <span class="mesa-ticker__item-action">Waiting for the table to fill...</span>
             </span>
           `);
         }
