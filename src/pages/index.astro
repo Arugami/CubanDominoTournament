@@ -107,7 +107,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 5;
       }
 
-      /* Layered fog - tobacco smoke, not a flashlight */
+      /* Atmospheric depth - subtle support, not the main event */
       .fog-container {
         position: absolute;
         width: 100%;
@@ -116,91 +116,30 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow: hidden;
       }
 
-      /* Deep layer - large, slow, copper undertone */
-      .fog-layer--deep {
+      /* Single atmospheric layer - soft ambient warmth */
+      .fog-layer--ambient {
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 600px;
-        height: 400px;
+        width: 100%;
+        height: 100%;
         transform: translate(-50%, -50%);
         background: radial-gradient(
-          ellipse 70% 60% at 50% 45%,
-          rgba(183, 106, 59, 0.15) 0%,
-          rgba(183, 106, 59, 0.08) 30%,
-          rgba(183, 106, 59, 0.02) 60%,
-          transparent 100%
+          ellipse 50% 40% at 50% 48%,
+          rgba(183, 106, 59, 0.08) 0%,
+          rgba(139, 69, 19, 0.04) 40%,
+          transparent 70%
         );
-        animation: fogDeep 8s ease-in-out infinite;
+        animation: ambientBreath 6s ease-in-out infinite;
       }
 
-      /* Mid layer - medium, brass warmth */
-      .fog-layer--mid {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 400px;
-        height: 300px;
-        transform: translate(-50%, -48%);
-        background: radial-gradient(
-          ellipse 65% 55% at 52% 48%,
-          rgba(212, 165, 116, 0.2) 0%,
-          rgba(212, 165, 116, 0.1) 35%,
-          rgba(212, 165, 116, 0.03) 65%,
-          transparent 100%
-        );
-        animation: fogMid 5s ease-in-out infinite;
-      }
-
-      /* Near layer - small, bright amber emanation */
-      .fog-layer--near {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 280px;
-        height: 220px;
-        transform: translate(-50%, -50%);
-        background: radial-gradient(
-          ellipse 60% 50% at 50% 50%,
-          rgba(232, 190, 140, 0.25) 0%,
-          rgba(212, 165, 116, 0.12) 40%,
-          transparent 80%
-        );
-        animation: fogNear 3s ease-in-out infinite;
-      }
-
-      /* Deep fog - slow, majestic breathing */
-      @keyframes fogDeep {
+      @keyframes ambientBreath {
         0%, 100% {
           transform: translate(-50%, -50%) scale(1);
-          opacity: 0.7;
+          opacity: 0.6;
         }
         50% {
-          transform: translate(-50%, -50%) scale(1.08);
-          opacity: 1;
-        }
-      }
-
-      /* Mid fog - medium rhythm */
-      @keyframes fogMid {
-        0%, 100% {
-          transform: translate(-50%, -48%) scale(1);
-          opacity: 0.8;
-        }
-        50% {
-          transform: translate(-50%, -48%) scale(1.12);
-          opacity: 1;
-        }
-      }
-
-      /* Near fog - faster, intimate pulse */
-      @keyframes fogNear {
-        0%, 100% {
-          transform: translate(-50%, -50%) scale(1);
-          opacity: 0.85;
-        }
-        50% {
-          transform: translate(-50%, -50%) scale(1.1);
+          transform: translate(-50%, -50%) scale(1.05);
           opacity: 1;
         }
       }
@@ -236,16 +175,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-style: italic;
         font-weight: 400;
         font-size: 100px;
-        color: #d4a574;
+        color: #e8be8c;
         line-height: 1;
         letter-spacing: 0;
+        /* Stacked bloom - light emanates FROM the letters */
         text-shadow:
-          0 0 60px rgba(212, 165, 116, 0.8),
-          0 0 120px rgba(212, 165, 116, 0.4);
+          0 0 10px rgba(232, 190, 140, 1),
+          0 0 20px rgba(232, 190, 140, 0.9),
+          0 0 40px rgba(212, 165, 116, 0.8),
+          0 0 80px rgba(212, 165, 116, 0.5),
+          0 0 120px rgba(183, 106, 59, 0.4),
+          0 0 200px rgba(183, 106, 59, 0.2);
         opacity: 0;
         animation:
           letterReveal 0.8s ease-out forwards,
-          letterGlow 3s ease-in-out 1s infinite;
+          letterGlow 4s ease-in-out 1s infinite;
       }
 
       /* Staggered letter reveal - dramatic entrance */
@@ -262,12 +206,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
+      /* Breathing glow - the letters ARE the light source */
       @keyframes letterGlow {
         0%, 100% {
-          text-shadow: 0 0 40px rgba(212, 165, 116, 0.6), 0 0 80px rgba(212, 165, 116, 0.3);
+          text-shadow:
+            0 0 10px rgba(232, 190, 140, 0.9),
+            0 0 20px rgba(232, 190, 140, 0.7),
+            0 0 40px rgba(212, 165, 116, 0.5),
+            0 0 80px rgba(212, 165, 116, 0.3),
+            0 0 120px rgba(183, 106, 59, 0.2),
+            0 0 180px rgba(183, 106, 59, 0.1);
         }
         50% {
-          text-shadow: 0 0 80px rgba(212, 165, 116, 1), 0 0 140px rgba(212, 165, 116, 0.6);
+          text-shadow:
+            0 0 15px rgba(232, 190, 140, 1),
+            0 0 30px rgba(232, 190, 140, 0.9),
+            0 0 60px rgba(212, 165, 116, 0.7),
+            0 0 100px rgba(212, 165, 116, 0.5),
+            0 0 160px rgba(183, 106, 59, 0.3),
+            0 0 240px rgba(183, 106, 59, 0.15);
         }
       }
 
@@ -292,12 +249,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .cdl-tile__divider {
         width: 100%;
         height: 1px;
-        background: linear-gradient(90deg, transparent 0%, #d4a574 50%, transparent 100%);
+        background: linear-gradient(90deg, transparent 0%, #e8be8c 50%, transparent 100%);
         margin: 20px 0;
         opacity: 0;
+        /* Bloom from the divider line */
+        box-shadow:
+          0 0 8px rgba(232, 190, 140, 0.8),
+          0 0 20px rgba(212, 165, 116, 0.5),
+          0 0 40px rgba(183, 106, 59, 0.3);
         animation:
           dividerReveal 0.6s ease-out 0.6s forwards,
-          dividerGlow 3s ease-in-out 1.2s infinite;
+          dividerGlow 4s ease-in-out 1.2s infinite;
       }
 
       @keyframes dividerReveal {
@@ -312,8 +274,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       @keyframes dividerGlow {
-        0%, 100% { opacity: 0.5; }
-        50% { opacity: 1; }
+        0%, 100% {
+          opacity: 0.6;
+          box-shadow:
+            0 0 6px rgba(232, 190, 140, 0.6),
+            0 0 15px rgba(212, 165, 116, 0.3),
+            0 0 30px rgba(183, 106, 59, 0.2);
+        }
+        50% {
+          opacity: 1;
+          box-shadow:
+            0 0 12px rgba(232, 190, 140, 1),
+            0 0 30px rgba(212, 165, 116, 0.6),
+            0 0 60px rgba(183, 106, 59, 0.4);
+        }
       }
 
       .cdl-tile__lower {
@@ -4116,6 +4090,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-weight: 700;
       }
 
+      /* Button Scarcity - small text below button, mobile only */
+      .button-scarcity {
+        display: none; /* Hidden on desktop */
+        margin: 12px 0 0 0;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+      }
+
+      .button-scarcity span {
+        color: var(--brass);
+        font-weight: 600;
+      }
+
       /* Primary Label - WHO YOU ARE at the table */
       .label--primary {
         position: relative;
@@ -4779,9 +4771,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           display: none;
         }
 
-        /* CRITICAL: Hide the headline on mobile - form IS the hero */
+        /* Show headline on mobile - compact version */
         .form-header {
-          display: none;
+          margin-bottom: 8px;
+        }
+
+        .panel--form .panel-headline {
+          font-size: clamp(1.6rem, 7vw, 2.2rem);
+          margin-bottom: 0;
         }
 
         /* Hide Notes field on mobile - it's optional and saves space */
@@ -4792,6 +4789,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         /* Hide the scroll-hint divider - footer is always visible now */
         .scroll-hint-divider {
           display: none !important;
+        }
+
+        /* Hide TOP scarcity on mobile - moved below button */
+        .form-scarcity {
+          display: none;
+        }
+
+        /* Show button scarcity on mobile */
+        .button-scarcity {
+          display: block;
         }
 
         /* Compact form spacing for single-viewport fit */
@@ -4808,16 +4815,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .form-shell {
           padding: 20px 16px;
           margin-bottom: 0;
-        }
-
-        /* Scarcity indicator is the new "header" */
-        .form-scarcity {
-          margin-bottom: 12px;
-          padding: 10px 16px;
-        }
-
-        .form-scarcity__text {
-          font-size: 0.75rem;
         }
 
         /* Footer is ALWAYS visible - no separate scroll */
@@ -5102,11 +5099,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
   <body class="is-loading">
     <!-- Loading Screen - The Tile -->
     <div class="loading-screen" id="loadingScreen">
-      <!-- Layered fog - depth through smoke -->
+      <!-- Atmospheric ambient - the letters are the light source -->
       <div class="fog-container">
-        <div class="fog-layer--deep"></div>
-        <div class="fog-layer--mid"></div>
-        <div class="fog-layer--near"></div>
+        <div class="fog-layer--ambient"></div>
       </div>
       <div class="cdl-tile">
         <div class="cdl-tile__upper">
@@ -5303,6 +5298,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               </label>
 
               <button type="submit" id="submitBtn">Claim Your Seat</button>
+              <!-- Mobile scarcity - below button -->
+              <p class="button-scarcity"><span id="spotsLeftButton">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span> seats remain</p>
               <p class="status" id="status" aria-live="polite"></p>
             </form>
           </div>
@@ -5661,6 +5658,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       // Progress counter animation
       const playerCountEl = document.getElementById("playerCount");
       const spotsLeftEl = document.getElementById("spotsLeft");
+      const spotsLeftButtonEl = document.getElementById("spotsLeftButton");
       const progressFillEl = document.getElementById("progressFill");
 
       function animateCounter(target, duration = 1000) {
@@ -5703,8 +5701,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               progressFillEl.style.width = percentage + "%";
             }, 100);
 
-            // Update spots left
+            // Update spots left (desktop and mobile button)
             spotsLeftEl.textContent = (PLAYERS_GOAL - PLAYERS_REGISTERED) + " spots left";
+            if (spotsLeftButtonEl) spotsLeftButtonEl.textContent = (PLAYERS_GOAL - PLAYERS_REGISTERED);
           }
         });
       }, { threshold: 0.3 });
@@ -5863,9 +5862,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           // Update progress counter
           const playerCount = document.getElementById('playerCount');
           const spotsLeft = document.getElementById('spotsLeft');
+          const spotsLeftButton = document.getElementById('spotsLeftButton');
           const progressFill = document.getElementById('progressFill');
           if (playerCount) playerCount.textContent = registeredPlayers.length;
           if (spotsLeft) spotsLeft.textContent = `${16 - registeredPlayers.length} spots left`;
+          if (spotsLeftButton) spotsLeftButton.textContent = 16 - registeredPlayers.length;
           if (progressFill) progressFill.style.width = `${(registeredPlayers.length / 16) * 100}%`;
 
           // Populate chat player selector
