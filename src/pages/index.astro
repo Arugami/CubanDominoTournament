@@ -1336,33 +1336,61 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* SCENE 2: THE REVELATION - The twist that hits */
-      .panel-content--build {
+      /* ================================================
+         SCENE 2: THE REVELATION - The Cinematic Climax
+         "You didn't learn this game. You inherited it."
+         The word "inherited" is the SLAM moment.
+         ================================================ */
+
+      .panel--build {
         justify-content: center;
         align-items: center;
-        text-align: center;
-        padding: 0 6vw;
-        gap: 0;
+        padding: 0;
+      }
+
+      /* TOP LETTERBOX - The setup whispered from darkness */
+      .build-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        padding: 3vh 6vw 14vh;
+        background: linear-gradient(
+          to bottom,
+          rgba(10, 7, 5, 0.98) 0%,
+          rgba(10, 7, 5, 0.9) 30%,
+          rgba(10, 7, 5, 0.5) 70%,
+          rgba(10, 7, 5, 0) 100%
+        );
+        display: flex;
+        justify-content: center;
+        pointer-events: none;
       }
 
       .build-setup {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: clamp(1.1rem, 4vw, 1.6rem);
-        color: rgba(255, 255, 255, 0.6);
-        letter-spacing: 0.1em;
-        /* Heavy shadow halo */
-        text-shadow:
-          0 0 6px rgba(0, 0, 0, 1),
-          0 0 12px rgba(0, 0, 0, 1),
-          0 0 25px rgba(0, 0, 0, 0.95),
-          0 2px 30px rgba(0, 0, 0, 1);
+        font-size: clamp(1rem, 4vw, 1.5rem);
+        color: rgba(255, 255, 255, 0.75);
+        letter-spacing: 0.12em;
+        text-align: center;
         opacity: 0;
-        margin-bottom: 2vh;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
       }
 
-      /* The revelation - word by word */
+      /* CENTER - The revelation commands the space */
+      .build-center {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        pointer-events: none;
+      }
+
       .build-revelation {
         display: flex;
         flex-direction: column;
@@ -1375,69 +1403,116 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-style: italic;
         font-weight: 400;
         opacity: 0;
-        /* Heavy shadow halo */
-        text-shadow:
-          0 0 8px rgba(0, 0, 0, 1),
-          0 0 15px rgba(0, 0, 0, 1),
-          0 0 30px rgba(0, 0, 0, 0.95),
-          0 4px 40px rgba(0, 0, 0, 1);
       }
 
       .build-word--you {
-        font-size: clamp(1.4rem, 5vw, 2.2rem);
-        color: rgba(212, 165, 116, 0.8);
-        margin-bottom: 0.5vh;
+        font-size: clamp(1.3rem, 5vw, 2rem);
+        color: rgba(212, 165, 116, 0.85);
+        letter-spacing: 0.08em;
+        margin-bottom: 1vh;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
       }
 
+      /* "inherited" - THE WORD. The slam. The climax. */
       .build-word--inherited {
-        font-size: clamp(3rem, 14vw, 7rem);
-        color: var(--cream);
-        letter-spacing: 0.02em;
-        line-height: 1;
-        /* Extra heavy halo for the big word */
+        font-size: clamp(3.2rem, 16vw, 8rem);
+        color: #fff;
+        letter-spacing: -0.01em;
+        line-height: 0.9;
+        /* Luminous glow - this word RADIATES */
         text-shadow:
-          0 0 10px rgba(0, 0, 0, 1),
-          0 0 20px rgba(0, 0, 0, 1),
-          0 0 40px rgba(0, 0, 0, 1),
-          0 0 60px rgba(0, 0, 0, 0.9),
-          0 4px 50px rgba(0, 0, 0, 1);
+          0 0 30px rgba(212, 165, 116, 0.5),
+          0 0 60px rgba(212, 165, 116, 0.3),
+          0 0 100px rgba(212, 165, 116, 0.15),
+          0 4px 30px rgba(0, 0, 0, 0.6);
       }
 
       .build-word--it {
-        font-size: clamp(1.6rem, 6vw, 2.8rem);
+        font-size: clamp(1.5rem, 6vw, 2.6rem);
         color: var(--brass);
-        margin-top: 0.5vh;
+        letter-spacing: 0.06em;
+        margin-top: 1.5vh;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
       }
 
-      /* Scene 2 animation sequence */
+      /* BOTTOM LETTERBOX - Scroll hint emerges after revelation */
+      .build-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        padding: 10vh 6vw 14vh;
+        background: linear-gradient(
+          to top,
+          rgba(10, 7, 5, 0.98) 0%,
+          rgba(10, 7, 5, 0.85) 30%,
+          rgba(10, 7, 5, 0.4) 70%,
+          rgba(10, 7, 5, 0) 100%
+        );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        pointer-events: none;
+      }
+
+      .build-scroll-hint {
+        opacity: 0;
+        display: flex;
+        justify-content: center;
+      }
+
+      .build-scroll-hint__chevron {
+        width: 18px;
+        height: 18px;
+        border-right: 2px solid var(--brass);
+        border-bottom: 2px solid var(--brass);
+        transform: rotate(45deg);
+        opacity: 0.5;
+      }
+
+      /* Scene 2 animation sequence - timed for impact */
       .panel--build.in-view .build-setup {
-        animation: cinematicReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        animation: cinematicReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
       }
 
       .panel--build.in-view .build-word--you {
-        animation: wordBuild 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+        animation: wordBuild 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
       }
 
       .panel--build.in-view .build-word--inherited {
-        animation: revelationHit 1.4s cubic-bezier(0.16, 1, 0.3, 1) 2s forwards;
+        animation: revelationSlam 1.2s cubic-bezier(0.16, 1, 0.3, 1) 2.3s forwards;
       }
 
       .panel--build.in-view .build-word--it {
-        animation: wordBuildFinal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 3.2s forwards;
+        animation: wordBuildFinal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
       }
 
-      @keyframes revelationHit {
+      .panel--build.in-view .build-scroll-hint {
+        animation: scrollHintReveal 1s ease-out 4.5s forwards;
+      }
+
+      .panel--build.in-view .build-scroll-hint__chevron {
+        animation: scrollHintBounce 2s ease-in-out 5.5s infinite;
+      }
+
+      /* The SLAM - "inherited" hits like a domino on the table */
+      @keyframes revelationSlam {
         0% {
           opacity: 0;
-          transform: translateY(40px) scale(0.85);
-          filter: blur(12px);
+          transform: translateY(50px) scale(0.8);
+          filter: blur(15px);
         }
-        50% {
+        40% {
           opacity: 1;
           filter: blur(0);
         }
+        55% {
+          transform: translateY(-5px) scale(1.02);
+        }
         70% {
-          transform: translateY(-8px) scale(1.03);
+          transform: translateY(2px) scale(0.99);
         }
         100% {
           opacity: 1;
@@ -1570,13 +1645,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           font-size: clamp(1.8rem, 8vw, 2.8rem);
         }
 
-        .panel-content--build {
-          padding: 0 5vw;
+        /* Panel 3 mobile - cinematic frame */
+        .build-top {
+          padding: 2vh 5vw 12vh;
+        }
+
+        .build-bottom {
+          padding: 8vh 5vw 16vh;
         }
 
         .build-setup {
           font-size: clamp(0.9rem, 3.5vw, 1.2rem);
-          margin-bottom: 3vh;
         }
 
         .build-word--you {
@@ -1584,7 +1663,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .build-word--inherited {
-          font-size: clamp(2.6rem, 16vw, 5rem);
+          font-size: clamp(2.8rem, 18vw, 5.5rem);
         }
 
         .build-word--it {
@@ -2732,8 +2811,129 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1 !important;
       }
 
+      /*
+        iOS Safari: stabilize compositing for fixed + animated ticker.
+        Safari can mis-paint fixed elements with transforms/backdrop-filters and full-screen overlays,
+        making the ticker appear dimmed even when `.ticker-dimmed` is not set.
+      */
+      @supports (-webkit-touch-callout: none) {
+        .chat-widget {
+          z-index: 20001;
+        }
+        .mesa-ticker {
+          z-index: 20002;
+          isolation: isolate;
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+        }
+        .mesa-ticker__badge,
+        .mesa-ticker__track,
+        .mesa-ticker__chat-btn {
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+        }
+        .chat-panel {
+          z-index: 20003;
+        }
+        .chat-backdrop {
+          z-index: 20000;
+        }
+        .mesa-help {
+          z-index: 20010;
+        }
+        .vignette-overlay {
+          z-index: 19900;
+        }
+        .chromatic-aberration {
+          z-index: 19899;
+        }
+      }
+
       .mesa-ticker__track:hover {
         animation-play-state: paused;
+      }
+
+      /* "Unlock La Mesa" hint bubble (shown when unregistered user taps the domino) */
+      .mesa-help {
+        position: fixed;
+        left: 14px;
+        right: 14px;
+        bottom: calc(46px + 14px);
+        z-index: 15000;
+        max-width: 520px;
+        margin: 0 auto;
+        background: rgba(28, 19, 15, 0.92);
+        border: 1px solid rgba(212, 165, 116, 0.22);
+        border-radius: 14px;
+        padding: 12px 12px 12px 14px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65);
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+        transition: opacity 220ms ease, transform 220ms ease;
+      }
+      .mesa-help.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      @media (max-width: 768px) {
+        .mesa-help {
+          bottom: calc(40px + 12px);
+        }
+      }
+
+      .mesa-help__row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .mesa-help__icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: rgba(212, 165, 116, 0.12);
+        border: 1px solid rgba(212, 165, 116, 0.22);
+        color: var(--brass);
+        flex: 0 0 auto;
+        margin-top: 2px;
+      }
+      .mesa-help__title {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        color: var(--brass);
+        font-size: 0.95rem;
+        line-height: 1.2;
+        margin-bottom: 4px;
+      }
+      .mesa-help__text {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.85rem;
+        line-height: 1.35;
+      }
+      .mesa-help__text strong {
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 700;
+      }
+      .mesa-help__dismiss {
+        appearance: none;
+        border: 1px solid rgba(212, 165, 116, 0.22);
+        background: rgba(10, 6, 4, 0.35);
+        color: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        padding: 8px 10px;
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        flex: 0 0 auto;
+      }
+      .mesa-help__dismiss:active {
+        transform: scale(0.98);
       }
 
       @keyframes tickerScroll {
@@ -5482,19 +5682,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="smoke-layer"></div>
       </section>
 
-      <!-- Panel 3: The Revelation -->
-      <section class="panel panel--build">
+      <!-- Panel 3: The Revelation - Cinematic Climax -->
+      <section class="panel panel--build" id="panelBuild">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-3.webp')"></div>
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
-        <div class="panel-content panel-content--build">
+
+        <!-- TOP LETTERBOX - The setup whispered from darkness -->
+        <div class="build-top">
           <p class="build-setup">You didn't learn this game</p>
+        </div>
+
+        <!-- CENTER - The revelation commands the space -->
+        <div class="build-center">
           <div class="build-revelation">
             <span class="build-word build-word--you">You</span>
             <span class="build-word build-word--inherited">inherited</span>
             <span class="build-word build-word--it">it.</span>
           </div>
         </div>
+
+        <!-- BOTTOM LETTERBOX - Scroll hint after revelation -->
+        <div class="build-bottom">
+          <div class="build-scroll-hint">
+            <div class="build-scroll-hint__chevron"></div>
+          </div>
+        </div>
+
+        <div class="smoke-layer"></div>
       </section>
 
       <!-- Panel 4: The Stakes -->
@@ -5942,6 +6157,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       </div>
     </div>
 
+    <!-- "Unlock La Mesa" Hint Bubble -->
+    <div class="mesa-help" id="mesaHelp" role="status" aria-live="polite" aria-atomic="true">
+      <div class="mesa-help__row">
+        <div class="mesa-help__icon" aria-hidden="true">🁣</div>
+        <div class="mesa-help__body">
+          <div class="mesa-help__title">La Mesa unlocks after signup</div>
+          <div class="mesa-help__text">
+            Claim your seat below, then tap the domino again to enter <strong>La Mesa</strong>.
+          </div>
+        </div>
+        <button class="mesa-help__dismiss" id="mesaHelpDismiss" type="button">Got it</button>
+      </div>
+    </div>
+
     <!-- Background Dimming Overlay -->
     <div class="chat-backdrop" id="chatBackdrop"></div>
 
@@ -5998,41 +6227,69 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       // First panel is always in view
       allPanels[0]?.classList.add('in-view');
 
-      // Scroll-lock for Panel 2 narrative sequence
-      // Prevents scrolling until all animations complete (~7 seconds)
+      // Scroll-lock system for cinematic panels
+      // Prevents scrolling until animations complete
       const whisperPanel = document.getElementById('panelWhisper');
-      let narrativeLocked = false;
-      let narrativeHasPlayed = false;
+      const buildPanel = document.getElementById('panelBuild');
+      let scrollLocked = false;
+      let whisperHasPlayed = false;
+      let buildHasPlayed = false;
 
       function preventScroll(e) {
-        if (narrativeLocked) {
+        if (scrollLocked) {
           e.preventDefault();
           e.stopPropagation();
         }
       }
 
-      const narrativeObserver = new IntersectionObserver((entries) => {
+      function lockScroll(duration) {
+        scrollLocked = true;
+        document.addEventListener('wheel', preventScroll, { passive: false });
+        document.addEventListener('touchmove', preventScroll, { passive: false });
+
+        setTimeout(() => {
+          unlockScroll();
+        }, duration);
+      }
+
+      function unlockScroll() {
+        scrollLocked = false;
+        document.removeEventListener('wheel', preventScroll);
+        document.removeEventListener('touchmove', preventScroll);
+      }
+
+      // Panel 2 (Whisper) scroll-lock - 7.5 seconds
+      const whisperObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting && !narrativeHasPlayed) {
-            narrativeHasPlayed = true;
-            narrativeLocked = true;
-
-            // Add event listeners to prevent scroll
-            document.addEventListener('wheel', preventScroll, { passive: false });
-            document.addEventListener('touchmove', preventScroll, { passive: false });
-
-            // Unlock after animations complete (last word at 5.5s + 1s + scroll hint at 7s + buffer)
-            setTimeout(() => {
-              narrativeLocked = false;
-              document.removeEventListener('wheel', preventScroll);
-              document.removeEventListener('touchmove', preventScroll);
-            }, 7500);
+          if (entry.isIntersecting && !whisperHasPlayed) {
+            whisperHasPlayed = true;
+            lockScroll(7500);
           }
         });
       }, { threshold: 0.6 });
 
-      if (whisperPanel) {
-        narrativeObserver.observe(whisperPanel);
+      // Panel 3 (Build/Revelation) scroll-lock - 5.5 seconds
+      const buildObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !buildHasPlayed) {
+            buildHasPlayed = true;
+            lockScroll(5500);
+          }
+        });
+      }, { threshold: 0.6 });
+
+      if (whisperPanel) whisperObserver.observe(whisperPanel);
+      if (buildPanel) buildObserver.observe(buildPanel);
+
+      // La Mesa button bypass - unlock scroll and go to form
+      const laMesaButton = document.querySelector('.la-mesa-toggle');
+      if (laMesaButton) {
+        laMesaButton.addEventListener('click', () => {
+          unlockScroll();
+          // Mark both as played so they don't re-lock
+          whisperHasPlayed = true;
+          buildHasPlayed = true;
+        });
       }
 
       // Progress counter animation
@@ -6642,6 +6899,28 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       const chatBackdrop = document.getElementById('chatBackdrop');
       const mesaTicker = document.getElementById('mesaTicker');
+      const mesaHelp = document.getElementById('mesaHelp');
+      const mesaHelpDismiss = document.getElementById('mesaHelpDismiss');
+      let mesaHelpTimeout = null;
+
+      function showMesaHelp() {
+        if (!mesaHelp) return;
+        if (mesaHelpTimeout) clearTimeout(mesaHelpTimeout);
+        mesaHelp.classList.add('is-visible');
+        mesaHelpTimeout = setTimeout(() => {
+          mesaHelp.classList.remove('is-visible');
+          mesaHelpTimeout = null;
+        }, 6500);
+      }
+
+      function hideMesaHelp() {
+        if (!mesaHelp) return;
+        if (mesaHelpTimeout) clearTimeout(mesaHelpTimeout);
+        mesaHelpTimeout = null;
+        mesaHelp.classList.remove('is-visible');
+      }
+
+      mesaHelpDismiss?.addEventListener('click', hideMesaHelp);
 
       // DEBUG: Track ticker class changes
       if (mesaTicker) {
@@ -6698,6 +6977,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         const isRegistered = localStorage.getItem('cdl_registered') === 'true';
         if (!isRegistered) {
           // Not registered - scroll to registration form
+          showMesaHelp();
           const formPanel = document.querySelector('.panel--form');
           if (formPanel) {
             formPanel.scrollIntoView({ behavior: 'smooth' });
