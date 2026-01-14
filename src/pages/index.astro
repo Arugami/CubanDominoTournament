@@ -684,7 +684,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         to { opacity: 1; }
       }
 
-      .panel--hero .brand-lockup,
       .panel--hero .event-title,
       .panel--hero .event-edition,
       .panel--hero .hero-tagline,
@@ -694,13 +693,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: none !important;
       }
 
-      /* Stagger the fade-in timing - CDL I leads, then title follows */
-      .panel--hero .brand-lockup { animation-delay: 0.05s !important; }
-      .panel--hero .event-edition { animation-delay: 0.12s !important; }
+      /* Stagger the fade-in timing - CDL I badge first, then cascade down */
+      .panel--hero .event-edition { animation-delay: 0.1s !important; }
       .panel--hero .event-title { animation-delay: 0.2s !important; }
       .panel--hero .event-numeral { animation-delay: 0.25s !important; }
-      .panel--hero .hero-tagline { animation-delay: 0.35s !important; }
-      .panel--hero .hero-subtitle { animation-delay: 0.45s !important; }
+      .panel--hero .hero-tagline { animation-delay: 0.4s !important; }
+      .panel--hero .hero-subtitle { animation-delay: 0.55s !important; }
 
       /* Kill any ::after shine effects on hero text */
       .panel--hero .event-numeral::after {
@@ -814,86 +812,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: center;
       }
 
-      .brand-lockup {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 32px;
-        animation: fadeInDown 1s ease-out;
-        position: relative;
-      }
-
-      @keyframes fadeInDown {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .brand-name {
-        font-family: "Bodoni Moda", "Didot", serif;
-        font-size: clamp(0.75rem, 2vw, 1rem);
-        font-weight: 400;
-        letter-spacing: 0.5em;
-        text-transform: uppercase;
-        color: var(--brass);
-        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
-        margin-bottom: 6px;
-        position: relative;
-        padding: 0 40px;
-        opacity: 1;
-      }
-
-      /* Decorative horizontal lines for Brand Name */
-      .brand-name::before,
-      .brand-name::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        width: 30px;
-        height: 1px;
-        background: var(--brass);
-        opacity: 0.3;
-      }
-      .brand-name::before { left: 0; }
-      .brand-name::after { right: 0; }
-
-      .brand-presents {
-        font-family: "Bodoni Moda", serif;
-        font-style: italic;
-        font-size: 0.95rem;
-        color: var(--brass);
-        opacity: 0.6;
-        letter-spacing: 0.2em;
-        margin-top: 4px;
-      }
-
-      .brand-name::before {
-        right: 100%;
-        margin-right: 8px;
-      }
-
-      .brand-name::after {
-        left: 100%;
-        margin-left: 8px;
-      }
-
-      .brand-presents {
-        font-family: "Bodoni Moda", "Didot", serif;
-        font-size: clamp(0.8rem, 1.8vw, 1rem);
-        font-style: italic;
-        font-weight: 400;
-        color: var(--cream);
-        opacity: 0.5;
-        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
-        letter-spacing: 0.2em;
-        text-transform: lowercase;
-      }
-
       /* Event Title - TOURNAMENT I */
       .event-title {
         display: flex;
@@ -999,35 +917,69 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         50% { opacity: 1; }
       }
 
-      /* Event edition - CDL 1 (fight-card badge) */
+      /* Event edition - CDL 1 (UFC-style event badge) */
       .event-edition {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         font-family: "IBM Plex Sans", system-ui, sans-serif;
-        font-size: clamp(0.7rem, 1.8vw, 0.85rem);
-        font-weight: 600;
-        letter-spacing: 0.4em;
+        font-size: clamp(0.65rem, 1.6vw, 0.8rem);
+        font-weight: 700;
+        letter-spacing: 0.25em;
         text-transform: uppercase;
-        color: var(--brass);
-        margin: 0 0 12px;
-        opacity: 0.9;
-        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+        color: var(--tobacco);
+        background: linear-gradient(180deg, var(--brass) 0%, #c4965a 100%);
+        padding: 6px 18px 5px;
+        margin: 0 0 16px;
+        border-radius: 2px;
+        box-shadow:
+          0 2px 8px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+        text-shadow: none;
+        position: relative;
       }
 
-      /* Hero tagline - supporting, recedes
-         43 chars × 1.1 (letter-spacing) = 47 units
-         To fit 90vw: font-size = 90vw/47 ≈ 1.9vw */
+      /* Subtle shine on badge */
+      .event-edition::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
+        border-radius: 2px 2px 0 0;
+        pointer-events: none;
+      }
+
+      /* Hero tagline - Championship stamp with decorative lines */
       .hero-tagline {
-        font-family: "Bodoni Moda", serif;
-        font-size: clamp(0.42rem, 1.9vw, 0.85rem);
-        font-weight: 400;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: clamp(0.5rem, 2vw, 0.75rem);
+        font-weight: 600;
         color: var(--cream);
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-top: 22px;
-        margin-bottom: 10px;
-        opacity: 0.7;
+        letter-spacing: 0.2em;
+        margin-top: 24px;
+        margin-bottom: 12px;
+        opacity: 0.85;
         text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
         white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        position: relative;
+      }
+
+      /* Decorative lines on sides - championship banner feel */
+      .hero-tagline::before,
+      .hero-tagline::after {
+        content: "";
+        width: clamp(20px, 8vw, 60px);
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, var(--brass) 50%, transparent 100%);
+        opacity: 0.5;
       }
 
       /* Hero subtitle - practical info, fades */
@@ -1160,119 +1112,388 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* ========================================
-         TYPOGRAPHY CRESCENDO - The Story Arc
-         Panel 2: Whisper → Panel 3: Build → Panel 4: Slam
+         CINEMATIC STORYTELLING - Three Scenes
+         Scene 1: The Whisper (greeting + tension)
+         Scene 2: The Revelation (the twist)
+         Scene 3: The Stakes (winner takes all)
          ======================================== */
 
-      /* Panel 2: THE WHISPER - A nod from across the room */
+      /* SCENE 1: THE WHISPER - Intimate, building tension */
       .panel-content--whisper {
-        justify-content: flex-end;
-        align-items: flex-start;
-        padding-bottom: 12vh;
-        padding-left: 6vw;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 8vw;
       }
 
       .whisper-greeting {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: clamp(1.3rem, 4.5vw, 2.2rem);
+        font-size: clamp(2.8rem, 10vw, 5rem);
         color: var(--cream);
-        letter-spacing: 0.1em;
+        letter-spacing: 0.08em;
         text-shadow:
-          0 2px 20px rgba(0, 0, 0, 1),
-          0 4px 40px rgba(0, 0, 0, 0.8),
-          0 0 60px rgba(0, 0, 0, 0.6);
-        animation: fadeIn 1.5s ease-out 0.3s both;
+          0 4px 30px rgba(0, 0, 0, 1),
+          0 8px 60px rgba(0, 0, 0, 0.8),
+          0 0 100px rgba(212, 165, 116, 0.2);
+        opacity: 0;
+        margin-bottom: 3vh;
       }
 
-      /* Panel 3: THE BUILD - Stakes revealed, tension rising */
+      /* Narrative sequence - words that build */
+      .whisper-narrative {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        margin-top: 2vh;
+      }
+
+      .whisper-line {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--brass);
+        opacity: 0;
+        letter-spacing: 0.06em;
+        text-shadow:
+          0 2px 20px rgba(0, 0, 0, 0.9),
+          0 4px 40px rgba(0, 0, 0, 0.7);
+      }
+
+      .whisper-line--watching {
+        font-size: clamp(1.2rem, 4vw, 1.8rem);
+        color: rgba(212, 165, 116, 0.85);
+        margin-bottom: 2vh;
+      }
+
+      /* Each word GROWS - building to revelation */
+      .whisper-line--train {
+        font-size: clamp(1.4rem, 5vw, 2.2rem);
+        margin-bottom: 0.8vh;
+      }
+
+      .whisper-line--learn {
+        font-size: clamp(1.6rem, 6vw, 2.6rem);
+        margin-bottom: 0.8vh;
+      }
+
+      .whisper-line--wait {
+        font-size: clamp(1.8rem, 7vw, 3rem);
+        color: var(--cream);
+      }
+
+      /* Cinematic animations - slow, deliberate, weighted */
+      .panel--whisper.in-view .whisper-greeting {
+        animation: cinematicReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+      }
+
+      .panel--whisper.in-view .whisper-line--watching {
+        animation: cinematicReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 2s forwards;
+      }
+
+      .panel--whisper.in-view .whisper-line--train {
+        animation: wordBuild 0.8s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
+      }
+
+      .panel--whisper.in-view .whisper-line--learn {
+        animation: wordBuild 0.8s cubic-bezier(0.16, 1, 0.3, 1) 4.5s forwards;
+      }
+
+      .panel--whisper.in-view .whisper-line--wait {
+        animation: wordBuildFinal 1s cubic-bezier(0.16, 1, 0.3, 1) 5.5s forwards;
+      }
+
+      @keyframes cinematicReveal {
+        0% {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+          filter: blur(8px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes wordBuild {
+        0% {
+          opacity: 0;
+          transform: translateY(15px);
+          filter: blur(4px);
+        }
+        100% {
+          opacity: 0.8;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes wordBuildFinal {
+        0% {
+          opacity: 0;
+          transform: translateY(15px) scale(0.9);
+          filter: blur(4px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+      }
+
+      /* SCENE 2: THE REVELATION - The twist that hits */
       .panel-content--build {
         justify-content: center;
-        align-items: flex-start;
-        padding-left: 8vw;
-        gap: 8px;
+        align-items: center;
+        text-align: center;
+        padding: 0 6vw;
+        gap: 0;
       }
 
       .build-setup {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: clamp(1.1rem, 3.5vw, 1.6rem);
-        color: var(--cream);
-        opacity: 0.7;
-        letter-spacing: 0.08em;
-        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
-        animation: fadeInUp 0.8s ease-out 0.2s both;
+        font-size: clamp(1.1rem, 4vw, 1.6rem);
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.1em;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+        opacity: 0;
+        margin-bottom: 2vh;
       }
 
-      .build-payoff {
+      /* The revelation - word by word */
+      .build-revelation {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+
+      .build-word {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: clamp(2.2rem, 8vw, 4.5rem);
-        color: var(--brass);
-        letter-spacing: 0.04em;
-        line-height: 1.1;
+        opacity: 0;
         text-shadow:
-          0 4px 20px rgba(0, 0, 0, 0.9),
-          0 0 60px rgba(212, 165, 116, 0.3);
-        animation: fadeInUp 0.8s ease-out 0.4s both;
-        margin: 0;
+          0 4px 30px rgba(0, 0, 0, 0.95),
+          0 8px 60px rgba(0, 0, 0, 0.7);
       }
 
-      /* Panel 4: THE SLAM - Winner takes all, the table flip */
-      .panel-content--slam {
-        justify-content: center;
-        align-items: center;
+      .build-word--you {
+        font-size: clamp(1.4rem, 5vw, 2.2rem);
+        color: rgba(212, 165, 116, 0.7);
+        margin-bottom: 0.5vh;
       }
 
-      .slam-headline {
-        font-family: "Bodoni Moda", serif;
-        font-weight: 900;
-        font-size: clamp(3.5rem, 14vw, 9rem);
+      .build-word--inherited {
+        font-size: clamp(3rem, 14vw, 7rem);
         color: var(--cream);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        line-height: 0.95;
-        text-align: center;
+        letter-spacing: 0.02em;
+        line-height: 1;
         text-shadow:
-          0 4px 20px rgba(0, 0, 0, 0.95),
-          0 8px 40px rgba(0, 0, 0, 0.7),
-          0 0 80px rgba(212, 165, 116, 0.25);
-        animation: slamIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-        margin: 0;
+          0 4px 40px rgba(0, 0, 0, 0.95),
+          0 8px 80px rgba(0, 0, 0, 0.7),
+          0 0 120px rgba(212, 165, 116, 0.5);
       }
 
-      @keyframes slamIn {
+      .build-word--it {
+        font-size: clamp(1.6rem, 6vw, 2.8rem);
+        color: var(--brass);
+        margin-top: 0.5vh;
+      }
+
+      /* Scene 2 animation sequence */
+      .panel--build.in-view .build-setup {
+        animation: cinematicReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+      }
+
+      .panel--build.in-view .build-word--you {
+        animation: wordBuild 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+      }
+
+      .panel--build.in-view .build-word--inherited {
+        animation: revelationHit 1.4s cubic-bezier(0.16, 1, 0.3, 1) 2s forwards;
+      }
+
+      .panel--build.in-view .build-word--it {
+        animation: wordBuildFinal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 3.2s forwards;
+      }
+
+      @keyframes revelationHit {
         0% {
           opacity: 0;
-          transform: scale(1.1) translateY(-20px);
+          transform: translateY(40px) scale(0.85);
+          filter: blur(12px);
+        }
+        50% {
+          opacity: 1;
+          filter: blur(0);
+        }
+        70% {
+          transform: translateY(-8px) scale(1.03);
         }
         100% {
           opacity: 1;
-          transform: scale(1) translateY(0);
+          transform: translateY(0) scale(1);
+          filter: blur(0);
         }
       }
 
-      /* Mobile adjustments for crescendo */
+      /* SCENE 3: THE STAKES - Winner takes all */
+      .panel-content--slam {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 6vw;
+      }
+
+      .slam-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+
+      .slam-word {
+        font-family: "Bodoni Moda", serif;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        line-height: 0.85;
+        opacity: 0;
+        text-shadow:
+          0 4px 30px rgba(0, 0, 0, 0.95),
+          0 8px 60px rgba(0, 0, 0, 0.7);
+      }
+
+      .slam-word--winner {
+        font-size: clamp(2.2rem, 10vw, 5rem);
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .slam-word--takes {
+        font-size: clamp(2.6rem, 12vw, 6rem);
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .slam-word--all {
+        font-size: clamp(4rem, 20vw, 12rem);
+        color: var(--cream);
+        text-shadow:
+          0 4px 40px rgba(0, 0, 0, 0.95),
+          0 8px 80px rgba(0, 0, 0, 0.7),
+          0 0 150px rgba(212, 165, 116, 0.4);
+      }
+
+      /* Scene 3 animation sequence */
+      .panel--slam.in-view .slam-word--winner {
+        animation: slamWord 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+      }
+
+      .panel--slam.in-view .slam-word--takes {
+        animation: slamWord 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+      }
+
+      .panel--slam.in-view .slam-word--all {
+        animation: slamFinal 1s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
+      }
+
+      @keyframes slamWord {
+        0% {
+          opacity: 0;
+          transform: translateY(-20px) scale(1.1);
+          filter: blur(4px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes slamFinal {
+        0% {
+          opacity: 0;
+          transform: translateY(-30px) scale(1.2);
+          filter: blur(8px);
+        }
+        60% {
+          opacity: 1;
+          transform: translateY(10px) scale(0.95);
+          filter: blur(0);
+        }
+        80% {
+          transform: translateY(-5px) scale(1.02);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+      }
+
+      /* Mobile adjustments for cinematic panels */
       @media (max-width: 768px) {
         .panel-content--whisper {
-          padding-bottom: 20vh;
-          padding-left: 6vw;
+          padding: 0 6vw;
+        }
+
+        .whisper-greeting {
+          font-size: clamp(2.2rem, 12vw, 3.5rem);
+          margin-bottom: 4vh;
+        }
+
+        .whisper-line--watching {
+          font-size: clamp(1rem, 4.5vw, 1.4rem);
+        }
+
+        .whisper-line--train {
+          font-size: clamp(1.2rem, 5.5vw, 1.8rem);
+        }
+
+        .whisper-line--learn {
+          font-size: clamp(1.4rem, 6.5vw, 2.2rem);
+        }
+
+        .whisper-line--wait {
+          font-size: clamp(1.6rem, 8vw, 2.6rem);
         }
 
         .panel-content--build {
-          padding-left: 6vw;
-          padding-right: 6vw;
+          padding: 0 5vw;
         }
 
-        .build-payoff {
-          font-size: clamp(1.8rem, 10vw, 3.5rem);
+        .build-setup {
+          font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+          margin-bottom: 3vh;
         }
 
-        .slam-headline {
-          font-size: clamp(2.8rem, 16vw, 6rem);
+        .build-word--you {
+          font-size: clamp(1.2rem, 5vw, 1.8rem);
+        }
+
+        .build-word--inherited {
+          font-size: clamp(2.6rem, 16vw, 5rem);
+        }
+
+        .build-word--it {
+          font-size: clamp(1.4rem, 6vw, 2.2rem);
+        }
+
+        .slam-word--winner {
+          font-size: clamp(2rem, 12vw, 4rem);
+        }
+
+        .slam-word--takes {
+          font-size: clamp(2.4rem, 14vw, 5rem);
+        }
+
+        .slam-word--all {
+          font-size: clamp(3.5rem, 22vw, 9rem);
         }
       }
 
@@ -5124,48 +5345,65 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="panel-bg panel-bg--hero" style="background-image: url('/FRAMES/frame-hero.webp')"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content">
-          <div class="brand-lockup">
-            <div class="brand-name">Cuban Domino League</div>
-            <div class="brand-presents">presents</div>
-          </div>
-          <p class="event-edition">CDL 1</p>
+          <!-- UFC-style event badge at top -->
+          <p class="event-edition">CDL I</p>
+
+          <!-- THE HERO - Tournament Name -->
           <h1 class="event-title">
             <span class="event-numeral event-numeral--salida" data-text="La Salida">La Salida</span>
           </h1>
+
+          <!-- Championship stamp -->
           <p class="hero-tagline">The First Cuban Domino League Championship</p>
+
+          <!-- Date/Venue -->
           <p class="hero-subtitle">January 31, 2025<span class="dot">•</span><a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a></p>
         </div>
       </section>
 
       <!-- Panel 2: The Whisper -->
-      <section class="panel panel--whisper">
+      <section class="panel panel--whisper" id="panelWhisper">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-2.webp')"></div>
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content panel-content--whisper">
           <p class="whisper-greeting">Que Bola Asere</p>
+          <div class="whisper-narrative">
+            <p class="whisper-line whisper-line--watching">We've been watching you...</p>
+            <p class="whisper-line whisper-line--train">...train</p>
+            <p class="whisper-line whisper-line--learn">...learn</p>
+            <p class="whisper-line whisper-line--wait">...wait.</p>
+          </div>
         </div>
         <div class="smoke-layer"></div>
       </section>
 
-      <!-- Panel 3: The Build -->
+      <!-- Panel 3: The Revelation -->
       <section class="panel panel--build">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-3.webp')"></div>
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content panel-content--build">
           <p class="build-setup">You didn't learn this game</p>
-          <h2 class="build-payoff">You inherited it.</h2>
+          <div class="build-revelation">
+            <span class="build-word build-word--you">You</span>
+            <span class="build-word build-word--inherited">inherited</span>
+            <span class="build-word build-word--it">it.</span>
+          </div>
         </div>
       </section>
 
-      <!-- Panel 4: The Slam -->
+      <!-- Panel 4: The Stakes -->
       <section class="panel panel--slam">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-4.webp')"></div>
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content panel-content--slam">
-          <h2 class="slam-headline">Winner<br>Takes All</h2>
+          <div class="slam-container">
+            <span class="slam-word slam-word--winner">Winner</span>
+            <span class="slam-word slam-word--takes">Takes</span>
+            <span class="slam-word slam-word--all">All</span>
+          </div>
         </div>
         <div class="scroll-indicator">
           <span>Rules</span>
@@ -5654,6 +5892,33 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // First panel is always in view
       allPanels[0]?.classList.add('in-view');
+
+      // Narrative scroll-lock for Panel 2 (whisper)
+      const whisperPanel = document.getElementById('panelWhisper');
+      const storyContainer = document.querySelector('.story');
+      let narrativeHasPlayed = false;
+
+      const narrativeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !narrativeHasPlayed) {
+            narrativeHasPlayed = true;
+
+            // Lock scroll during narrative sequence
+            document.body.classList.add('scroll-lock-active');
+            storyContainer.style.overflowY = 'hidden';
+
+            // Unlock after sequence completes (~7 seconds - last word at 5.5s + breathing room)
+            setTimeout(() => {
+              document.body.classList.remove('scroll-lock-active');
+              storyContainer.style.overflowY = '';
+            }, 7000);
+          }
+        });
+      }, { threshold: 0.7 });
+
+      if (whisperPanel) {
+        narrativeObserver.observe(whisperPanel);
+      }
 
       // Progress counter animation
       const playerCountEl = document.getElementById("playerCount");
