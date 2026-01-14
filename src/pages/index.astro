@@ -1118,40 +1118,40 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          Scene 3: The Stakes (winner takes all)
          ======================================== */
 
-      /* SCENE 1: THE WHISPER - Intimate, building tension */
+      /* SCENE 1: THE WHISPER - He's talking to you */
       .panel-content--whisper {
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 0 8vw;
+        justify-content: flex-end;
+        align-items: flex-start;
+        text-align: left;
+        padding: 0 6vw;
+        padding-bottom: 14vh; /* Space above La Mesa */
       }
 
       .whisper-greeting {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: clamp(2.8rem, 10vw, 5rem);
+        font-size: clamp(2.4rem, 9vw, 4rem);
         color: var(--cream);
-        letter-spacing: 0.08em;
-        /* Heavy shadow halo for legibility against any background */
+        letter-spacing: 0.06em;
+        /* Heavy shadow halo for legibility */
         text-shadow:
           0 0 8px rgba(0, 0, 0, 1),
           0 0 15px rgba(0, 0, 0, 1),
           0 0 30px rgba(0, 0, 0, 1),
           0 0 50px rgba(0, 0, 0, 0.9),
-          0 2px 40px rgba(0, 0, 0, 1),
-          0 4px 60px rgba(0, 0, 0, 0.8);
+          0 2px 40px rgba(0, 0, 0, 1);
         opacity: 0;
-        margin-bottom: 3vh;
+        margin-bottom: 2vh;
       }
 
-      /* Narrative sequence - words that build */
+      /* Narrative sequence - conversational, like dialogue */
       .whisper-narrative {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 0;
-        margin-top: 2vh;
+        align-items: flex-start;
+        gap: 0.8vh;
+        margin-top: 1vh;
       }
 
       .whisper-line {
@@ -1160,7 +1160,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-weight: 400;
         color: var(--brass);
         opacity: 0;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.04em;
         /* Heavy shadow halo */
         text-shadow:
           0 0 6px rgba(0, 0, 0, 1),
@@ -1171,9 +1171,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .whisper-line--watching {
-        font-size: clamp(1.2rem, 4vw, 1.8rem);
-        color: rgba(212, 165, 116, 0.85);
-        margin-bottom: 2vh;
+        font-size: clamp(1.1rem, 4vw, 1.6rem);
+        color: rgba(212, 165, 116, 0.9);
+        margin-bottom: 1vh;
       }
 
       /* Each word GROWS - building to revelation */
@@ -1458,12 +1458,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Mobile adjustments for cinematic panels */
       @media (max-width: 768px) {
         .panel-content--whisper {
-          padding: 0 6vw;
+          justify-content: flex-end;
+          align-items: flex-start;
+          text-align: left;
+          padding: 0 5vw;
+          padding-bottom: 16vh; /* Space above La Mesa on mobile */
         }
 
         .whisper-greeting {
-          font-size: clamp(2.2rem, 12vw, 3.5rem);
-          margin-bottom: 4vh;
+          font-size: clamp(2rem, 10vw, 3rem);
+          margin-bottom: 2.5vh;
         }
 
         .whisper-line--watching {
@@ -2475,27 +2479,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transition: background 0.3s ease;
       }
 
-      /* Semi-transparent when chat is open */
-      .chat-widget:has(.chat-panel.is-open) .mesa-ticker {
-        background: rgba(10, 6, 4, 0.85);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-      }
-      /* Dim ticker content when chat is open for focus */
-      .chat-widget:has(.chat-panel.is-open) .mesa-ticker__track,
-      .chat-widget:has(.chat-panel.is-open) .mesa-ticker__badge {
-        opacity: 0.5;
-        transition: opacity 0.3s ease;
-      }
-      /* Desktop only: restore on hover to "peek" */
-      @media (min-width: 769px) {
-        .chat-widget:has(.chat-panel.is-open) .mesa-ticker:hover .mesa-ticker__track,
-        .chat-widget:has(.chat-panel.is-open) .mesa-ticker:hover .mesa-ticker__badge {
-          opacity: 1;
-        }
-      }
-
-      /* JS Fallback for browsers without :has() support */
+      /* Ticker dimming when chat is open - controlled via JS class */
       .mesa-ticker.ticker-dimmed {
         background: rgba(10, 6, 4, 0.85);
         backdrop-filter: blur(8px);
@@ -6488,6 +6472,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         void chatPanel.offsetWidth;
         chatPanel.classList.add('is-open');
         document.body.classList.add('chat-open'); // Lock scroll via CSS class
+        // Dim ticker when chat is open
+        if (mesaTicker) mesaTicker.classList.add('ticker-dimmed');
       }
 
       // Success CTA: Close success overlay, open chat
