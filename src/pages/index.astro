@@ -100,25 +100,47 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         padding: 20px 0;
       }
 
+      /* Staggered letter arrangement to match actual logo */
       .cdl-tile__upper {
         display: flex;
-        gap: 16px; /* Gap between C and D */
-        margin-bottom: 24px; /* The horizontal negative space "spine" */
+        flex-direction: column;
+        align-items: stretch;
+        width: 140px;
+        margin-bottom: 0;
       }
 
       .cdl-tile__letter {
         font-family: "Bodoni Moda", serif;
-        font-weight: 700;
-        font-size: 110px;
+        font-weight: 400;
+        font-size: 64px;
         color: #d4a574;
         line-height: 1;
-        letter-spacing: -0.02em;
-        text-align: center;
+        letter-spacing: 0;
+      }
+
+      .cdl-tile__letter--c {
+        align-self: flex-start;
+        margin-left: 8px;
+      }
+
+      .cdl-tile__letter--d {
+        align-self: flex-end;
+        margin-right: 8px;
+        margin-top: -20px; /* Overlap slightly for staggered effect */
+      }
+
+      .cdl-tile__divider {
+        width: 100%;
+        height: 1px;
+        background: #d4a574;
+        opacity: 0.6;
+        margin: 16px 0;
       }
 
       .cdl-tile__lower {
         display: flex;
         justify-content: center;
+        width: 140px;
       }
 
       .cdl-tile__tagline {
@@ -168,18 +190,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Mobile adjustments */
       @media (max-width: 768px) {
-        .cdl-tile__letter {
-          font-size: 56px;
+        .cdl-tile__upper,
+        .cdl-tile__lower {
+          width: 100px;
         }
-        .cdl-tile__upper {
-          gap: 18px;
+        .cdl-tile__letter {
+          font-size: 44px;
+        }
+        .cdl-tile__letter--d {
+          margin-top: -14px;
         }
         .cdl-tile__divider {
-          width: 80px;
+          margin: 12px 0;
         }
         .cdl-tile__tagline {
-          font-size: 10px;
-          letter-spacing: 0.25em;
+          font-size: 8px;
+          letter-spacing: 0.4em;
+          margin-top: 24px;
         }
       }
 
@@ -664,26 +691,40 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .brand-name {
         font-family: "Bodoni Moda", "Didot", serif;
-        font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+        font-size: clamp(0.75rem, 2vw, 1rem);
         font-weight: 400;
-        letter-spacing: 0.35em;
+        letter-spacing: 0.5em;
         text-transform: uppercase;
         color: var(--brass);
-        text-shadow: 0 2px 10px rgba(212, 165, 116, 0.5);
-        margin-bottom: 8px;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
+        margin-bottom: 6px;
         position: relative;
-        padding: 0 20px;
+        padding: 0 40px;
+        opacity: 1;
       }
 
-      /* Decorative lines flanking brand name */
+      /* Decorative horizontal lines for Brand Name */
       .brand-name::before,
       .brand-name::after {
         content: "";
         position: absolute;
         top: 50%;
-        width: 40px;
+        width: 30px;
         height: 1px;
-        background: linear-gradient(90deg, transparent, var(--brass), transparent);
+        background: var(--brass);
+        opacity: 0.3;
+      }
+      .brand-name::before { left: 0; }
+      .brand-name::after { right: 0; }
+
+      .brand-presents {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-size: 0.95rem;
+        color: var(--brass);
+        opacity: 0.6;
+        letter-spacing: 0.2em;
+        margin-top: 4px;
       }
 
       .brand-name::before {
@@ -698,12 +739,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .brand-presents {
         font-family: "Bodoni Moda", "Didot", serif;
-        font-size: clamp(0.85rem, 2vw, 1.1rem);
+        font-size: clamp(0.8rem, 1.8vw, 1rem);
         font-style: italic;
         font-weight: 400;
-        color: rgba(248, 239, 230, 0.75); /* warm beige/cream */
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
-        letter-spacing: 0.14em;
+        color: var(--cream);
+        opacity: 0.5;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
+        letter-spacing: 0.2em;
         text-transform: lowercase;
       }
 
@@ -761,24 +803,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         position: relative;
       }
 
-      /* La Salida specific styling */
+      /* La Salida - THE HERO (cream = brightest, unmissable) */
       .event-numeral--salida {
-        font-size: clamp(2.8rem, 14vw, 8.6rem);
+        font-family: "Bodoni Moda", serif;
         font-style: italic;
-        font-weight: 700; /* Tobias: Increased weight */
-        letter-spacing: 0.01em;
+        font-weight: 400;
+        font-size: clamp(4.5rem, 16vw, 11rem);
+        color: var(--cream);
         line-height: 0.9;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: geometricPrecision;
-        /* Tobias: Physical Digital - letterpressed depth */
-        text-shadow: 
-          -1px -1px 2px rgba(0, 0, 0, 0.9), /* Inset top shadow */
-          1px 1px 1px rgba(255, 255, 255, 0.15), /* Subtle bevel bottom */
-          0 10px 30px rgba(0, 0, 0, 0.7); /* Deep grounding */
+        margin: 0;
+        text-shadow:
+          0 0 40px rgba(212, 165, 116, 0.4),
+          0 0 80px rgba(212, 165, 116, 0.2),
+          0 4px 20px rgba(0, 0, 0, 0.8),
+          0 8px 40px rgba(0, 0, 0, 0.6);
+        letter-spacing: -0.02em;
+        position: relative;
+        display: inline-block;
+      }
+
+      .event-numeral--salida::before {
+        content: none;
       }
 
       .event-numeral--salida::after {
-        content: none; /* Disable the "I" shine effect */
+        content: none;
       }
 
       /* Metallic shine effect on numeral */
@@ -805,63 +854,66 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         50% { opacity: 1; }
       }
 
-      /* Event edition - CDL 1 (fight-card, grounded) */
+      /* Event edition - CDL 1 (fight-card badge) */
       .event-edition {
         display: inline-block;
         font-family: "IBM Plex Sans", system-ui, sans-serif;
-        font-size: clamp(0.78rem, 2.2vw, 0.95rem);
-        font-weight: 800;
-        letter-spacing: 0.35em;
+        font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+        font-weight: 600;
+        letter-spacing: 0.4em;
         text-transform: uppercase;
-        margin: 0 0 8px;
-        opacity: 0.95;
-        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
+        color: var(--brass);
+        margin: 0 0 12px;
+        opacity: 0.9;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.9);
       }
 
-      /* Hero tagline */
+      /* Hero tagline - supporting, recedes */
       .hero-tagline {
-        font-family: "IBM Plex Sans", system-ui, sans-serif;
-        font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+        font-family: "Bodoni Moda", serif;
+        font-size: clamp(0.65rem, 1.6vw, 0.85rem);
+        font-weight: 400;
+        color: var(--cream);
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        margin-top: 32px;
+        margin-bottom: 10px;
+        opacity: 0.7;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
+      }
+
+      /* Hero subtitle - practical info, fades */
+      .hero-subtitle {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: clamp(0.65rem, 1.4vw, 0.75rem);
         font-weight: 500;
-        color: var(--brass);
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+        color: var(--cream);
+        opacity: 0.55;
         letter-spacing: 0.2em;
         text-transform: uppercase;
-        margin-top: 20px;
-        margin-bottom: 8px;
-        opacity: 0.75;
-        animation: fadeInUp 1s ease-out 0.5s both;
+        margin-top: 6px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
       }
-
-      /* Hero subtitle adjustment */
-      .hero-subtitle {
-        font-size: clamp(0.8rem, 2vw, 1rem);
-        font-weight: 500;
-        color: rgba(255, 255, 255, 0.7);
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        animation: fadeInUp 1s ease-out 0.6s both;
+      .hero-subtitle a {
+        color: var(--brass);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.3);
+        transition: all 0.3s ease;
       }
-
+      .hero-subtitle a:hover {
+        color: var(--cream);
+        border-bottom-color: var(--cream);
+      }
 
       .hero-subtitle .dot {
-        color: var(--copper);
-        margin: 0 12px;
+        display: inline-block;
+        margin: 0 0.5em;
+        opacity: 0.4;
       }
 
-      .hero-subtitle a,
-      .panel-subtitle a {
-        color: inherit;
-        text-decoration: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        transition: border-color 0.2s, color 0.2s;
-      }
-
-      .hero-subtitle a:hover,
-      .panel-subtitle a:hover {
+      .mesa-live-text span {
         color: var(--brass);
-        border-bottom-color: var(--brass);
+        font-weight: 600;
       }
 
       /* Typography - Bodoni Moda Black for vintage cigar lounge elegance */
@@ -4315,11 +4367,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       <div class="cdl-tile__glow"></div>
       <div class="cdl-tile">
         <div class="cdl-tile__upper">
-          <span class="cdl-tile__letter">C</span>
-          <span class="cdl-tile__letter">D</span>
+          <span class="cdl-tile__letter cdl-tile__letter--c">C</span>
+          <span class="cdl-tile__letter cdl-tile__letter--d">D</span>
         </div>
+        <div class="cdl-tile__divider"></div>
         <div class="cdl-tile__lower">
-          <span class="cdl-tile__letter">L</span>
+          <span class="cdl-tile__letter cdl-tile__letter--l">L</span>
         </div>
         <div class="cdl-tile__tagline">La Mesa Te Espera</div>
       </div>
@@ -4335,21 +4388,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="panel-overlay"></div>
         <div class="panel-content">
           <div class="brand-lockup">
-            <div class="brand-tile">
-              <div class="brand-tile__upper">
-                <span class="brand-tile__letter">C</span>
-                <span class="brand-tile__letter">D</span>
-              </div>
-              <div class="brand-tile__lower">
-                <span class="brand-tile__letter">L</span>
-              </div>
-            </div>
             <div class="brand-name">Cuban Domino League</div>
             <div class="brand-presents">presents</div>
           </div>
           <p class="event-edition">CDL 1</p>
           <h1 class="event-title">
-            <span class="event-numeral event-numeral--salida">La Salida</span>
+            <span class="event-numeral event-numeral--salida" data-text="La Salida">La Salida</span>
           </h1>
           <p class="hero-tagline">The First Cuban Domino League Championship</p>
           <p class="hero-subtitle">January 31, 2025<span class="dot">•</span><a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a></p>
@@ -4793,23 +4837,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <div class="chat-backdrop" id="chatBackdrop"></div>
 
     <script define:vars={{ PLAYERS_REGISTERED, PLAYERS_GOAL, SUPABASE_URL, SUPABASE_ANON_KEY }}>
-      // Tobias: Remove loading class to trigger Cinematic Focus Snap
-      window.addEventListener('load', () => {
-        document.body.classList.remove('is-loading');
-
-        // Hide the CDL loading screen - quick flash for immersion
+      // Loading Screen Dismissal Logic
+      function dismissLoadingScreen() {
         const loadingScreen = document.getElementById('loadingScreen');
-        if (loadingScreen) {
-          // Quick 400ms glimpse, then fade out
+        if (!loadingScreen) return;
+
+        document.body.classList.remove('is-loading');
+        
+        // Brief moment to appreciate the logo, then fade
+        setTimeout(() => {
+          loadingScreen.classList.add('is-hidden');
+          // Fully remove from DOM after transition
           setTimeout(() => {
-            loadingScreen.classList.add('is-hidden');
-            // Remove from DOM after fade completes
-            setTimeout(() => {
+            if (loadingScreen.parentNode) {
               loadingScreen.remove();
-            }, 400);
-          }, 400);
-        }
-      });
+            }
+          }, 600);
+        }, 800);
+      }
+
+      // Trigger dismissal on load or if already loaded
+      if (document.readyState === 'complete') {
+        dismissLoadingScreen();
+      } else {
+        window.addEventListener('load', dismissLoadingScreen);
+      }
+
+      // Fallback: Force dismissal after 3 seconds in case of slow assets
+      setTimeout(dismissLoadingScreen, 3000);
 
       // Panel parallax and content animations
       const allPanels = document.querySelectorAll('.panel');
@@ -5434,7 +5489,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       };
 
       const chatBackdrop = document.getElementById('chatBackdrop');
-      const tickerChatBtn = document.getElementById('tickerChatBtn');
       const mesaTicker = document.getElementById('mesaTicker');
 
       // Toggle Chat & Scroll Lock
