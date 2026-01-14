@@ -73,13 +73,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow: hidden;
       }
 
-      #loadingCanvas {
+      /* Elegant radial glow behind CDL */
+      .cdl-glow {
         position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(212, 165, 116, 0.25) 0%,
+          rgba(212, 165, 116, 0.1) 40%,
+          transparent 70%
+        );
+        animation: glowPulse 4s ease-in-out infinite;
         pointer-events: none;
+      }
+
+      @keyframes glowPulse {
+        0%, 100% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(1.3);
+          opacity: 1;
+        }
       }
 
       .cdl-tile {
@@ -4910,7 +4928,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
   <body class="is-loading">
     <!-- Loading Screen - The Tile -->
     <div class="loading-screen" id="loadingScreen">
-      <canvas id="loadingCanvas"></canvas>
+      <div class="cdl-glow"></div>
       <div class="cdl-tile">
         <div class="cdl-tile__upper">
           <span class="cdl-tile__letter cdl-tile__letter--c">C</span>
