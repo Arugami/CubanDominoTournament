@@ -4104,6 +4104,56 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         color: rgba(255, 255, 255, 0.6);
       }
 
+      /* Scroll Hint Divider - visual separator between form and footer */
+      .scroll-hint-divider {
+        display: none; /* Hidden on desktop */
+      }
+
+      @media (max-width: 768px) {
+        .scroll-hint-divider {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          /* Use calc to push divider below fold based on viewport */
+          /* This is the "fold gap" - enough to hide footer on first view */
+          margin-top: calc(15vh - 20px);
+          margin-bottom: 16px;
+          padding: 24px 0;
+        }
+
+        .scroll-hint-divider__line {
+          width: 60px;
+          height: 1px;
+          background: linear-gradient(90deg,
+            transparent 0%,
+            var(--brass) 40%,
+            var(--brass) 60%,
+            transparent 100%
+          );
+          opacity: 0.4;
+        }
+
+        .scroll-hint-divider__pip {
+          font-size: 1.5rem;
+          color: var(--brass);
+          opacity: 0.6;
+          animation: scroll-pulse 2s ease-in-out infinite;
+          letter-spacing: 0.2em;
+        }
+
+        @keyframes scroll-pulse {
+          0%, 100% {
+            opacity: 0.4;
+            transform: translateY(0);
+          }
+          50% {
+            opacity: 0.8;
+            transform: translateY(4px);
+          }
+        }
+      }
+
       /* Footer Section - pushed below fold on mobile */
       .form-footer-section {
         display: flex;
@@ -4114,11 +4164,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         padding-bottom: 100px; /* Clearance for ticker */
       }
 
-      /* On mobile, push footer to next "screen" */
+      /* On mobile, subtle spacing - divider handles separation */
       @media (max-width: 768px) {
         .form-footer-section {
-          margin-top: 30vh; /* Push below the fold - requires one swipe */
-          padding-top: 60px;
+          margin-top: 0; /* Divider provides visual separation now */
+          padding-top: 32px;
           padding-bottom: 80px;
         }
       }
@@ -5210,6 +5260,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <button type="submit" id="submitBtn">Claim Your Seat</button>
               <p class="status" id="status" aria-live="polite"></p>
             </form>
+          </div>
+
+          <!-- Scroll hint divider - visible on mobile between form and footer -->
+          <div class="scroll-hint-divider">
+            <span class="scroll-hint-divider__line"></span>
+            <span class="scroll-hint-divider__pip">⋮</span>
+            <span class="scroll-hint-divider__line"></span>
           </div>
 
           <!-- Footer section - pushed below fold on mobile -->
