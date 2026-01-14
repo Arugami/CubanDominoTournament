@@ -45,11 +45,12 @@
 - [ ] B-roll shot list (cigars, cafecito, atmosphere)
 
 ### Brand & Design
-- [ ] Finalize CDL logo
+- [ ] Finalize CDL logo — **Logo design session completed! See `TEAM/SESSIONS/2026-01-14-logo-design-session.md`**
 - [ ] Create social media templates
 - [ ] Event poster/graphic
 - [ ] Player name tags/cards
 - [ ] Winner trophy/prize presentation
+- [x] Merch concepts brainstormed — **See `TEAM/SESSIONS/2026-01-14-merch-brainstorm.md`**
 
 ---
 
@@ -120,7 +121,7 @@
 - [ ] Live scoring system?
 - [ ] Bracket management tool
 - [ ] Player registration database
-- [ ] Mobile-friendly improvements
+- [x] Mobile-friendly improvements — **90% mobile users, optimized chat/ticker/safe areas, iOS zoom fix**
 
 ---
 
@@ -152,10 +153,10 @@
 - [ ] Venue layout diagram
 
 ### Herb Lubalin (Brand Identity)
-- [ ] Logo concepts
-- [ ] Typography system
-- [ ] Color specifications
-- [ ] Logo usage guidelines
+- [x] Logo concepts — **5 directions designed! See `TEAM/SESSIONS/2026-01-14-logo-design-session.md`**
+- [x] Typography system — **Bodoni Moda + IBM Plex Sans**
+- [x] Color specifications — **Brass, tobacco, cream, copper, burgundy defined**
+- [ ] Logo usage guidelines — *Pending final logo selection*
 
 ### George Lois (Advertising)
 - [ ] Tagline options
@@ -236,6 +237,18 @@
 - [x] **Film grain on backgrounds** — 2-3% noise overlay for memory texture
 - [x] **Registration form centered** — Flexbox alignment per Wes Anderson
 - [x] **LA MESA brass underline** — Sign above a door feel per Herb Lubalin
+- [x] **La Mesa ESPN-style ticker** — Live activity feed showing registrations/joins
+- [x] **Expandable chat panel** — Backdrop dimming, focus hierarchy
+- [x] **Mobile scroll lock bug fixed** — Send button disappearing, page zoom issue
+- [x] **Ticker visibility on mobile** — Ticker shows below chat input when open
+- [x] **Chat simplified** — Removed reaction system for cleaner UX
+- [x] **Touch-to-pause ticker** — Mobile users can tap to pause and read
+- [x] **iOS Safari zoom fix** — viewport max-scale + 16px input font-size
+- [x] **Logo design session** — 5 directions with Nano Banana Pro prompts
+- [x] **Merch brainstorm session** — 21 products with AI prompts for mockups
+- [x] **Rules grid 2-column on mobile** — Preserved 2-column layout instead of stacking
+- [x] **iOS chat header fixed** — Added solid background for La Mesa header visibility
+- [x] **Hero-anchor coordinates removed** — Deleted "23.1136° N, 82.3666° W" element above ticker
 
 ---
 
@@ -289,9 +302,47 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 13, 2026
+**Last Updated:** January 14, 2026
 
 *"La mesa te espera."*
+
+---
+
+## Recent Session Notes (Jan 14, 2026) — La Mesa Redesign + Logo Session
+
+### La Mesa ESPN-Style Redesign
+Implemented "ambient awareness" ticker inspired by ESPN sports broadcasts:
+- Fixed "LIVE" badge with activity feed scrolling
+- Shows registrations, joins, chat activity in real-time
+- Touch-to-pause on mobile (1.5s resume delay)
+- Focus hierarchy: ticker dims when chat is open
+
+### Mobile Fixes (90% of users are mobile!)
+- **Scroll lock bug:** Fixed send button disappearing and page zoom issue
+- **Ticker visibility:** Now shows below chat input when chat is open
+- **iOS Safari zoom:** Added `maximum-scale=1` to viewport, increased input font to 16px
+
+### Logo Design Session (Herb Lubalin)
+5 concept directions developed with full team input:
+1. **The Ligature** — C-D-L as one continuous flowing form
+2. **The Tile** — Letters arranged like pips within domino proportions
+3. **The Monogram** — Interlocked letters sharing strokes
+4. **The Double** — Ambigram/rotationally symmetrical design
+5. **The Stamp** — Bold badge with curved text
+
+See: `TEAM/SESSIONS/2026-01-14-logo-design-session.md`
+
+### Merch Brainstorm Session
+21 products conceptualized with Nano Banana Pro prompts:
+- Domino sets (3 tiers: Standard, Premium, Collector)
+- Tables (Folding, Round, Bar Height)
+- Apparel (Guayabera, Tee, Hoodie, Dad Hat, Chain)
+- Lifestyle (Ashtray, Coasters, Cafecito Set, Playing Mat)
+
+See: `TEAM/SESSIONS/2026-01-14-merch-brainstorm.md`
+
+### Chat Simplified
+Removed reaction system (+ button, emoji picker) — too cluttered. Keeping chat focused on conversation.
 
 ---
 
