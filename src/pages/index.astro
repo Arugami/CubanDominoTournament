@@ -2267,7 +2267,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         align-items: center;
         height: 100%;
-        animation: tickerScroll 45s linear infinite; /* Slow, languid pace */
+        animation: tickerScroll 30s linear infinite;
         white-space: nowrap;
       }
 
@@ -2280,133 +2280,64 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         100% { transform: translateX(-50%); }
       }
 
-      .mesa-ticker__item {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        padding: 0 100px; /* Generous - each item floats in space */
+      /* ===========================================
+         TICKER ITEMS - Simple, clean, Tobias-style
+         =========================================== */
+
+      :global(.ticker-item) {
+        display: inline-block;
+        padding: 0 28px;
         font-family: 'IBM Plex Sans', system-ui, sans-serif;
-        transition: all 0.3s ease;
-      }
-
-      @keyframes tickerItemEntrance {
-        from { opacity: 0; transform: scale(0.95); }
-        to { opacity: 1; transform: scale(1); }
-      }
-
-      /* The Name - base styles */
-      .mesa-ticker__item-name {
-        color: #ffffff;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
       }
 
-      /* The Action - Tobias: "the whisper that follows" */
-      .mesa-ticker__item-action {
-        color: rgba(255, 255, 255, 0.35);
-        font-size: 0.65rem;
+      /* Spots remaining - white, clear urgency */
+      :global(.ticker-spots) {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      /* Names - warm brass, the social proof */
+      :global(.ticker-name) {
+        color: var(--brass);
+        text-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+      }
+
+      /* Waiting state - subtle */
+      :global(.ticker-waiting) {
+        color: rgba(255, 255, 255, 0.4);
         font-weight: 400;
         font-style: italic;
-        letter-spacing: 0.05em;
-        text-transform: lowercase; /* Whispers don't shout */
+        text-transform: none;
       }
 
-      /* ===========================================
-         EVENT TYPES - Color is the indicator
-         No icons. Just presence and warmth.
-         :global() needed for JS-generated content
-         =========================================== */
-
-      /* Registration = warm brass presence, the main event */
-      :global(.ticker-event--register) .mesa-ticker__item-name,
-      :global(.ticker-event--register .mesa-ticker__item-name) {
-        color: var(--brass) !important;
-        text-shadow: 0 0 20px rgba(212, 165, 116, 0.5);
+      /* Live count */
+      :global(.ticker-live) {
+        color: rgba(255, 255, 255, 0.6);
       }
-      :global(.ticker-event--register) .mesa-ticker__item-action,
-      :global(.ticker-event--register .mesa-ticker__item-action) {
-        color: rgba(212, 165, 116, 0.5) !important;
-      }
-
-      /* Chat = ambient white, someone speaking */
-      :global(.ticker-event--chat) .mesa-ticker__item-name,
-      :global(.ticker-event--chat .mesa-ticker__item-name) {
-        color: rgba(255, 255, 255, 0.9) !important;
-      }
-      :global(.ticker-event--chat) .mesa-ticker__item-action,
-      :global(.ticker-event--chat .mesa-ticker__item-action) {
-        color: rgba(255, 255, 255, 0.35) !important;
-      }
-
-      /* Update = copper accent, announcements */
-      :global(.ticker-event--update) .mesa-ticker__item-name,
-      :global(.ticker-event--update .mesa-ticker__item-name) {
-        color: var(--copper) !important;
-        text-shadow: 0 0 15px rgba(183, 106, 59, 0.4);
-      }
-      :global(.ticker-event--update) .mesa-ticker__item-action,
-      :global(.ticker-event--update .mesa-ticker__item-action) {
-        color: rgba(183, 106, 59, 0.6) !important;
-      }
-
-      /* Spots = structural metadata, quieter */
-      :global(.ticker-event--spots) {
-        opacity: 0.5;
-      }
-      :global(.ticker-event--spots) .mesa-ticker__item-name,
-      :global(.ticker-event--spots .mesa-ticker__item-name) {
-        font-weight: 500;
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
-      }
-
-      /* Separators - barely visible pauses */
-      .mesa-ticker__separator {
-        color: var(--brass);
-        padding: 0 40px;
-        font-size: 0.35rem;
-        opacity: 0.15;
-      }
-
-      /* Live count in scroll */
-      .mesa-ticker__live {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 0 100px;
-        font-family: 'IBM Plex Sans', system-ui, sans-serif;
-        font-size: 0.8rem;
-      }
-
-      .mesa-ticker__live-dot {
+      :global(.ticker-live-dot) {
+        display: inline-block;
         width: 6px;
         height: 6px;
         background: #22c55e;
         border-radius: 50%;
+        margin-right: 8px;
         animation: livePulse 1.5s ease-in-out infinite;
       }
-
       @keyframes livePulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(0.8); }
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
       }
 
-      .mesa-ticker__live-count {
-        color: #ffffff;
-        font-weight: 700;
-      }
-
-      .mesa-ticker__live-label {
-        color: rgba(255, 255, 255, 0.5);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+      /* Action text - the whisper */
+      :global(.ticker-action) {
+        font-weight: 400;
         font-size: 0.7rem;
-      }
-
-      .mesa-ticker__live-label {
-        color: rgba(255, 255, 255, 0.5);
+        opacity: 0.5;
+        margin-left: 6px;
+        text-transform: lowercase;
       }
 
       /* Input Area - The Ledger (lighter at bottom - where the action happens) */
@@ -6292,62 +6223,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         const liveCount = users.length;
 
-        // Build ticker items
+        // Build ticker - simple, clean
         let items = [];
 
-        // Always show live count
-        items.push(`
-          <span class="mesa-ticker__live">
-            <span class="mesa-ticker__live-dot"></span>
-            <span class="mesa-ticker__live-count">${liveCount || 0}</span>
-            <span class="mesa-ticker__live-label">at the table</span>
-          </span>
-        `);
+        // Live count
+        items.push(`<span class="ticker-item ticker-live"><span class="ticker-live-dot"></span>${liveCount} at the table</span>`);
 
-        // Show spots left (structural metadata, quieter)
+        // Spots remaining
         const spotsRemaining = PLAYERS_GOAL - PLAYERS_REGISTERED;
-        items.push(`
-          <span class="mesa-ticker__item ticker-event--spots">
-            <span class="mesa-ticker__item-name">${spotsRemaining} spots left</span>
-          </span>
-        `);
+        items.push(`<span class="ticker-item ticker-spots">${spotsRemaining} spots left</span>`);
 
-        // Add recent events (up to 8) - only registrations and updates
-        // No chat events - ticker is for key moments only
+        // Recent registrations with action
         tickerEvents
-          .filter(event => event.type === 'register' || event.type === 'update')
-          .slice(0, 8)
+          .filter(event => event.type === 'register')
+          .slice(0, 5)
           .forEach(event => {
-            let actionText = '';
-            let eventClass = `ticker-event--${event.type}`;
-
-            // Tobias: Color IS the message. Minimal text.
-            if (event.type === 'chat') actionText = '';
-            if (event.type === 'register') actionText = '';
-            if (event.type === 'update') actionText = '';
-
-            items.push(`
-              <span class="mesa-ticker__item ${eventClass}">
-                <span class="mesa-ticker__item-name">${escapeHtml(event.playerName)}</span>
-                <span class="mesa-ticker__item-action">${actionText}</span>
-              </span>
-            `);
+            items.push(`<span class="ticker-item ticker-name">${escapeHtml(event.playerName)}<span class="ticker-action">just joined</span></span>`);
           });
 
-        // If no events and no users, show ambient waiting state
-        if (items.length <= 1 && liveCount === 0) {
-          items.push(`
-            <span class="mesa-ticker__item">
-              <span class="mesa-ticker__item-action">the table awaits...</span>
-            </span>
-          `);
+        // If no registrations yet
+        if (items.length === 2) {
+          items.push(`<span class="ticker-item ticker-waiting">Be the first to join</span>`);
         }
 
-        // Join with separators - single pip
-        const content = items.join('<span class="mesa-ticker__separator">•</span>');
-
-        // Duplicate for seamless infinite scroll
-        tickerTrack.innerHTML = content + '<span class="mesa-ticker__separator">•</span>' + content;
+        const content = items.join('');
+        tickerTrack.innerHTML = content + content;
       }
 
       function leaveMesaPresence() {
