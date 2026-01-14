@@ -2912,6 +2912,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           /* Safe area for notch/Dynamic Island - generous padding */
           padding: max(28px, calc(env(safe-area-inset-top) + 20px)) 20px 14px;
           min-height: 56px;
+          background: rgba(20, 14, 11, 0.98); /* Solid dark background for visibility */
+          border-bottom: 1px solid rgba(212, 165, 116, 0.15);
         }
 
         .chat-header__title {
@@ -3109,7 +3111,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .rules-grid {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr); /* Always 2 columns, even on mobile */
         gap: 16px;
         margin-bottom: 32px;
       }
