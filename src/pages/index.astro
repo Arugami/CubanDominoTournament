@@ -107,29 +107,100 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 5;
       }
 
-      /* Elegant radial glow behind CDL */
-      .cdl-glow {
+      /* Layered fog - tobacco smoke, not a flashlight */
+      .fog-container {
         position: absolute;
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(212, 165, 116, 0.25) 0%,
-          rgba(212, 165, 116, 0.1) 40%,
-          transparent 70%
-        );
-        animation: glowPulse 4s ease-in-out infinite;
+        width: 100%;
+        height: 100%;
         pointer-events: none;
+        overflow: hidden;
       }
 
-      @keyframes glowPulse {
+      /* Deep layer - large, slow, copper undertone */
+      .fog-layer--deep {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 600px;
+        height: 400px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+          ellipse 70% 60% at 50% 45%,
+          rgba(183, 106, 59, 0.15) 0%,
+          rgba(183, 106, 59, 0.08) 30%,
+          rgba(183, 106, 59, 0.02) 60%,
+          transparent 100%
+        );
+        animation: fogDeep 8s ease-in-out infinite;
+      }
+
+      /* Mid layer - medium, brass warmth */
+      .fog-layer--mid {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 400px;
+        height: 300px;
+        transform: translate(-50%, -48%);
+        background: radial-gradient(
+          ellipse 65% 55% at 52% 48%,
+          rgba(212, 165, 116, 0.2) 0%,
+          rgba(212, 165, 116, 0.1) 35%,
+          rgba(212, 165, 116, 0.03) 65%,
+          transparent 100%
+        );
+        animation: fogMid 5s ease-in-out infinite;
+      }
+
+      /* Near layer - small, bright amber emanation */
+      .fog-layer--near {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 280px;
+        height: 220px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+          ellipse 60% 50% at 50% 50%,
+          rgba(232, 190, 140, 0.25) 0%,
+          rgba(212, 165, 116, 0.12) 40%,
+          transparent 80%
+        );
+        animation: fogNear 3s ease-in-out infinite;
+      }
+
+      /* Deep fog - slow, majestic breathing */
+      @keyframes fogDeep {
         0%, 100% {
-          transform: scale(1);
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.08);
+          opacity: 1;
+        }
+      }
+
+      /* Mid fog - medium rhythm */
+      @keyframes fogMid {
+        0%, 100% {
+          transform: translate(-50%, -48%) scale(1);
           opacity: 0.8;
         }
         50% {
-          transform: scale(1.3);
+          transform: translate(-50%, -48%) scale(1.12);
+          opacity: 1;
+        }
+      }
+
+      /* Near fog - faster, intimate pulse */
+      @keyframes fogNear {
+        0%, 100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.85;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.1);
           opacity: 1;
         }
       }
@@ -5062,7 +5133,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
   <body class="is-loading">
     <!-- Loading Screen - The Tile -->
     <div class="loading-screen" id="loadingScreen">
-      <div class="cdl-glow"></div>
+      <!-- Layered fog - depth through smoke -->
+      <div class="fog-container">
+        <div class="fog-layer--deep"></div>
+        <div class="fog-layer--mid"></div>
+        <div class="fog-layer--near"></div>
+      </div>
       <div class="cdl-tile">
         <div class="cdl-tile__upper">
           <span class="cdl-tile__letter cdl-tile__letter--c">C</span>
