@@ -1924,6 +1924,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         box-shadow: -4px 0 15px rgba(0,0,0,0.4);
       }
 
+      /* Hide chat button until registration */
+      .mesa-ticker__chat-btn--hidden {
+        display: none !important;
+      }
+
       .mesa-ticker__chat-btn:hover {
         background: linear-gradient(135deg, #e8c896 0%, var(--brass) 100%);
         transform: scale(1.05);
@@ -4485,7 +4490,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     </audio>
 
     <!-- Chat Widget - The Sacred Table -->
-    <div class="chat-widget chat-widget--hidden" id="chatWidget">
+    <div class="chat-widget" id="chatWidget">
       <!-- Mesa Ticker: ESPN-style activity feed -->
       <div class="mesa-ticker" id="mesaTicker">
         <div class="mesa-ticker__badge">
@@ -4497,7 +4502,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <!-- Populated by JS - duplicated for seamless loop -->
           </div>
         </div>
-        <button class="mesa-ticker__chat-btn" id="tickerChatBtn" title="Open La Mesa">
+        <button class="mesa-ticker__chat-btn mesa-ticker__chat-btn--hidden" id="tickerChatBtn" title="Open La Mesa">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
             <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
           </svg>
@@ -5216,15 +5221,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const tutorialMesaCta = document.getElementById('tutorialMesaCta');
       const tutorialDismiss = document.getElementById('tutorialDismiss');
 
-      // Check if user is already registered → show La Mesa immediately
+      // Check if user is already registered → show chat button
       const isRegistered = localStorage.getItem('cdl_registered') === 'true';
-      if (isRegistered) {
-        chatWidget.classList.remove('chat-widget--hidden');
+      const tickerChatBtn = document.getElementById('tickerChatBtn');
+      if (isRegistered && tickerChatBtn) {
+        tickerChatBtn.classList.remove('mesa-ticker__chat-btn--hidden');
       }
 
       // Helper to open chat
       function openChat() {
-        chatWidget.classList.remove('chat-widget--hidden');
+        // Show chat button if hidden
+        if (tickerChatBtn) tickerChatBtn.classList.remove('mesa-ticker__chat-btn--hidden');
         chatPanel.style.display = 'flex';
         void chatPanel.offsetWidth;
         chatPanel.classList.add('is-open');
@@ -5276,7 +5283,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       if (tutorialDismiss) {
         tutorialDismiss.addEventListener('click', () => {
           mesaTutorial.classList.remove('is-visible');
-          chatWidget.classList.remove('chat-widget--hidden');
+          if (tickerChatBtn) tickerChatBtn.classList.remove('mesa-ticker__chat-btn--hidden');
         });
       }
 
