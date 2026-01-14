@@ -120,7 +120,7 @@
 - [ ] Live scoring system?
 - [ ] Bracket management tool
 - [ ] Player registration database
-- [ ] Mobile-friendly improvements
+- [x] Mobile-friendly improvements (90% of users are mobile - optimized chat, ticker, safe areas)
 
 ---
 
@@ -209,11 +209,19 @@
 - [x] **Live Tournament Chat** - Real-time chat using Supabase for pre-tournament hype
 - [x] Website copy finalized (all panels reviewed by Dream Team)
 - [x] Music toggle hides on mobile when form is visible
-- [x] **Chat enhancements** - @mention highlighting, pixel flag avatars, reactions, pinned messages
+- [x] **Chat enhancements** - @mention highlighting, pixel flag avatars, pinned messages
 - [x] **Registration form cleanup** - Removed redundant copy, simplified UX
 - [x] **Rules panel** - Added "Your move." footer
 - [x] **Local dev setup** - .env and .dev.vars for full local testing with Supabase
 - [x] **Supabase schema updated** - avatar, reactions, is_pinned columns added
+- [x] **La Mesa redesign** - ESPN-style ticker, expandable chat panel, backdrop dimming
+- [x] **Mesa Ticker** - Live activity feed showing registrations/joins (ESPN sports broadcast style)
+- [x] **Mobile scroll lock bug** - Fixed send button disappearing, page zoom issue
+- [x] **Ticker visibility on mobile** - Ticker now shows below chat input when chat is open
+- [x] **Chat simplified** - Removed reaction system (+ button, emoji picker) for cleaner UX
+- [x] **Domino button redesign** - 50% larger with heartbeat pulse animation
+- [x] **Touch-to-pause** - Mobile users can tap ticker to pause and read
+- [x] **Focus hierarchy** - Ticker dims when chat is open, restored on close
 
 ---
 
@@ -263,10 +271,23 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ## Notes
 
-*Add notes from team discussions here*
+### January 14, 2026 — La Mesa Redesign
+- Implemented ESPN-style ticker for "ambient awareness" — shows registrations, joins, chat activity
+- 90% of users are on mobile; all features optimized for touch
+- Removed reaction system (too cluttered) — keeping chat simple and focused
+- Design decision: Ticker stays visible below chat input on mobile for continuous activity feed
+- See `DOCS/DECISION RECORDS/ADR-001-mesa-ticker.md` for full design rationale
+
+### Design Philosophy (Tobias)
+> "A ticker is a hallway. Make it a room."
+
+Key principles applied:
+- **Physical Digital** — Domino button has weight, slam animations
+- **Breath Spacing** — 24s scroll speed, 1.5s pause on touch
+- **Focus Hierarchy** — Ticker dims when chat open, conversation takes priority
 
 ---
 
-**Last Updated:** January 12, 2026 (evening session)
+**Last Updated:** January 14, 2026 (La Mesa redesign + mobile fixes)
 
 *"Your seat's waiting."*
