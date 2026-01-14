@@ -23,6 +23,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,800;6..96,900&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
     <style>
       :root {
         color-scheme: dark;
@@ -73,41 +74,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow: hidden;
       }
 
-      .loading-screen.is-hidden {
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-      }
-
-      /* Hypnotic glow behind logo */
-      .cdl-tile__glow {
+      #loadingCanvas {
         position: absolute;
-        width: 350px;
-        height: 350px;
-        background: radial-gradient(circle, rgba(212, 165, 116, 0.2) 0%, transparent 70%);
-        border-radius: 50%;
-        animation: glowPulse 4s ease-in-out infinite;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
         pointer-events: none;
-      }
-
-      @keyframes glowPulse {
-        0%, 100% { transform: scale(1); opacity: 0.6; }
-        50% { transform: scale(1.4); opacity: 1; }
-      }
-
-      /* The Tile Logo */
-      @keyframes tileAppear {
-        0% {
-          opacity: 0;
-          transform: scale(0.9);
-        }
-        100% {
-          opacity: 1;
-          transform: scale(1);
-        }
       }
 
       .cdl-tile {
+        z-index: 2;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -4643,7 +4620,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .panel--form {
-          padding-bottom: 80px; /* Account for fixed ticker at bottom */
+          padding-bottom: 100px; /* Account for fixed ticker at bottom */
         }
 
         .form-shell {
@@ -4932,7 +4909,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
   <body class="is-loading">
     <!-- Loading Screen - The Tile -->
     <div class="loading-screen" id="loadingScreen">
-      <div class="cdl-tile__glow"></div>
+      <canvas id="loadingCanvas"></canvas>
       <div class="cdl-tile">
         <div class="cdl-tile__upper">
           <span class="cdl-tile__letter cdl-tile__letter--c">C</span>
@@ -5422,6 +5399,224 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <div class="chat-backdrop" id="chatBackdrop"></div>
 
     <script define:vars={{ PLAYERS_REGISTERED, PLAYERS_GOAL, SUPABASE_URL, SUPABASE_ANON_KEY }}>
+      // --- THREE.JS LOADING SCREEN ENHANCEMENT ---
+      let loadingScene, loadingCamera, loadingRenderer, loadingDomino, loadingParticles, loadingSmokePlanes = [], loadingLightRays;
+      let loadingAnimationId;
+
+      function createSmokeTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+        const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+        gradient.addColorStop(0, 'rgba(212, 165, 116, 0.2)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 128, 128);
+        return new THREE.CanvasTexture(canvas);
+      }
+
+      function createRayTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 256;
+        canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+        const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+        gradient.addColorStop(0, 'rgba(212, 165, 116, 0.3)');
+        gradient.addColorStop(0.5, 'rgba(212, 165, 116, 0.05)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 256, 256);
+        return new THREE.CanvasTexture(canvas);
+      }
+
+      function initLoadingThreeJS() {
+        const canvas = document.getElementById('loadingCanvas');
+        if (!canvas) return;
+
+        // Renderer
+        loadingRenderer = new THREE.WebGLRenderer({
+          canvas,
+          antialias: true,
+          alpha: true,
+          powerPreference: 'low-power'
+        });
+        loadingRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        loadingRenderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Scene
+        loadingScene = new THREE.Scene();
+        loadingScene.fog = new THREE.FogExp2(0x1a120d, 0.002);
+
+        // Camera
+        loadingCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        loadingCamera.position.z = 5;
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0xd4a574, 0.2);
+        loadingScene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(0xd4a574, 1, 10);
+        pointLight.position.set(0, 0, 2);
+        loadingScene.add(pointLight);
+
+        // Layer 1: Smoke/Fog Atmosphere
+        const smokeTexture = createSmokeTexture();
+        const smokeMaterial = new THREE.MeshBasicMaterial({
+          map: smokeTexture,
+          transparent: true,
+          opacity: 0.1,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending
+        });
+        const smokeGeometry = new THREE.PlaneGeometry(10, 10);
+        for (let i = 0; i < 5; i++) {
+          const plane = new THREE.Mesh(smokeGeometry, smokeMaterial);
+          plane.position.set((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10, -2 - Math.random() * 2);
+          plane.rotation.z = Math.random() * Math.PI * 2;
+          loadingScene.add(plane);
+          loadingSmokePlanes.push(plane);
+        }
+
+        // Layer 2: Light Rays
+        const rayTexture = createRayTexture();
+        const rayMaterial = new THREE.SpriteMaterial({
+          map: rayTexture,
+          transparent: true,
+          opacity: 0.4,
+          blending: THREE.AdditiveBlending
+        });
+        loadingLightRays = new THREE.Sprite(rayMaterial);
+        loadingLightRays.scale.set(8, 8, 1);
+        loadingLightRays.position.z = -1;
+        loadingScene.add(loadingLightRays);
+
+        // Layer 3: 3D Domino Tile
+        const tileGeometry = new THREE.BoxGeometry(1, 2, 0.1);
+        const tileMaterial = new THREE.MeshStandardMaterial({
+          color: 0xd4a574,
+          metalness: 0.7,
+          roughness: 0.3
+        });
+        loadingDomino = new THREE.Mesh(tileGeometry, tileMaterial);
+        loadingScene.add(loadingDomino);
+
+        // Layer 4: Floating Particles
+        const particleCount = window.innerWidth < 768 ? 50 : 100;
+        const particleGeometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const opacities = new Float32Array(particleCount);
+
+        for (let i = 0; i < particleCount; i++) {
+          positions[i * 3] = (Math.random() - 0.5) * 10;
+          positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+          positions[i * 3 + 2] = (Math.random() - 0.5) * 5;
+          opacities[i] = Math.random();
+        }
+
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particleMaterial = new THREE.PointsMaterial({
+          color: 0xd4a574,
+          size: 0.02,
+          transparent: true,
+          opacity: 0.5
+        });
+        loadingParticles = new THREE.Points(particleGeometry, particleMaterial);
+        loadingScene.add(loadingParticles);
+
+        // Resize handler
+        window.addEventListener('resize', onLoadingResize);
+
+        animateLoading();
+      }
+
+      function onLoadingResize() {
+        if (!loadingRenderer || !loadingCamera) return;
+        loadingCamera.aspect = window.innerWidth / window.innerHeight;
+        loadingCamera.updateProjectionMatrix();
+        loadingRenderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      function animateLoading() {
+        if (!loadingRenderer) return;
+        loadingAnimationId = requestAnimationFrame(animateLoading);
+
+        const time = Date.now() * 0.001;
+
+        // Smoke animation
+        loadingSmokePlanes.forEach((plane, i) => {
+          plane.rotation.z += 0.001 * (i + 1);
+          plane.position.y += Math.sin(time * 0.2 + i) * 0.002;
+        });
+
+        // Light rays pulse
+        if (loadingLightRays) {
+          loadingLightRays.material.opacity = 0.2 + Math.sin(time * 2) * 0.1;
+          const s = 8 + Math.sin(time) * 0.5;
+          loadingLightRays.scale.set(s, s, 1);
+        }
+
+        // Domino animation
+        if (loadingDomino) {
+          loadingDomino.rotation.y = Math.sin(time) * 0.05;
+          loadingDomino.rotation.x = Math.cos(time * 0.5) * 0.03;
+          const scale = 1 + Math.sin(time * 2) * 0.01;
+          loadingDomino.scale.set(scale, scale, scale);
+        }
+
+        // Particles animation
+        if (loadingParticles) {
+          const positions = loadingParticles.geometry.attributes.position.array;
+          for (let i = 0; i < positions.length; i += 3) {
+            positions[i + 1] += 0.005; // Upward drift
+            positions[i] += Math.sin(time + i) * 0.002; // Sway
+            if (positions[i + 1] > 5) positions[i + 1] = -5;
+          }
+          loadingParticles.geometry.attributes.position.needsUpdate = true;
+        }
+
+        loadingRenderer.render(loadingScene, loadingCamera);
+      }
+
+      function cleanupLoadingThreeJS() {
+        cancelAnimationFrame(loadingAnimationId);
+        window.removeEventListener('resize', onLoadingResize);
+        
+        if (loadingRenderer) {
+          loadingRenderer.dispose();
+          loadingRenderer.forceContextLoss();
+          const canvas = document.getElementById('loadingCanvas');
+          if (canvas) canvas.remove();
+        }
+
+        // Dispose geometries and materials
+        loadingScene?.traverse((object) => {
+          if (object.geometry) object.geometry.dispose();
+          if (object.material) {
+            if (Array.isArray(object.material)) {
+              object.material.forEach(mat => {
+                if (mat.map) mat.map.dispose();
+                mat.dispose();
+              });
+            } else {
+              if (object.material.map) object.material.map.dispose();
+              object.material.dispose();
+            }
+          }
+        });
+
+        loadingScene = null;
+        loadingCamera = null;
+        loadingRenderer = null;
+        loadingDomino = null;
+        loadingParticles = null;
+        loadingSmokePlanes = [];
+        loadingLightRays = null;
+      }
+
+      // Start Three.js when script runs
+      initLoadingThreeJS();
+
       // Loading Screen Dismissal Logic
       function dismissLoadingScreen() {
         const loadingScreen = document.getElementById('loadingScreen');
@@ -5434,6 +5629,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           loadingScreen.classList.add('is-hidden');
           // Fully remove from DOM after transition
           setTimeout(() => {
+            cleanupLoadingThreeJS(); // Clean up Three.js resources
             if (loadingScreen.parentNode) {
               loadingScreen.remove();
             }
