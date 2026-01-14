@@ -2267,9 +2267,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: inline-flex;
         align-items: center;
         height: 100%;
-        animation: tickerScroll 20s linear infinite;
+        animation: tickerScroll 28s linear infinite;
         white-space: nowrap;
         will-change: transform;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
       }
 
       .mesa-ticker__track:hover {
@@ -2347,6 +2349,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-shadow: 0 0 15px rgba(183, 106, 59, 0.4);
         text-transform: none;
         font-weight: 500;
+      }
+
+      /* Spacer for seamless loop */
+      :global(.ticker-spacer) {
+        display: inline-block;
+        width: 60px;
       }
 
       /* Input Area - The Ledger (lighter at bottom - where the action happens) */
@@ -6544,7 +6552,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         const content = items.join('');
-        const newHTML = content + content;
+        // Duplicate for seamless infinite scroll - add spacer for clean loop
+        const newHTML = content + '<span class="ticker-spacer"></span>' + content + '<span class="ticker-spacer"></span>';
         tickerTrack.innerHTML = newHTML;
         tickerInitialized = true;
       }
