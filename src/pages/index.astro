@@ -74,13 +74,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow: hidden;
       }
 
-      #loadingCanvas {
+      /* Elegant radial glow behind CDL */
+      .cdl-glow {
         position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(212, 165, 116, 0.25) 0%,
+          rgba(212, 165, 116, 0.1) 40%,
+          transparent 70%
+        );
+        animation: glowPulse 4s ease-in-out infinite;
         pointer-events: none;
+      }
+
+      @keyframes glowPulse {
+        0%, 100% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(1.3);
+          opacity: 1;
+        }
       }
 
       .cdl-tile {
@@ -3333,10 +3351,38 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         min-height: 100vh;
         min-height: 100dvh;
         height: auto;
-        padding: 60px 24px 100px;
+        padding: 60px 24px 40px;
         align-items: center;
         justify-content: flex-start;
         padding-top: 80px;
+      }
+
+      /* Panel 7: Footer - compact final panel */
+      .panel--footer {
+        min-height: auto;
+        height: auto;
+        padding: 60px 24px 100px; /* Extra bottom for ticker */
+        background: linear-gradient(180deg, rgba(26, 18, 13, 0.95) 0%, rgba(10, 7, 5, 1) 100%);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .panel--footer .panel-content {
+        opacity: 1;
+        transform: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 32px;
+      }
+
+      .panel--footer .footer-contact {
+        margin-top: 0;
+      }
+
+      .panel--footer .brand-footer {
+        margin-top: 0;
       }
 
       /* Form panel content always visible (no fade-in animation) */
@@ -4911,7 +4957,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
   <body class="is-loading">
     <!-- Loading Screen - The Tile -->
     <div class="loading-screen" id="loadingScreen">
-      <canvas id="loadingCanvas"></canvas>
+      <div class="cdl-glow"></div>
       <div class="cdl-tile">
         <div class="cdl-tile__upper">
           <span class="cdl-tile__letter cdl-tile__letter--c">C</span>
@@ -5110,8 +5156,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <p class="status" id="status" aria-live="polite"></p>
             </form>
           </div>
+        </div>
+      </section>
 
-          <!-- Strengthened footer -->
+      <!-- Panel 7: Footer -->
+      <section class="panel panel--footer">
+        <div class="panel-content">
           <div class="footer-contact">
             <div class="footer-contact__item">
               <span class="footer-contact__label">Direct Line</span>
