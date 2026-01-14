@@ -181,9 +181,37 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1;
       }
 
-      /* Panel in view - no transform effects */
+      /* Tobias: Smoke Layer - Foreground Atmosphere */
+      .smoke-layer {
+        position: absolute;
+        inset: -10%;
+        width: 120%;
+        height: 120%;
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 10;
+        opacity: 0;
+        mix-blend-mode: screen;
+        transition: opacity 4s ease;
+        animation: smokeDrift 40s linear infinite;
+      }
+
+      @keyframes smokeDrift {
+        from { transform: translate(0, 0) scale(1); }
+        to { transform: translate(-5%, 5%) scale(1.1); }
+      }
+
+      .panel.in-view .smoke-layer {
+        opacity: 0.6;
+      }
+
+      /* Lens Push - Subtle background motion when in view */
+      .panel-bg {
+        transition: transform 12s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 1s ease;
+      }
+
       .panel.in-view .panel-bg {
-        /* Clean, stable backgrounds */
+        transform: scale(1.08); /* Slow, immersive zoom — Tobias Signature */
       }
 
       /* Hero "walking in" effect */
@@ -270,11 +298,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transition: filter 2.5s cubic-bezier(0.16, 1, 0.3, 1), transform 3s cubic-bezier(0.16, 1, 0.3, 1);
         filter: blur(0) brightness(1);
         transform: scale(1);
-      }
-
-      /* Table Coordinates (Branding Anchor) - HIDDEN */
-      .hero-anchor {
-        display: none; /* Removed - was appearing above ticker */
       }
 
       @media (max-width: 768px) {
@@ -768,15 +791,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Whisper subtitle - elegant italic like "presents" */
       .panel-whisper {
         font-family: "Bodoni Moda", "Didot", serif;
-        font-size: clamp(1.2rem, 4vw, 2rem);
+        font-size: clamp(1rem, 3.5vw, 1.8rem);
         font-style: italic;
         font-weight: 400;
-        color: rgba(255, 255, 255, 0.7);
-        letter-spacing: 0.1em;
-        margin-top: 0.5em;
+        color: rgba(248, 239, 230, 0.55); /* Softer cream for "memory" feel */
+        letter-spacing: 0.15em;
+        margin-top: 0.6em;
         text-shadow:
-          0 2px 8px rgba(0, 0, 0, 0.8),
-          0 4px 20px rgba(0, 0, 0, 0.5);
+          0 2px 10px rgba(0, 0, 0, 0.9);
+        animation: fadeIn 2s ease-out 0.5s both;
       }
 
       .panel-subtitle--attitude {
@@ -4164,10 +4187,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="hero-tagline">The First Cuban Domino League Championship</p>
           <p class="hero-subtitle">January 31, 2025<span class="dot">•</span><a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a></p>
         </div>
-        <div class="hero-anchor">
-          <span class="hero-anchor__coord">23.1136° N, 82.3666° W</span>
-          <span class="hero-anchor__status">MESA NO. 01</span>
-        </div>
       </section>
 
       <!-- Panel 2: The Welcome -->
@@ -4176,9 +4195,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content">
-          <h2 class="panel-headline">Que Bola Asere</h2>
+          <h2 class="panel-headline">Que Bola <span class="accent--italic">Asere</span></h2>
           <p class="panel-whisper">We've been expecting you</p>
         </div>
+        <div class="smoke-layer"></div>
       </section>
 
       <!-- Panel 3: The Call -->
