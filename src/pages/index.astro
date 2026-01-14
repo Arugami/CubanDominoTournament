@@ -135,7 +135,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0.4;
       }
 
-      /* Tobias: Chromatic Aberration - Edge Distortion */
+      /* Tobias: Chromatic Aberration - Edge Distortion
+         Gives it that vintage lens feel, pulling the digital into the physical world. */
       .chromatic-aberration {
         position: fixed;
         inset: 0;
@@ -143,11 +144,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         height: 100vh;
         pointer-events: none;
         z-index: 9999;
-        opacity: 0.6;
+        opacity: 0.4;
         mix-blend-mode: screen;
         background: 
-          radial-gradient(circle at 49.8% 50%, rgba(255, 0, 0, 0.05) 0%, transparent 80%),
-          radial-gradient(circle at 50.2% 50%, rgba(0, 0, 255, 0.05) 0%, transparent 80%);
+          radial-gradient(circle at 49.8% 50%, rgba(255, 0, 0, 0.08) 0%, transparent 80%),
+          radial-gradient(circle at 50.2% 50%, rgba(0, 0, 255, 0.08) 0%, transparent 80%);
       }
 
       /* Tobias: Tobacco Fog Layer - Depth Through Layers */
@@ -484,7 +485,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* ========================================
-         BRAND LOCKUP - Cuban Domino League
+         BRAND LOCKUP - THE TILE
+         Arranged in domino proportions (2:1).
          ======================================== */
       .brand-lockup {
         display: flex;
@@ -492,6 +494,52 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         align-items: center;
         margin-bottom: 24px;
         animation: fadeInDown 1s ease-out;
+        position: relative;
+      }
+
+      /* The Tile Logo - "The letters define the shape" — Herb Lubalin */
+      .logo-tile {
+        width: 60px;
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 12px 0;
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .logo-tile__upper {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        font-family: "Bodoni Moda", serif;
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--brass);
+        line-height: 1;
+      }
+
+      .logo-tile__lower {
+        display: flex;
+        justify-content: center;
+        font-family: "Bodoni Moda", serif;
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--brass);
+        line-height: 1;
+      }
+
+      /* Implied dividing line through negative space */
+      .logo-tile::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 15%;
+        right: 15%;
+        height: 1px;
+        background: rgba(212, 165, 116, 0.15); /* Whisper of a line */
+        transform: translateY(-50%);
       }
 
       @keyframes fadeInDown {
@@ -4163,10 +4211,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="panel-bg panel-bg--hero" style="background-image: url('/FRAMES/frame-hero.webp')"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content">
-          <div class="brand-lockup">
-            <span class="brand-name">Cuban Domino League</span>
-            <span class="brand-presents">presents</span>
+          <!-- Brand Lockup - The Tile -->
+      <div class="brand-lockup">
+        <div class="logo-tile">
+          <div class="logo-tile__upper">
+            <span>C</span>
+            <span>D</span>
           </div>
+          <div class="logo-tile__lower">
+            <span>L</span>
+          </div>
+        </div>
+        <div class="brand-name">Cuban Domino League</div>
+        <div class="brand-presents">presents</div>
+      </div>
           <p class="event-edition">CDL 1</p>
           <h1 class="event-title">
             <span class="event-numeral event-numeral--salida">La Salida</span>
