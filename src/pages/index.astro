@@ -326,7 +326,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Mobile adjustments */
-      @media (max-width: 768px) {
+	      @media (max-width: 768px) {
         .cdl-tile__upper,
         .cdl-tile__lower {
           width: 100px;
@@ -5833,18 +5833,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           margin-bottom: 0;
         }
 
-        /* Footer flows naturally below form - needs ticker clearance */
-        .form-footer-section {
-          margin-top: 32px;
-          padding-top: 24px;
-          padding-bottom: 80px; /* Clear the ticker */
-        }
+	        /* Footer flows naturally below form - needs ticker clearance */
+	        .form-footer-section {
+	          /* Mobile: keep this panel "only the form" (footer lives elsewhere) */
+	          display: none;
+	        }
 
-        .footer-contact {
-          margin-top: 0;
-          gap: 12px;
-          flex-direction: column;
-        }
+	        .footer-contact {
+	          margin-top: 0;
+	          gap: 12px;
+	          flex-direction: column;
+	        }
 
         .footer-contact__divider {
           display: none;
@@ -7512,6 +7511,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Helper to open chat
       function openChat() {
+        // DEFENSIVE CHECK: Never open La Mesa for unregistered users
+        const isRegistered = localStorage.getItem('cdl_registered') === 'true';
+        if (!isRegistered) {
+          routeUnregisteredToRegistration();
+          return;
+        }
+
         // Show chat button if hidden
         if (tickerChatBtn) tickerChatBtn.classList.remove('mesa-ticker__chat-btn--hidden');
         chatPanel.style.display = 'flex';
@@ -7652,10 +7658,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           document.body.classList.remove('chat-open'); // Unlock scroll via CSS class
           vibrate(5);
         } else {
+          // DEFENSIVE CHECK: Never open La Mesa for unregistered users
+          const isRegistered = localStorage.getItem('cdl_registered') === 'true';
+          if (!isRegistered) {
+            routeUnregisteredToRegistration();
+            return;
+          }
+
           // Open
           chatBackdrop.classList.add('is-visible');
           mesaTicker.classList.add('ticker-dimmed'); // JS fallback for :has()
-          
+
           // Tobias: Clear unread state when entering the room
           tickerChatBtn.classList.remove('has-unread');
           if (chatBadge) chatBadge.style.display = 'none';
@@ -7664,12 +7677,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           // Force reflow for animation
           void chatPanel.offsetWidth;
           chatPanel.classList.add('is-open');
-          
+
           if (window.innerWidth <= 768) {
             document.body.classList.add('chat-open'); // Lock scroll via CSS class
           }
           vibrate(10);
-          
+
           // Focus input if joined
           if (chatBodyContainer && chatBodyContainer.style.display !== 'none') {
              setTimeout(() => chatInput.focus(), 100);
