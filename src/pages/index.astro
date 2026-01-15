@@ -1262,7 +1262,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Cinematic animations - slow, deliberate, weighted */
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: cinematicReveal 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        animation: greetingRevealRTL 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--watching {
@@ -1279,6 +1279,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--wait {
         animation: wordBuildFinal 1s cubic-bezier(0.16, 1, 0.3, 1) 5.5s forwards;
+      }
+
+      /* Greeting reveals right-to-left - smoother, smoky, jazz-like */
+      @keyframes greetingRevealRTL {
+        0% {
+          opacity: 0;
+          transform: translateX(30px) scale(0.98);
+          filter: blur(12px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+          filter: blur(0);
+        }
       }
 
       @keyframes cinematicReveal {
@@ -5691,27 +5705,26 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Mobile form panel - EVERYTHING fits in single viewport */
+      /* Mobile form panel - breathe, don't cram */
       @media (max-width: 768px) {
         .progress-tracker {
           display: none;
         }
 
-        /* Show edition badge on mobile - smaller size */
+        /* Edition badge hidden on mobile - clean focus */
         .form-header__edition {
-          font-size: 0.5rem;
-          padding: 4px 10px;
-          margin-bottom: 10px;
+          display: none;
         }
 
-        /* Headline on mobile - still needs breathing room */
+        /* Headline on mobile - generous breathing room */
         .form-header {
-          margin-bottom: 20px;
+          margin-bottom: 24px;
         }
 
         .panel--form .panel-headline {
-          font-size: clamp(1.6rem, 7vw, 2.2rem);
+          font-size: clamp(1.8rem, 8vw, 2.4rem);
           margin-bottom: 0;
+          line-height: 1.1;
         }
 
         /* Hide Notes field on mobile - it's optional and saves space */
@@ -5734,32 +5747,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           display: block;
         }
 
-        /* Compact form spacing for single-viewport fit */
+        /* Form spacing - comfortable, not cramped */
         form {
-          gap: 14px;
+          gap: 16px;
         }
 
+        /* Panel needs room to BREATHE at the top */
         .panel--form {
-          padding-top: 5vh; /* Still some breathing room on mobile */
+          padding-top: max(60px, 10vh); /* At least 60px, scales with screen */
           padding-bottom: 60px; /* Ticker clearance */
-          justify-content: flex-start; /* Pack from top */
+          justify-content: flex-start;
+          overflow-y: auto; /* Allow scroll if needed - it's OK */
+          scroll-snap-align: start; /* Snap to start, not center */
         }
 
         .form-shell {
-          padding: 20px 16px;
+          padding: 24px 20px;
           margin-bottom: 0;
         }
 
-        /* Footer is ALWAYS visible - no separate scroll */
+        /* Footer flows naturally below form */
         .form-footer-section {
-          margin-top: 24px;
-          padding-top: 20px;
-          padding-bottom: 20px;
+          margin-top: 32px;
+          padding-top: 24px;
+          padding-bottom: 24px;
         }
 
         .footer-contact {
           margin-top: 0;
-          gap: 8px;
+          gap: 12px;
           flex-direction: column;
         }
 
@@ -5773,39 +5789,39 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .footer-contact__label {
-          font-size: 0.6rem;
+          font-size: 0.65rem;
         }
 
         .footer-contact__link {
-          font-size: 0.8rem;
+          font-size: 0.85rem;
         }
 
         .brand-footer {
-          margin-top: 16px;
-          padding-top: 12px;
-        }
-
-        .brand-footer__logo {
-          font-size: 1.2rem;
-        }
-
-        .brand-footer__text {
-          font-size: 0.65rem;
-        }
-      }
-
-      /* Extra compact for very small screens */
-      @media (max-width: 480px) {
-        .panel--form {
+          margin-top: 20px;
           padding-top: 16px;
         }
 
+        .brand-footer__logo {
+          font-size: 1.3rem;
+        }
+
+        .brand-footer__text {
+          font-size: 0.7rem;
+        }
+      }
+
+      /* Small phones - still breathe */
+      @media (max-width: 480px) {
+        .panel--form {
+          padding-top: max(50px, 8vh); /* Never less than 50px */
+        }
+
         .form-shell {
-          padding: 16px 12px;
+          padding: 20px 16px;
         }
 
         form {
-          gap: 12px;
+          gap: 14px;
         }
 
         label {
@@ -5813,19 +5829,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         input, textarea {
-          padding: 6px 0;
-          font-size: 0.9rem;
+          padding: 8px 0;
+          font-size: 0.95rem;
         }
 
         button[type="submit"] {
-          padding: 14px 20px;
-          font-size: 0.85rem;
-          margin-top: 4px;
+          padding: 16px 24px;
+          font-size: 0.9rem;
+          margin-top: 8px;
         }
 
         .form-footer-section {
-          margin-top: 16px;
-          padding-top: 12px;
+          margin-top: 24px;
+          padding-top: 16px;
         }
       }
 
@@ -7469,9 +7485,27 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const mesaHelp = document.getElementById('mesaHelp');
       const mesaHelpDismiss = document.getElementById('mesaHelpDismiss');
       let mesaHelpTimeout = null;
+      const registrationPanel = document.querySelector('.panel--form');
+      let lastTickerActivateAt = 0;
+
+      function getPanelVisibilityRatio(panelEl) {
+        if (!storyEl || !panelEl) return 0;
+        const storyRect = storyEl.getBoundingClientRect();
+        const panelRect = panelEl.getBoundingClientRect();
+        const visibleTop = Math.max(storyRect.top, panelRect.top);
+        const visibleBottom = Math.min(storyRect.bottom, panelRect.bottom);
+        const visible = Math.max(0, visibleBottom - visibleTop);
+        return panelRect.height > 0 ? visible / panelRect.height : 0;
+      }
+
+      function isRegistrationPanelActive() {
+        return getPanelVisibilityRatio(registrationPanel) >= 0.7;
+      }
 
       function showMesaHelp() {
         if (!mesaHelp) return;
+        // Only show this bubble while the registration panel is actually on screen.
+        if (!isRegistrationPanelActive()) return;
         if (mesaHelpTimeout) clearTimeout(mesaHelpTimeout);
         mesaHelp.classList.add('is-visible');
         mesaHelpTimeout = setTimeout(() => {
@@ -7488,6 +7522,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       mesaHelpDismiss?.addEventListener('click', hideMesaHelp);
+      storyEl?.addEventListener(
+        'scroll',
+        () => {
+          if (!isRegistrationPanelActive()) hideMesaHelp();
+        },
+        { passive: true }
+      );
 
       // DEBUG: Track ticker class changes
       if (mesaTicker) {
@@ -7540,24 +7581,57 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      tickerChatBtn.addEventListener('click', () => {
+      function routeUnregisteredToRegistration() {
+        // Ensure nothing can "fight" the teleport.
+        unlockScroll();
+        whisperHasPlayed = true;
+        buildHasPlayed = true;
+        slamHasPlayed = true;
+        rulesHasPlayed = true;
+        whisperPanel?.classList.add('has-played');
+        buildPanel?.classList.add('has-played');
+        slamPanel?.classList.add('has-played');
+        rulesPanel?.classList.add('has-played');
+
+        // Teleport to the registration panel (smooth scroll + scroll-snap is unreliable on iOS Safari).
+        if (registrationPanel) snapToPanelTop(registrationPanel);
+
+        // Show the bubble only once we're actually on the form panel.
+        let tries = 0;
+        const tryShow = () => {
+          tries += 1;
+          if (isRegistrationPanelActive()) {
+            showMesaHelp();
+            if (submitBtn) {
+              submitBtn.classList.remove('is-unlock-hinted');
+              void submitBtn.offsetWidth;
+              submitBtn.classList.add('is-unlock-hinted');
+              setTimeout(() => submitBtn.classList.remove('is-unlock-hinted'), 1300);
+            }
+            return;
+          }
+          if (tries < 20) requestAnimationFrame(tryShow);
+        };
+        requestAnimationFrame(tryShow);
+      }
+
+      function handleTickerActivate() {
+        const now = Date.now();
+        if (now - lastTickerActivateAt < 350) return;
+        lastTickerActivateAt = now;
+
         const isRegistered = localStorage.getItem('cdl_registered') === 'true';
         if (!isRegistered) {
-          // Not registered - scroll to registration form
-          showMesaHelp();
-          if (submitBtn) {
-            submitBtn.classList.remove('is-unlock-hinted');
-            void submitBtn.offsetWidth; // restart animation
-            submitBtn.classList.add('is-unlock-hinted');
-            setTimeout(() => submitBtn.classList.remove('is-unlock-hinted'), 1300);
-          }
-          const formPanel = document.querySelector('.panel--form');
-          if (formPanel) {
-            formPanel.scrollIntoView({ behavior: 'smooth' });
-          }
+          routeUnregisteredToRegistration();
           return;
         }
         toggleChat();
+      }
+
+      tickerChatBtn?.addEventListener('click', handleTickerActivate);
+      // iOS Safari reliability: treat a touch pointer-up as activation (guarded to avoid double fire).
+      tickerChatBtn?.addEventListener('pointerup', (e) => {
+        if (e.pointerType === 'touch') handleTickerActivate();
       });
       chatBackdrop.addEventListener('click', toggleChat);
       // Leave the table: clears identity + presence, then closes the panel
