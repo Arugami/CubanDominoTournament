@@ -373,6 +373,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         scroll-snap-type: y mandatory;
         overscroll-behavior: contain;
         scroll-padding-bottom: 46px; /* Account for fixed ticker */
+        position: relative;
       }
 
       /* Panel Base */
@@ -404,12 +405,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         isolation: isolate; /* Contain blend/film layers to the background only (don’t trap typography) */
       }
 
+      /* Global overlays live INSIDE the scroll container (sticky) so iOS Safari stacking stays correct. */
+      .story-overlays {
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100vh;
+        height: 100dvh;
+        pointer-events: none;
+        z-index: 4; /* Above panel overlays (2), below text (10+) */
+      }
+
       /* Global Cinematic Vignette - Tobias Signature */
       .vignette-overlay {
-        position: fixed;
+        position: absolute;
         inset: 0;
-        width: 100vw;
-        height: 100vh;
         background: radial-gradient(
           circle at center,
           transparent 15%,
@@ -417,8 +428,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           rgba(0, 0, 0, 0.85) 100%
         );
         pointer-events: none;
-        /* Above panel backgrounds/overlays, but BELOW all readable text */
-        z-index: 6;
+        z-index: 1;
       }
 
       /* Film grain overlay - "Like photos from 1978" — Wes Anderson
@@ -437,13 +447,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Tobias: Chromatic Aberration - Edge Distortion
          Gives it that vintage lens feel, pulling the digital into the physical world. */
       .chromatic-aberration {
-        position: fixed;
+        position: absolute;
         inset: 0;
-        width: 100vw;
-        height: 100vh;
         pointer-events: none;
-        /* Keep the "lens" effect on imagery, not on top of typography */
-        z-index: 5;
+        z-index: 0;
         opacity: 0.4;
         mix-blend-mode: screen;
         background: 
@@ -889,6 +896,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* La Salida - THE HERO (cream = brightest, unmissable) */
+      /* Tobias: "The headline should RADIATE" - luminous glow that cuts through darkness */
       .event-numeral--salida {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
@@ -897,14 +905,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         color: var(--cream);
         line-height: 0.9;
         margin: 0;
+        /* Layered glow: inner light → mid aureole → outer atmosphere → depth shadow */
         text-shadow:
-          0 0 40px rgba(212, 165, 116, 0.4),
-          0 0 80px rgba(212, 165, 116, 0.2),
-          0 4px 20px rgba(0, 0, 0, 0.8),
-          0 8px 40px rgba(0, 0, 0, 0.6);
+          0 0 10px rgba(255, 252, 245, 0.6),
+          0 0 30px rgba(255, 252, 245, 0.3),
+          0 0 50px rgba(212, 165, 116, 0.5),
+          0 0 90px rgba(212, 165, 116, 0.35),
+          0 0 140px rgba(212, 165, 116, 0.2),
+          0 4px 20px rgba(0, 0, 0, 0.9),
+          0 8px 40px rgba(0, 0, 0, 0.7);
         letter-spacing: -0.02em;
         position: relative;
         display: inline-block;
+        /* Slight brightness boost for mobile readability */
+        filter: brightness(1.05);
       }
 
       .event-numeral--salida::before {
@@ -976,17 +990,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Hero tagline - Championship stamp with decorative lines */
+      /* Tobias: Clear hierarchy - this is the WHAT */
       .hero-tagline {
         font-family: "IBM Plex Sans", sans-serif;
-        font-size: clamp(0.5rem, 2vw, 0.75rem);
+        font-size: clamp(0.65rem, 2.2vw, 0.85rem);
         font-weight: 600;
         color: var(--cream);
         text-transform: uppercase;
-        letter-spacing: 0.2em;
+        letter-spacing: 0.18em;
         margin-top: 24px;
-        margin-bottom: 12px;
-        opacity: 0.85;
-        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
+        margin-bottom: 14px;
+        opacity: 1;
+        text-shadow:
+          0 0 20px rgba(0, 0, 0, 0.95),
+          0 2px 15px rgba(0, 0, 0, 0.9);
         white-space: nowrap;
         display: flex;
         align-items: center;
@@ -1001,20 +1018,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         width: clamp(20px, 8vw, 60px);
         height: 1px;
         background: linear-gradient(90deg, transparent 0%, var(--brass) 50%, transparent 100%);
-        opacity: 0.5;
+        opacity: 0.6;
       }
 
-      /* Hero subtitle - practical info, fades */
+      /* Hero subtitle - practical info (date + venue) */
+      /* Tobias: WHERE/WHEN - readable but doesn't compete with title */
       .hero-subtitle {
         font-family: "IBM Plex Sans", sans-serif;
-        font-size: clamp(0.65rem, 1.4vw, 0.75rem);
+        font-size: clamp(0.7rem, 1.6vw, 0.85rem);
         font-weight: 500;
         color: var(--cream);
-        opacity: 0.55;
-        letter-spacing: 0.2em;
+        opacity: 0.78;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         margin-top: 6px;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+        text-shadow:
+          0 0 15px rgba(0, 0, 0, 0.95),
+          0 2px 10px rgba(0, 0, 0, 0.9);
       }
       .hero-subtitle a {
         color: var(--brass);
@@ -1033,7 +1053,36 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .hero-subtitle .dot {
         display: inline-block;
         margin: 0 0.5em;
-        opacity: 0.4;
+        opacity: 0.5;
+      }
+
+      /* MOBILE HERO ENHANCEMENTS - 99% of users are on iPhone */
+      @media (max-width: 768px) {
+        /* La Salida needs MAXIMUM presence on mobile */
+        .event-numeral--salida {
+          filter: brightness(1.1);
+          text-shadow:
+            0 0 12px rgba(255, 252, 245, 0.7),
+            0 0 35px rgba(255, 252, 245, 0.4),
+            0 0 60px rgba(212, 165, 116, 0.6),
+            0 0 100px rgba(212, 165, 116, 0.4),
+            0 4px 20px rgba(0, 0, 0, 0.95),
+            0 8px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Tagline bigger on mobile for readability */
+        .hero-tagline {
+          font-size: clamp(0.6rem, 3vw, 0.8rem);
+          letter-spacing: 0.14em;
+          gap: 12px;
+        }
+
+        /* Date/venue more prominent on mobile */
+        .hero-subtitle {
+          font-size: clamp(0.68rem, 2.8vw, 0.82rem);
+          opacity: 0.82;
+          letter-spacing: 0.1em;
+        }
       }
 
       .mesa-live-text span {
@@ -3093,11 +3142,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .mesa-help {
           z-index: 20010;
         }
-        .vignette-overlay {
-          z-index: 6;
-        }
         .chromatic-aberration {
-          z-index: 5;
           mix-blend-mode: normal;
           opacity: 0.18;
           transform: translateZ(0);
@@ -6156,10 +6201,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       </div>
     </div>
 
-    <div class="vignette-overlay"></div>
-    <div class="chromatic-aberration"></div>
-    <div class="story">
-      <main>
+	    <div class="story">
+	      <div class="story-overlays" aria-hidden="true">
+	        <div class="vignette-overlay"></div>
+	        <div class="chromatic-aberration"></div>
+	      </div>
+	      <main>
       <!-- Panel 1: Brand Introduction -->
       <section class="panel panel--hero" id="heroPanel">
         <div class="panel-bg panel-bg--hero" style="background-image: url('/FRAMES/frame-hero.webp')"></div>
@@ -6732,7 +6779,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           return;
         }
 
-        // Brief moment to appreciate the logo, then fade (keep interaction snappy)
+        // Let the logo breathe - this is the first impression
         setTimeout(() => {
           loadingScreen.classList.add('is-hidden');
           // Start hero animations as the loading screen fades away (so it doesn't play "behind" it).
@@ -6743,7 +6790,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               loadingScreen.remove();
             }
           }, 650);
-        }, 400);
+        }, 1400);
       }
 
       // Trigger dismissal on load or if already loaded
