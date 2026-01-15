@@ -83,6 +83,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow: hidden;
       }
 
+      /* Keep the loader visible, but stop blocking scroll/taps quickly. */
+      .loading-screen.is-passive {
+        pointer-events: none;
+      }
+
       .loading-screen.is-hidden {
         opacity: 0;
         visibility: hidden;
@@ -1417,45 +1422,48 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
       }
 
-      /* Typography crescendo - each word grows, tension builds */
-      .whisper-line--watching {
-        font-size: clamp(1.1rem, 4vw, 1.5rem);
-        color: rgba(212, 165, 116, 0.85);
-      }
-
-      .whisper-line--train {
-        font-size: clamp(1.4rem, 5.5vw, 2rem);
-      }
-
-      .whisper-line--learn {
-        font-size: clamp(1.7rem, 6.5vw, 2.5rem);
-      }
-
-      .whisper-line--wait {
-        font-size: clamp(2rem, 8vw, 3.2rem);
+      /* THE LINE - The challenge that sets up INHERITED */
+      .whisper-line--mystery {
+        font-size: clamp(2rem, 8vw, 3.5rem);
+        font-style: italic;
+        font-weight: 500;
         color: var(--cream);
-        letter-spacing: 0.08em;
+        letter-spacing: 0.02em;
+        margin-top: 2vh;
+        text-shadow:
+          0 0 30px rgba(212, 165, 116, 0.4),
+          0 2px 20px rgba(0, 0, 0, 0.6);
       }
 
-      /* Cinematic animations - slow, deliberate, weighted */
+      /* Cinematic animations - tight 2-beat sequence */
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingRevealRTL 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        animation: greetingRevealRTL 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
       }
 
-      .panel--whisper.in-view:not(.has-played) .whisper-line--watching {
-        animation: cinematicReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 2s forwards;
+      .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
+        animation: mysterySlam 1.4s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards;
       }
 
-      .panel--whisper.in-view:not(.has-played) .whisper-line--train {
-        animation: wordBuild 0.8s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
-      }
-
-      .panel--whisper.in-view:not(.has-played) .whisper-line--learn {
-        animation: wordBuild 0.8s cubic-bezier(0.16, 1, 0.3, 1) 4.5s forwards;
-      }
-
-      .panel--whisper.in-view:not(.has-played) .whisper-line--wait {
-        animation: wordBuildFinal 1s cubic-bezier(0.16, 1, 0.3, 1) 5.5s forwards;
+      /* Mystery slam - THE LINE hits with weight */
+      @keyframes mysterySlam {
+        0% {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+          filter: blur(8px);
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(-3px) scale(1.01);
+          filter: blur(0);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+          text-shadow:
+            0 0 40px rgba(212, 165, 116, 0.5),
+            0 2px 20px rgba(0, 0, 0, 0.6);
+        }
       }
 
       /* Greeting reveals right-to-left - smoother, smoky, jazz-like */
@@ -1532,7 +1540,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--whisper.in-view .whisper-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 7s forwards;
+        animation: scrollHintReveal 1s ease-out 4s forwards;
       }
 
       /* Once played: returning should feel "static" and inevitable (no replays). */
@@ -1541,21 +1549,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: none;
         filter: none;
       }
-      .panel--whisper.has-played .whisper-line--watching {
+      .panel--whisper.has-played .whisper-line--mystery {
         opacity: 1;
         transform: none;
         filter: none;
-      }
-      .panel--whisper.has-played .whisper-line--train,
-      .panel--whisper.has-played .whisper-line--learn {
-        opacity: 0.8;
-        transform: none;
-        filter: none;
-      }
-      .panel--whisper.has-played .whisper-line--wait {
-        opacity: 1;
-        transform: none;
-        filter: none;
+        text-shadow:
+          0 0 40px rgba(212, 165, 116, 0.5),
+          0 2px 20px rgba(0, 0, 0, 0.6);
       }
       .panel--whisper.has-played .whisper-scroll-hint {
         opacity: 1;
@@ -1681,12 +1681,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 2px 15px rgba(0, 0, 0, 0.5);
       }
 
-      /* "inherited!" - THE WORD. The slam. The climax. */
+      /* "INHERITED." - THE WORD. The slam. The climax. */
       .build-word--inherited {
-        font-size: clamp(3.2rem, 16vw, 8rem);
+        font-size: clamp(2.6rem, 12vw, 6rem); /* Reduced for uppercase */
         color: #fff;
         font-weight: 500;
-        letter-spacing: -0.01em;
+        letter-spacing: 0.06em; /* Positive spacing for all-caps readability */
         line-height: 0.9;
         /* Luminous glow - this word RADIATES */
         text-shadow:
@@ -1821,20 +1821,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         padding: 0;
       }
 
-      /* TOP LETTERBOX - Darkness frames the stakes */
+      /* TOP LETTERBOX - Event context sets the stage */
       .slam-top {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         z-index: 10;
-        height: 15vh;
+        padding: 14vh 6vw 8vh;
         background: linear-gradient(
           to bottom,
           rgba(10, 7, 5, 0.98) 0%,
           rgba(10, 7, 5, 0.85) 40%,
           rgba(10, 7, 5, 0) 100%
         );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
         pointer-events: none;
       }
 
@@ -1928,21 +1932,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0.5;
       }
 
-      /* Scene 3 animation sequence - rapid fire, then SLAM */
+      /* Scene 3 animation sequence - context first, then rapid fire SLAM */
       .panel--slam.in-view:not(.has-played) .slam-word--winner {
-        animation: slamWord 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
-      }
-
-      .panel--slam.in-view:not(.has-played) .slam-word--takes {
         animation: slamWord 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
       }
 
+      .panel--slam.in-view:not(.has-played) .slam-word--takes {
+        animation: slamWord 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+      }
+
       .panel--slam.in-view:not(.has-played) .slam-word--all {
-        animation: slamFinal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
+        animation: slamFinal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
       }
 
       .panel--slam.in-view:not(.has-played) .slam-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 2.5s forwards;
+        animation: scrollHintReveal 1s ease-out 2.8s forwards;
       }
 
       .panel--slam.has-played .slam-word {
@@ -1952,6 +1956,46 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
       .panel--slam.has-played .slam-scroll-hint {
         opacity: 1;
+      }
+
+      /* Event context - grounds the stakes in reality */
+      .slam-context {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: clamp(0.65rem, 2vw, 0.8rem);
+        font-weight: 500;
+        color: var(--cream);
+        opacity: 0;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin-bottom: 3vh;
+        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.9);
+      }
+
+      .slam-context .dot {
+        display: inline-block;
+        margin: 0 0.6em;
+        color: var(--brass);
+        opacity: 0.6;
+      }
+
+      /* Animation - context loads FIRST, sets the stage */
+      .panel--slam.in-view:not(.has-played) .slam-context {
+        animation: fadeInDown 0.8s ease-out 0s forwards;
+      }
+
+      .panel--slam.has-played .slam-context {
+        opacity: 0.75;
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 0.75;
+          transform: translateY(0);
+        }
       }
 
       @keyframes slamWord {
@@ -2003,20 +2047,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           font-size: clamp(2rem, 10vw, 3.2rem);
         }
 
-        .whisper-line--watching {
-          font-size: clamp(1rem, 4.5vw, 1.3rem);
+        /* Mobile: Larger, bolder for impact on small screens */
+        .whisper-line--challenge {
+          font-size: clamp(1.2rem, 5vw, 1.6rem);
         }
 
-        .whisper-line--train {
-          font-size: clamp(1.2rem, 5.5vw, 1.7rem);
+        .whisper-line--counter {
+          font-size: clamp(1.4rem, 6vw, 1.9rem);
         }
 
-        .whisper-line--learn {
-          font-size: clamp(1.5rem, 6.5vw, 2.1rem);
-        }
-
-        .whisper-line--wait {
-          font-size: clamp(1.8rem, 8vw, 2.8rem);
+        .whisper-line--mystery {
+          font-size: clamp(1.6rem, 7vw, 2.2rem);
         }
 
         /* Panel 3 mobile - cinematic frame */
@@ -2037,12 +2078,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .build-word--inherited {
-          font-size: clamp(2.8rem, 18vw, 5.5rem);
+          font-size: clamp(2.2rem, 11vw, 4rem); /* Reduced for uppercase */
         }
 
         /* Panel 4 mobile - cinematic frame */
         .slam-top {
-          height: 12vh;
+          padding: 12vh 5vw 6vh;
         }
 
         .slam-bottom {
@@ -2059,6 +2100,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         .slam-word--all {
           font-size: clamp(3.5rem, 22vw, 9rem);
+        }
+
+        /* Event context - slightly larger on mobile for readability */
+        .slam-context {
+          font-size: clamp(0.6rem, 2.8vw, 0.75rem);
+          letter-spacing: 0.1em;
+          margin-bottom: 2.5vh;
         }
       }
 
@@ -4451,14 +4499,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-align: center;
       }
 
+      /* Form slogan - confident invitation, Cuban elegance meets UFC edge */
       .panel--form .panel-headline {
-        font-size: clamp(2.6rem, 9vw, 4.5rem);
-        margin-bottom: 12px;
-        color: rgba(255, 255, 255, 0.92);
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(2rem, 7vw, 3rem);
+        margin-bottom: 24px;
+        color: var(--cream);
+        letter-spacing: 0.02em;
         text-shadow:
-          0 2px 4px rgba(0, 0, 0, 0.95),
-          0 6px 24px rgba(0, 0, 0, 0.65),
-          0 0 34px rgba(212, 165, 116, 0.12);
+          0 2px 15px rgba(0, 0, 0, 0.9),
+          0 0 50px rgba(212, 165, 116, 0.2);
       }
 
       .panel--form .panel-subtitle {
@@ -5980,9 +6032,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .panel--form .panel-headline {
-          font-size: clamp(1.8rem, 8vw, 2.4rem);
-          margin-bottom: 0;
-          line-height: 1.1;
+          font-size: clamp(1.6rem, 6vw, 2.2rem);
+          margin-bottom: 18px;
+          line-height: 1.15;
         }
 
         /* Hide Notes field on mobile - it's optional and saves space */
@@ -6364,13 +6416,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="whisper-greeting">Que Bola Asere</p>
         </div>
 
-        <!-- BOTTOM LETTERBOX - The tension rises from shadow -->
+        <!-- BOTTOM LETTERBOX - The challenge rises from shadow -->
         <div class="whisper-bottom">
           <div class="whisper-narrative">
-            <p class="whisper-line whisper-line--watching">We've been watching you...</p>
-            <p class="whisper-line whisper-line--train">...train</p>
-            <p class="whisper-line whisper-line--learn">...learn</p>
-            <p class="whisper-line whisper-line--wait">...wait.</p>
+            <p class="whisper-line whisper-line--mystery">You think you learned this game?</p>
           </div>
           <!-- Scroll hint - appears after narrative, guides the uninitiated -->
           <div class="whisper-scroll-hint">
@@ -6396,7 +6445,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="build-center">
           <div class="build-revelation">
             <span class="build-word build-word--itwas">It was</span>
-            <span class="build-word build-word--inherited">inherited!</span>
+            <span class="build-word build-word--inherited">INHERITED.</span>
           </div>
         </div>
 
@@ -6416,8 +6465,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
 
-        <!-- TOP LETTERBOX - Darkness frames the stakes -->
-        <div class="slam-top"></div>
+        <!-- TOP LETTERBOX - Event context sets the stage -->
+        <div class="slam-top">
+          <p class="slam-context">CDL 1<span class="dot">•</span>January 31<span class="dot">•</span>Mr Garcia Cigars</p>
+        </div>
 
         <!-- CENTER - The stakes command attention -->
         <div class="slam-center">
@@ -6500,7 +6551,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="panel-content">
           <!-- Story-connected headline -->
           <div class="form-header">
-            <h2 class="panel-headline panel-headline--form"><span class="accent">La mesa</span> te espera</h2>
+            <h2 class="panel-headline panel-headline--form">La mesa te espera</h2>
           </div>
 
           <!-- Progress Tracker (Desktop) -->
@@ -6881,46 +6932,56 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <!-- Background Dimming Overlay -->
     <div class="chat-backdrop" id="chatBackdrop"></div>
 
-    <script define:vars={{ PLAYERS_REGISTERED, PLAYERS_GOAL, SUPABASE_URL, SUPABASE_ANON_KEY }}>
-      // Loading Screen Dismissal Logic - Pure CSS
-      function dismissLoadingScreen() {
-        const loadingScreen = document.getElementById('loadingScreen');
-        document.body.classList.remove('is-loading');
+	    <script define:vars={{ PLAYERS_REGISTERED, PLAYERS_GOAL, SUPABASE_URL, SUPABASE_ANON_KEY }}>
+	      // Loading Screen Dismissal Logic - Pure CSS
+	      let didDismissLoadingScreen = false;
+	      function dismissLoadingScreen() {
+	        if (didDismissLoadingScreen) return;
+	        didDismissLoadingScreen = true;
+	        const loadingScreen = document.getElementById('loadingScreen');
+	        document.body.classList.remove('is-loading');
 
-        const markReady = () => {
+	        const markReady = () => {
           if (document.body.classList.contains('is-ready')) return;
           document.body.classList.add('is-ready');
           window.dispatchEvent(new Event('cdl:ready'));
         };
 
-        if (!loadingScreen) {
-          markReady();
-          return;
-        }
+	        if (!loadingScreen) {
+	          markReady();
+	          return;
+	        }
 
-        // Let the logo breathe - this is the first impression
-        setTimeout(() => {
-          loadingScreen.classList.add('is-hidden');
-          // Start hero animations as the loading screen fades away (so it doesn't play "behind" it).
-          markReady();
-          // Fully remove from DOM after transition
-          setTimeout(() => {
-            if (loadingScreen.parentNode) {
-              loadingScreen.remove();
-            }
-          }, 650);
-        }, 1400);
-      }
+	        // Let the loading screen breathe, but stop blocking scroll/taps quickly.
+	        const INTERACTION_RELEASE_MS = 180;
+	        const VISUAL_HOLD_MS = 1400;
 
-      // Trigger dismissal on load or if already loaded
-      if (document.readyState === 'complete') {
-        dismissLoadingScreen();
-      } else {
-        window.addEventListener('load', dismissLoadingScreen);
-      }
+	        setTimeout(() => {
+	          loadingScreen.classList.add('is-passive');
+	        }, INTERACTION_RELEASE_MS);
 
-      // Fallback: Force dismissal after 3 seconds in case of slow assets
-      setTimeout(dismissLoadingScreen, 3000);
+	        setTimeout(() => {
+	          loadingScreen.classList.add('is-hidden');
+	          // Start hero animations as the loading screen fades away (so it doesn't play "behind" it).
+	          markReady();
+	          // Fully remove from DOM after transition
+	          setTimeout(() => {
+	            if (loadingScreen.parentNode) {
+	              loadingScreen.remove();
+	            }
+	          }, 650);
+	        }, VISUAL_HOLD_MS);
+	      }
+
+	      // Trigger dismissal as soon as DOM is ready (don't wait for full window load).
+	      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+	        dismissLoadingScreen();
+	      } else {
+	        document.addEventListener('DOMContentLoaded', dismissLoadingScreen, { once: true });
+	      }
+
+	      // Fallback: Force dismissal after 3 seconds in case of slow assets
+	      setTimeout(dismissLoadingScreen, 3000);
 
       // Panel parallax and content animations
       const allPanels = document.querySelectorAll('.panel');
@@ -7101,7 +7162,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !whisperHasPlayed) {
             whisperHasPlayed = true;
             alignPanelAfterSettle(whisperPanel);
-            lockScroll(7500, () => whisperPanel?.classList.add('has-played'));
+            lockScroll(4500, () => whisperPanel?.classList.add('has-played'));
           }
         });
       }, { threshold: 0.6 });
@@ -7128,16 +7189,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         });
       }, { threshold: 0.6 });
 
-      // Panel 5 (Rules/La Ley) scroll-lock - 3 seconds
-      const rulesObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !rulesHasPlayed) {
-            rulesHasPlayed = true;
-            alignPanelAfterSettle(rulesPanel);
-            lockScroll(3000, () => rulesPanel?.classList.add('has-played'));
-          }
-        });
-      }, { threshold: 0.6 });
+	      // Panel 5 (Rules/La Ley) scroll-lock - 3 seconds
+	      const rulesObserver = new IntersectionObserver((entries) => {
+	        entries.forEach(entry => {
+	          if (entry.isIntersecting && !rulesHasPlayed) {
+	            rulesHasPlayed = true;
+	            alignPanelAfterSettle(rulesPanel);
+	            lockScroll(3000, () => {
+	              // Let Safari finish its snap/momentum and the unlock paint before we flip to the static state.
+	              requestAnimationFrame(() => {
+	                requestAnimationFrame(() => rulesPanel?.classList.add('has-played'));
+	              });
+	            });
+	          }
+	        });
+	      }, { threshold: 0.6 });
 
       if (whisperPanel) whisperObserver.observe(whisperPanel);
       if (buildPanel) buildObserver.observe(buildPanel);

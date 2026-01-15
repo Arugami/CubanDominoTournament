@@ -249,4 +249,125 @@ All website copy has been reviewed and approved by the full dream team.
 
 *Session documented: January 11, 2026*
 
+---
+
+# Revision: January 15, 2026
+## Panel 2 Copy Overhaul — Visual Energy Mismatch
+
+**Creative Lead:** George Lois + Dana White
+**Focus:** Panel 2 copy didn't match the UFC staredown energy of frame-2.webp
+
+---
+
+### The Problem
+
+After reviewing the actual background images:
+
+| Frame | Visual Energy | Original Copy | Issue |
+|-------|---------------|---------------|-------|
+| frame-2.webp | Man staring down camera, cigar raised, UFC weigh-in energy | "We've been expecting you..." | **TOO SOFT** |
+
+**George Lois:** "You don't whisper when the image is SCREAMING at you. The man in that photo is challenging you. The copy should match."
+
+**Dana White:** "That's a fighter sizing you up. 'We've been expecting you' sounds like a hotel concierge, not a competitor."
+
+---
+
+### Panel Structure Clarification
+
+The actual site has 6 panels, not 5:
+
+| Panel | Name | Background | Content |
+|-------|------|------------|---------|
+| 1 | Hero | frame-hero.webp | "La Salida" |
+| 2 | Whisper | frame-2.webp | Greeting + Challenge |
+| 3 | Build | frame-3.webp | "INHERITED" revelation |
+| 4 | Slam | frame-4.webp | "Winner Takes All" |
+| 5 | Rules | *(no image)* | "La Ley" + rules grid |
+| 6 | Form | gradient | Registration |
+
+---
+
+### Panel 2: Revised Copy
+
+**Before:**
+```
+Que Bola Asere
+We've been watching you...
+...train
+...learn
+...wait.
+```
+
+**After:**
+```
+Que Bola Asere
+You think you learned this game?
+We know better.
+We know who you are.
+```
+
+**Why the change:**
+
+1. **Challenge matches image:** The man is staring you down. "You think you learned?" is a direct challenge that matches his posture.
+
+2. **Sets up Panel 3:** "You think you learned" → "You didn't learn this game. It was INHERITED." The callback makes the revelation land harder.
+
+3. **Cuban + UFC balance:** "Que Bola Asere" keeps the Cuban soul. The challenge adds Dana White's competitive edge.
+
+---
+
+### Story Flow: Panels 2→3→4
+
+> **Panel 2:** "Que Bola Asere. You think you learned this game? We know better. We know who you are."
+>
+> **Panel 3:** "You didn't learn this game. It was INHERITED."
+>
+> **Panel 4:** "Winner Takes All"
+
+**George Lois:** "Now THAT reads like a movie trailer. Challenge → Revelation → Stakes. Each panel builds."
+
+---
+
+### Typography & Animation Changes
+
+**Typography treatment:**
+- Challenge line: Upright (not italic), bolder — confrontational
+- Counter line ("We know better."): Brass color, snap animation — punchy like a jab
+- Mystery line: Italic, glow effect — lingers before INHERITED
+
+**Animation timing:**
+- Total sequence: ~5.5s (was ~7s with 4 lines)
+- Counter has "snap" overshoot animation
+- Mystery line gets subtle glow at end
+
+---
+
+### Team Sign-off
+
+**Dana White:** "NOW it matches the image. That's a staredown."
+
+**George Lois:** "Challenge in, softness out. This passes."
+
+**Daisy Expósito-Ulla:** "Still passes the Abuela test. 'Que Bola Asere' anchors it in Cuban culture."
+
+**Jay-Z:** "The mystery line 'We know who you are' is exclusive energy. You belong here because of your bloodline."
+
+**Status:** ✅ APPROVED
+
+---
+
+### Updated Summary
+
+| Panel | Original Copy | Revised Copy | Status |
+|-------|---------------|--------------|--------|
+| 2 (Whisper) | "We've been expecting you..." | "You think you learned this game? We know better. We know who you are." | ✅ Updated Jan 15 |
+| 3 (Build) | "INHERITED" | *(no change)* | ✅ |
+| 4 (Slam) | "Winner Takes All" | *(no change)* | ✅ |
+| 5 (Rules) | "La Ley" | *(no change)* | ✅ |
+
+---
+
+*Revision documented: January 15, 2026*
+
 *"La mesa te espera."*

@@ -116,5 +116,37 @@ Design/UX items to sanity-check through a Tobias lens (weight, intention, “roo
 5. **Cinematic overlays vs. legibility** — Vignette/lens effects should deepen imagery without dimming key typography (e.g., “Que Bola Asere”).
 6. **iOS Safari integrity** — Fixed ticker should never “mysteriously dim” or pause; confirm it holds under scroll-snap + overlays.
 
+---
+
+## Review Notes (Jan 15, 2026)
+
+Quick gut-check based on the latest full-page capture + iPhone Safari debugging:
+
+### What’s Working
+
+- **The room is real** — strong “cigar lounge” depth; gradients + film texture read as atmosphere, not decoration.
+- **Typography hierarchy** — the Bodoni moments land (especially panel 3 “inherited!”) and feel like title cards.
+- **Ticker as artifact** — the bottom bar feels like a physical strip, not a web footer.
+
+### What Needs Attention (High Priority)
+
+1. **Domino La Mesa button polish**
+   - Avoid any “browser tooltip” feel, clipping, or odd hover states (especially on tap/press).
+   - The interaction should read as: *artifact toggles a hidden room*, not “a button on a website”.
+
+2. **Panel transitions (snap + lock)**
+   - There’s a “micro-jerk” risk after sequences when scroll-lock releases and scroll-snap corrects.
+   - Goal: transitions should feel like *camera cuts*, never like the browser nudged the page.
+
+3. **Legibility guardrails**
+   - Overlays should never dim key copy (we already hit this once with “Que Bola Asere” on iPhone).
+   - Rule: if the headline is the moment, the atmosphere must get out of the way.
+
+### What I’d Refine Next (Medium Priority)
+
+- **Scroll hints**: calm, consistent, and “felt” (fade in only; never bounce). They should behave like direction in a film, not UI coaching.
+- **Registration panel composition**: the form should be the entire “scene”. Any contact/venue footer should be its own beat (a second swipe).
+- **Microcopy inevitability**: keep the language ritualized and precise (“Claim your seat” → “Tap the domino to enter La Mesa”).
+
 *Hired: January 13, 2026*
 *CDL Dream Team - Product Division*
