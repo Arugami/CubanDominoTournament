@@ -384,7 +384,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         scroll-snap-align: start;
         scroll-snap-stop: always;
         position: relative;
-        isolation: isolate; /* Keep blend/film layers from affecting UI/text across panels */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -402,6 +401,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background-position: center;
         background-repeat: no-repeat;
         z-index: 0; /* Establish a stacking context so film grain never floats above typography (iOS quirk) */
+        isolation: isolate; /* Contain blend/film layers to the background only (don’t trap typography) */
       }
 
       /* Global Cinematic Vignette - Tobias Signature */
@@ -1488,7 +1488,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-style: italic;
         font-weight: 400;
         font-size: clamp(1rem, 4vw, 1.5rem);
-        color: rgba(255, 255, 255, 0.75);
+        color: rgba(255, 255, 255, 0.88);
         letter-spacing: 0.12em;
         text-align: center;
         opacity: 0;
@@ -1525,20 +1525,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* "It was" - the setup on one line */
       .build-word--itwas {
         font-size: clamp(1.4rem, 5vw, 2.2rem);
-        color: rgba(212, 165, 116, 0.9);
+        color: rgba(212, 165, 116, 0.98);
         letter-spacing: 0.06em;
         margin-bottom: 1.5vh;
-        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+        text-shadow:
+          0 0 16px rgba(212, 165, 116, 0.22),
+          0 2px 15px rgba(0, 0, 0, 0.5);
       }
 
       /* "inherited!" - THE WORD. The slam. The climax. */
       .build-word--inherited {
         font-size: clamp(3.2rem, 16vw, 8rem);
         color: #fff;
+        font-weight: 500;
         letter-spacing: -0.01em;
         line-height: 0.9;
         /* Luminous glow - this word RADIATES */
         text-shadow:
+          0 0 18px rgba(255, 255, 255, 0.22),
           0 0 30px rgba(212, 165, 116, 0.5),
           0 0 60px rgba(212, 165, 116, 0.3),
           0 0 100px rgba(212, 165, 116, 0.15),
@@ -1589,7 +1593,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--build.in-view:not(.has-played) .build-word--itwas {
-        animation: wordBuild 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
+        animation: wordBuildBright 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
       }
 
       .panel--build.in-view:not(.has-played) .build-word--inherited {
@@ -1606,9 +1610,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         filter: none;
       }
       .panel--build.has-played .build-word--itwas {
-        opacity: 0.9;
+        opacity: 1;
         transform: none;
         filter: none;
+      }
+
+      /* Like wordBuild, but lands at full presence */
+      @keyframes wordBuildBright {
+        0% {
+          opacity: 0;
+          transform: translateY(15px);
+          filter: blur(4px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
       }
       .panel--build.has-played .build-word--inherited {
         opacity: 1;
