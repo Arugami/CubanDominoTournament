@@ -105,5 +105,16 @@ Before any design ships, ask:
 
 ---
 
+## Review Request (Jan 14, 2026)
+
+Design/UX items to sanity-check through a Tobias lens (weight, intention, “room” feel):
+
+1. **Domino chat button states** — Tap/press/focus should feel like an artifact (no weird clipping, no browser tooltip vibes).
+2. **Signup panel copy + hierarchy** — Avoid “sign up below” when the form is above; confirm the microcopy reads inevitable.
+3. **“Unlock La Mesa” guidance** — When an unregistered player taps the domino, show a helpful bubble that explains the ritual: claim seat → tap domino to enter La Mesa.
+4. **Scroll hints consistency** — The chevron hint should appear on the hero after a few seconds, and also on panels 2/4/5 after their sequences; keep it calm (no bouncy movement).
+5. **Cinematic overlays vs. legibility** — Vignette/lens effects should deepen imagery without dimming key typography (e.g., “Que Bola Asere”).
+6. **iOS Safari integrity** — Fixed ticker should never “mysteriously dim” or pause; confirm it holds under scroll-snap + overlays.
+
 *Hired: January 13, 2026*
 *CDL Dream Team - Product Division*
