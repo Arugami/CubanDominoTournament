@@ -1148,13 +1148,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: center;
         align-items: center;
         padding: 0;
-        /* Smooth fade-out while scrolling away (driven by IntersectionObserver ratio) */
-        --panel-vis: 0;
       }
 
       .panel--whisper .whisper-top,
       .panel--whisper .whisper-bottom {
-        opacity: calc(var(--panel-vis) * 1.12);
+        opacity: 0;
+        transition: opacity 420ms ease;
+      }
+
+      .panel--whisper.in-view .whisper-top,
+      .panel--whisper.in-view .whisper-bottom {
+        opacity: 1;
+      }
+
+      /* Revisit: subtle "breath" (not a full replay) to keep the room alive */
+      .panel--whisper.reentering .whisper-top,
+      .panel--whisper.reentering .whisper-bottom,
+      .panel--build.reentering .build-top,
+      .panel--build.reentering .build-center,
+      .panel--build.reentering .build-bottom,
+      .panel--slam.reentering .slam-top,
+      .panel--slam.reentering .slam-center,
+      .panel--slam.reentering .slam-bottom,
+      .panel--rules.reentering .rules-plaque {
+        animation: revisitBreath 380ms ease-out both;
+      }
+
+      @keyframes revisitBreath {
+        from { opacity: 0.82; transform: translateY(2px) scale(1.01); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
       }
 
       /* iOS fix: ensure full opacity when panel is in view */
@@ -1170,7 +1192,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 2.5vh 6vw 12vh; /* Tighter to top - deeper in darkness */
+        padding: 8vh 6vw 12vh; /* Generous top breathing - title card descending */
         background: linear-gradient(
           to bottom,
           rgba(10, 7, 5, 0.98) 0%,
@@ -1441,7 +1463,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 3vh 6vw 14vh;
+        padding: 8vh 6vw 14vh; /* Generous top breathing */
         background: linear-gradient(
           to bottom,
           rgba(10, 7, 5, 0.98) 0%,
@@ -1795,9 +1817,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Mobile adjustments for cinematic panels */
       @media (max-width: 768px) {
-        /* Cinematic frame - tighter on mobile */
+        /* Cinematic frame - still breathe on mobile */
         .whisper-top {
-          padding: 2vh 5vw 10vh; /* Tighter to top edge */
+          padding: max(50px, 6vh) 5vw 10vh; /* Never less than 50px from top */
         }
 
         .whisper-bottom {
@@ -1826,7 +1848,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         /* Panel 3 mobile - cinematic frame */
         .build-top {
-          padding: 2vh 5vw 12vh;
+          padding: max(50px, 6vh) 5vw 12vh; /* Never less than 50px from top */
         }
 
         .build-bottom {
@@ -6671,23 +6693,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       let heroHintTimer = null;
 
       const inViewRatioThreshold = 0.4;
-      const panelVisThresholds = Array.from({ length: 51 }, (_, i) => i / 50);
+      const enterThreshold = 0.45;
+      const exitThreshold = 0.25;
 
       const panelObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           const ratio = typeof entry.intersectionRatio === 'number' ? entry.intersectionRatio : 0;
 
-          if (entry.target.classList.contains('panel--whisper')) {
-            entry.target.style.setProperty('--panel-vis', ratio.toFixed(3));
-          }
-
-          if (ratio >= inViewRatioThreshold) {
+          if (ratio >= enterThreshold) {
             entry.target.classList.add('in-view');
-          } else {
+            if (entry.target.classList.contains('has-played') && !entry.target.classList.contains('reentering')) {
+              entry.target.classList.add('reentering');
+              setTimeout(() => entry.target.classList.remove('reentering'), 420);
+            }
+          } else if (ratio <= exitThreshold) {
             entry.target.classList.remove('in-view');
           }
         });
-      }, { threshold: panelVisThresholds });
+      }, { threshold: [0, exitThreshold, enterThreshold, 1] });
 
       // Skip observing the first panel (hero) - it should always be visible
       allPanels.forEach((panel, index) => {
@@ -6763,7 +6786,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (!storyEl || !panelEl) return;
         const storyRect = storyEl.getBoundingClientRect();
         const panelRect = panelEl.getBoundingClientRect();
-        const targetTop = storyEl.scrollTop + (panelRect.top - storyRect.top);
+        const delta = panelRect.top - storyRect.top;
+        if (Math.abs(delta) <= 4) return; // already aligned; avoid iOS flicker/jump
+        const targetTop = storyEl.scrollTop + delta;
         storyEl.scrollTo({ top: targetTop, behavior: 'auto' });
       }
 
