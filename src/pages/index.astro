@@ -1329,9 +1329,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .panel--build.reentering .build-bottom,
       .panel--slam.reentering .slam-top,
       .panel--slam.reentering .slam-center,
-      .panel--slam.reentering .slam-bottom,
-      .panel--rules.reentering .rules-plaque {
+      .panel--slam.reentering .slam-bottom {
         animation: revisitBreath 380ms ease-out both;
+      }
+
+      /* Rules plaque - separate animation without opacity (has transparent bg) */
+      .panel--rules.reentering .rules-plaque {
+        animation: revisitBreathNoOpacity 380ms ease-out both;
+      }
+
+      @keyframes revisitBreathNoOpacity {
+        from { transform: translateY(2px) scale(1.01); }
+        to { transform: translateY(0) scale(1); }
       }
 
       @keyframes revisitBreath {
@@ -1853,6 +1862,109 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         pointer-events: none;
       }
 
+      /* ============================================
+         CDL 1 BADGE - The Bone Language
+         A domino tile as championship marker
+         ============================================ */
+      .slam-badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 70px;
+        height: 100px;
+        margin-bottom: 3vh;
+        background: linear-gradient(
+          145deg,
+          rgba(20, 14, 10, 0.95) 0%,
+          rgba(12, 8, 5, 0.98) 100%
+        );
+        border: 2px solid var(--brass);
+        border-radius: 12px; /* Bone Language */
+        position: relative;
+        opacity: 0;
+        /* Brass glow - championship energy */
+        box-shadow:
+          0 0 20px rgba(212, 165, 116, 0.3),
+          0 0 40px rgba(212, 165, 116, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          0 8px 32px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Subtle shine overlay - metallic feel */
+      .slam-badge::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 50%,
+          rgba(0, 0, 0, 0.1) 100%
+        );
+        pointer-events: none;
+      }
+
+      .slam-badge__top,
+      .slam-badge__bottom {
+        font-family: "Bodoni Moda", serif;
+        font-weight: 700;
+        color: var(--brass);
+        text-shadow: 0 0 10px rgba(212, 165, 116, 0.5);
+        letter-spacing: 0.05em;
+      }
+
+      .slam-badge__top {
+        font-size: 1.1rem;
+        margin-top: 12px;
+      }
+
+      .slam-badge__divider {
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          var(--brass) 20%,
+          var(--brass) 80%,
+          transparent 100%
+        );
+        margin: 8px 0;
+        opacity: 0.7;
+      }
+
+      .slam-badge__bottom {
+        font-size: 1.8rem;
+        font-style: italic;
+        margin-bottom: 8px;
+      }
+
+      /* Badge animation - appears first, sets the stage */
+      .panel--slam.in-view:not(.has-played) .slam-badge {
+        animation: badgeReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+      }
+
+      .panel--slam.has-played .slam-badge {
+        opacity: 1;
+      }
+
+      @keyframes badgeReveal {
+        0% {
+          opacity: 0;
+          transform: scale(0.8) translateY(10px);
+          filter: blur(4px);
+        }
+        60% {
+          transform: scale(1.02) translateY(0);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+          filter: blur(0);
+        }
+      }
+
       .slam-container {
         display: flex;
         flex-direction: column;
@@ -2088,6 +2200,28 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         .slam-bottom {
           padding: 6vh 5vw 16vh;
+        }
+
+        /* CDL badge mobile - slightly smaller */
+        .slam-badge {
+          width: 60px;
+          height: 85px;
+          margin-bottom: 2.5vh;
+        }
+
+        .slam-badge__top {
+          font-size: 0.95rem;
+          margin-top: 10px;
+        }
+
+        .slam-badge__divider {
+          width: 40px;
+          margin: 6px 0;
+        }
+
+        .slam-badge__bottom {
+          font-size: 1.5rem;
+          margin-bottom: 6px;
         }
 
         .slam-word--winner {
@@ -3329,7 +3463,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .panel--build.reentering .build-bottom,
         .panel--slam.reentering .slam-top,
         .panel--slam.reentering .slam-center,
-        .panel--slam.reentering .slam-bottom,
+        .panel--slam.reentering .slam-bottom {
+          animation: none !important;
+        }
+
         .panel--rules.reentering .rules-plaque {
           animation: none !important;
         }
@@ -4553,19 +4690,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: center;
         align-items: center;
         padding: 0;
-        /* Atmospheric depth - vignette edges */
-        background:
-          /* Top vignette */
-          linear-gradient(to bottom, rgba(10, 7, 5, 0.95) 0%, transparent 20%),
-          /* Bottom vignette */
-          linear-gradient(to top, rgba(10, 7, 5, 0.95) 0%, transparent 25%),
-          /* Central glow */
-          radial-gradient(ellipse at 50% 50%, rgba(28, 19, 15, 0.5) 0%, transparent 70%),
-          /* Base */
-          linear-gradient(180deg, #0a0705 0%, #1a120d 50%, #0d0906 100%);
+        /* Background image now handles atmosphere */
       }
 
-      /* Single unified container - THE PLAQUE */
+      /* Single unified container - THE PLAQUE - floating in the room */
       .rules-plaque {
         position: relative;
         z-index: 10;
@@ -4575,7 +4703,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-align: center;
         max-width: 540px;
         width: 100%;
-        padding: 0 5vw;
+        padding: 32px 5vw;
+        /* Floating plaque effect */
+        background: linear-gradient(
+          145deg,
+          rgba(18, 12, 8, 0.92) 0%,
+          rgba(10, 7, 5, 0.95) 100%
+        );
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 12px;
+        /* Depth - floating in the room */
+        box-shadow:
+          0 0 60px rgba(0, 0, 0, 0.8),
+          0 20px 60px rgba(0, 0, 0, 0.6),
+          0 0 100px rgba(212, 165, 116, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        /* Subtle backdrop blur for depth */
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
       }
 
       /* Header section - tightly coupled */
@@ -4634,12 +4779,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-bottom: 20px;
       }
 
-      /* Rule Cards - Brass plaques, not paper */
+      /* Rule Cards - Etched brass plaques */
       .rule-card {
         background:
-          linear-gradient(145deg, rgba(35, 25, 18, 0.85) 0%, rgba(18, 12, 8, 0.95) 100%);
-        border: 1px solid rgba(212, 165, 116, 0.12);
-        border-top-color: rgba(212, 165, 116, 0.25);
+          linear-gradient(145deg, rgba(28, 20, 14, 0.9) 0%, rgba(14, 10, 7, 0.95) 100%);
+        border: 1px solid rgba(212, 165, 116, 0.2);
         border-radius: var(--radius);
         padding: 14px 12px;
         text-align: center;
@@ -4647,19 +4791,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0;
         transform: translateY(12px);
         position: relative;
+        /* Etched/pressed effect - inset shadows */
         box-shadow:
-          0 1px 0 rgba(212, 165, 116, 0.1) inset,
-          0 -1px 0 rgba(0, 0, 0, 0.3) inset,
-          0 8px 24px rgba(0, 0, 0, 0.5);
+          inset 0 2px 4px rgba(0, 0, 0, 0.4),
+          inset 0 -1px 0 rgba(212, 165, 116, 0.1),
+          0 1px 0 rgba(255, 255, 255, 0.03);
       }
 
-      /* Brass edge highlight */
+      /* Brass corner accents - subtle */
       .rule-card::before {
         content: "";
         position: absolute;
-        inset: 3px;
-        border: 1px solid rgba(212, 165, 116, 0.05);
-        border-radius: calc(var(--radius) - 2px);
+        top: 4px;
+        left: 4px;
+        right: 4px;
+        bottom: 4px;
+        border: 1px solid rgba(212, 165, 116, 0.08);
+        border-radius: calc(var(--radius) - 3px);
         pointer-events: none;
       }
 
@@ -6467,11 +6615,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         <!-- TOP LETTERBOX - Event context sets the stage -->
         <div class="slam-top">
-          <p class="slam-context">CDL 1<span class="dot">•</span>January 31<span class="dot">•</span>Mr Garcia Cigars</p>
+          <p class="slam-context">January 31<span class="dot">•</span>Mr Garcia Cigars</p>
         </div>
 
         <!-- CENTER - The stakes command attention -->
         <div class="slam-center">
+          <!-- CDL 1 Badge - Domino tile as championship marker -->
+          <div class="slam-badge">
+            <span class="slam-badge__top">CDL</span>
+            <div class="slam-badge__divider"></div>
+            <span class="slam-badge__bottom">1</span>
+          </div>
+
           <div class="slam-container">
             <span class="slam-word slam-word--winner">Winner</span>
             <span class="slam-word slam-word--takes">Takes</span>
@@ -6489,6 +6644,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       <!-- Panel 5: Rules - "La Ley" - THE LAW (Unified Plaque) -->
       <section class="panel panel--rules" id="panelRules">
+        <div class="panel-bg" style="background-image: url('/FRAMES/frame-5.webp')"></div>
+        <div class="fog-layer"></div>
+        <div class="panel-overlay"></div>
+
         <div class="rules-plaque">
           <!-- Header - tightly coupled -->
           <div class="rules-header">
