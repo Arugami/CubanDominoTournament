@@ -72,6 +72,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transition: opacity 0.6s ease, visibility 0.6s ease;
         overflow: hidden;
       }
+      .loading-screen.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
 
       /* Film grain overlay - cinematic texture */
       .loading-screen::before {
@@ -379,6 +384,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         scroll-snap-align: start;
         scroll-snap-stop: always;
         position: relative;
+        isolation: isolate; /* Keep blend/film layers from affecting UI/text across panels */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -395,6 +401,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+        z-index: 0; /* Establish a stacking context so film grain never floats above typography (iOS quirk) */
       }
 
       /* Global Cinematic Vignette - Tobias Signature */
@@ -422,7 +429,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         inset: 0;
         background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.03'/%3E%3C/svg%3E");
         pointer-events: none;
-        z-index: 2;
+        z-index: 1;
         mix-blend-mode: overlay;
         opacity: 0.4;
       }
@@ -6707,7 +6714,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           return;
         }
 
-        // Brief moment to appreciate the logo, then fade
+        // Brief moment to appreciate the logo, then fade (keep interaction snappy)
         setTimeout(() => {
           loadingScreen.classList.add('is-hidden');
           // Start hero animations as the loading screen fades away (so it doesn't play "behind" it).
@@ -6717,8 +6724,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             if (loadingScreen.parentNode) {
               loadingScreen.remove();
             }
-          }, 600);
-        }, 800);
+          }, 650);
+        }, 400);
       }
 
       // Trigger dismissal on load or if already loaded
