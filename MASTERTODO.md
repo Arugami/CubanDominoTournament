@@ -266,6 +266,15 @@
 - [x] **Ticker CSS :has() removal** — Removed Safari-incompatible :has() selectors causing dimming issues
 - [x] **Ticker explicit visibility rules** — Added :not(.ticker-dimmed) CSS with !important to force full opacity
 - [x] **Ticker debug logging** — MutationObserver tracks class changes for Safari debugging
+- [x] **Mobile form panel breathing room** — Added `max(60px, 10vh)` top padding to prevent headline cutoff
+- [x] **Panel 2 & 3 headline positioning** — Lowered "Que Bola Asere" and Panel 3 headlines with `max(50px, 6vh)` padding
+- [x] **Form footer ticker clearance** — Added 80px bottom padding to prevent ticker overlap
+- [x] **La Mesa registration gate hardening** — Defensive checks in both `openChat()` and `toggleChat()` to prevent rapid-click bypass
+- [x] **Hero "La Salida" luminous glow** — 7-layer text-shadow for glowing effect on mobile
+- [x] **Hero tagline/subtitle readability** — Increased minimum sizes and opacity for mobile legibility
+- [x] **Loading screen hypnotic redesign** — Synchronized 3.5s heartbeat pulse, ember particles, orbital float, enhanced letter reveal
+- [x] **Loading screen timing extended** — 400ms → 1400ms for proper cinematic effect
+- [x] **Form slogan styling** — "La mesa te espera" in Bodoni Moda italic, confident (not precious) per Dana White's UFC edge
 
 ---
 
@@ -319,9 +328,68 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 14, 2026 (Hero Redesign + Ticker Safari Fix)
+**Last Updated:** January 15, 2026 (Mobile Polish + Loading Screen Hypnotic + Form Slogan)
 
 *"La mesa te espera."*
+
+---
+
+## Recent Session Notes (Jan 15, 2026) — Mobile Polish + Hypnotic Loading + Form Slogan
+
+### Mobile Form Panel Breathing Room
+**Problem:** On iPhone, form headline "La mesa te espera" was cut off at the top.
+
+**Solution:**
+- Changed mobile padding from `5vh` to `max(60px, 10vh)` — guaranteed minimum
+- Added `overflow-y: auto` to allow scrolling on small screens
+- Same fix applied to Panel 2 & 3 headlines with `max(50px, 6vh)`
+
+### La Mesa Registration Gate Hardening
+**Problem:** Rapid clicks on domino button could open La Mesa even when unregistered.
+
+**Solution:** Added defensive `localStorage.getItem('cdl_registered')` checks to BOTH `openChat()` and `toggleChat()` functions. Belt-and-suspenders approach.
+
+### Hero Text Hierarchy (Mobile Readability)
+**Problem:** "La Salida" was hard to read on mobile, tagline/subtitle too dim.
+
+**Solution:**
+- Added 7-layer luminous glow text-shadow to "La Salida"
+- Increased tagline minimum from 0.5rem to 0.65rem
+- Increased subtitle opacity from 0.55 to 0.78
+- Mobile-specific overrides with stronger glow
+
+### Loading Screen Hypnotic Redesign
+**Tobias Principle:** "Make them forget they're waiting."
+
+**Implemented:**
+- Synchronized 3.5s heartbeat pulse across all elements
+- Ember particles floating upward (cigar smoke feel)
+- Gentle orbital float with micro-rotation
+- Divider "slam" effect (scale + shadow spread)
+- Enhanced letter reveal (scale + rotation + blur)
+- Extended timing: 400ms → 1400ms
+
+**Removed:**
+- Light rays animation (too flashy, not classy per user feedback)
+
+### Form Slogan Styling
+**Problem:** "La mesa te espera" looked like a generic headline, not a memorable slogan.
+
+**Initial approach:** Em-dashes + reduced opacity (too precious/whispered)
+
+**User reminder:** Remember Dana White's UFC competitive edge — not too classy!
+
+**Final solution:**
+- Bodoni Moda italic (elegant but confident)
+- Full opacity (not whispered)
+- Clean without em-dashes
+- Balance of Cuban elegance and UFC confidence
+
+### Key Takeaways
+- 99% of users are on mobile — prioritize iPhone experience
+- Use CSS `max()` for guaranteed minimum padding
+- Balance elegance with competitive spirit (Dana White's UFC + Cuban culture)
+- Remove gimmicky effects in favor of confident simplicity
 
 ---
 
