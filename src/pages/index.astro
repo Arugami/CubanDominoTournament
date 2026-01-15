@@ -3041,6 +3041,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         making the ticker appear dimmed even when `.ticker-dimmed` is not set.
       */
       @supports (-webkit-touch-callout: none) {
+        .story {
+          -webkit-overflow-scrolling: touch;
+        }
         .chat-widget {
           z-index: 20001;
         }
@@ -3070,6 +3073,48 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
         .chromatic-aberration {
           z-index: 5;
+          mix-blend-mode: normal;
+          opacity: 0.18;
+          transform: translateZ(0);
+          -webkit-transform: translateZ(0);
+        }
+
+        /* iOS Safari stability: avoid blend-mode + heavy transforms during scroll-snap (can flicker). */
+        .panel-bg::after {
+          mix-blend-mode: normal;
+          opacity: 0.16;
+        }
+        .fog-layer {
+          filter: blur(45px);
+          animation: none;
+        }
+        .smoke-layer {
+          mix-blend-mode: normal;
+          opacity: 0.16;
+          animation: none;
+        }
+        .panel.in-view .smoke-layer {
+          opacity: 0.16;
+        }
+        .panel-bg {
+          transition: none;
+          transform: none !important;
+        }
+        .panel.in-view .panel-bg {
+          transform: none !important;
+        }
+
+        /* Revisit breath can flicker on iOS; keep re-entry stable. */
+        .panel--whisper.reentering .whisper-top,
+        .panel--whisper.reentering .whisper-bottom,
+        .panel--build.reentering .build-top,
+        .panel--build.reentering .build-center,
+        .panel--build.reentering .build-bottom,
+        .panel--slam.reentering .slam-top,
+        .panel--slam.reentering .slam-center,
+        .panel--slam.reentering .slam-bottom,
+        .panel--rules.reentering .rules-plaque {
+          animation: none !important;
         }
       }
 
@@ -5788,11 +5833,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           margin-bottom: 0;
         }
 
-        /* Footer flows naturally below form */
+        /* Footer flows naturally below form - needs ticker clearance */
         .form-footer-section {
           margin-top: 32px;
           padding-top: 24px;
-          padding-bottom: 24px;
+          padding-bottom: 80px; /* Clear the ticker */
         }
 
         .footer-contact {
@@ -5864,6 +5909,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .form-footer-section {
           margin-top: 24px;
           padding-top: 16px;
+          padding-bottom: 80px; /* Clear the ticker */
         }
       }
 
@@ -6787,9 +6833,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         const storyRect = storyEl.getBoundingClientRect();
         const panelRect = panelEl.getBoundingClientRect();
         const delta = panelRect.top - storyRect.top;
-        if (Math.abs(delta) <= 4) return; // already aligned; avoid iOS flicker/jump
+        if (Math.abs(delta) <= 24) return; // close enough; avoid iOS flicker/jump
         const targetTop = storyEl.scrollTop + delta;
         storyEl.scrollTo({ top: targetTop, behavior: 'auto' });
+      }
+
+      function alignPanelAfterSettle(panelEl) {
+        if (!storyEl || !panelEl) return;
+        let lastTop = storyEl.scrollTop;
+        let stableFrames = 0;
+        let frames = 0;
+
+        const step = () => {
+          frames += 1;
+          const top = storyEl.scrollTop;
+          if (Math.abs(top - lastTop) < 0.5) stableFrames += 1;
+          else stableFrames = 0;
+          lastTop = top;
+
+          if (stableFrames >= 3) {
+            if (typeof getPanelVisibilityRatio === 'function' && getPanelVisibilityRatio(panelEl) >= 0.9) {
+              snapToPanelTop(panelEl);
+            }
+            return;
+          }
+          if (frames < 28) requestAnimationFrame(step);
+        };
+
+        requestAnimationFrame(step);
       }
 
       function preventScroll(e) {
@@ -6839,7 +6910,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         entries.forEach(entry => {
           if (entry.isIntersecting && !whisperHasPlayed) {
             whisperHasPlayed = true;
-            snapToPanelTop(whisperPanel);
+            alignPanelAfterSettle(whisperPanel);
             lockScroll(7500, () => whisperPanel?.classList.add('has-played'));
           }
         });
@@ -6850,7 +6921,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         entries.forEach(entry => {
           if (entry.isIntersecting && !buildHasPlayed) {
             buildHasPlayed = true;
-            snapToPanelTop(buildPanel);
+            alignPanelAfterSettle(buildPanel);
             lockScroll(5500, () => buildPanel?.classList.add('has-played'));
           }
         });
@@ -6861,7 +6932,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         entries.forEach(entry => {
           if (entry.isIntersecting && !slamHasPlayed) {
             slamHasPlayed = true;
-            snapToPanelTop(slamPanel);
+            alignPanelAfterSettle(slamPanel);
             lockScroll(3500, () => slamPanel?.classList.add('has-played'));
           }
         });
@@ -6872,7 +6943,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         entries.forEach(entry => {
           if (entry.isIntersecting && !rulesHasPlayed) {
             rulesHasPlayed = true;
-            snapToPanelTop(rulesPanel);
+            alignPanelAfterSettle(rulesPanel);
             lockScroll(3000, () => rulesPanel?.classList.add('has-played'));
           }
         });
