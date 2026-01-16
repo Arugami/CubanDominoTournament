@@ -465,11 +465,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       @keyframes glowPulse {
         0%, 100% {
           transform: translate(-50%, -50%) scale(1);
-          opacity: 0.4;
+          opacity: 0.5;  /* Matches crescendo end — no jerk */
         }
         50% {
-          transform: translate(-50%, -50%) scale(1.2);
-          opacity: 0.8;
+          transform: translate(-50%, -50%) scale(1.05);  /* Subtle pulse, no blob */
+          opacity: 0.6;
         }
       }
 
@@ -4967,21 +4967,33 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 1;
         box-sizing: border-box;
         overflow: hidden;
+        padding: 0; /* Override base panel padding - full bleed */
       }
 
-      /* Cinematic overlay - deep vignette, the room recedes into memory */
+      /* Full bleed background - extend beyond edges for seamless feel */
+      .panel--postscript .panel-bg {
+        inset: -5%;
+        width: 110%;
+        height: 110%;
+      }
+
+      /* Cinematic overlay - deep vignette, seamless edges fade to black */
       .panel-overlay--postscript {
+        /* Extend overlay beyond panel to cover any edge artifacts */
+        inset: -5%;
+        width: 110%;
+        height: 110%;
         background:
           /* Film grain texture - the room breathes */
           url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
-          /* Heavy top vignette - darkness descends like closing eyes */
-          linear-gradient(to bottom, rgba(10, 7, 5, 0.85) 0%, rgba(10, 7, 5, 0.4) 25%, transparent 50%),
-          /* Heavy bottom vignette - grounds the space, fades to credits */
-          linear-gradient(to top, rgba(10, 7, 5, 0.95) 0%, rgba(10, 7, 5, 0.6) 20%, transparent 45%),
+          /* Top fade to black - seamless transition from previous panel */
+          linear-gradient(to bottom, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.7) 15%, rgba(10, 7, 5, 0.3) 30%, transparent 50%),
+          /* Bottom fade to black - seamless transition to footer */
+          linear-gradient(to top, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.8) 12%, rgba(10, 7, 5, 0.4) 25%, transparent 45%),
           /* Side vignettes - tunnel vision, focus on center */
-          linear-gradient(90deg, rgba(10, 7, 5, 0.7) 0%, transparent 25%, transparent 75%, rgba(10, 7, 5, 0.7) 100%),
+          linear-gradient(90deg, rgba(10, 7, 5, 0.85) 0%, rgba(10, 7, 5, 0.4) 15%, transparent 30%, transparent 70%, rgba(10, 7, 5, 0.4) 85%, rgba(10, 7, 5, 0.85) 100%),
           /* Deep radial vignette - the room is a memory */
-          radial-gradient(ellipse 80% 70% at 50% 50%, transparent 20%, rgba(10, 7, 5, 0.5) 60%, rgba(10, 7, 5, 0.85) 100%);
+          radial-gradient(ellipse 75% 65% at 50% 50%, transparent 15%, rgba(10, 7, 5, 0.5) 55%, rgba(10, 7, 5, 0.9) 100%);
       }
 
       /* Ember glow - warm light leak from the chandelier */
@@ -5019,37 +5031,37 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 5;
       }
 
-      /* Mobile: Balanced overlays - moody but visible */
+      /* Mobile: Seamless edges, moody atmosphere */
       @media (max-width: 768px) {
         .panel-overlay--postscript {
           background:
             /* Film grain */
             url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
-            /* Heavy top vignette - darkness descends */
-            linear-gradient(to bottom, rgba(10, 7, 5, 0.75) 0%, rgba(10, 7, 5, 0.3) 30%, transparent 50%),
-            /* Heavy bottom vignette - fades to credits */
-            linear-gradient(to top, rgba(10, 7, 5, 0.85) 0%, rgba(10, 7, 5, 0.5) 25%, transparent 45%),
+            /* Top fade to black - seamless from previous panel */
+            linear-gradient(to bottom, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.7) 12%, rgba(10, 7, 5, 0.35) 28%, transparent 48%),
+            /* Bottom fade to black - seamless to footer */
+            linear-gradient(to top, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.8) 10%, rgba(10, 7, 5, 0.45) 22%, transparent 42%),
             /* Side vignettes - tunnel focus */
-            linear-gradient(90deg, rgba(10, 7, 5, 0.6) 0%, transparent 20%, transparent 80%, rgba(10, 7, 5, 0.6) 100%),
+            linear-gradient(90deg, rgba(10, 7, 5, 0.9) 0%, rgba(10, 7, 5, 0.5) 12%, transparent 28%, transparent 72%, rgba(10, 7, 5, 0.5) 88%, rgba(10, 7, 5, 0.9) 100%),
             /* Deep radial vignette - room as memory */
-            radial-gradient(ellipse 85% 75% at 50% 50%, transparent 25%, rgba(10, 7, 5, 0.45) 65%, rgba(10, 7, 5, 0.75) 100%);
+            radial-gradient(ellipse 80% 70% at 50% 50%, transparent 18%, rgba(10, 7, 5, 0.5) 55%, rgba(10, 7, 5, 0.85) 100%);
         }
 
         /* Full fog on mobile */
         .panel--postscript.in-view .fog-layer {
-          opacity: 0.8 !important;
+          opacity: 0.85 !important;
         }
 
         /* Smoke layer on mobile */
         .panel--postscript.in-view .smoke-layer {
-          opacity: 0.5 !important;
+          opacity: 0.55 !important;
         }
 
         /* Ember glow */
         .panel--postscript::after {
           background:
-            radial-gradient(ellipse 50% 35% at 50% 20%, rgba(212, 165, 116, 0.18) 0%, transparent 70%),
-            radial-gradient(ellipse 70% 50% at 50% 65%, rgba(183, 106, 59, 0.1) 0%, transparent 60%);
+            radial-gradient(ellipse 50% 35% at 50% 20%, rgba(212, 165, 116, 0.15) 0%, transparent 70%),
+            radial-gradient(ellipse 70% 50% at 50% 60%, rgba(183, 106, 59, 0.1) 0%, transparent 60%);
         }
       }
 
