@@ -15,12 +15,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <title>La Salida | Cuban Domino League</title>
     <meta
       name="description"
-      content="La Salida — The first Cuban Domino League tournament at Mr Garcia Cigars. January 31, 2025. $25 per player, 16 spots. Winner takes all."
+      content="La Salida — The first Cuban Domino League tournament at Mr Garcia Cigars. January 31, 2025. They taught you for this moment. Make them proud."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,800;6..96,900&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,800;6..96,900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -79,7 +79,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: opacity 0.8s ease, visibility 0.8s ease;
+        transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
         overflow: hidden;
       }
 
@@ -195,12 +195,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: translate(-50%, -50%);
         background: radial-gradient(
           ellipse 60% 50% at 50% 48%,
-          rgba(183, 106, 59, 0.12) 0%,
-          rgba(139, 69, 19, 0.06) 30%,
-          rgba(100, 50, 20, 0.03) 50%,
+          rgba(183, 106, 59, 0.20) 0%,
+          rgba(139, 69, 19, 0.12) 30%,
+          rgba(100, 50, 20, 0.06) 50%,
           transparent 70%
         );
-        animation: ambientBreath var(--heartbeat) ease-in-out infinite;
+        /* Phase 1: Fog breathes alone in darkness, then syncs to heartbeat */
+        animation:
+          fogAlone 3s ease-in-out,
+          ambientBreath var(--heartbeat) ease-in-out 4.5s infinite;
+      }
+
+      /* Phase 1: Fog breathes alone — you wait in darkness */
+      @keyframes fogAlone {
+        0% {
+          transform: translate(-50%, -50%) scale(0.8);
+          opacity: 0.2;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.15);
+          opacity: 0.9;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.6;
+        }
       }
 
       @keyframes ambientBreath {
@@ -223,9 +242,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         gap: 0;
         position: relative;
         padding: 20px 0;
+        /* Phase 6: Float begins with heartbeat */
         animation:
-          tileAppear 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards,
-          tileFloat 8s ease-in-out 1.5s infinite;
+          tileAppear 1.5s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards,
+          tileFloat 8s ease-in-out 4.5s infinite;
       }
 
       @keyframes tileAppear {
@@ -269,11 +289,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-style: italic;
         font-weight: 400;
         font-size: 100px;
-        color: #f0d4a8;
+        color: #f0d4a8; /* Solid luminous color — the letters ARE the light */
         line-height: 1;
         letter-spacing: 0;
         opacity: 0;
-        /* The letters ARE the light source */
+        /* The letters ARE the light source — intense mystical glow */
         text-shadow:
           0 0 5px rgba(255, 255, 255, 0.5),
           0 0 15px var(--glow-warm),
@@ -281,10 +301,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 60px rgba(212, 165, 116, 0.8),
           0 0 100px var(--glow-deep),
           0 0 150px rgba(183, 106, 59, 0.4);
+        /* Phase 3: Letters emerge from the light, slow and deliberate */
         animation:
-          letterReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+          letterReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards,
           letterPulse var(--heartbeat) ease-in-out infinite;
-        animation-delay: 0.3s, 1.5s;
+        animation-delay: 2s, 4.5s;  /* Emerge after glow, pulse after stillness */
       }
 
       /* Dramatic letter entrance - emerge from the void */
@@ -307,12 +328,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Synchronized heartbeat glow - all letters breathe together */
       @keyframes letterPulse {
         0%, 100% {
+          /* Softer but still present — letters never feel "off" */
           text-shadow:
-            0 0 5px rgba(255, 255, 255, 0.3),
-            0 0 15px rgba(232, 190, 140, 0.6),
-            0 0 30px rgba(212, 165, 116, 0.4),
-            0 0 60px rgba(183, 106, 59, 0.2);
-          filter: brightness(0.95);
+            0 0 5px rgba(255, 255, 255, 0.4),
+            0 0 15px rgba(232, 190, 140, 0.7),
+            0 0 30px rgba(212, 165, 116, 0.5),
+            0 0 60px rgba(183, 106, 59, 0.3);
+          filter: brightness(1);
         }
         50% {
           text-shadow:
@@ -327,19 +349,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .cdl-tile__letter--c {
         align-self: flex-start;
-        margin-left: 10px;
-        animation-delay: 0.2s, 1.5s;
+        margin-left: 16px;  /* Proportional to container */
+        animation-delay: 2s, 4.5s;  /* First to emerge */
       }
 
       .cdl-tile__letter--d {
         align-self: flex-end;
-        margin-right: 10px;
-        margin-top: -32px;
-        animation-delay: 0.5s, 1.5s;
+        margin-right: 16px;  /* Proportional to container */
+        margin-top: -20px;  /* Tighter diagonal — leaning together */
+        animation-delay: 2.6s, 4.5s;  /* 0.6s after C */
       }
 
       .cdl-tile__letter--l {
-        animation-delay: 0.8s, 1.5s;
+        animation-delay: 3.2s, 4.5s;  /* 0.6s after D */
       }
 
       /* ===== THE DIVIDER - "The Bone" placed on the table ===== */
@@ -353,9 +375,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 10px var(--glow-warm),
           0 0 25px rgba(212, 165, 116, 0.7),
           0 0 50px var(--glow-deep);
+        /* Phase 4: The Bone slams between C/D and L */
         animation:
-          dividerSlam 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s forwards,
-          dividerPulse var(--heartbeat) ease-in-out 1.5s infinite;
+          dividerSlam 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 3s forwards,
+          dividerPulse var(--heartbeat) ease-in-out 4.5s infinite;
       }
 
       /* The slam - like placing a domino tile */
@@ -382,7 +405,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Synchronized with letter heartbeat */
       @keyframes dividerPulse {
         0%, 100% {
-          opacity: 0.7;
+          opacity: 0.8;
           box-shadow:
             0 0 6px rgba(232, 190, 140, 0.5),
             0 0 15px rgba(212, 165, 116, 0.3),
@@ -403,7 +426,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         width: 200px;
       }
 
-      /* Inner glow behind the tile */
+      /* Inner glow behind the tile — reinforces that letters emit light */
       .cdl-tile__glow {
         position: absolute;
         width: 280px;
@@ -413,14 +436,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: translate(-50%, -50%);
         background: radial-gradient(
           circle,
-          rgba(212, 165, 116, 0.2) 0%,
-          rgba(183, 106, 59, 0.1) 30%,
-          transparent 60%
+          rgba(212, 165, 116, 0.30) 0%,
+          rgba(183, 106, 59, 0.18) 35%,
+          transparent 65%
         );
         border-radius: 50%;
-        animation: glowPulse var(--heartbeat) ease-in-out infinite;
+        opacity: 0;
+        /* Phase 2: Glow crescendo — light appears before letters */
+        animation:
+          glowCrescendo 2s ease-out 1s forwards,
+          glowPulse var(--heartbeat) ease-in-out 4.5s infinite;
         pointer-events: none;
         z-index: -1;
+      }
+
+      /* Phase 2: Glow crescendo — something is coming */
+      @keyframes glowCrescendo {
+        0% {
+          transform: translate(-50%, -50%) scale(0.5);
+          opacity: 0;
+        }
+        60% {
+          transform: translate(-50%, -50%) scale(1.1);
+          opacity: 0.7;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.5;
+        }
       }
 
       @keyframes glowPulse {
@@ -795,8 +838,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       @keyframes heroSettle {
         0% {
           opacity: 0;
-          transform: translate3d(0, 10px, 0) scale(1.05);
-          filter: blur(12px);
+          transform: translate3d(0, 20px, 0) scale(1.02);  /* More lift, less scale */
+          filter: blur(8px);  /* Cleaner entry */
         }
         100% {
           opacity: 1;
@@ -834,11 +877,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Stagger the fade-in timing - CDL 1 badge first, then cascade down */
-      body.is-ready .panel--hero .hero-badge { animation-delay: 0.1s !important; }
-      body.is-ready .panel--hero .event-title { animation-delay: 0.2s !important; }
-      body.is-ready .panel--hero .event-numeral { animation-delay: 0.25s !important; }
-      body.is-ready .panel--hero .hero-tagline { animation-delay: 0.4s !important; }
-      body.is-ready .panel--hero .hero-subtitle { animation-delay: 0.55s !important; }
+      /* Tighter stagger = unified reveal, like one "scene" appearing */
+      body.is-ready .panel--hero .hero-badge { animation-delay: 0s !important; }
+      body.is-ready .panel--hero .event-title { animation-delay: 0.08s !important; }
+      body.is-ready .panel--hero .event-numeral { animation-delay: 0.14s !important; }
+      body.is-ready .panel--hero .hero-tagline { animation-delay: 0.22s !important; }
+      body.is-ready .panel--hero .hero-subtitle { animation-delay: 0.32s !important; }
 
       /* Kill any ::after shine effects on hero text */
       .panel--hero .event-numeral::after {
@@ -1097,10 +1141,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .hero-badge__top,
       .hero-badge__bottom {
         font-family: "Bodoni Moda", serif;
-        font-weight: 700;
-        color: var(--brass);
-        text-shadow: 0 0 8px rgba(212, 165, 116, 0.4);
-        letter-spacing: 0.04em;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: 0.08em;
+        /* Brass-to-copper gradient — matches footer CDL */
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
       .hero-badge__top {
@@ -1421,7 +1469,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 8vh 6vw 12vh; /* Generous top breathing - title card descending */
+        padding: 8vh 8vw 12vh; /* Left padding for dialogue feel */
         background: linear-gradient(
           to bottom,
           rgba(10, 7, 5, 0.98) 0%,
@@ -1430,34 +1478,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           rgba(10, 7, 5, 0) 100%
         );
         display: flex;
-        justify-content: center;
+        justify-content: flex-start; /* Left-aligned — he's talking to you */
         pointer-events: none;
       }
 
       .whisper-greeting {
         font-family: "Bodoni Moda", serif;
-        font-style: italic; /* Warm whisper, like Panel 3's setup */
+        font-style: italic;
         font-weight: 400;
-        font-size: clamp(1.1rem, 4vw, 1.6rem); /* Small — matches Panel 3 top line */
-        color: rgba(255, 255, 255, 0.9);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        text-align: center;
+        font-size: clamp(1.3rem, 5vw, 2rem);
+        color: rgba(255, 255, 255, 0.95);
+        letter-spacing: 0.15em;
+        text-align: left; /* Left-aligned — feels like dialogue, he's talking to you */
         opacity: 0;
-        transition: opacity 420ms ease;
+        /* Cinematic text shadow — words forming from smoke */
         text-shadow:
-          0 0 20px rgba(212, 165, 116, 0.3),
-          0 2px 15px rgba(0, 0, 0, 0.5);
+          0 0 40px rgba(212, 165, 116, 0.5),
+          0 0 80px rgba(212, 165, 116, 0.3),
+          0 4px 20px rgba(0, 0, 0, 0.8);
       }
 
-      /* BOTTOM LETTERBOX - The narrative rises from shadow */
+      /* BOTTOM LETTERBOX - Dialogue continues from him */
       .whisper-bottom {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 12vh 6vw 14vh; /* Extra bottom for La Mesa */
+        padding: 12vh 8vw 14vh; /* Match top padding for dialogue feel */
         background: linear-gradient(
           to top,
           rgba(10, 7, 5, 0.98) 0%,
@@ -1467,8 +1515,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         );
         display: flex;
         flex-direction: column;
-        align-items: center;
-        text-align: center;
+        align-items: flex-start; /* Left-aligned — continuous dialogue */
+        text-align: left;
         pointer-events: none;
       }
 
@@ -1488,6 +1536,59 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transition: opacity 420ms ease;
         letter-spacing: 0.05em;
         text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+      }
+
+      /* THE LINE - "You've been waiting for this." - the moment arrives */
+      .whisper-line--ancestors {
+        font-size: clamp(1.4rem, 5vw, 2.2rem); /* Slightly smaller to fit on one line */
+        color: rgba(255, 255, 255, 0.85);
+        letter-spacing: 0.06em;
+        margin-bottom: 3vh;
+        white-space: nowrap; /* Keep on one line */
+        text-shadow:
+          0 0 40px rgba(212, 165, 116, 0.4),
+          0 4px 25px rgba(0, 0, 0, 0.7);
+      }
+
+      /* "They" — the ancestors, emphasized in brass */
+      .ancestors-they {
+        font-style: normal;
+        color: var(--brass);
+        text-shadow:
+          0 0 30px rgba(212, 165, 116, 0.8),
+          0 0 60px rgba(212, 165, 116, 0.5),
+          0 0 100px rgba(212, 165, 116, 0.3);
+      }
+
+      /* Animation for ancestors line - delayed, weighted, the truth arrives */
+      .panel--whisper.in-view:not(.has-played) .whisper-line--ancestors {
+        animation: ancestorsTruth 2s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
+      }
+
+      /* The ancestors speak - slow dawning realization */
+      @keyframes ancestorsTruth {
+        0% {
+          opacity: 0;
+          transform: translateY(30px) scale(0.95);
+          filter: blur(12px);
+          letter-spacing: 0.15em;
+        }
+        40% {
+          opacity: 0.7;
+          filter: blur(4px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+          letter-spacing: 0.08em;
+        }
+      }
+
+      .panel--whisper.has-played .whisper-line--ancestors {
+        opacity: 1;
+        transform: none;
+        filter: none;
       }
 
       /* THE LINE - The challenge that sets up INHERITED */
@@ -1527,9 +1628,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 50px rgba(212, 165, 116, 0.4);
       }
 
-      /* Cinematic animations - tight 2-beat sequence */
+      /* Cinematic animations - slow, weighted, like memories surfacing */
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        animation: greetingSmoke 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
@@ -1558,7 +1659,36 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Simple greeting reveal - fade in with subtle lift */
+      /* Greeting forms from cigar smoke - slow, deliberate, intimate */
+      @keyframes greetingSmoke {
+        0% {
+          opacity: 0;
+          transform: translateY(15px) scale(0.92);
+          filter: blur(20px);
+          letter-spacing: 0.25em;
+        }
+        30% {
+          opacity: 0.5;
+          filter: blur(10px);
+        }
+        60% {
+          opacity: 0.85;
+          filter: blur(3px);
+          letter-spacing: 0.18em;
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+          letter-spacing: 0.15em;
+          text-shadow:
+            0 0 50px rgba(212, 165, 116, 0.6),
+            0 0 100px rgba(212, 165, 116, 0.3),
+            0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+      }
+
+      /* Simple greeting reveal - fallback */
       @keyframes greetingReveal {
         0% {
           opacity: 0;
@@ -1785,21 +1915,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 2px 15px rgba(0, 0, 0, 0.5);
       }
 
-      /* "INHERITED." - THE WORD. The slam. The climax. */
+      /* "INHERITED." - THE SINGLE WORD. Alone. Massive. The truth. */
       .build-word--inherited {
-        font-size: clamp(2.6rem, 12vw, 6rem); /* Reduced for uppercase */
-        font-style: normal; /* Regular — mirrors "Que Bola Asere" (bookend) */
+        font-size: clamp(3.5rem, 18vw, 10rem); /* Massive — it stands alone */
+        font-style: normal;
         color: #fff;
         font-weight: 500;
-        letter-spacing: 0.06em; /* Positive spacing for all-caps readability */
-        line-height: 0.9;
-        /* Luminous glow - this word RADIATES */
+        letter-spacing: 0.1em;
+        line-height: 0.85;
+        /* Luminous glow - the ancestors are speaking through this word */
         text-shadow:
-          0 0 18px rgba(255, 255, 255, 0.22),
-          0 0 30px rgba(212, 165, 116, 0.5),
-          0 0 60px rgba(212, 165, 116, 0.3),
-          0 0 100px rgba(212, 165, 116, 0.15),
-          0 4px 30px rgba(0, 0, 0, 0.6);
+          0 0 25px rgba(255, 255, 255, 0.35),
+          0 0 50px rgba(212, 165, 116, 0.7),
+          0 0 100px rgba(212, 165, 116, 0.5),
+          0 0 150px rgba(212, 165, 116, 0.25),
+          0 8px 50px rgba(0, 0, 0, 0.8);
       }
 
       /* BOTTOM LETTERBOX - Scroll hint emerges after revelation */
@@ -1845,16 +1975,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: cinematicReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
       }
 
-      .panel--build.in-view:not(.has-played) .build-word--itwas {
-        animation: wordBuildBright 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
-      }
-
+      /* "INHERITED." appears alone - slow dawning, not a slam */
       .panel--build.in-view:not(.has-played) .build-word--inherited {
-        animation: revelationSlam 1.2s cubic-bezier(0.16, 1, 0.3, 1) 2.5s forwards;
+        animation: inheritedDawning 3s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
       }
 
       .panel--build.in-view:not(.has-played) .build-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 3.8s forwards;
+        animation: scrollHintReveal 1s ease-out 4s forwards;
       }
 
       .panel--build.has-played .build-setup {
@@ -1914,10 +2041,44 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
+      /* "INHERITED." dawns like a memory surfacing - slow, weighted, inevitable */
+      @keyframes inheritedDawning {
+        0% {
+          opacity: 0;
+          transform: scale(0.85);
+          filter: blur(25px);
+          letter-spacing: 0.2em;
+        }
+        20% {
+          opacity: 0.3;
+          filter: blur(15px);
+        }
+        50% {
+          opacity: 0.7;
+          filter: blur(5px);
+          letter-spacing: 0.12em;
+        }
+        80% {
+          opacity: 0.95;
+          filter: blur(1px);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+          filter: blur(0);
+          letter-spacing: 0.1em;
+          text-shadow:
+            0 0 30px rgba(255, 255, 255, 0.4),
+            0 0 60px rgba(212, 165, 116, 0.8),
+            0 0 120px rgba(212, 165, 116, 0.5),
+            0 0 180px rgba(212, 165, 116, 0.3);
+        }
+      }
+
       /* ================================================
-         SCENE 3: THE STAKES - Winner Takes All
-         The final word "ALL" is the money shot.
-         Everything is on the line.
+         SCENE 3: THE MISSION - Make Them Proud
+         The final word "PROUD" is the emotional slam.
+         This is why you're here. For them.
          ================================================ */
 
       .panel--slam {
@@ -2005,10 +2166,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .slam-badge__top,
       .slam-badge__bottom {
         font-family: "Bodoni Moda", serif;
-        font-weight: 700;
-        color: var(--brass);
-        text-shadow: 0 0 10px rgba(212, 165, 116, 0.5);
-        letter-spacing: 0.05em;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: 0.08em;
+        /* Brass-to-copper gradient — matches footer CDL */
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
       .slam-badge__top {
@@ -2394,10 +2559,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 20px 28px;
-        margin-top: 36px;
-        margin-bottom: 28px;
+        border-radius: 14px;
+        padding: 14px 18px;
+        margin-top: 18px;
+        margin-bottom: 18px;
         max-width: 400px;
         width: 100%;
         margin-left: auto;
@@ -3328,27 +3493,37 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* "LA MESA" badge on left - Tobias: "The room is alive" */
+      /* "LA MESA" badge on left - ESPN sporty energy */
       .mesa-ticker__badge {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        padding: 0 16px;
-        background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+        padding: 0 18px;
+        background: linear-gradient(135deg, #cc0000 0%, #8a0000 100%);
         color: #ffffff;
-        font-family: 'IBM Plex Sans', system-ui, sans-serif;
-        font-size: 0.7rem;
+        font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', system-ui, sans-serif;
+        font-size: 0.8rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.02em; /* Tighter — sporty condensed feel */
         flex-shrink: 0;
         position: relative;
         z-index: 3;
+        /* Slight skew — motion energy */
+        transform: skewX(-6deg);
         box-shadow:
-          4px 0 15px rgba(0,0,0,0.5),
-          inset 0 1px 0 rgba(255,255,255,0.15), /* Tobias: Inner light */
-          0 0 20px rgba(204, 0, 0, 0.3); /* Warm glow */
+          4px 0 15px rgba(0,0,0,0.6),
+          inset 0 1px 0 rgba(255,255,255,0.2),
+          0 0 25px rgba(204, 0, 0, 0.4);
+        /* Hard edge on right — ESPN style */
+        clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
+      }
+
+      /* Un-skew the text inside */
+      .mesa-ticker__badge-dot,
+      .mesa-ticker__badge-text {
+        transform: skewX(6deg);
       }
 
       .mesa-ticker__badge-dot {
@@ -3579,104 +3754,104 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* "Unlock La Mesa" hint bubble (shown when unregistered user taps the domino) */
+      /* "Unlock La Mesa" — ESPN credential / press pass aesthetic */
       .mesa-help {
         position: fixed;
         right: calc(14px + env(safe-area-inset-right));
         left: auto;
         bottom: calc(46px + 14px + env(safe-area-inset-bottom));
         z-index: 15000;
-        width: min(420px, calc(100vw - 28px));
+        width: min(280px, calc(100vw - 28px));
         margin: 0;
-        background: rgba(28, 19, 15, 0.92);
-        border: 1px solid rgba(212, 165, 116, 0.22);
-        border-radius: 12px;
-        padding: 10px 10px 10px 12px;
-        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65);
+        background: linear-gradient(135deg, rgba(18, 12, 8, 0.98) 0%, rgba(12, 8, 5, 0.98) 100%);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        /* Sharp edges — credential, not notification */
+        border: 1px solid rgba(212, 165, 116, 0.3);
+        border-left: 3px solid var(--brass);
+        border-radius: 2px;
+        padding: 0;
+        overflow: hidden;
+        box-shadow:
+          0 20px 60px rgba(0, 0, 0, 0.6),
+          0 4px 16px rgba(0, 0, 0, 0.4);
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateX(20px);
         pointer-events: none;
-        transition: opacity 220ms ease, transform 220ms ease;
-      }
-
-      /* Small pointer toward the domino button (keeps it feeling like guidance, not a modal) */
-      .mesa-help::after {
-        content: "";
-        position: absolute;
-        right: 18px;
-        bottom: -7px;
-        width: 14px;
-        height: 14px;
-        background: rgba(28, 19, 15, 0.92);
-        border-right: 1px solid rgba(212, 165, 116, 0.22);
-        border-bottom: 1px solid rgba(212, 165, 116, 0.22);
-        transform: rotate(45deg);
+        transition: opacity 180ms ease, transform 180ms ease;
       }
 
       .mesa-help.is-visible {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
         pointer-events: auto;
       }
+
       @media (max-width: 768px) {
         .mesa-help {
           right: calc(12px + env(safe-area-inset-right));
-          width: min(360px, calc(100vw - 24px));
+          width: min(300px, calc(100vw - 24px));
           bottom: calc(40px + 12px + env(safe-area-inset-bottom));
         }
       }
 
-      .mesa-help__row {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-      }
-      .mesa-help__icon {
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        background: rgba(212, 165, 116, 0.12);
-        border: 1px solid rgba(212, 165, 116, 0.22);
-        color: var(--brass);
-        flex: 0 0 auto;
-        margin-top: 1px;
-      }
-      .mesa-help__title {
-        font-family: "Bodoni Moda", serif;
-        font-style: italic;
-        color: var(--brass);
-        font-size: 0.9rem;
-        line-height: 1.2;
-        margin-bottom: 4px;
-      }
-      .mesa-help__text {
-        color: rgba(255, 255, 255, 0.75);
-        font-size: 0.82rem;
-        line-height: 1.35;
-      }
-      .mesa-help__text strong {
-        color: rgba(255, 255, 255, 0.92);
+      /* ACCESS badge — like a credential strip */
+      .mesa-help__badge {
+        background: var(--brass);
+        color: #0a0705;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
         font-weight: 700;
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        padding: 5px 14px;
+        text-transform: uppercase;
       }
+
+      .mesa-help__content {
+        padding: 14px 16px 12px;
+      }
+
+      .mesa-help__title {
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+        font-weight: 700;
+        color: #fff;
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .mesa-help__text {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.8rem;
+        line-height: 1.4;
+        margin: 0;
+      }
+
       .mesa-help__dismiss {
         appearance: none;
-        border: 1px solid rgba(212, 165, 116, 0.22);
-        background: rgba(10, 6, 4, 0.35);
-        color: rgba(255, 255, 255, 0.8);
-        border-radius: 12px;
-        padding: 7px 10px;
-        font-family: "IBM Plex Sans", system-ui, sans-serif;
-        font-size: 0.7rem;
-        font-weight: 700;
+        width: 100%;
+        border: none;
+        border-top: 1px solid rgba(212, 165, 116, 0.15);
+        background: rgba(212, 165, 116, 0.06);
+        color: var(--brass);
+        padding: 11px 16px;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 0.75rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         cursor: pointer;
-        flex: 0 0 auto;
+        transition: background 150ms ease;
       }
+
+      .mesa-help__dismiss:hover {
+        background: rgba(212, 165, 116, 0.12);
+      }
+
       .mesa-help__dismiss:active {
-        transform: scale(0.98);
+        background: rgba(212, 165, 116, 0.08);
       }
 
       @keyframes tickerScroll {
@@ -4724,11 +4899,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         min-height: 100dvh;
         height: 100vh;
         height: 100dvh;
-        padding: 24px;
-        padding-top: 12vh; /* Breathing room at top */
-        padding-bottom: 80px;
+        padding: 5vh 24px 90px; /* Top breathing room + ticker clearance */
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: flex-start; /* Start from top so button isn't cut off */
+        box-sizing: border-box;
+        /* Base `.panel` uses `overflow: hidden`; allow the form scene to scroll when content exceeds the viewport. */
+        overflow-x: hidden;
+        overflow-y: hidden;
         /* Atmospheric depth - Tobias: "Rooms, Not Hallways" */
         background:
           /* Top vignette - darkness descends */
@@ -4751,6 +4930,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-direction: column;
         align-items: center;
         text-align: center;
+        width: 100%;
+        max-width: 480px;
       }
 
       /* Form slogan - confident invitation, Cuban elegance meets UFC edge */
@@ -4771,30 +4952,106 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-bottom: 24px;
       }
 
-      /* Footer panel - contact + venue, separated from the form (mobile wants a second swipe) */
-      .panel--footer {
+      /* ========================================
+         POSTSCRIPT PANEL - The Room at Rest
+         Pure visual punctuation. No text. Just atmosphere.
+         "Dark UI is about depth, not darkness.
+          It's layers of smoke, not a black wall." — Tobias
+         ======================================== */
+      .panel--postscript {
         min-height: 100vh;
         min-height: 100dvh;
         height: 100vh;
         height: 100dvh;
-        padding: 24px;
-        padding-bottom: 90px; /* Ticker clearance */
+        display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        background:
-          linear-gradient(to bottom, rgba(10, 7, 5, 0.9) 0%, transparent 15%),
-          linear-gradient(to top, rgba(10, 7, 5, 0.95) 0%, transparent 20%),
-          radial-gradient(ellipse at 50% 40%, rgba(183, 106, 59, 0.06) 0%, transparent 50%),
-          radial-gradient(ellipse at 50% 50%, rgba(28, 19, 15, 0.4) 0%, transparent 70%),
-          linear-gradient(180deg, #0a0705 0%, #1a120d 40%, #0d0906 100%);
+        position: relative;
+        z-index: 1;
+        box-sizing: border-box;
+        overflow: hidden;
       }
 
+      /* Cinematic overlay - deep vignette, the room recedes into memory */
+      .panel-overlay--postscript {
+        background:
+          /* Film grain texture - the room breathes */
+          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+          /* Heavy top vignette - darkness descends like closing eyes */
+          linear-gradient(to bottom, rgba(10, 7, 5, 0.85) 0%, rgba(10, 7, 5, 0.4) 25%, transparent 50%),
+          /* Heavy bottom vignette - grounds the space, fades to credits */
+          linear-gradient(to top, rgba(10, 7, 5, 0.95) 0%, rgba(10, 7, 5, 0.6) 20%, transparent 45%),
+          /* Side vignettes - tunnel vision, focus on center */
+          linear-gradient(90deg, rgba(10, 7, 5, 0.7) 0%, transparent 25%, transparent 75%, rgba(10, 7, 5, 0.7) 100%),
+          /* Deep radial vignette - the room is a memory */
+          radial-gradient(ellipse 80% 70% at 50% 50%, transparent 20%, rgba(10, 7, 5, 0.5) 60%, rgba(10, 7, 5, 0.85) 100%);
+      }
+
+      /* Ember glow - warm light leak from the chandelier */
+      .panel--postscript::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          /* Chandelier glow - top center warm bloom */
+          radial-gradient(ellipse 40% 30% at 50% 15%, rgba(212, 165, 116, 0.15) 0%, transparent 70%),
+          /* Table warmth - where the game was played */
+          radial-gradient(ellipse 60% 40% at 50% 70%, rgba(183, 106, 59, 0.08) 0%, transparent 60%);
+        mix-blend-mode: color-dodge;
+        pointer-events: none;
+        z-index: 4;
+        animation: postscriptEmber 12s ease-in-out infinite alternate;
+      }
+
+      @keyframes postscriptEmber {
+        0% { opacity: 0.5; }
+        100% { opacity: 0.8; }
+      }
+
+      /* Chromatic aberration - vintage film feel */
+      .panel--postscript::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: 0.3;
+        mix-blend-mode: screen;
+        background:
+          radial-gradient(circle at 49.5% 50%, rgba(255, 100, 50, 0.06) 0%, transparent 70%),
+          radial-gradient(circle at 50.5% 50%, rgba(50, 100, 255, 0.06) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      /* Footer panel - clean dark credits */
+      .panel--footer {
+        min-height: 60vh;
+        min-height: 60dvh;
+        height: auto;
+        padding: 48px 24px;
+        padding-bottom: 100px; /* Ticker clearance */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+        box-sizing: border-box;
+        background:
+          radial-gradient(ellipse at 50% 30%, rgba(183, 106, 59, 0.04) 0%, transparent 50%),
+          linear-gradient(180deg, #0a0705 0%, #0d0906 100%);
+      }
+
+      /* Footer section — cinematic closing credits */
       .event-footer-section {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         text-align: center;
-        padding-top: 24px;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
       }
 
       /* ========================================
@@ -5200,7 +5457,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border: 1px solid rgba(183, 106, 59, 0.2);
         border-top-color: rgba(212, 165, 116, 0.25);
         border-radius: 4px;
-        padding: 44px 40px; /* Slightly more vertical breathing room */
+        padding: 34px 34px;
         max-width: 520px;
         width: 100%;
         margin: 0 auto;
@@ -5263,7 +5520,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       form {
         display: grid;
-        gap: 32px; /* Breath spacing */
+        gap: 20px;
       }
 
       label {
@@ -5506,11 +5763,46 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          "The Final Hand" - Story climax
          ======================================== */
 
-      /* Form Header - Story Connection */
-      .form-header {
-        text-align: center;
-        margin-bottom: 32px; /* Breathing room before form */
-      }
+	      /* Form Header — "The Entrance" */
+	      .form-header {
+	        text-align: center;
+	        margin-bottom: 32px;
+	        position: relative;
+	      }
+
+	      /* Two-line headline: arrival announcement */
+	      .panel-headline--form {
+	        font-family: "Bodoni Moda", serif;
+	        font-style: italic;
+	        font-weight: 400;
+	        text-transform: none;
+	        letter-spacing: 0.03em;
+	        line-height: 1.05;
+	        color: rgba(255, 255, 255, 0.95);
+	        text-shadow:
+	          0 0 40px rgba(212, 165, 116, 0.3),
+	          0 4px 20px rgba(0, 0, 0, 0.5);
+	      }
+
+	      /* Brass underline — like an inscription plaque */
+	      .panel-headline--form::after {
+	        content: '';
+	        display: block;
+	        width: 60px;
+	        height: 2px;
+	        background: linear-gradient(90deg,
+	          transparent 0%,
+	          var(--brass) 20%,
+	          var(--brass) 80%,
+	          transparent 100%
+	        );
+	        margin: 16px auto 0;
+	        opacity: 0.7;
+	      }
+
+	      .form-headline__line {
+	        display: block;
+	      }
 
       /* Edition badge - matches CDL 1 badges on other panels */
       .form-header__edition {
@@ -5540,7 +5832,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: rgba(183, 106, 59, 0.08);
         border: 1px solid rgba(183, 106, 59, 0.2);
         border-radius: 2px;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
       }
 
       .form-scarcity__pulse {
@@ -5658,71 +5950,59 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: none;
       }
 
-      /* Footer Contact - The House Details */
-      /* Tobias: "Part of the room, not an afterthought" */
+      /* Footer Contact — ESPN Closing Credits Style */
+      /* No boxy container — content floats on darkness */
       .footer-contact {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 28px;
-        margin-top: 0;
-        flex-wrap: wrap;
-        padding: 20px 24px;
-        background:
-          linear-gradient(180deg, rgba(28, 19, 15, 0.3) 0%, rgba(18, 12, 8, 0.5) 100%);
-        border: 1px solid rgba(212, 165, 116, 0.08);
-        border-radius: 3px;
-        position: relative;
-      }
-
-      /* Subtle brass line accent on top */
-      .footer-contact::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 20%;
-        right: 20%;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.25), transparent);
+        gap: 48px;
+        width: 100%;
+        padding: 0;
+        background: none;
+        border: none;
       }
 
       .footer-contact__item {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
+        justify-content: center;
+        text-align: center;
+        gap: 10px;
+        min-width: 180px; /* Equal width for balanced layout */
       }
 
+      /* ESPN condensed typography for labels */
       .footer-contact__label {
-        font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.6rem;
-        font-weight: 600;
-        letter-spacing: 0.2em;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--brass);
-        opacity: 0.6;
       }
 
       .footer-contact__link {
         font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.85rem;
-        color: var(--cream);
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.85);
         text-decoration: none;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: color 0.2s ease;
         position: relative;
       }
 
       .footer-contact__link::after {
         content: "";
         position: absolute;
-        bottom: -2px;
+        bottom: -3px;
         left: 0;
         width: 100%;
         height: 1px;
         background: var(--brass);
         transform: scaleX(0);
-        transform-origin: right;
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        transform-origin: center;
+        transition: transform 0.25s ease;
       }
 
       .footer-contact__link:hover {
@@ -5731,13 +6011,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .footer-contact__link:hover::after {
         transform: scaleX(1);
-        transform-origin: left;
       }
 
+      /* Vertical divider — broadcast style */
       .footer-contact__divider {
-        color: var(--brass);
-        font-size: 0.45rem;
-        opacity: 0.35;
+        width: 1px;
+        height: 40px;
+        background: rgba(212, 165, 116, 0.25);
+        align-self: center;
       }
 
       /* Mobile: Stack footer vertically */
@@ -5769,21 +6050,27 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         .footer-contact {
           flex-direction: column;
-          gap: 14px;
-          margin-top: 24px;
-          padding: 16px 20px;
+          gap: 24px;
+          align-items: center;
+        }
+
+        .footer-contact__item {
+          align-items: center;
+          text-align: center;
         }
 
         .footer-contact__divider {
-          display: none;
+          width: 40px;
+          height: 1px;
+          background: rgba(212, 165, 116, 0.2);
         }
 
         .footer-contact__link {
-          font-size: 0.8rem;
+          font-size: 0.9rem;
         }
 
         .footer-contact__label {
-          font-size: 0.55rem;
+          font-size: 0.65rem;
         }
       }
 
@@ -6340,30 +6627,37 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	        .footer-contact {
 	          margin-top: 0;
-	          gap: 12px;
+	          gap: 28px;
 	          flex-direction: column;
+	          align-items: center;
+	          width: 100%;
 	        }
 
+        /* Horizontal divider on mobile */
         .footer-contact__divider {
-          display: none;
+          width: 40px;
+          height: 1px;
+          background: rgba(212, 165, 116, 0.2);
         }
 
         .footer-contact__item {
-          flex-direction: row;
-          gap: 8px;
+          align-items: center;
+          text-align: center;
+          min-width: auto; /* Reset desktop min-width */
+          width: 100%;
         }
 
         .footer-contact__label {
-          font-size: 0.65rem;
+          font-size: 0.7rem;
         }
 
         .footer-contact__link {
-          font-size: 0.85rem;
+          font-size: 0.95rem;
         }
 
         .brand-footer {
-          margin-top: 20px;
-          padding-top: 16px;
+          margin-top: 40px;
+          align-items: center;
         }
 
         .brand-footer__logo {
@@ -6540,54 +6834,38 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* ========================================
-         BRAND FOOTER
+         BRAND FOOTER — Film Credits Style
          ======================================== */
       .brand-footer {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 12px;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        gap: 14px;
         margin-top: 48px;
-        padding-top: 32px;
-        border-top: 1px solid rgba(183, 106, 59, 0.2);
       }
 
       .brand-footer__logo {
         font-family: "Bodoni Moda", "Didot", serif;
-        font-size: 1.8rem;
+        font-size: 2rem;
         font-weight: 900;
-        letter-spacing: 0.15em;
+        font-style: italic;
+        letter-spacing: 0.2em;
         background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        position: relative;
-      }
-
-      /* Decorative dots around logo */
-      .brand-footer__logo::before,
-      .brand-footer__logo::after {
-        content: "◆";
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 0.4rem;
-        color: var(--copper);
-        -webkit-text-fill-color: var(--copper);
-      }
-
-      .brand-footer__logo::before {
-        right: calc(100% + 12px);
-      }
-
-      .brand-footer__logo::after {
-        left: calc(100% + 12px);
       }
 
       .brand-footer__text {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.4);
-        letter-spacing: 0.05em;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
       }
 
       .brand-footer__tagline {
@@ -6600,8 +6878,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       @media (max-width: 640px) {
         .brand-footer {
-          margin-top: 36px;
-          padding-top: 24px;
+          margin-top: 40px;
+        }
+        .brand-footer__logo {
+          font-size: 1.8rem;
         }
       }
     </style>
@@ -6665,7 +6945,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="hero-tagline">The First Cuban Domino League Championship</p>
 
           <!-- Date/Venue -->
-          <p class="hero-subtitle">January 31, 2025<span class="dot">•</span><a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer">Mr Garcia Cigars</a></p>
+	          <p class="hero-subtitle">January 31, 2025<span class="dot">•</span><a href="https://share.google/Bd3ZofPsvccfdT7EC" target="_blank" rel="noreferrer">Mr Garcia Cigars</a></p>
         </div>
         <div class="hero-scroll-hint" id="heroScrollHint" aria-hidden="true">
           <div class="hero-scroll-hint__chevron"></div>
@@ -6683,15 +6963,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="whisper-greeting">Que Bola Asere</p>
         </div>
 
-        <!-- BOTTOM LETTERBOX - The challenge rises from shadow -->
+        <!-- BOTTOM LETTERBOX - The moment arrives -->
         <div class="whisper-bottom">
-          <div class="whisper-narrative">
-            <p class="whisper-line whisper-line--mystery">
-              <span class="whisper-line__top">You think you</span>
-              <span class="whisper-line__bottom"><em class="callback-word">learned</em> this game?</span>
-            </p>
-          </div>
-          <!-- Scroll hint - appears after narrative, guides the uninitiated -->
+          <p class="whisper-line whisper-line--ancestors">You've been waiting for this.</p>
+          <!-- Scroll hint - appears after narrative -->
           <div class="whisper-scroll-hint">
             <div class="whisper-scroll-hint__chevron"></div>
           </div>
@@ -6706,16 +6981,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        <div class="fog-layer"></div>
 	        <div class="panel-overlay"></div>
 
-        <!-- TOP LETTERBOX - The setup whispered from darkness -->
-        <div class="build-top">
-          <p class="build-setup">You didn't learn this game</p>
-        </div>
+        <!-- TOP LETTERBOX - Empty, let INHERITED command the space -->
+        <div class="build-top"></div>
 
-        <!-- CENTER - The revelation commands the space -->
+        <!-- CENTER - The ancestors are watching too -->
         <div class="build-center">
           <div class="build-revelation">
-            <span class="build-word build-word--itwas">It was</span>
-            <span class="build-word build-word--inherited">INHERITED.</span>
+            <span class="build-word build-word--inherited">SO HAVE THEY.</span>
           </div>
         </div>
 
@@ -6729,7 +7001,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="smoke-layer"></div>
       </section>
 
-      <!-- Panel 4: The Stakes - "Winner Takes All" -->
+      <!-- Panel 4: The Mission - "Make Them Proud" -->
       <section class="panel panel--slam" id="panelSlam">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-4.webp')"></div>
         <div class="fog-layer"></div>
@@ -6740,7 +7012,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="slam-context">January 31<span class="dot">•</span>Mr Garcia Cigars</p>
         </div>
 
-        <!-- CENTER - The stakes command attention -->
+        <!-- CENTER - The mission commands attention -->
         <div class="slam-center">
           <!-- CDL 1 Badge - Domino tile as championship marker -->
           <div class="slam-badge">
@@ -6750,9 +7022,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
 
           <div class="slam-container">
-            <span class="slam-word slam-word--winner">Winner</span>
-            <span class="slam-word slam-word--takes">Takes</span>
-            <span class="slam-word slam-word--all">ALL</span>
+            <span class="slam-word slam-word--winner">Make</span>
+            <span class="slam-word slam-word--takes">Them</span>
+            <span class="slam-word slam-word--all">PROUD</span>
           </div>
         </div>
 
@@ -6766,7 +7038,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	      <!-- Panel 5: Rules - "La Ley" - THE LAW (Unified Plaque) -->
 	      <section class="panel panel--rules" id="panelRules">
-	        <div class="panel-bg" style="background-image: url('/FRAMES/frame-5.webp')"></div>
+	        <div class="panel-bg" style="background-image: url('/FRAMES/rules-nyc-test.png')"></div>
 	        <div class="fog-layer"></div>
 	        <div class="panel-overlay"></div>
 
@@ -6833,7 +7105,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       <!-- Panel 6: Registration Form - "The Final Hand" -->
       <section class="panel panel--form">
         <div class="panel-bg-gradient"></div>
-        <div class="panel-content">
+          <div class="panel-content">
           <!-- Story-connected headline -->
           <div class="form-header">
             <h2 class="panel-headline panel-headline--form">La mesa te espera</h2>
@@ -6909,29 +7181,37 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        </div>
 	      </section>
 	
-	      <!-- Panel 7: Footer - Contact + Venue -->
-	      <section class="panel panel--footer" id="eventFooter">
-	        <div class="panel-content">
-	          <div class="event-footer-section">
-	            <div class="footer-contact">
-	              <div class="footer-contact__item">
-	                <span class="footer-contact__label">Direct Line</span>
-	                <a href="mailto:Erik@CubanDominoLeague.com" class="footer-contact__link">Erik@CubanDominoLeague.com</a>
-	              </div>
-	              <div class="footer-contact__divider">◆</div>
-	              <div class="footer-contact__item">
-	                <span class="footer-contact__label">Venue</span>
-	                <a href="https://mrgarciacigars.com/" target="_blank" rel="noreferrer" class="footer-contact__link">Mr Garcia Cigars</a>
-	              </div>
-	            </div>
-	
-	            <footer class="brand-footer">
-	              <span class="brand-footer__logo">CDL</span>
-	              <span class="brand-footer__text">© 2025 Cuban Domino League</span>
-	            </footer>
-	          </div>
-	        </div>
-	      </section>
+	      <!-- Panel 7: Postscript - The Room at Rest (visual punctuation, no text) -->
+      <section class="panel panel--postscript" id="panelPostscript">
+        <div class="panel-bg" style="background-image: url('/FRAMES/frame-footer.webp')"></div>
+        <div class="fog-layer"></div>
+        <div class="smoke-layer"></div>
+        <div class="panel-overlay panel-overlay--postscript"></div>
+      </section>
+
+      <!-- Panel 8: Footer - Credits -->
+      <section class="panel panel--footer" id="eventFooter">
+        <div class="panel-content">
+          <div class="event-footer-section">
+            <div class="footer-contact">
+              <div class="footer-contact__item">
+                <span class="footer-contact__label">Direct Line</span>
+                <a href="mailto:Erik@CubanDominoLeague.com" class="footer-contact__link">Erik@CubanDominoLeague.com</a>
+              </div>
+              <div class="footer-contact__divider"></div>
+              <div class="footer-contact__item">
+                <span class="footer-contact__label">Venue</span>
+                <a href="https://share.google/Bd3ZofPsvccfdT7EC" target="_blank" rel="noreferrer" class="footer-contact__link">Mr Garcia Cigars</a>
+              </div>
+            </div>
+
+            <footer class="brand-footer">
+              <span class="brand-footer__logo">CDL</span>
+              <span class="brand-footer__text">© 2025 Cuban Domino League</span>
+            </footer>
+          </div>
+        </div>
+      </section>
 	    </main>
 	    </div>
 
@@ -7033,7 +7313,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       <div class="mesa-ticker" id="mesaTicker">
         <div class="mesa-ticker__badge">
           <span class="mesa-ticker__badge-dot"></span>
-          LA MESA
+          <span class="mesa-ticker__badge-text">LA MESA</span>
         </div>
         <div class="mesa-ticker__scroll">
           <div class="mesa-ticker__track" id="tickerTrack">
@@ -7200,18 +7480,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       </div>
     </div>
 
-    <!-- "Unlock La Mesa" Hint Bubble -->
+    <!-- "Unlock La Mesa" — ESPN credential, not app notification -->
     <div class="mesa-help" id="mesaHelp" role="status" aria-live="polite" aria-atomic="true">
-      <div class="mesa-help__row">
-        <div class="mesa-help__icon" aria-hidden="true">🁣</div>
-        <div class="mesa-help__body">
-          <div class="mesa-help__title">Unlock La Mesa</div>
-          <div class="mesa-help__text">
-            Claim your seat to unlock <strong>La Mesa</strong>. Tap the domino again to enter.
-          </div>
-        </div>
-        <button class="mesa-help__dismiss" id="mesaHelpDismiss" type="button">Got it</button>
+      <div class="mesa-help__badge">ACCESS</div>
+      <div class="mesa-help__content">
+        <div class="mesa-help__title">UNLOCK LA MESA</div>
+        <p class="mesa-help__text">Register first. Then the domino opens.</p>
       </div>
+      <button class="mesa-help__dismiss" id="mesaHelpDismiss" type="button">DISMISS</button>
     </div>
 
     <!-- Background Dimming Overlay -->
@@ -7238,8 +7514,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        }
 
 	        // Let the loading screen breathe, but stop blocking scroll/taps quickly.
+	        // The ritual takes ~4.5s, then heartbeat begins. Hold for one full breath.
 	        const INTERACTION_RELEASE_MS = 180;
-	        const VISUAL_HOLD_MS = 1400;
+	        const VISUAL_HOLD_MS = 7000;  // 7 seconds — witness the ritual, sync with heartbeat
 
 	        setTimeout(() => {
 	          loadingScreen.classList.add('is-passive');
@@ -7247,14 +7524,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	        setTimeout(() => {
 	          loadingScreen.classList.add('is-hidden');
-	          // Start hero animations as the loading screen fades away (so it doesn't play "behind" it).
-	          markReady();
-	          // Fully remove from DOM after transition
+	          // "Darkness beat" — wait for loading to fade before hero reveals
+	          // This creates a brief moment of darkness (the "cut") before the scene begins
+	          setTimeout(() => {
+	            markReady();
+	          }, 300);
+	          // Fully remove from DOM after fade completes (600ms fade + buffer)
 	          setTimeout(() => {
 	            if (loadingScreen.parentNode) {
 	              loadingScreen.remove();
 	            }
-	          }, 650);
+	          }, 800);
 	        }, VISUAL_HOLD_MS);
 	      }
 
@@ -7265,8 +7545,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        document.addEventListener('DOMContentLoaded', dismissLoadingScreen, { once: true });
 	      }
 
-	      // Fallback: Force dismissal after 3 seconds in case of slow assets
-	      setTimeout(dismissLoadingScreen, 3000);
+	      // Fallback: Force dismissal after 10 seconds (ritual takes ~7s now)
+	      setTimeout(dismissLoadingScreen, 10000);
 
       // Panel parallax and content animations
       const allPanels = document.querySelectorAll('.panel');
