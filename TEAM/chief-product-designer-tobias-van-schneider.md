@@ -142,6 +142,33 @@ Quick gut-check based on the latest full-page capture + iPhone Safari debugging:
    - Overlays should never dim key copy (we already hit this once with “Que Bola Asere” on iPhone).
    - Rule: if the headline is the moment, the atmosphere must get out of the way.
 
+### Rules Panel (“La Ley”) — Consistency Check
+
+The rules panel is the first place the site reads as “UI card grid” instead of “cinematic room”. The direction is right (plaque, brass, restraint), but it needs a touch more *artifact* and a touch less *component*.
+
+**What’s working**
+- The **CDL 1 badge + La Ley title** feels like a title card and matches the ritual tone.
+- The **brass palette** is consistent with the rest of the page and doesn’t shout.
+- “**Respect the table.**” is a good closing line—feels like house rules, not app copy.
+
+**What feels slightly off**
+- The **big rounded rectangle frame** + **six equal cards** reads like a settings screen module (too “perfect web grid”).
+- The cards are a bit **flat + uniform**; the earlier panels have “weight” through hierarchy and asymmetry.
+
+**Suggested refinements (keep it subtle)**
+1. **Make it feel carved/inlaid**
+   - Consider a thinner, sharper plaque edge (less radius, more “machined”).
+   - Add a faint inner bevel/engraved border rather than a full UI container outline.
+   - Use the **domino-tile CDL badge** language (consistent with hero + “Winner Takes All”), not a flat label.
+2. **Break the grid perfection (without chaos)**
+   - Treat the two “primary” rules as visibly primary (slightly larger, stronger brass edge).
+   - Let secondary rules recede more (lower contrast desc text, less border emphasis).
+3. **Typography cadence**
+   - Increase title “La Ley” presence slightly, but keep subtitle quiet.
+   - Give the rule titles more “engraved brass” contrast; keep descriptions softer and more matte.
+4. **One iconic divider artifact**
+   - The little domino mark is good—make it feel like an intentional emblem (centered, crisp, not “UI icon”).
+
 ### What I’d Refine Next (Medium Priority)
 
 - **Scroll hints**: calm, consistent, and “felt” (fade in only; never bounce). They should behave like direction in a film, not UI coaching.

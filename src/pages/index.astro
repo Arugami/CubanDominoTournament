@@ -511,12 +511,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Global overlays live INSIDE the scroll container (sticky) so iOS Safari stacking stays correct. */
       .story-overlays {
-        position: sticky;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 100vh;
-        height: 100dvh;
+        position: fixed;
+        inset: 0;
         pointer-events: none;
         z-index: 4; /* Above panel overlays (2), below text (10+) */
       }
@@ -817,7 +813,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Gate hero animations until the loading screen is dismissed */
       body:not(.is-ready) .panel--hero .event-title,
-      body:not(.is-ready) .panel--hero .event-edition,
+      body:not(.is-ready) .panel--hero .hero-badge,
       body:not(.is-ready) .panel--hero .hero-tagline,
       body:not(.is-ready) .panel--hero .hero-subtitle,
       body:not(.is-ready) .panel--hero .event-numeral {
@@ -829,7 +825,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         will-change: transform, filter, opacity;
       }
 
-      body.is-ready .panel--hero .event-edition,
+      body.is-ready .panel--hero .hero-badge,
       body.is-ready .panel--hero .hero-tagline,
       body.is-ready .panel--hero .hero-subtitle,
       body.is-ready .panel--hero .event-numeral {
@@ -838,7 +834,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Stagger the fade-in timing - CDL 1 badge first, then cascade down */
-      body.is-ready .panel--hero .event-edition { animation-delay: 0.1s !important; }
+      body.is-ready .panel--hero .hero-badge { animation-delay: 0.1s !important; }
       body.is-ready .panel--hero .event-title { animation-delay: 0.2s !important; }
       body.is-ready .panel--hero .event-numeral { animation-delay: 0.25s !important; }
       body.is-ready .panel--hero .hero-tagline { animation-delay: 0.4s !important; }
@@ -1057,40 +1053,103 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         50% { opacity: 1; }
       }
 
-      /* Event edition - CDL 1 (UFC-style event badge) */
-      .event-edition {
-        display: inline-flex;
+      /* ============================================
+         HERO BADGE - Domino tile (Bone Language)
+         Smaller version of slam-badge for hero
+         ============================================ */
+      .hero-badge {
+        display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-family: "IBM Plex Sans", system-ui, sans-serif;
-        font-size: clamp(0.65rem, 1.6vw, 0.8rem);
-        font-weight: 700;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        color: #000;
-        background: linear-gradient(180deg, var(--brass) 0%, #c4965a 100%);
-        padding: 6px 18px 5px;
-        margin: 0 0 16px;
-        border-radius: 2px;
-        box-shadow:
-          0 2px 8px rgba(0, 0, 0, 0.5),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-        text-shadow: none;
+        width: 52px;
+        height: 72px;
+        margin: 0 auto 20px auto;
+        background: linear-gradient(
+          145deg,
+          rgba(20, 14, 10, 0.9) 0%,
+          rgba(12, 8, 5, 0.95) 100%
+        );
+        border: 2px solid var(--brass);
+        border-radius: 10px;
         position: relative;
+        box-shadow:
+          0 0 20px rgba(212, 165, 116, 0.25),
+          0 0 40px rgba(212, 165, 116, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          0 6px 24px rgba(0, 0, 0, 0.5);
       }
 
-      /* Subtle shine on badge */
-      .event-edition::before {
-        content: "";
+      .hero-badge::before {
+        content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 50%;
-        background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
-        border-radius: 2px 2px 0 0;
+        inset: 0;
+        border-radius: 8px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 50%,
+          rgba(0, 0, 0, 0.1) 100%
+        );
         pointer-events: none;
+      }
+
+      .hero-badge__top,
+      .hero-badge__bottom {
+        font-family: "Bodoni Moda", serif;
+        font-weight: 700;
+        color: var(--brass);
+        text-shadow: 0 0 8px rgba(212, 165, 116, 0.4);
+        letter-spacing: 0.04em;
+      }
+
+      .hero-badge__top {
+        font-size: 0.85rem;
+        margin-top: 8px;
+      }
+
+      .hero-badge__divider {
+        width: 36px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          var(--brass) 20%,
+          var(--brass) 80%,
+          transparent 100%
+        );
+        margin: 5px 0;
+        opacity: 0.6;
+      }
+
+      .hero-badge__bottom {
+        font-size: 1.4rem;
+        font-style: italic;
+        margin-bottom: 6px;
+      }
+
+      /* Mobile - slightly smaller */
+      @media (max-width: 768px) {
+        .hero-badge {
+          width: 46px;
+          height: 64px;
+          margin: 0 auto 16px auto;
+        }
+
+        .hero-badge__top {
+          font-size: 0.75rem;
+          margin-top: 7px;
+        }
+
+        .hero-badge__divider {
+          width: 30px;
+          margin: 4px 0;
+        }
+
+        .hero-badge__bottom {
+          font-size: 1.2rem;
+          margin-bottom: 5px;
+        }
       }
 
       /* Hero tagline - Championship stamp with decorative lines */
@@ -1111,6 +1170,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         white-space: nowrap;
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 16px;
         position: relative;
       }
@@ -1376,19 +1436,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .whisper-greeting {
         font-family: "Bodoni Moda", serif;
-        font-style: italic;
+        font-style: italic; /* Warm whisper, like Panel 3's setup */
         font-weight: 400;
-        font-size: clamp(2.4rem, 9vw, 4rem);
-        color: #fff; /* Pure white for maximum brightness */
-        letter-spacing: 0.08em;
+        font-size: clamp(1.1rem, 4vw, 1.6rem); /* Small — matches Panel 3 top line */
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
         text-align: center;
         opacity: 0;
         transition: opacity 420ms ease;
-        /* Warm glow to make it pop against the dark letterbox */
         text-shadow:
-          0 0 20px rgba(212, 165, 116, 0.4),
-          0 0 40px rgba(212, 165, 116, 0.2),
-          0 4px 20px rgba(0, 0, 0, 0.5);
+          0 0 20px rgba(212, 165, 116, 0.3),
+          0 2px 15px rgba(0, 0, 0, 0.5);
       }
 
       /* BOTTOM LETTERBOX - The narrative rises from shadow */
@@ -1433,20 +1492,44 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* THE LINE - The challenge that sets up INHERITED */
       .whisper-line--mystery {
-        font-size: clamp(2rem, 8vw, 3.5rem);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3em;
         font-style: italic;
-        font-weight: 500;
+        font-weight: 400;
         color: var(--cream);
         letter-spacing: 0.02em;
         margin-top: 2vh;
         text-shadow:
           0 0 30px rgba(212, 165, 116, 0.4),
-          0 2px 20px rgba(0, 0, 0, 0.6);
+          0 4px 25px rgba(0, 0, 0, 0.6);
+      }
+
+      /* Top line - smaller setup */
+      .whisper-line__top {
+        font-size: clamp(1.4rem, 5vw, 2rem);
+        opacity: 0.85;
+      }
+
+      /* Bottom line - THE moment with "learned" */
+      .whisper-line__bottom {
+        font-size: clamp(2.2rem, 9vw, 4rem);
+        font-weight: 500;
+      }
+
+      /* Callback word "learned" - brass glow thread to Panel 3 */
+      .callback-word {
+        font-style: italic;
+        color: var(--brass);
+        text-shadow:
+          0 0 25px rgba(212, 165, 116, 0.7),
+          0 0 50px rgba(212, 165, 116, 0.4);
       }
 
       /* Cinematic animations - tight 2-beat sequence */
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingRevealRTL 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        animation: greetingReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
@@ -1472,6 +1555,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           text-shadow:
             0 0 40px rgba(212, 165, 116, 0.5),
             0 2px 20px rgba(0, 0, 0, 0.6);
+        }
+      }
+
+      /* Simple greeting reveal - fade in with subtle lift */
+      @keyframes greetingReveal {
+        0% {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
 
@@ -1693,6 +1788,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* "INHERITED." - THE WORD. The slam. The climax. */
       .build-word--inherited {
         font-size: clamp(2.6rem, 12vw, 6rem); /* Reduced for uppercase */
+        font-style: normal; /* Regular — mirrors "Que Bola Asere" (bookend) */
         color: #fff;
         font-weight: 500;
         letter-spacing: 0.06em; /* Positive spacing for all-caps readability */
@@ -2156,7 +2252,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .whisper-greeting {
-          font-size: clamp(2rem, 10vw, 3.2rem);
+          font-size: clamp(0.9rem, 3.5vw, 1.2rem); /* Small whisper */
         }
 
         /* Mobile: Larger, bolder for impact on small screens */
@@ -2168,8 +2264,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           font-size: clamp(1.4rem, 6vw, 1.9rem);
         }
 
-        .whisper-line--mystery {
-          font-size: clamp(1.6rem, 7vw, 2.2rem);
+        .whisper-line__top {
+          font-size: clamp(1.2rem, 4.5vw, 1.6rem);
+        }
+
+        .whisper-line__bottom {
+          font-size: clamp(1.8rem, 8vw, 2.8rem);
         }
 
         /* Panel 3 mobile - cinematic frame */
@@ -3482,12 +3582,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* "Unlock La Mesa" hint bubble (shown when unregistered user taps the domino) */
       .mesa-help {
         position: fixed;
-        left: 14px;
-        right: 14px;
-        bottom: calc(46px + 14px);
+        right: calc(14px + env(safe-area-inset-right));
+        left: auto;
+        bottom: calc(46px + 14px + env(safe-area-inset-bottom));
         z-index: 15000;
-        max-width: 460px;
-        margin: 0 auto;
+        width: min(420px, calc(100vw - 28px));
+        margin: 0;
         background: rgba(28, 19, 15, 0.92);
         border: 1px solid rgba(212, 165, 116, 0.22);
         border-radius: 12px;
@@ -3498,6 +3598,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         pointer-events: none;
         transition: opacity 220ms ease, transform 220ms ease;
       }
+
+      /* Small pointer toward the domino button (keeps it feeling like guidance, not a modal) */
+      .mesa-help::after {
+        content: "";
+        position: absolute;
+        right: 18px;
+        bottom: -7px;
+        width: 14px;
+        height: 14px;
+        background: rgba(28, 19, 15, 0.92);
+        border-right: 1px solid rgba(212, 165, 116, 0.22);
+        border-bottom: 1px solid rgba(212, 165, 116, 0.22);
+        transform: rotate(45deg);
+      }
+
       .mesa-help.is-visible {
         opacity: 1;
         transform: translateY(0);
@@ -3505,7 +3620,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
       @media (max-width: 768px) {
         .mesa-help {
-          bottom: calc(40px + 12px);
+          right: calc(12px + env(safe-area-inset-right));
+          width: min(360px, calc(100vw - 24px));
+          bottom: calc(40px + 12px + env(safe-area-inset-bottom));
         }
       }
 
@@ -4723,41 +4840,39 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         -webkit-backdrop-filter: blur(8px);
       }
 
-      /* Header section - tightly coupled */
-      .rules-header {
-        margin-bottom: 24px;
-      }
+	      /* Header section - tightly coupled */
+	      .rules-header {
+	        margin-bottom: 24px;
+	      }
 
-      .rules-header__badge {
-        display: inline-block;
-        font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.6rem;
-        font-weight: 600;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        color: #000;
-        background: var(--brass);
-        padding: 4px 12px;
-        border-radius: 2px;
-        margin-bottom: 10px;
-        opacity: 0;
-      }
+	      /* Rules badge uses the same domino tile language as hero/slam */
+	      .panel--rules .hero-badge {
+	        width: 48px;
+	        height: 68px;
+	        margin: 0 auto 14px auto;
+	        opacity: 0;
+	      }
 
-      .rules-header__title {
-        font-family: "Bodoni Moda", serif;
-        font-size: clamp(2.8rem, 11vw, 4.5rem);
-        font-weight: 400;
-        font-style: italic;
-        color: #fff;
-        letter-spacing: 0.02em;
-        line-height: 0.9;
-        margin: 0 0 8px 0;
-        opacity: 0;
-        text-shadow:
-          0 0 30px rgba(212, 165, 116, 0.4),
-          0 0 60px rgba(212, 165, 116, 0.2),
-          0 4px 20px rgba(0, 0, 0, 0.8);
-      }
+	      .rules-header__title {
+	        font-family: "Bodoni Moda", serif;
+	        font-size: clamp(3.1rem, 12vw, 5rem);
+	        font-weight: 400;
+	        font-style: italic;
+	        color: #fff;
+	        letter-spacing: -0.02em;
+	        line-height: 0.9;
+	        margin: 0 0 8px 0;
+	        opacity: 0;
+	        text-shadow:
+	          0 0 10px rgba(255, 252, 245, 0.55),
+	          0 0 30px rgba(255, 252, 245, 0.25),
+	          0 0 60px rgba(212, 165, 116, 0.35),
+	          0 0 100px rgba(212, 165, 116, 0.18),
+	          0 4px 20px rgba(0, 0, 0, 0.9),
+	          0 8px 40px rgba(0, 0, 0, 0.7);
+	        filter: brightness(1.04);
+	        display: inline-block;
+	      }
 
       .rules-header__subtitle {
         font-family: "IBM Plex Sans", sans-serif;
@@ -4925,13 +5040,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0.4;
       }
 
-      /* ========================================
-         RULES ANIMATIONS - The Law is revealed
-         ======================================== */
+	      /* ========================================
+	         RULES ANIMATIONS - The Law is revealed
+	         ======================================== */
 
-      .panel--rules.in-view:not(.has-played) .rules-header__badge {
-        animation: rulesFadeIn 0.5s ease-out 0.2s forwards;
-      }
+	      .panel--rules.in-view:not(.has-played) .hero-badge {
+	        animation: fadeInOnly 0.6s ease-out 0.2s forwards;
+	      }
 
       .panel--rules.in-view:not(.has-played) .rules-header__title {
         animation: rulesLawSlam 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
@@ -4966,11 +5081,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: scrollHintReveal 0.8s ease-out 2.2s forwards;
       }
 
-      .panel--rules.has-played .rules-header__badge,
-      .panel--rules.has-played .rules-header__title,
-      .panel--rules.has-played .rules-header__subtitle,
-      .panel--rules.has-played .rule-card,
-      .panel--rules.has-played .rules-divider,
+	      .panel--rules.has-played .hero-badge,
+	      .panel--rules.has-played .rules-header__title,
+	      .panel--rules.has-played .rules-header__subtitle,
+	      .panel--rules.has-played .rule-card,
+	      .panel--rules.has-played .rules-divider,
       .panel--rules.has-played .rules-footer {
         opacity: 1;
         transform: none;
@@ -6534,8 +6649,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="panel-bg panel-bg--hero" style="background-image: url('/FRAMES/frame-hero.webp')"></div>
         <div class="panel-overlay"></div>
         <div class="panel-content">
-          <!-- UFC-style event badge at top -->
-          <p class="event-edition">CDL 1</p>
+          <!-- CDL 1 Domino Badge - Bone Language -->
+          <div class="hero-badge">
+            <span class="hero-badge__top">CDL</span>
+            <div class="hero-badge__divider"></div>
+            <span class="hero-badge__bottom">1</span>
+          </div>
 
           <!-- THE HERO - Tournament Name -->
           <h1 class="event-title">
@@ -6567,7 +6686,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <!-- BOTTOM LETTERBOX - The challenge rises from shadow -->
         <div class="whisper-bottom">
           <div class="whisper-narrative">
-            <p class="whisper-line whisper-line--mystery">You think you learned this game?</p>
+            <p class="whisper-line whisper-line--mystery">
+              <span class="whisper-line__top">You think you</span>
+              <span class="whisper-line__bottom"><em class="callback-word">learned</em> this game?</span>
+            </p>
           </div>
           <!-- Scroll hint - appears after narrative, guides the uninitiated -->
           <div class="whisper-scroll-hint">
@@ -6642,19 +6764,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         </div>
       </section>
 
-      <!-- Panel 5: Rules - "La Ley" - THE LAW (Unified Plaque) -->
-      <section class="panel panel--rules" id="panelRules">
-        <div class="panel-bg" style="background-image: url('/FRAMES/frame-5.webp')"></div>
-        <div class="fog-layer"></div>
-        <div class="panel-overlay"></div>
+	      <!-- Panel 5: Rules - "La Ley" - THE LAW (Unified Plaque) -->
+	      <section class="panel panel--rules" id="panelRules">
+	        <div class="panel-bg" style="background-image: url('/FRAMES/frame-5.webp')"></div>
+	        <div class="fog-layer"></div>
+	        <div class="panel-overlay"></div>
 
-        <div class="rules-plaque">
-          <!-- Header - tightly coupled -->
-          <div class="rules-header">
-            <span class="rules-header__badge">CDL 1</span>
-            <h2 class="rules-header__title">La Ley</h2>
-            <p class="rules-header__subtitle">The Law of the Table</p>
-          </div>
+	        <div class="rules-plaque">
+	          <!-- Header - tightly coupled -->
+	          <div class="rules-header">
+	            <div class="hero-badge hero-badge--rules" aria-hidden="true">
+	              <span class="hero-badge__top">CDL</span>
+	              <div class="hero-badge__divider"></div>
+	              <span class="hero-badge__bottom">1</span>
+	            </div>
+	            <h2 class="rules-header__title">La Ley</h2>
+	            <p class="rules-header__subtitle">The Law of the Table</p>
+	          </div>
 
           <!-- The Law carved in brass -->
           <div class="rules-grid">
@@ -7315,7 +7441,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      // Panel 2 (Whisper) scroll-lock - 7.5 seconds
+      // Panel 2 (Whisper) scroll-lock - 4.5 seconds
       const whisperObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !whisperHasPlayed) {
@@ -8032,14 +8158,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }, 6500);
       }
 
-      function hideMesaHelp() {
-        if (!mesaHelp) return;
-        if (mesaHelpTimeout) clearTimeout(mesaHelpTimeout);
-        mesaHelpTimeout = null;
-        mesaHelp.classList.remove('is-visible');
-      }
+	      function hideMesaHelp() {
+	        if (!mesaHelp) return;
+	        if (mesaHelpTimeout) clearTimeout(mesaHelpTimeout);
+	        mesaHelpTimeout = null;
+	        mesaHelp.classList.remove('is-visible');
+	      }
 
-      mesaHelpDismiss?.addEventListener('click', hideMesaHelp);
+	      // Make the bubble feel like a toast, not a modal: tapping it dismisses immediately.
+	      mesaHelp?.addEventListener('click', hideMesaHelp);
+	      mesaHelpDismiss?.addEventListener('click', hideMesaHelp);
       storyEl?.addEventListener(
         'scroll',
         () => {
