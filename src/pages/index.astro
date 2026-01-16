@@ -200,10 +200,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           rgba(100, 50, 20, 0.06) 50%,
           transparent 70%
         );
-        /* Phase 1: Fog breathes alone in darkness, then syncs to heartbeat */
-        animation:
-          fogAlone 2s ease-in-out,
-          ambientBreath var(--heartbeat) ease-in-out 3.5s infinite;
+        /* Fog appears once, then stays static */
+        animation: fogAlone 2s ease-in-out forwards;
       }
 
       /* Phase 1: Fog breathes alone — gentler, less dramatic */
@@ -242,10 +240,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         gap: 0;
         position: relative;
         padding: 20px 0;
-        /* Phase 6: Float begins with heartbeat */
-        animation:
-          tileAppear 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards,
-          tileFloat 8s ease-in-out 3.5s infinite;
+        /* Tile appears once, then stays static */
+        animation: tileAppear 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
       }
 
       @keyframes tileAppear {
@@ -301,11 +297,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 60px rgba(212, 165, 116, 0.8),
           0 0 100px var(--glow-deep),
           0 0 150px rgba(183, 106, 59, 0.4);
-        /* Phase 3: Letters emerge from the light, subtler entrance */
-        animation:
-          letterReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards,
-          letterPulse var(--heartbeat) ease-in-out infinite;
-        animation-delay: 1.5s, 3.5s;  /* Earlier emergence, earlier pulse */
+        /* Letters emerge once, then stay static */
+        animation: letterReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
       }
 
       /* Subtler letter entrance - emerge, don't crash */
@@ -350,18 +343,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .cdl-tile__letter--c {
         align-self: flex-start;
         margin-left: 16px;  /* Proportional to container */
-        animation-delay: 1.5s, 3.5s;  /* First to emerge */
+        animation-delay: 1.5s;  /* First to emerge */
       }
 
       .cdl-tile__letter--d {
         align-self: flex-end;
         margin-right: 16px;  /* Proportional to container */
         margin-top: -20px;  /* Tighter diagonal — leaning together */
-        animation-delay: 1.9s, 3.5s;  /* 0.4s after C (tighter stagger) */
+        animation-delay: 1.9s;  /* 0.4s after C */
       }
 
       .cdl-tile__letter--l {
-        animation-delay: 2.3s, 3.5s;  /* 0.4s after D */
+        animation-delay: 2.3s;  /* 0.4s after D */
       }
 
       /* ===== THE DIVIDER - "The Bone" placed on the table ===== */
@@ -375,10 +368,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 10px var(--glow-warm),
           0 0 25px rgba(212, 165, 116, 0.7),
           0 0 50px var(--glow-deep);
-        /* Phase 4: The Bone slams between C/D and L */
-        animation:
-          dividerSlam 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.1s forwards,
-          dividerPulse var(--heartbeat) ease-in-out 3.5s infinite;
+        /* Divider slams once, then stays static */
+        animation: dividerSlam 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.1s forwards;
       }
 
       /* The slam - like placing a domino tile */
@@ -442,10 +433,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         );
         border-radius: 50%;
         opacity: 0;
-        /* Phase 2: Glow crescendo — light appears before letters */
-        animation:
-          glowCrescendo 1.5s ease-out 0.8s forwards,
-          glowPulse var(--heartbeat) ease-in-out 3.5s infinite;
+        /* Glow crescendos once, then stays static */
+        animation: glowCrescendo 1.5s ease-out 0.8s forwards;
         pointer-events: none;
         z-index: -1;
       }
