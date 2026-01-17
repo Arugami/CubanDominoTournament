@@ -1447,61 +1447,77 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1;
       }
 
-      /* TOP LETTERBOX - The Greeting descends from darkness */
+      /* TOP LETTERBOX - Setup whisper + Greeting descend from darkness */
       .whisper-top {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 8vh 8vw 12vh; /* Left padding for dialogue feel */
+        padding: 6vh 8vw 10vh;
         background: linear-gradient(
           to bottom,
-          rgba(10, 7, 5, 0.98) 0%,
-          rgba(10, 7, 5, 0.9) 30%,
-          rgba(10, 7, 5, 0.6) 60%,
+          rgba(10, 7, 5, 0.95) 0%,
+          rgba(10, 7, 5, 0.8) 40%,
+          rgba(10, 7, 5, 0.3) 75%,
           rgba(10, 7, 5, 0) 100%
         );
         display: flex;
-        justify-content: flex-start; /* Left-aligned — he's talking to you */
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5vh;
         pointer-events: none;
       }
 
-      .whisper-greeting {
-        font-family: "Bodoni Moda", serif;
-        font-style: italic;
+      /* Setup whisper - like the room whispering to you */
+      .whisper-setup {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
         font-weight: 400;
-        font-size: clamp(1.3rem, 5vw, 2rem);
-        color: rgba(255, 255, 255, 0.95);
-        letter-spacing: 0.15em;
-        text-align: left; /* Left-aligned — feels like dialogue, he's talking to you */
+        font-size: clamp(0.7rem, 2.5vw, 0.95rem);
+        color: rgba(212, 165, 116, 0.6);
+        letter-spacing: 0.08em;
+        text-align: center;
         opacity: 0;
-        /* Cinematic text shadow — words forming from smoke */
         text-shadow:
-          0 0 40px rgba(212, 165, 116, 0.5),
-          0 0 80px rgba(212, 165, 116, 0.3),
-          0 4px 20px rgba(0, 0, 0, 0.8);
+          0 0 20px rgba(212, 165, 116, 0.2),
+          0 2px 10px rgba(0, 0, 0, 0.5);
       }
 
-      /* BOTTOM LETTERBOX - Dialogue continues from him */
+      .whisper-greeting {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        font-weight: 500;
+        font-size: clamp(0.9rem, 3.5vw, 1.3rem); /* Smaller, contextual */
+        color: var(--brass);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-align: center;
+        opacity: 0;
+        /* Subtle brass glow — setup, not climax */
+        text-shadow:
+          0 0 25px rgba(212, 165, 116, 0.35),
+          0 0 50px rgba(212, 165, 116, 0.15),
+          0 2px 12px rgba(0, 0, 0, 0.6);
+      }
+
+      /* BOTTOM LETTERBOX - The recognition, lower to connect with table */
       .whisper-bottom {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 12vh 8vw 14vh; /* Match top padding for dialogue feel */
+        padding: 8vh 8vw 18vh; /* More bottom padding — text sits lower */
         background: linear-gradient(
           to top,
           rgba(10, 7, 5, 0.98) 0%,
-          rgba(10, 7, 5, 0.9) 30%,
-          rgba(10, 7, 5, 0.6) 60%,
+          rgba(10, 7, 5, 0.85) 35%,
+          rgba(10, 7, 5, 0.4) 70%,
           rgba(10, 7, 5, 0) 100%
         );
         display: flex;
         flex-direction: column;
-        align-items: flex-start; /* Left-aligned — continuous dialogue */
-        text-align: left;
+        align-items: center; /* Centered — symmetry */
+        text-align: center;
         pointer-events: none;
       }
 
@@ -1523,16 +1539,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
       }
 
-      /* THE LINE - "You've been waiting for this." - the moment arrives */
+      /* THE LINE - "You know this table." - the recognition */
       .whisper-line--ancestors {
-        font-size: clamp(1.4rem, 5vw, 2.2rem); /* Slightly smaller to fit on one line */
-        color: rgba(255, 255, 255, 0.85);
-        letter-spacing: 0.06em;
-        margin-bottom: 3vh;
-        white-space: nowrap; /* Keep on one line */
+        font-size: clamp(1.6rem, 6vw, 2.8rem);
+        font-style: italic;
+        color: #fff;
+        letter-spacing: 0.04em;
+        margin-bottom: 4vh;
         text-shadow:
-          0 0 40px rgba(212, 165, 116, 0.4),
-          0 4px 25px rgba(0, 0, 0, 0.7);
+          0 0 30px rgba(255, 255, 255, 0.2),
+          0 0 50px rgba(212, 165, 116, 0.5),
+          0 0 80px rgba(212, 165, 116, 0.3),
+          0 4px 25px rgba(0, 0, 0, 0.8);
       }
 
       /* "They" — the ancestors, emphasized in brass */
@@ -1545,28 +1563,26 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 100px rgba(212, 165, 116, 0.3);
       }
 
-      /* Animation for ancestors line - delayed, weighted, the truth arrives */
+      /* Animation for main line - the recognition statement */
       .panel--whisper.in-view:not(.has-played) .whisper-line--ancestors {
-        animation: ancestorsTruth 2s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
+        animation: recognitionStatement 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards;
       }
 
-      /* The ancestors speak - slow dawning realization */
-      @keyframes ancestorsTruth {
+      /* Recognition statement - Camera cut. Emerges once, lands clean. No fidgeting. */
+      @keyframes recognitionStatement {
         0% {
           opacity: 0;
-          transform: translateY(30px) scale(0.95);
-          filter: blur(12px);
-          letter-spacing: 0.15em;
-        }
-        40% {
-          opacity: 0.7;
-          filter: blur(4px);
+          transform: translateY(20px);
+          filter: blur(8px);
         }
         100% {
           opacity: 1;
-          transform: translateY(0) scale(1);
+          transform: translateY(0);
           filter: blur(0);
-          letter-spacing: 0.08em;
+          text-shadow:
+            0 0 35px rgba(255, 255, 255, 0.25),
+            0 0 60px rgba(212, 165, 116, 0.5),
+            0 4px 25px rgba(0, 0, 0, 0.8);
         }
       }
 
@@ -1614,29 +1630,28 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Cinematic animations - slow, weighted, like memories surfacing */
+      .panel--whisper.in-view:not(.has-played) .whisper-setup {
+        animation: setupWhisper 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+      }
+
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingSmoke 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+        animation: greetingSmoke 2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
         animation: mysterySlam 1.4s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards;
       }
 
-      /* Mystery slam - THE LINE hits with weight */
+      /* Mystery slam - Clean cut. Lands with weight. */
       @keyframes mysterySlam {
         0% {
           opacity: 0;
-          transform: translateY(20px) scale(0.95);
-          filter: blur(8px);
-        }
-        50% {
-          opacity: 1;
-          transform: translateY(-3px) scale(1.01);
-          filter: blur(0);
+          transform: translateY(15px);
+          filter: blur(6px);
         }
         100% {
           opacity: 1;
-          transform: translateY(0) scale(1);
+          transform: translateY(0);
           filter: blur(0);
           text-shadow:
             0 0 40px rgba(212, 165, 116, 0.5),
@@ -1644,28 +1659,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Greeting forms from cigar smoke - slow, deliberate, intimate */
-      @keyframes greetingSmoke {
+      /* Setup whisper - fades in like the room remembering */
+      @keyframes setupWhisper {
         0% {
           opacity: 0;
-          transform: translateY(15px) scale(0.92);
-          filter: blur(20px);
-          letter-spacing: 0.25em;
-        }
-        30% {
-          opacity: 0.5;
-          filter: blur(10px);
-        }
-        60% {
-          opacity: 0.85;
-          filter: blur(3px);
-          letter-spacing: 0.18em;
+          transform: translateY(8px);
+          filter: blur(6px);
         }
         100% {
           opacity: 1;
-          transform: translateY(0) scale(1);
+          transform: translateY(0);
           filter: blur(0);
-          letter-spacing: 0.15em;
+        }
+      }
+
+      /* Greeting forms from cigar smoke - one clean emergence, like focus pulling */
+      @keyframes greetingSmoke {
+        0% {
+          opacity: 0;
+          transform: translateY(12px);
+          filter: blur(12px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
           text-shadow:
             0 0 50px rgba(212, 165, 116, 0.6),
             0 0 100px rgba(212, 165, 116, 0.3),
@@ -1763,6 +1781,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Once played: returning should feel "static" and inevitable (no replays). */
+      .panel--whisper.has-played .whisper-setup {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
       .panel--whisper.has-played .whisper-greeting {
         opacity: 1;
         transform: none;
@@ -1870,15 +1893,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         text-align: center;
         pointer-events: none;
+        /* Position slightly above center for better visual weight */
+        margin-top: -5vh;
       }
 
       .build-revelation {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0;
+        gap: 1.5vh; /* Breathing room between lines */
       }
 
       .build-word {
@@ -1900,15 +1926,64 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 2px 15px rgba(0, 0, 0, 0.5);
       }
 
-      /* "INHERITED." - THE SINGLE WORD. Alone. Massive. The truth. */
+      /* "Your abuelo sat here." - The heritage line */
+      .build-word--primary {
+        font-size: clamp(1.6rem, 7vw, 3.2rem);
+        font-style: italic;
+        color: #fff;
+        font-weight: 400;
+        letter-spacing: 0.03em;
+        line-height: 1.15;
+        display: block;
+        /* Luminous glow - memory surfacing from darkness */
+        text-shadow:
+          0 0 25px rgba(255, 255, 255, 0.3),
+          0 0 50px rgba(212, 165, 116, 0.6),
+          0 0 100px rgba(212, 165, 116, 0.4),
+          0 4px 30px rgba(0, 0, 0, 0.8);
+      }
+
+      /* "Every weekend. Every holiday." - Supporting context, not the punch */
+      .build-word--secondary {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        font-size: clamp(0.85rem, 3.2vw, 1.3rem);
+        font-weight: 400;
+        color: var(--brass);
+        letter-spacing: 0.04em;
+        line-height: 1.5;
+        display: block;
+        opacity: 0.8;
+        margin-top: 1.5vh;
+        text-shadow:
+          0 0 18px rgba(212, 165, 116, 0.3),
+          0 2px 12px rgba(0, 0, 0, 0.5);
+      }
+
+      /* "Now the ficha passes to you." - The torch pass, forward momentum */
+      .build-word--torch {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        font-size: clamp(0.75rem, 2.8vw, 1.1rem);
+        font-weight: 500;
+        font-style: italic;
+        color: rgba(212, 165, 116, 0.85);
+        letter-spacing: 0.06em;
+        line-height: 1.5;
+        display: block;
+        opacity: 0;
+        margin-top: 3vh;
+        text-shadow:
+          0 0 20px rgba(212, 165, 116, 0.4),
+          0 2px 10px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Legacy: keep inherited for backwards compat */
       .build-word--inherited {
-        font-size: clamp(3.5rem, 18vw, 10rem); /* Massive — it stands alone */
+        font-size: clamp(3.5rem, 18vw, 10rem);
         font-style: normal;
         color: #fff;
         font-weight: 500;
         letter-spacing: 0.1em;
         line-height: 0.85;
-        /* Luminous glow - the ancestors are speaking through this word */
         text-shadow:
           0 0 25px rgba(255, 255, 255, 0.35),
           0 0 50px rgba(212, 165, 116, 0.7),
@@ -1960,7 +2035,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: cinematicReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
       }
 
-      /* "INHERITED." appears alone - slow dawning, not a slam */
+      /* Heritage lines appear - staggered, weighted reveals */
+      .panel--build.in-view:not(.has-played) .build-word--primary {
+        animation: memorySurface 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+      }
+
+      .panel--build.in-view:not(.has-played) .build-word--secondary {
+        animation: memoryEcho 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2s forwards;
+      }
+
+      .panel--build.in-view:not(.has-played) .build-word--torch {
+        animation: torchPass 1.5s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
+      }
+
+      /* Legacy: keep inherited animation */
       .panel--build.in-view:not(.has-played) .build-word--inherited {
         animation: inheritedDawning 3s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
       }
@@ -1969,12 +2057,91 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: scrollHintReveal 1s ease-out 4s forwards;
       }
 
+      /* Memory surface - clean camera cut. The memory is THERE or it isn't. */
+      @keyframes memorySurface {
+        0% {
+          opacity: 0;
+          transform: translateY(25px);
+          filter: blur(10px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+          text-shadow:
+            0 0 30px rgba(255, 255, 255, 0.35),
+            0 0 60px rgba(212, 165, 116, 0.6),
+            0 0 100px rgba(212, 165, 116, 0.4),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+      }
+
+      /* Memory echo - gentle follow, no complexity */
+      @keyframes memoryEcho {
+        0% {
+          opacity: 0;
+          transform: translateY(10px);
+          filter: blur(4px);
+        }
+        100% {
+          opacity: 0.85;
+          transform: translateY(0);
+          filter: blur(0);
+          text-shadow:
+            0 0 25px rgba(212, 165, 116, 0.4),
+            0 2px 15px rgba(0, 0, 0, 0.6);
+        }
+      }
+
+      /* Torch pass - the baton handoff, forward momentum */
+      @keyframes torchPass {
+        0% {
+          opacity: 0;
+          transform: translateY(8px);
+          filter: blur(4px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+
+      /* Legacy: basic heritage reveal */
+      @keyframes heritageReveal {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+          filter: blur(8px);
+        }
+        60% {
+          opacity: 1;
+          filter: blur(0);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+
       .panel--build.has-played .build-setup {
         opacity: 1;
         transform: none;
         filter: none;
       }
       .panel--build.has-played .build-word--itwas {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+      .panel--build.has-played .build-word--primary,
+      .panel--build.has-played .build-word--secondary {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+      .panel--build.has-played .build-word--torch {
         opacity: 1;
         transform: none;
         filter: none;
@@ -2274,6 +2441,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         pointer-events: none;
       }
 
+      /* "La mesa te espera." - The slogan landing, signature moment */
+      .slam-slogan {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(1rem, 4vw, 1.5rem);
+        color: var(--brass);
+        letter-spacing: 0.08em;
+        text-align: center;
+        opacity: 0;
+        margin-bottom: 3vh;
+        text-shadow:
+          0 0 30px rgba(212, 165, 116, 0.5),
+          0 0 60px rgba(212, 165, 116, 0.25),
+          0 2px 15px rgba(0, 0, 0, 0.6);
+      }
+
       .slam-scroll-hint {
         opacity: 0;
         transition: opacity 420ms ease;
@@ -2303,11 +2487,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: slamFinal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
       }
 
+      .panel--slam.in-view:not(.has-played) .slam-slogan {
+        animation: sloganLanding 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards;
+      }
+
       .panel--slam.in-view:not(.has-played) .slam-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 2.8s forwards;
+        animation: scrollHintReveal 1s ease-out 3.5s forwards;
       }
 
       .panel--slam.has-played .slam-word {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+      .panel--slam.has-played .slam-slogan {
         opacity: 1;
         transform: none;
         filter: none;
@@ -2390,6 +2583,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
+      /* Slogan landing - the signature moment, elegant arrival */
+      @keyframes sloganLanding {
+        0% {
+          opacity: 0;
+          transform: translateY(15px);
+          filter: blur(6px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+
       /* Mobile adjustments for cinematic panels */
       @media (max-width: 768px) {
         /* Cinematic frame - still breathe on mobile */
@@ -2441,6 +2648,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         .build-word--inherited {
           font-size: clamp(2.2rem, 11vw, 4rem); /* Reduced for uppercase */
+        }
+
+        .build-word--primary {
+          font-size: clamp(1.4rem, 6vw, 2.5rem);
+          margin-bottom: 0.4em;
+        }
+
+        .build-word--secondary {
+          font-size: clamp(0.85rem, 3.5vw, 1.3rem);
         }
 
         /* Panel 4 mobile - cinematic frame */
@@ -2792,11 +3008,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         width: 54px;
         height: 54px;
         background:
-          radial-gradient(circle at 25% 25%, rgba(183, 106, 59, 0.45) 6px, transparent 6px),
-          radial-gradient(circle at 75% 25%, rgba(183, 106, 59, 0.45) 6px, transparent 6px),
-          radial-gradient(circle at 50% 50%, rgba(183, 106, 59, 0.45) 6px, transparent 6px),
-          radial-gradient(circle at 25% 75%, rgba(183, 106, 59, 0.45) 6px, transparent 6px),
-          radial-gradient(circle at 75% 75%, rgba(183, 106, 59, 0.45) 6px, transparent 6px);
+          radial-gradient(circle at 25% 25%, var(--brass) 6px, transparent 6px),
+          radial-gradient(circle at 75% 25%, var(--brass) 6px, transparent 6px),
+          radial-gradient(circle at 50% 50%, var(--brass) 6px, transparent 6px),
+          radial-gradient(circle at 25% 75%, var(--brass) 6px, transparent 6px),
+          radial-gradient(circle at 75% 75%, var(--brass) 6px, transparent 6px);
         pointer-events: none;
       }
 
@@ -2835,9 +3051,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.1em;
         font-size: 0.7rem;
         font-weight: 700;
-        color: var(--copper);
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         padding: 8px 6px 14px;
-        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
       }
 
       /* Hide the old pulsing dot - pips are the new icon */
@@ -3657,7 +3875,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           transform: translate3d(0, 0, 0);
           -webkit-transform: translate3d(0, 0, 0);
         }
-        .mesa-ticker__badge,
+        .mesa-ticker__badge {
+          transform: skewX(-6deg) translate3d(0, 0, 0);
+          -webkit-transform: skewX(-6deg) translate3d(0, 0, 0);
+        }
         .mesa-ticker__track,
         .mesa-ticker__chat-btn {
           transform: translate3d(0, 0, 0);
@@ -3821,7 +4042,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .mesa-help__highlight {
-        color: var(--copper);
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
       }
 
       .mesa-help__text {
@@ -5495,19 +5720,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .form-shell {
         background:
           /* Inner vignette - the cigar smoke settling */
-          radial-gradient(ellipse at 50% 0%, rgba(212, 165, 116, 0.02) 0%, transparent 50%),
+          radial-gradient(ellipse at 50% 0%, rgba(212, 165, 116, 0.03) 0%, transparent 50%),
           /* Depth gradient */
-          linear-gradient(180deg, rgba(35, 25, 18, 0.6) 0%, rgba(20, 14, 10, 0.8) 100%),
+          linear-gradient(180deg, rgba(35, 25, 18, 0.7) 0%, rgba(20, 14, 10, 0.9) 100%),
           /* Noise texture */
           url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-        /* Subtle borders — doesn't compete with CTA */
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
-        padding: 34px 34px;
-        max-width: 520px;
+        /* Bone Language - Brass border */
+        border: 1px solid rgba(212, 165, 116, 0.25);
+        border-radius: 12px;
+        padding: 32px 32px;
+        max-width: 480px;
         width: 100%;
         margin: 0 auto;
+        /* Subtle glow */
+        box-shadow:
+          0 0 40px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.03);
         position: relative;
         /* Layered shadows for depth - Tobias: "Weight" */
         box-shadow:
@@ -5881,8 +6109,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         align-items: center;
         justify-content: center;
         gap: 10px;
-        margin-bottom: 24px;
-        padding-top: 8px;
       }
 
       .form-scarcity__display {
@@ -5970,6 +6196,180 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-transform: uppercase;
         color: rgba(212, 165, 116, 0.5);
         text-shadow: 0 0 8px rgba(183, 106, 59, 0.2);
+      }
+
+      /* Form Header - Scarcity + Tagline */
+      .form-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 28px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.1);
+      }
+
+      .form-header__tagline {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.8rem;
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.4);
+        letter-spacing: 0.02em;
+        margin: 0;
+      }
+
+      /* Form Sections - Visual grouping */
+      .form-section {
+        margin-bottom: 8px;
+      }
+
+      .form-section--primary {
+        margin-bottom: 24px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.08);
+      }
+
+      .form-section--primary .label--primary {
+        border-left: none;
+        padding-left: 0;
+        box-shadow: none;
+      }
+
+      .form-section--primary input {
+        font-size: 1.3rem;
+        padding: 16px 0;
+        font-weight: 500;
+      }
+
+      .form-section--secondary {
+        display: grid;
+        gap: 16px;
+      }
+
+      /* Label hierarchy */
+      .label-main {
+        display: block;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .label-sub {
+        display: block;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 400;
+        font-style: italic;
+        text-transform: none;
+        letter-spacing: 0.01em;
+        color: rgba(255, 255, 255, 0.35);
+        margin-bottom: 8px;
+      }
+
+      /* Terms Checkbox - Trash Talk Agreement */
+      .form-terms {
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(212, 165, 116, 0.08);
+      }
+
+      .terms-checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .terms-checkbox input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .terms-checkbox__box {
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        border: 1.5px solid rgba(212, 165, 116, 0.5);
+        border-radius: 4px;
+        background: rgba(212, 165, 116, 0.05);
+        position: relative;
+        margin-top: 2px;
+        transition: all 0.2s ease;
+      }
+
+      .terms-checkbox__box::after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 1px;
+        width: 5px;
+        height: 10px;
+        border: solid var(--brass);
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg) scale(0);
+        transition: transform 0.15s ease;
+      }
+
+      .terms-checkbox input:checked + .terms-checkbox__box {
+        background: rgba(212, 165, 116, 0.15);
+        border-color: var(--brass);
+      }
+
+      .terms-checkbox input:checked + .terms-checkbox__box::after {
+        transform: rotate(45deg) scale(1);
+      }
+
+      .terms-checkbox input:focus-visible + .terms-checkbox__box {
+        box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.3);
+      }
+
+      .terms-checkbox:hover .terms-checkbox__box {
+        border-color: var(--brass);
+        background: rgba(212, 165, 116, 0.1);
+      }
+
+      .terms-checkbox__text {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .terms-checkbox__text em {
+        font-style: italic;
+        color: var(--brass);
+      }
+
+      .terms-highlight {
+        display: inline-block;
+        font-weight: 600;
+        color: var(--gold);
+        margin-left: 2px;
+      }
+
+      /* Form CTA Area */
+      .form-cta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .form-cta button {
+        width: 100%;
+      }
+
+      .form-cta__hint {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.7rem;
+        font-style: italic;
+        color: rgba(255, 255, 255, 0.3);
+        margin: 0;
+        letter-spacing: 0.02em;
       }
 
       /* Button Scarcity - Subtle status indicator, matches ticker energy */
@@ -6801,7 +7201,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .form-shell {
-          padding: 20px 16px;
+          padding: 20px 16px 28px; /* Extra bottom for button clearance */
+          margin-bottom: 160px; /* Increased clearance for ticker */
         }
 
         form {
@@ -6821,6 +7222,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           padding: 16px 24px;
           font-size: 0.9rem;
           margin-top: 8px;
+        }
+
+        /* Terms checkbox - compact on mobile */
+        .terms-checkbox__text {
+          font-size: 0.7rem;
         }
 
       }
@@ -7178,14 +7584,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
 
-        <!-- TOP LETTERBOX - His greeting descends from darkness -->
+        <!-- TOP LETTERBOX - Setup whisper, then greeting -->
         <div class="whisper-top">
+          <p class="whisper-setup">Some tables never forget.</p>
           <p class="whisper-greeting">Que Bola Asere</p>
         </div>
 
-        <!-- BOTTOM LETTERBOX - The moment arrives -->
+        <!-- BOTTOM LETTERBOX - The recognition -->
         <div class="whisper-bottom">
-          <p class="whisper-line whisper-line--ancestors">You've been waiting for this.</p>
+          <p class="whisper-line whisper-line--ancestors">You know this table.</p>
           <!-- Scroll hint - appears after narrative -->
           <div class="whisper-scroll-hint">
             <div class="whisper-scroll-hint__chevron"></div>
@@ -7204,10 +7611,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <!-- TOP LETTERBOX - Empty, let INHERITED command the space -->
         <div class="build-top"></div>
 
-        <!-- CENTER - The ancestors are watching too -->
+        <!-- CENTER - The heritage moment -->
         <div class="build-center">
           <div class="build-revelation">
-            <span class="build-word build-word--inherited">SO HAVE THEY.</span>
+            <span class="build-word build-word--primary">Your abuelo sat here.</span>
+            <span class="build-word build-word--secondary">Every weekend. Every holiday.</span>
+            <span class="build-word build-word--torch">Now the ficha passes to you.</span>
           </div>
         </div>
 
@@ -7221,7 +7630,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="smoke-layer"></div>
       </section>
 
-      <!-- Panel 4: The Mission - "Make Them Proud" -->
+      <!-- Panel 4: The Hype Card - "CLAIM YOUR SEAT" -->
       <section class="panel panel--slam" id="panelSlam">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-4.webp')"></div>
         <div class="fog-layer"></div>
@@ -7232,7 +7641,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="slam-context">January 31<span class="dot">•</span>Mr Garcia Cigars</p>
         </div>
 
-        <!-- CENTER - The mission commands attention -->
+        <!-- CENTER - The call to action -->
         <div class="slam-center">
           <!-- CDL 1 Badge - Domino tile as championship marker -->
           <div class="slam-badge">
@@ -7242,14 +7651,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
 
           <div class="slam-container">
-            <span class="slam-word slam-word--winner">Make</span>
-            <span class="slam-word slam-word--takes">Them</span>
-            <span class="slam-word slam-word--all">PROUD</span>
+            <span class="slam-word slam-word--winner">Claim</span>
+            <span class="slam-word slam-word--takes">Your</span>
+            <span class="slam-word slam-word--all">SEAT</span>
           </div>
         </div>
 
-        <!-- BOTTOM LETTERBOX - Scroll hint after animation -->
+        <!-- BOTTOM LETTERBOX - Slogan landing + scroll hint -->
         <div class="slam-bottom">
+          <p class="slam-slogan">La mesa te espera.</p>
           <div class="slam-scroll-hint" aria-hidden="true">
             <div class="slam-scroll-hint__chevron"></div>
           </div>
@@ -7326,11 +7736,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       <section class="panel panel--form">
         <div class="panel-bg-gradient"></div>
           <div class="panel-content">
-          <!-- Story-connected headline -->
-          <div class="form-header">
-            <h2 class="panel-headline panel-headline--form">La mesa te espera</h2>
-          </div>
-
           <!-- Progress Tracker (Desktop) -->
           <div class="progress-tracker">
             <div class="progress-header">
@@ -7342,16 +7747,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             </div>
           </div>
 
-          <!-- Form -->
-          <div class="form-shell">
-            <!-- Inline scarcity - Retro scoreboard -->
-            <div class="form-scarcity" id="formScarcity">
-              <div class="form-scarcity__display">
-                <span class="form-scarcity__number" id="spotsLeftInline">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span>
+          <!-- Form - Accordion Disclosure -->
+          <div class="form-shell" id="formShell">
+            <!-- Teaser - Always visible -->
+            <div class="form-teaser">
+              <div class="form-scarcity" id="formScarcity">
+                <div class="form-scarcity__display">
+                  <span class="form-scarcity__number" id="spotsLeftInline">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span>
+                </div>
+                <span class="form-scarcity__label">SEATS LEFT</span>
               </div>
-              <span class="form-scarcity__label">SEATS LEFT</span>
+              <p class="form-teaser__tagline">First come, first served. No substitutes.</p>
+              <button type="button" class="form-teaser__trigger" id="formTrigger">
+                <span class="form-teaser__trigger-text">Register Now</span>
+                <span class="form-teaser__trigger-arrow">↓</span>
+              </button>
             </div>
 
+            <!-- Disclosure - Expands on click -->
+            <div class="form-disclosure" id="formDisclosure">
 <form id="signup" novalidate>
               <input
                 type="text"
@@ -7365,36 +7779,57 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <!-- Hidden field - rules accepted by submitting -->
               <input type="hidden" name="ruleConfirm" value="true" />
 
-              <!-- Player Name - PRIMARY input, WHO YOU ARE -->
-              <label class="label--primary">
-                Player Name
-                <div class="input-wrapper">
-                  <input name="playerName" required placeholder="Desi Arnaz" />
-                </div>
-              </label>
+              <!-- Full Name - PRIMARY input, WHO YOU ARE -->
+              <div class="form-section form-section--primary">
+                <label class="label--primary">
+                  <span class="label-main">Full Name</span>
+                  <span class="label-sub">As it'll appear on the bracket</span>
+                  <div class="input-wrapper">
+                    <input name="playerName" required placeholder="Desi Arnaz" />
+                  </div>
+                </label>
+              </div>
 
-              <label>
-                Email
-                <div class="input-wrapper">
-                  <input name="email" type="email" required placeholder="you@email.com" />
-                </div>
-              </label>
+              <!-- Contact Details - Secondary -->
+              <div class="form-section form-section--secondary">
+                <label>
+                  Email
+                  <div class="input-wrapper">
+                    <input name="email" type="email" required placeholder="desi@havana.club" />
+                  </div>
+                </label>
 
-              <label>
-                Phone
-                <div class="input-wrapper">
-                  <input name="phone" type="tel" required placeholder="(555) 123-4567" />
-                </div>
-              </label>
+                <label>
+                  Phone
+                  <div class="input-wrapper">
+                    <input name="phone" type="tel" required placeholder="(305) 555-1952" />
+                  </div>
+                </label>
+              </div>
 
               <label class="label--optional">
                 Notes <span class="label-hint">(optional)</span>
                 <div class="input-wrapper">
-                  <textarea name="notes" placeholder="Any special requirements?"></textarea>
+                  <textarea name="notes" placeholder="Bringing a partner? Special requests?"></textarea>
                 </div>
               </label>
 
-              <button type="submit" id="submitBtn">Claim Your Seat</button>
+              <!-- Terms - Trash Talk Agreement -->
+              <div class="form-terms">
+                <label class="terms-checkbox">
+                  <input type="checkbox" name="termsAccepted" required />
+                  <span class="terms-checkbox__box"></span>
+                  <span class="terms-checkbox__text">
+                    I accept that <em>hablar mierda</em> (trash talk) is sacred at La Mesa.
+                    I can dish it and I can take it. <span class="terms-highlight">¡Coge eso!</span>
+                  </span>
+                </label>
+              </div>
+
+              <div class="form-cta">
+                <button type="submit" id="submitBtn">Claim Your Seat</button>
+                <p class="form-cta__hint">Your information stays at the table.</p>
+              </div>
               <!-- Mobile scarcity - larger pulsing badge -->
               <div class="button-scarcity">
                 <div class="button-scarcity__inner">
@@ -7404,6 +7839,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               </div>
 	              <p class="status" id="status" aria-live="polite"></p>
 	            </form>
+            </div><!-- /.form-disclosure -->
 	          </div>
 	        </div>
 	      </section>
@@ -7720,7 +8156,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       <div class="mesa-help__badge">ACCESS</div>
       <div class="mesa-help__content">
         <div class="mesa-help__title">UNLOCK <span class="mesa-help__highlight">LA MESA</span></div>
-        <p class="mesa-help__text">Register first. Then the domino opens.</p>
+        <p class="mesa-help__text">The table is for registered players only.</p>
       </div>
       <button class="mesa-help__dismiss" id="mesaHelpDismiss" type="button">DISMISS</button>
     </div>
