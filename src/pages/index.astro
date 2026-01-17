@@ -400,15 +400,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Synchronized heartbeat glow - all letters breathe together */
       @keyframes letterPulse {
         0%, 100% {
-          /* Softer but still present — letters never feel "off" */
+          /* Must match base .cdl-tile__letter text-shadow to avoid jerk on animation switch */
+          opacity: 1;
           text-shadow:
-            0 0 5px rgba(255, 255, 255, 0.4),
-            0 0 15px rgba(232, 190, 140, 0.7),
-            0 0 30px rgba(212, 165, 116, 0.5),
-            0 0 60px rgba(183, 106, 59, 0.3);
+            0 0 5px rgba(255, 255, 255, 0.5),
+            0 0 15px var(--glow-warm),
+            0 0 30px var(--glow-warm),
+            0 0 60px rgba(212, 165, 116, 0.8),
+            0 0 100px var(--glow-deep),
+            0 0 150px rgba(183, 106, 59, 0.4);
           filter: brightness(1);
         }
         50% {
+          opacity: 1;
           text-shadow:
             0 0 8px rgba(255, 255, 255, 0.6),
             0 0 20px var(--glow-warm),
@@ -5330,15 +5334,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         position: relative;
         z-index: 1;
         box-sizing: border-box;
-        /* Quiet fade - no spectacle, just graceful departure */
+        overflow: hidden;
+      }
+
+      /* Dimmed overlay - lets image show through but quiet */
+      .panel-overlay--exit {
         background:
-          /* Subtle film grain - barely there */
-          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E"),
-          /* Fade from form's dark */
+          /* Heavy top fade from form panel */
           linear-gradient(to bottom,
-            rgba(10, 7, 5, 0.95) 0%,
-            #0a0705 40%,
-            #0d0906 100%
+            rgba(10, 7, 5, 1) 0%,
+            rgba(10, 7, 5, 0.85) 15%,
+            rgba(10, 7, 5, 0.6) 35%,
+            rgba(10, 7, 5, 0.4) 60%,
+            rgba(10, 7, 5, 0.7) 100%
+          ),
+          /* Soft vignette */
+          radial-gradient(ellipse 80% 70% at 50% 50%,
+            transparent 20%,
+            rgba(10, 7, 5, 0.5) 70%,
+            rgba(10, 7, 5, 0.8) 100%
           );
       }
 
@@ -5348,12 +5362,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         position: absolute;
         inset: 0;
         background: radial-gradient(
-          ellipse 50% 40% at 50% 60%,
-          rgba(183, 106, 59, 0.03) 0%,
+          ellipse 50% 40% at 50% 55%,
+          rgba(183, 106, 59, 0.06) 0%,
           transparent 70%
         );
         pointer-events: none;
-        z-index: 0;
+        z-index: 2;
       }
 
       /* Mobile: Adjust height */
@@ -7860,7 +7874,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <div class="form-section form-section--primary">
                 <label class="label--primary">
                   <span class="label-main">Full Name</span>
-                  <span class="label-sub">As it'll appear on the bracket</span>
+                  <span class="label-sub">As it'll be remembered</span>
                   <div class="input-wrapper">
                     <input name="playerName" required placeholder="Desi Arnaz" />
                   </div>
@@ -7904,7 +7918,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               </div>
 
               <div class="form-cta">
-                <button type="submit" id="submitBtn">Claim Your Seat</button>
+                <button type="submit" id="submitBtn">Take Your Seat</button>
                 <p class="form-cta__hint">Your information stays at the table.</p>
               </div>
               <!-- Mobile scarcity - larger pulsing badge -->
@@ -7923,6 +7937,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	      <!-- Panel 7: Exit - Quiet Fade + Footer (merged postscript + footer) -->
       <!-- "Silence isn't empty. It's where the feeling lives." -->
       <section class="panel panel--exit" id="panelExit">
+        <div class="panel-bg" style="background-image: url('/FRAMES/frame-footer.webp')"></div>
+        <div class="panel-overlay panel-overlay--exit"></div>
         <div class="panel-content">
           <div class="event-footer-section">
             <div class="footer-contact">
