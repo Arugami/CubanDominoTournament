@@ -79,7 +79,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+        transition: opacity 0.6s ease-out, visibility 0.6s ease-out, transform 0.7s ease-out;
         overflow: hidden;
       }
 
@@ -92,6 +92,70 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
+      }
+
+      /* ===== EXIT ANIMATION - "The Smoke Clears" ===== */
+      .loading-screen.is-exiting {
+        transform: translateY(-25px);
+      }
+
+      .loading-screen.is-exiting .cdl-tile {
+        transform: scale(0.92) translateY(-15px);
+        opacity: 0.7;
+      }
+
+      .loading-screen.is-exiting .ember {
+        animation: emberExit 0.8s ease-out forwards;
+      }
+
+      .loading-screen.is-exiting .fog-layer--ambient {
+        transform: translate(-50%, -55%) scale(1.1);
+        opacity: 0.3;
+      }
+
+      @keyframes emberExit {
+        0% {
+          opacity: 0.6;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-120px) scale(0.5);
+        }
+      }
+
+      /* ===== BREATHING STATE - "The Room Lives" ===== */
+      /* After entrance completes, the room enters a meditative pulse */
+      .loading-screen.is-breathing .cdl-tile {
+        animation: tileFloat 6s ease-in-out infinite;
+      }
+
+      .loading-screen.is-breathing .cdl-tile__letter {
+        animation: letterPulse var(--heartbeat) ease-in-out infinite;
+      }
+
+      .loading-screen.is-breathing .cdl-tile__divider {
+        animation: dividerPulse var(--heartbeat) ease-in-out infinite;
+      }
+
+      .loading-screen.is-breathing .cdl-tile__glow {
+        animation: glowPulse var(--heartbeat) ease-in-out infinite;
+      }
+
+      .loading-screen.is-breathing .fog-layer--ambient {
+        animation: ambientBreath 5s ease-in-out infinite;
+      }
+
+      /* ===== EXIT ANTICIPATION - "The Final Breath" ===== */
+      /* A brief intensification before release */
+      .loading-screen.is-anticipating .cdl-tile__glow {
+        transform: translate(-50%, -50%) scale(1.15);
+        opacity: 0.8;
+        transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+      }
+
+      .loading-screen.is-anticipating .cdl-tile__letter {
+        filter: brightness(1.15);
+        transition: filter 0.4s ease-out;
       }
 
       /* Film grain overlay - cinematic texture */
@@ -147,15 +211,26 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-radius: 50%;
         filter: blur(1px);
         opacity: 0;
-        animation: emberFloat 8s ease-in-out infinite;
+        animation: emberFloat 6s ease-in-out infinite;
       }
 
-      .ember:nth-child(1) { left: 45%; bottom: 30%; animation-delay: 0s; }
-      .ember:nth-child(2) { left: 52%; bottom: 35%; animation-delay: 1.2s; }
-      .ember:nth-child(3) { left: 48%; bottom: 28%; animation-delay: 2.4s; }
-      .ember:nth-child(4) { left: 55%; bottom: 32%; animation-delay: 3.6s; }
-      .ember:nth-child(5) { left: 43%; bottom: 38%; animation-delay: 4.8s; }
-      .ember:nth-child(6) { left: 50%; bottom: 25%; animation-delay: 6s; }
+      /* Varied sizes - some embers are larger, brighter */
+      .ember--lg { width: 4px; height: 4px; filter: blur(0.5px); }
+      .ember--sm { width: 2px; height: 2px; filter: blur(1.5px); opacity: 0.7; }
+
+      /* 12 embers - denser smoke, varied positions */
+      .ember:nth-child(1)  { left: 45%; bottom: 30%; animation-delay: 0s; }
+      .ember:nth-child(2)  { left: 52%; bottom: 35%; animation-delay: 0.8s; }
+      .ember:nth-child(3)  { left: 48%; bottom: 28%; animation-delay: 1.6s; }
+      .ember:nth-child(4)  { left: 55%; bottom: 32%; animation-delay: 2.4s; }
+      .ember:nth-child(5)  { left: 43%; bottom: 38%; animation-delay: 3.2s; }
+      .ember:nth-child(6)  { left: 50%; bottom: 25%; animation-delay: 4s; }
+      .ember:nth-child(7)  { left: 47%; bottom: 33%; animation-delay: 0.5s; }
+      .ember:nth-child(8)  { left: 53%; bottom: 29%; animation-delay: 1.3s; }
+      .ember:nth-child(9)  { left: 44%; bottom: 36%; animation-delay: 2.1s; }
+      .ember:nth-child(10) { left: 56%; bottom: 31%; animation-delay: 2.9s; }
+      .ember:nth-child(11) { left: 49%; bottom: 27%; animation-delay: 3.7s; }
+      .ember:nth-child(12) { left: 51%; bottom: 34%; animation-delay: 4.5s; }
 
       @keyframes emberFloat {
         0% {
@@ -202,6 +277,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         );
         /* Fog appears once, then stays static */
         animation: fogAlone 2s ease-in-out forwards;
+        /* Exit transition - fog drifts up and dissipates */
+        transition: transform 0.7s ease-out, opacity 0.6s ease-out;
       }
 
       /* Phase 1: Fog breathes alone — gentler, less dramatic */
@@ -242,6 +319,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         padding: 20px 0;
         /* Tile appears once, then stays static */
         animation: tileAppear 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+        /* Exit transition - "the smoke clears" */
+        transition: transform 0.7s ease-out, opacity 0.6s ease-out;
       }
 
       @keyframes tileAppear {
@@ -437,6 +516,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: glowCrescendo 1.5s ease-out 0.8s forwards;
         pointer-events: none;
         z-index: -1;
+        /* Smooth state transitions */
+        transition: transform 0.4s ease-out, opacity 0.4s ease-out;
       }
 
       /* Phase 2: Glow crescendo — smooth, no overshoot */
@@ -1512,18 +1593,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 2px 15px rgba(0, 0, 0, 0.6);
       }
 
-      /* "This table remembers." - The table whispers after the greeting */
+      /* "This table remembers." - The ROOM whispers (narrator voice, not character) */
+      /* Cream @ 50% = ghostly, ethereal, memory — distinct from brass human voice */
       .whisper-setup {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: clamp(0.8rem, 2.8vw, 1.05rem);  /* Smaller - intimate whisper */
-        color: rgba(212, 165, 116, 0.85);  /* Warmer brass, more present */
+        font-size: clamp(0.8rem, 2.8vw, 1.05rem);
+        color: rgba(248, 239, 230, 0.50);  /* Cream @ 50% — narrator/room voice */
         letter-spacing: 0.05em;
         text-align: center;
         opacity: 0;
         text-shadow:
-          0 0 20px rgba(212, 165, 116, 0.3),
+          0 0 25px rgba(248, 239, 230, 0.2),
           0 2px 10px rgba(0, 0, 0, 0.5);
       }
 
@@ -1661,18 +1743,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Cinematic animations - slow, weighted, like memories surfacing */
       /* Lin-Manuel: "Build the pauses into the animation timing. The words that matter need room to BREATHE." */
 
-      /* Narrative sequence: Setup (narrator whisper) → Greeting (direct speech) → Recognition */
-      /* The whisper sets atmosphere first, THEN you're spoken to directly */
+      /* Narrative sequence: Setup (narrator) → Greeting (character) → Recognition (payoff) */
+      /* Tighter timing: 0.3s → 1.6s → 2.8s (no dead air between beats) */
       .panel--whisper.in-view:not(.has-played) .whisper-setup {
         animation: setupWhisper 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingSmoke 1.6s cubic-bezier(0.16, 1, 0.3, 1) 2.0s forwards;
+        animation: greetingSmoke 1.6s cubic-bezier(0.16, 1, 0.3, 1) 1.6s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
-        animation: mysterySlam 1.6s cubic-bezier(0.16, 1, 0.3, 1) 3.8s forwards;
+        animation: mysterySlam 1.6s cubic-bezier(0.16, 1, 0.3, 1) 2.8s forwards;
       }
 
       /* Mystery slam - Clean cut. Lands with weight. */
@@ -5230,141 +5312,59 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* ========================================
-         POSTSCRIPT PANEL - The Room at Rest
-         Pure visual punctuation. No text. Just atmosphere.
-         "Dark UI is about depth, not darkness.
-          It's layers of smoke, not a black wall." — Tobias
+         EXIT PANEL - The Quiet Fade
+         The form is the climax. This is the graceful departure.
+         "Silence isn't empty. It's where the feeling lives." — Lin-Manuel
          ======================================== */
-      .panel--postscript {
-        min-height: 100vh;
-        min-height: 100dvh;
-        height: 100vh;
-        height: 100dvh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        z-index: 1;
-        box-sizing: border-box;
-        overflow: hidden;
-        padding: 0; /* Override base panel padding - full bleed */
-      }
-
-      /* Full bleed background - extend beyond edges for seamless feel */
-      .panel--postscript .panel-bg {
-        inset: -5%;
-        width: 110%;
-        height: 110%;
-      }
-
-      /* Cinematic overlay - deep vignette, seamless edges fade to black */
-      .panel-overlay--postscript {
-        /* Extend overlay beyond panel to cover any edge artifacts */
-        inset: -5%;
-        width: 110%;
-        height: 110%;
-        background:
-          /* Film grain texture - the room breathes */
-          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
-          /* Top fade to black - seamless transition from previous panel */
-          linear-gradient(to bottom, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.7) 15%, rgba(10, 7, 5, 0.3) 30%, transparent 50%),
-          /* Bottom fade to black - seamless transition to footer */
-          linear-gradient(to top, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.95) 8%, rgba(10, 7, 5, 0.7) 18%, rgba(10, 7, 5, 0.3) 30%, transparent 45%),
-          /* Side vignettes - tunnel vision, focus on center */
-          linear-gradient(90deg, rgba(10, 7, 5, 0.85) 0%, rgba(10, 7, 5, 0.4) 15%, transparent 30%, transparent 70%, rgba(10, 7, 5, 0.4) 85%, rgba(10, 7, 5, 0.85) 100%),
-          /* Deep radial vignette - the room is a memory */
-          radial-gradient(ellipse 75% 65% at 50% 50%, transparent 15%, rgba(10, 7, 5, 0.5) 55%, rgba(10, 7, 5, 0.9) 100%);
-      }
-
-      /* Ember glow - warm light leak from the chandelier */
-      .panel--postscript::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          /* Chandelier glow - top center warm bloom */
-          radial-gradient(ellipse 40% 30% at 50% 15%, rgba(212, 165, 116, 0.15) 0%, transparent 70%),
-          /* Table warmth - where the game was played */
-          radial-gradient(ellipse 60% 40% at 50% 70%, rgba(183, 106, 59, 0.08) 0%, transparent 60%);
-        mix-blend-mode: color-dodge;
-        pointer-events: none;
-        z-index: 4;
-        animation: postscriptEmber 12s ease-in-out infinite alternate;
-      }
-
-      @keyframes postscriptEmber {
-        0% { opacity: 0.5; }
-        100% { opacity: 0.8; }
-      }
-
-      /* Chromatic aberration - vintage film feel */
-      .panel--postscript::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        opacity: 0.3;
-        mix-blend-mode: screen;
-        background:
-          radial-gradient(circle at 49.5% 50%, rgba(255, 100, 50, 0.06) 0%, transparent 70%),
-          radial-gradient(circle at 50.5% 50%, rgba(50, 100, 255, 0.06) 0%, transparent 70%);
-        pointer-events: none;
-        z-index: 5;
-      }
-
-      /* Mobile: Shorter edge fades so image is visible in center */
-      @media (max-width: 768px) {
-        .panel-overlay--postscript {
-          background:
-            /* Film grain - subtle */
-            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),
-            /* Top fade - SHORT, only 20% of panel */
-            linear-gradient(to bottom, rgba(10, 7, 5, 0.95) 0%, rgba(10, 7, 5, 0.5) 10%, transparent 20%),
-            /* Bottom fade - extended for seamless footer transition */
-            linear-gradient(to top, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.85) 10%, rgba(10, 7, 5, 0.5) 18%, transparent 28%),
-            /* Side vignettes - softer */
-            linear-gradient(90deg, rgba(10, 7, 5, 0.7) 0%, transparent 15%, transparent 85%, rgba(10, 7, 5, 0.7) 100%),
-            /* Soft radial vignette - center is clear */
-            radial-gradient(ellipse 90% 80% at 50% 50%, transparent 35%, rgba(10, 7, 5, 0.3) 65%, rgba(10, 7, 5, 0.6) 100%);
-        }
-
-        /* Reduced fog on mobile - let image show */
-        .panel--postscript.in-view .fog-layer {
-          opacity: 0.5 !important;
-        }
-
-        /* Reduced smoke on mobile */
-        .panel--postscript.in-view .smoke-layer {
-          opacity: 0.3 !important;
-        }
-
-        /* Ember glow - warmer */
-        .panel--postscript::after {
-          background:
-            radial-gradient(ellipse 55% 40% at 50% 25%, rgba(212, 165, 116, 0.2) 0%, transparent 70%),
-            radial-gradient(ellipse 75% 55% at 50% 60%, rgba(183, 106, 59, 0.12) 0%, transparent 60%);
-        }
-      }
-
-      /* Footer panel - clean dark credits */
-      .panel--footer {
-        min-height: 60vh;
-        min-height: 60dvh;
-        height: auto;
+      .panel--exit {
+        min-height: 70vh;
+        min-height: 70dvh;
+        height: 70vh;
+        height: 70dvh;
         padding: 48px 24px;
         padding-bottom: 100px; /* Ticker clearance */
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-end; /* Footer content at bottom */
         position: relative;
         z-index: 1;
         box-sizing: border-box;
+        /* Quiet fade - no spectacle, just graceful departure */
         background:
-          /* Top fade - blend seamlessly with postscript */
-          linear-gradient(to bottom, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.7) 10%, transparent 25%),
-          radial-gradient(ellipse at 50% 30%, rgba(183, 106, 59, 0.04) 0%, transparent 50%),
-          linear-gradient(180deg, #0a0705 0%, #0d0906 100%);
+          /* Subtle film grain - barely there */
+          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E"),
+          /* Fade from form's dark */
+          linear-gradient(to bottom,
+            rgba(10, 7, 5, 0.95) 0%,
+            #0a0705 40%,
+            #0d0906 100%
+          );
+      }
+
+      /* Subtle warmth at center - ember memory, not a glow */
+      .panel--exit::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 50% 40% at 50% 60%,
+          rgba(183, 106, 59, 0.03) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Mobile: Adjust height */
+      @media (max-width: 768px) {
+        .panel--exit {
+          min-height: 65vh;
+          min-height: 65dvh;
+          height: auto;
+          padding-top: 40px;
+          padding-bottom: 90px;
+        }
       }
 
       /* Footer section — cinematic closing credits */
@@ -7596,11 +7596,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       <!-- Ember particles - like cigar smoke drifting upward -->
       <div class="ember-container">
+        <div class="ember ember--lg"></div>
         <div class="ember"></div>
+        <div class="ember ember--sm"></div>
         <div class="ember"></div>
+        <div class="ember ember--lg"></div>
+        <div class="ember ember--sm"></div>
         <div class="ember"></div>
+        <div class="ember ember--sm"></div>
+        <div class="ember ember--lg"></div>
         <div class="ember"></div>
-        <div class="ember"></div>
+        <div class="ember ember--sm"></div>
         <div class="ember"></div>
       </div>
 
@@ -7914,16 +7920,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        </div>
 	      </section>
 	
-	      <!-- Panel 7: Postscript - The Room at Rest (visual punctuation, no text) -->
-      <section class="panel panel--postscript" id="panelPostscript">
-        <div class="panel-bg" style="background-image: url('/FRAMES/frame-footer.webp')"></div>
-        <div class="fog-layer"></div>
-        <div class="smoke-layer"></div>
-        <div class="panel-overlay panel-overlay--postscript"></div>
-      </section>
-
-      <!-- Panel 8: Footer - Credits -->
-      <section class="panel panel--footer" id="eventFooter">
+	      <!-- Panel 7: Exit - Quiet Fade + Footer (merged postscript + footer) -->
+      <!-- "Silence isn't empty. It's where the feeling lives." -->
+      <section class="panel panel--exit" id="panelExit">
         <div class="panel-content">
           <div class="event-footer-section">
             <div class="footer-contact">
@@ -8257,11 +8256,29 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        // Let the loading screen breathe, but stop blocking scroll/taps quickly.
 	        // The ritual takes ~3.5s, then heartbeat begins. Hold for one full breath.
 	        const INTERACTION_RELEASE_MS = 180;
-	        const VISUAL_HOLD_MS = 4000;  // 4 seconds — ritual completes, one breath, then cut
+	        const BREATHING_START_MS = 2700;  // Entrance completes, room starts breathing
+	        const ANTICIPATION_MS = 3500;     // Final breath before release
+	        const VISUAL_HOLD_MS = 4000;      // 4 seconds — ritual completes, then cut
+	        const EXIT_ANIMATION_MS = 200;    // Start exit animation before fade
 
 	        setTimeout(() => {
 	          loadingScreen.classList.add('is-passive');
 	        }, INTERACTION_RELEASE_MS);
+
+	        // "The Room Breathes" — entrance complete, begin meditative pulse
+	        setTimeout(() => {
+	          loadingScreen.classList.add('is-breathing');
+	        }, BREATHING_START_MS);
+
+	        // "The Final Breath" — glow intensifies before release
+	        setTimeout(() => {
+	          loadingScreen.classList.add('is-anticipating');
+	        }, ANTICIPATION_MS);
+
+	        // "The Smoke Clears" — start exit animation (embers accelerate, tile recedes)
+	        setTimeout(() => {
+	          loadingScreen.classList.add('is-exiting');
+	        }, VISUAL_HOLD_MS - EXIT_ANIMATION_MS);
 
 	        setTimeout(() => {
 	          loadingScreen.classList.add('is-hidden');
@@ -8270,12 +8287,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	          setTimeout(() => {
 	            markReady();
 	          }, 300);
-	          // Fully remove from DOM after fade completes (600ms fade + buffer)
+	          // Fully remove from DOM after fade completes (700ms exit + buffer)
 	          setTimeout(() => {
 	            if (loadingScreen.parentNode) {
 	              loadingScreen.remove();
 	            }
-	          }, 800);
+	          }, 900);
 	        }, VISUAL_HOLD_MS);
 	      }
 
