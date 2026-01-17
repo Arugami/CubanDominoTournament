@@ -270,10 +270,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: translate(-50%, -50%);
         background: radial-gradient(
           ellipse 60% 50% at 50% 48%,
-          rgba(183, 106, 59, 0.20) 0%,
-          rgba(139, 69, 19, 0.12) 30%,
-          rgba(100, 50, 20, 0.06) 50%,
-          transparent 70%
+          rgba(183, 106, 59, 0.18) 0%,
+          rgba(139, 69, 19, 0.10) 25%,
+          rgba(100, 50, 20, 0.04) 40%,
+          rgba(50, 25, 10, 0.02) 55%,
+          transparent 75%
         );
         /* Fog appears once, then stays static */
         animation: fogAlone 2s ease-in-out forwards;
@@ -510,9 +511,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: translate(-50%, -50%);
         background: radial-gradient(
           circle,
-          rgba(212, 165, 116, 0.30) 0%,
-          rgba(183, 106, 59, 0.18) 35%,
-          transparent 65%
+          rgba(212, 165, 116, 0.28) 0%,
+          rgba(183, 106, 59, 0.16) 30%,
+          rgba(150, 80, 40, 0.08) 50%,
+          rgba(100, 50, 20, 0.03) 70%,
+          transparent 90%
         );
         border-radius: 50%;
         opacity: 0;
@@ -2062,21 +2065,39 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 4px 30px rgba(0, 0, 0, 0.8);
       }
 
-      /* "Every Sunday. Every quinceañera. Every goodbye." - Life cycle punch, poetic brass */
-      .build-word--secondary {
-        font-family: "Bodoni Moda", serif;
-        font-size: clamp(0.9rem, 3.2vw, 1.35rem);
-        font-weight: 400;
-        font-style: italic;
-        color: var(--brass);
-        letter-spacing: 0.05em;
-        line-height: 1.4;
-        display: block;
-        opacity: 0;  /* Start hidden, animation reveals at 3.5s delay */
+      /* Life cycle reveal: "Every Sunday. Every quinceañera. Every goodbye." */
+      /* Lin-Manuel: Each beat needs room to breathe and land */
+      .build-poetry {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8vh;
         margin-top: 1.5vh;
+      }
+
+      .build-poetry__line {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(0.9rem, 3.2vw, 1.35rem);
+        letter-spacing: 0.05em;
+        opacity: 0;
         text-shadow:
-          0 0 20px rgba(212, 165, 116, 0.4),
-          0 2px 12px rgba(0, 0, 0, 0.6);
+          0 0 20px rgba(212, 165, 116, 0.3),
+          0 2px 12px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Color crescendo - each line builds in brightness */
+      .build-poetry__line--routine {
+        color: rgba(212, 165, 116, 0.75);  /* brass @ 75% - soft, familiar */
+      }
+
+      .build-poetry__line--celebration {
+        color: rgba(212, 165, 116, 0.85);  /* brass @ 85% - warmer, celebration */
+      }
+
+      .build-poetry__line--loss {
+        color: rgba(212, 165, 116, 1.0);   /* brass @ 100% - full weight, the gut-punch */
       }
 
       /* "Now the ficha is yours." - Torch pass as bottom-left signature */
@@ -2163,12 +2184,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: memorySurface 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
       }
 
-      .panel--build.in-view:not(.has-played) .build-word--secondary {
-        animation: memoryEcho 1.8s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
+      /* Staggered poetry reveal - each line gets its moment to breathe */
+      .panel--build.in-view:not(.has-played) .build-poetry__line--routine {
+        animation: poetryLineReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
+      }
+
+      .panel--build.in-view:not(.has-played) .build-poetry__line--celebration {
+        animation: poetryLineReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 4.2s forwards;
+      }
+
+      .panel--build.in-view:not(.has-played) .build-poetry__line--loss {
+        animation: poetryLineReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) 4.9s forwards;
       }
 
       .panel--build.in-view:not(.has-played) .build-word--torch {
-        animation: torchPass 1.5s cubic-bezier(0.16, 1, 0.3, 1) 5.5s forwards;
+        animation: torchPass 1.5s cubic-bezier(0.16, 1, 0.3, 1) 6.5s forwards;
       }
 
       /* Legacy: keep inherited animation */
@@ -2177,7 +2207,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--build.in-view:not(.has-played) .build-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 7s forwards;
+        animation: scrollHintReveal 1s ease-out 8s forwards;
       }
 
       /* Memory surface - clean camera cut. The memory is THERE or it isn't. */
@@ -2199,20 +2229,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Memory echo - gentle follow, no complexity */
-      @keyframes memoryEcho {
+      /* Poetry line reveal - gentle emergence, each line breathes */
+      @keyframes poetryLineReveal {
         0% {
           opacity: 0;
-          transform: translateY(10px);
-          filter: blur(4px);
+          transform: translateY(8px);
+          filter: blur(3px);
         }
         100% {
           opacity: 0.85;
           transform: translateY(0);
           filter: blur(0);
-          text-shadow:
-            0 0 25px rgba(212, 165, 116, 0.4),
-            0 2px 15px rgba(0, 0, 0, 0.6);
         }
       }
 
@@ -2258,9 +2285,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: none;
         filter: none;
       }
-      .panel--build.has-played .build-word--primary,
-      .panel--build.has-played .build-word--secondary {
+      .panel--build.has-played .build-word--primary {
         opacity: 1;
+        transform: none;
+        filter: none;
+      }
+      .panel--build.has-played .build-poetry__line {
+        opacity: 0.85;
         transform: none;
         filter: none;
       }
@@ -2783,7 +2814,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           margin-bottom: 0.4em;
         }
 
-        .build-word--secondary {
+        .build-poetry__line {
           font-size: clamp(0.85rem, 3.5vw, 1.3rem);
         }
 
@@ -5323,10 +5354,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .panel--exit {
         min-height: 70vh;
         min-height: 70dvh;
-        height: 70vh;
-        height: 70dvh;
+        height: auto; /* Allow content to determine height */
         padding: 48px 24px;
-        padding-bottom: 100px; /* Ticker clearance */
+        padding-bottom: 140px; /* Ticker clearance + copyright breathing room */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -5334,7 +5364,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         position: relative;
         z-index: 1;
         box-sizing: border-box;
-        overflow: hidden;
       }
 
       /* Dimmed overlay - lets image show through but quiet */
@@ -7543,6 +7572,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         width: 100%;
         gap: 14px;
         margin-top: 48px;
+        margin-bottom: 60px; /* Push above fixed ticker */
       }
 
       .brand-footer__wordmark {
@@ -7590,6 +7620,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       @media (max-width: 640px) {
         .brand-footer {
           margin-top: 40px;
+          margin-bottom: 50px; /* Ticker clearance on mobile */
         }
         .brand-footer__logo {
           font-size: 1.8rem;
@@ -7712,7 +7743,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="build-center">
           <div class="build-revelation">
             <span class="build-word build-word--primary">Your abuelo sat here.</span>
-            <span class="build-word build-word--secondary">Every Sunday. Every quinceañera. Every goodbye.</span>
+            <div class="build-poetry">
+              <span class="build-poetry__line build-poetry__line--routine">Every Sunday.</span>
+              <span class="build-poetry__line build-poetry__line--celebration">Every quinceañera.</span>
+              <span class="build-poetry__line build-poetry__line--loss">Every goodbye.</span>
+            </div>
           </div>
         </div>
 
@@ -7958,7 +7993,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
                 <span class="brand-footer__logo">CDL</span>
                 <span class="brand-footer__line"></span>
               </div>
-              <span class="brand-footer__text">© 2025 Cuban Domino League</span>
+              <span class="brand-footer__text">© 2026 Cuban Domino League</span>
             </footer>
           </div>
         </div>
