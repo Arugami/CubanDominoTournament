@@ -109,47 +109,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-bottom: 32px;
       }
 
-      /* CDL 1 Badge - unified with main site */
-      .page-badge {
+      /* ===== CDL WORDMARK - Iconic mark with signature line ===== */
+      .cdl-wordmark {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        width: 52px;
-        height: 72px;
-        margin: 0 auto 16px auto;
-        background: linear-gradient(
-          145deg,
-          rgba(20, 14, 10, 0.9) 0%,
-          rgba(12, 8, 5, 0.95) 100%
-        );
-        border: 2px solid var(--brass);
-        border-radius: 10px;
-        position: relative;
-        box-shadow:
-          0 0 20px rgba(212, 165, 116, 0.25),
-          0 0 40px rgba(212, 165, 116, 0.1),
-          inset 0 1px 0 rgba(255, 255, 255, 0.08),
-          0 6px 24px rgba(0, 0, 0, 0.5);
+        gap: 8px;
+        margin-bottom: 16px;
       }
 
-      .page-badge::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 8px;
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.1) 0%,
-          transparent 50%,
-          rgba(0, 0, 0, 0.1) 100%
-        );
-        pointer-events: none;
-      }
-
-      .page-badge__top,
-      .page-badge__bottom {
-        font-family: "Bodoni Moda", serif;
+      .cdl-wordmark__text {
+        font-family: "Bodoni Moda", "Didot", serif;
+        font-size: 2.4rem;
         font-weight: 900;
         font-style: italic;
         letter-spacing: 0.08em;
@@ -159,29 +130,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background-clip: text;
       }
 
-      .page-badge__top {
-        font-size: 0.85rem;
-        margin-top: 8px;
-      }
-
-      .page-badge__divider {
-        width: 36px;
-        height: 2px;
-        background: linear-gradient(
-          90deg,
-          transparent 0%,
-          var(--brass) 20%,
-          var(--brass) 80%,
-          transparent 100%
-        );
-        margin: 5px 0;
-        opacity: 0.6;
-      }
-
-      .page-badge__bottom {
-        font-size: 1.4rem;
-        font-style: italic;
-        margin-bottom: 6px;
+      .cdl-wordmark__line {
+        width: 60px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--brass), transparent);
       }
 
       .page-title {
@@ -324,29 +276,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: none;
       }
 
-      /* ===== DIVIDER ===== */
-      .divider {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin: 28px 0;
-      }
-
-      .divider-line {
-        flex: 1;
-        height: 1px;
-        background: rgba(212, 165, 116, 0.2);
-      }
-
-      .divider-text {
-        font-family: "Bodoni Moda", serif;
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: var(--brass);
-        opacity: 0.6;
-      }
-
       /* ===== MESSAGES ===== */
       .message {
         text-align: center;
@@ -433,6 +362,40 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0.8;
       }
 
+      .back-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 32px;
+        padding: 12px 20px;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.85rem;
+        color: var(--brass);
+        opacity: 0.6;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+      }
+
+      .back-link:hover {
+        opacity: 1;
+        background: rgba(212, 165, 116, 0.08);
+      }
+
+      .back-link__arrow {
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+      }
+
+      .back-link:hover .back-link__arrow {
+        transform: translateX(-4px);
+      }
+
+      .back-link__text {
+        font-style: italic;
+      }
+
       .hidden {
         display: none !important;
       }
@@ -457,10 +420,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
     <div class="setup-container">
       <div class="page-header">
-        <div class="page-badge">
-          <span class="page-badge__top">CDL</span>
-          <div class="page-badge__divider"></div>
-          <span class="page-badge__bottom">1</span>
+        <div class="cdl-wordmark">
+          <span class="cdl-wordmark__text">CDL</span>
+          <span class="cdl-wordmark__line"></span>
         </div>
         <h1 class="page-title">La Oficina</h1>
         <p class="page-subtitle">Commissioner Access</p>
@@ -533,14 +495,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </button>
         </form>
 
-        <div class="divider">
-          <div class="divider-line"></div>
-          <span class="divider-text">CDL I</span>
-          <div class="divider-line"></div>
-        </div>
-
         <a href="/admin/login" class="footer-link">Already set up? Sign in</a>
       </div>
+
+      <a href="/" class="back-link">
+        <span class="back-link__arrow">←</span>
+        <span class="back-link__text">Back to main site</span>
+      </a>
     </div>
 
     <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>

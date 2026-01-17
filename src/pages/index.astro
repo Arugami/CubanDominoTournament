@@ -3765,9 +3765,32 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       @media (max-width: 768px) {
         .mesa-help {
-          right: calc(12px + env(safe-area-inset-right));
-          width: min(300px, calc(100vw - 24px));
-          bottom: calc(40px + 12px + env(safe-area-inset-bottom));
+          right: 0;
+          left: 0;
+          width: 100%;
+          border-radius: 0;
+          border-left: none;
+          border-right: none;
+          border-bottom: none;
+          /* Sit directly on top of ticker */
+          bottom: calc(46px + env(safe-area-inset-bottom));
+          transform: translateY(100%);
+        }
+        .mesa-help.is-visible {
+          transform: translateY(0);
+        }
+        .mesa-help__content {
+          padding: 10px 16px 8px;
+        }
+        .mesa-help__title {
+          font-size: 0.85rem;
+          margin-bottom: 4px;
+        }
+        .mesa-help__text {
+          font-size: 0.75rem;
+        }
+        .mesa-help__dismiss {
+          padding: 8px 16px;
         }
       }
 
@@ -4891,16 +4914,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow-y: hidden;
         /* Atmospheric depth - Tobias: "Rooms, Not Hallways" */
         background:
-          /* Top vignette - darkness descends */
-          linear-gradient(to bottom, rgba(10, 7, 5, 0.9) 0%, transparent 15%),
-          /* Bottom vignette - grounds the space */
-          linear-gradient(to top, rgba(10, 7, 5, 0.95) 0%, transparent 20%),
-          /* Central warmth - brass glow where the action is */
-          radial-gradient(ellipse at 50% 40%, rgba(183, 106, 59, 0.06) 0%, transparent 50%),
-          /* Ambient depth */
-          radial-gradient(ellipse at 50% 50%, rgba(28, 19, 15, 0.4) 0%, transparent 70%),
-          /* Base - tobacco room */
-          linear-gradient(180deg, #0a0705 0%, #1a120d 40%, #0d0906 100%);
+          /* Top vignette - ceiling darkness */
+          linear-gradient(to bottom, rgba(10, 7, 5, 0.95) 0%, transparent 20%),
+          /* Bottom vignette - floor darkness */
+          linear-gradient(to top, rgba(10, 7, 5, 0.95) 0%, transparent 25%),
+          /* Central warm glow - where the action is */
+          radial-gradient(ellipse at 50% 45%, rgba(183, 106, 59, 0.12) 0%, transparent 45%),
+          /* Secondary warmth - depth layer */
+          radial-gradient(ellipse at 50% 50%, rgba(212, 165, 116, 0.06) 0%, transparent 60%),
+          /* Corner fog - top left */
+          radial-gradient(ellipse at 15% 15%, rgba(139, 90, 43, 0.08) 0%, transparent 40%),
+          /* Corner fog - top right */
+          radial-gradient(ellipse at 85% 15%, rgba(139, 90, 43, 0.06) 0%, transparent 35%),
+          /* Ambient room depth */
+          radial-gradient(ellipse at 50% 50%, rgba(28, 19, 15, 0.5) 0%, transparent 80%),
+          /* Base tobacco room gradient */
+          linear-gradient(180deg, #0a0705 0%, #1a120d 35%, #120c08 70%, #0d0906 100%);
       }
 
       /* Form panel content always visible (no fade-in animation) */
@@ -5484,7 +5513,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         box-shadow:
           0 1px 0 rgba(255, 255, 255, 0.04) inset,
           0 20px 50px rgba(0, 0, 0, 0.5),
-          0 0 100px rgba(0, 0, 0, 0.3);
+          0 0 100px rgba(0, 0, 0, 0.3),
+          /* Ambient glow cast onto background */
+          0 0 80px rgba(183, 106, 59, 0.08),
+          0 0 120px rgba(212, 165, 116, 0.05);
       }
 
       /* Corner accents - old ledger detail */
@@ -5539,17 +5571,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       form {
         display: grid;
         gap: 20px;
+        padding-top: 8px;
       }
 
       label {
         display: flex;
         flex-direction: column;
         gap: 12px;
-        font-family: "Bodoni Moda", serif;
-        font-weight: 400;
-        font-style: italic;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-weight: 500;
+        font-style: normal;
         color: var(--brass);
-        font-size: 1.15rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
         text-align: left;
       }
 
@@ -5840,50 +5875,101 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 20px rgba(212, 165, 116, 0.15);
       }
 
-      /* Inline Scarcity - Unified across all screen sizes */
+      /* Inline Scarcity - Retro NBA Jam Arcade Scoreboard */
       .form-scarcity {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 10px;
-        padding: 12px 20px;
-        background: rgba(183, 106, 59, 0.08);
-        border: 1px solid rgba(183, 106, 59, 0.2);
-        border-radius: 2px;
-        margin-bottom: 16px;
+        margin-bottom: 24px;
+        padding-top: 8px;
       }
 
-      .form-scarcity__pulse {
-        width: 8px;
-        height: 8px;
-        background: var(--copper);
-        border-radius: 50%;
-        animation: scarcityPulse 2s ease-in-out infinite;
+      .form-scarcity__display {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 56px;
+        padding: 8px 14px;
+        /* Arcade cabinet bezel */
+        background:
+          linear-gradient(180deg,
+            #1a0f08 0%,
+            #0d0704 20%,
+            #0a0503 50%,
+            #0d0704 80%,
+            #1a0f08 100%);
+        border: 3px solid #2a1a10;
+        border-radius: 6px;
+        /* Deep arcade screen inset */
+        box-shadow:
+          inset 0 3px 12px rgba(0, 0, 0, 0.9),
+          inset 0 -2px 6px rgba(183, 106, 59, 0.15),
+          0 0 0 1px rgba(0, 0, 0, 0.8),
+          0 4px 12px rgba(0, 0, 0, 0.6),
+          0 0 20px rgba(183, 106, 59, 0.1);
       }
 
-      @keyframes scarcityPulse {
+      /* CRT scan-line effect */
+      .form-scarcity__display::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 0, 0, 0.15) 2px,
+          rgba(0, 0, 0, 0.15) 4px
+        );
+        border-radius: 4px;
+        pointer-events: none;
+      }
+
+      .form-scarcity__number {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.75rem;
+        font-weight: 900;
+        font-style: italic;
+        line-height: 1;
+        /* Hot arcade LED glow */
+        color: #e8c87a;
+        text-shadow:
+          0 0 8px rgba(232, 200, 122, 0.9),
+          0 0 16px rgba(232, 200, 122, 0.6),
+          0 0 32px rgba(212, 165, 116, 0.4),
+          0 0 48px rgba(183, 106, 59, 0.3);
+        animation: arcadeGlow 1.5s ease-in-out infinite;
+      }
+
+      @keyframes arcadeGlow {
         0%, 100% {
-          opacity: 1;
-          box-shadow: 0 0 0 0 rgba(183, 106, 59, 0.4);
+          color: #e8c87a;
+          text-shadow:
+            0 0 8px rgba(232, 200, 122, 0.9),
+            0 0 16px rgba(232, 200, 122, 0.6),
+            0 0 32px rgba(212, 165, 116, 0.4),
+            0 0 48px rgba(183, 106, 59, 0.3);
         }
         50% {
-          opacity: 0.6;
-          box-shadow: 0 0 0 6px rgba(183, 106, 59, 0);
+          color: #f5d88a;
+          text-shadow:
+            0 0 12px rgba(245, 216, 138, 1),
+            0 0 24px rgba(232, 200, 122, 0.8),
+            0 0 48px rgba(212, 165, 116, 0.5),
+            0 0 64px rgba(183, 106, 59, 0.4);
         }
       }
 
-      .form-scarcity__text {
-        font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.8rem;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--cream);
-      }
-
-      .form-scarcity__text span {
-        color: var(--brass);
+      .form-scarcity__label {
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.7rem;
         font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(212, 165, 116, 0.5);
+        text-shadow: 0 0 8px rgba(183, 106, 59, 0.2);
       }
 
       /* Button Scarcity - Subtle status indicator, matches ticker energy */
@@ -6064,12 +6150,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .form-scarcity {
-          padding: 10px 16px;
+          gap: 10px;
           margin-bottom: 20px;
         }
 
-        .form-scarcity__text {
-          font-size: 0.7rem;
+        .form-scarcity__display {
+          min-width: 48px;
+          padding: 6px 12px;
+          border-width: 2px;
+        }
+
+        .form-scarcity__number {
+          font-size: 1.4rem;
+        }
+
+        .form-scarcity__label {
+          font-size: 0.65rem;
         }
 
         .label--primary {
@@ -6650,7 +6746,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .form-shell {
-          padding: 24px 20px;
+          padding: 28px 20px 24px; /* More top breathing room */
           margin-bottom: 140px; /* Clearance for mesa-help tooltip */
         }
 
@@ -6733,6 +6829,85 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .honeypot {
         position: absolute;
         left: -9999px;
+      }
+
+      /* Back to Top - Domino Pip */
+      .back-to-top {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        width: 48px;
+        height: 48px;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease,
+          transform 0.3s ease;
+      }
+
+      .back-to-top__pip {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 35% 35%,
+          #e8c089 0%,
+          var(--brass) 40%,
+          var(--copper) 100%
+        );
+        box-shadow:
+          0 0 12px rgba(212, 165, 116, 0.5),
+          0 0 24px rgba(212, 165, 116, 0.25),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+          inset 0 2px 4px rgba(255, 255, 255, 0.2);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .back-to-top.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .back-to-top:hover .back-to-top__pip,
+      .back-to-top:focus .back-to-top__pip {
+        transform: scale(1.15);
+        box-shadow:
+          0 0 16px rgba(212, 165, 116, 0.7),
+          0 0 32px rgba(212, 165, 116, 0.4),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+          inset 0 2px 4px rgba(255, 255, 255, 0.2);
+      }
+
+      .back-to-top:active .back-to-top__pip {
+        transform: scale(0.9);
+      }
+
+      /* Mobile adjustments */
+      @media (max-width: 768px) {
+        .back-to-top {
+          top: 16px;
+          left: 16px;
+          width: 44px;
+          height: 44px;
+        }
+
+        .back-to-top__pip {
+          width: 12px;
+          height: 12px;
+        }
       }
 
       /* Floating Music Toggle */
@@ -6876,16 +7051,29 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-top: 48px;
       }
 
+      .brand-footer__wordmark {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
       .brand-footer__logo {
         font-family: "Bodoni Moda", "Didot", serif;
         font-size: 2rem;
         font-weight: 900;
         font-style: italic;
-        letter-spacing: 0.2em;
+        letter-spacing: 0.08em;
         background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+      }
+
+      .brand-footer__line {
+        width: 50px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--brass), transparent);
       }
 
       .brand-footer__text {
@@ -6911,6 +7099,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
         .brand-footer__logo {
           font-size: 1.8rem;
+        }
+        .brand-footer__line {
+          width: 44px;
         }
       }
     </style>
@@ -7153,10 +7344,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
           <!-- Form -->
           <div class="form-shell">
-            <!-- Inline scarcity - always visible -->
+            <!-- Inline scarcity - Retro scoreboard -->
             <div class="form-scarcity" id="formScarcity">
-              <span class="form-scarcity__pulse"></span>
-              <span class="form-scarcity__text"><span id="spotsLeftInline">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span> seats remain</span>
+              <div class="form-scarcity__display">
+                <span class="form-scarcity__number" id="spotsLeftInline">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span>
+              </div>
+              <span class="form-scarcity__label">SEATS LEFT</span>
             </div>
 
 <form id="signup" novalidate>
@@ -7240,7 +7433,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             </div>
 
             <footer class="brand-footer">
-              <span class="brand-footer__logo">CDL</span>
+              <div class="brand-footer__wordmark">
+                <span class="brand-footer__logo">CDL</span>
+                <span class="brand-footer__line"></span>
+              </div>
               <span class="brand-footer__text">© 2025 Cuban Domino League</span>
             </footer>
           </div>
@@ -7322,6 +7518,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         </div>
       </div>
     </div>
+
+    <!-- Back to Top - Domino Pip -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+      <span class="back-to-top__pip"></span>
+    </button>
 
     <!-- Music Toggle Button -->
     <button class="music-toggle" id="musicToggle" aria-label="Toggle background music">
@@ -7648,6 +7849,41 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         const startWhenReady = () => onStoryScroll();
         if (document.body.classList.contains('is-ready')) startWhenReady();
         else window.addEventListener('cdl:ready', startWhenReady, { once: true });
+      }
+
+      // Back to Top - CDL Monogram
+      // Shows after scrolling past the hero panel, scrolls to top on click
+      {
+        const backToTop = document.getElementById('backToTop');
+        const heroPanel = document.getElementById('heroPanel');
+
+        if (backToTop && storyEl && heroPanel) {
+          // Show/hide based on scroll position
+          const updateBackToTopVisibility = () => {
+            const heroHeight = heroPanel.offsetHeight;
+            const scrolled = storyEl.scrollTop;
+
+            // Show after scrolling past 80% of hero panel
+            if (scrolled > heroHeight * 0.8) {
+              backToTop.classList.add('is-visible');
+            } else {
+              backToTop.classList.remove('is-visible');
+            }
+          };
+
+          storyEl.addEventListener('scroll', updateBackToTopVisibility, { passive: true });
+
+          // Initial check
+          updateBackToTopVisibility();
+
+          // Click to scroll to top
+          backToTop.addEventListener('click', () => {
+            storyEl.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+          });
+        }
       }
 
       // Scroll-lock system for cinematic panels

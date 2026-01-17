@@ -40,7 +40,8 @@ The CDL logo arranges the letters C, D, and L within the sacred proportions of a
 | Version | Description | Use Case |
 |---------|-------------|----------|
 | **The Tile** | Vertical mark (C/D above line, L below) | Primary symbol, favicon, loading screen |
-| **CDL Wordmark** | Horizontal "C D L" | Compact horizontal spaces |
+| **CDL Wordmark with Signature Line** | Horizontal "CDL" + fading underline | Page headers, admin UI, footers |
+| **CDL Wordmark** | Horizontal "C D L" (no line) | Compact horizontal spaces |
 | **Full Logotype** | "CUBAN DOMINO LEAGUE" | Formal applications, headers |
 | **Stacked Lockup** | Tile + logotype + tagline | Primary brand signature |
 | **Horizontal Lockup** | Tile + text side by side | Banners, email signatures |
@@ -1169,7 +1170,108 @@ This version is for certificates, special announcements, VIP communications.
 
 ---
 
+## Part 17: The CDL Wordmark with Signature Line (January 16, 2026)
+
+During implementation, a new logo variant emerged for page headers and administrative UI contexts.
+
+### The Problem
+The boxed Tile mark, while iconic for brand moments (loading screens, merchandise), felt cramped and heavy in page header contexts like the admin login page. A lighter touch was needed.
+
+### The Solution: Wordmark with Signature Line
+
+```
+   CDL
+   ───
+```
+
+**Specifications:**
+- **Typography:** Bodoni Moda, 900 weight, italic
+- **Letter-spacing:** 0.08em (tighter than footer's original 0.2em)
+- **Gradient:** Brass (#d4a574) to Copper (#b76a3b), vertical
+- **Signature Line:** 1px height, horizontal gradient fading at edges
+- **Line width:** Proportional to size (50-60px for medium, 28-32px for small)
+
+### Size Variants
+
+| Size | Font Size | Line Width | Use Case |
+|------|-----------|------------|----------|
+| Small | 1.3rem | 28px | Dashboard corners, compact UI |
+| Medium | 2.4rem | 60px | Page headers (login, setup, modals) |
+| Large | 2rem | 50px | Footer branding |
+
+### CSS Implementation
+
+```css
+.cdl-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.cdl-wordmark__text {
+  font-family: "Bodoni Moda", "Didot", serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cdl-wordmark__line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brass), transparent);
+}
+```
+
+### HTML Structure
+
+```html
+<div class="cdl-wordmark">
+  <span class="cdl-wordmark__text">CDL</span>
+  <span class="cdl-wordmark__line"></span>
+</div>
+```
+
+### Where It's Used
+
+| Location | Size | Context |
+|----------|------|---------|
+| Admin Login | Medium | Page header above "La Oficina" |
+| Admin Setup | Medium | Page header above "La Oficina" |
+| Admin Dashboard | Small | Hero stats corner |
+| Onboarding Modal | Medium | Welcome message header |
+| Main Site Footer | Large | Brand sign-off |
+
+### Design Rationale
+
+**Why the signature line works:**
+1. **References the domino divider** — The horizontal line echoes the Tile's central divider
+2. **Adds gravitas** — Like a signature beneath a name, it grounds the mark
+3. **Creates visual breathing room** — Separates the logo from content below
+4. **The fade effect** — Gradient fading at edges feels elegant, not harsh
+
+**Why tighter letterspacing:**
+- Original 0.2em felt too spread out at larger sizes
+- 0.08em creates a more cohesive, monolithic mark
+- Letters feel like they belong together as one unit
+
+### The Hierarchy
+
+```
+THE TILE          → Hero moments, loading screens, merchandise
+WORDMARK + LINE   → Page headers, administrative UI, footers
+WORDMARK (plain)  → Inline text, compact spaces
+```
+
+---
+
 **Session complete.**
 
 *Filed by: CDL Dream Team*
 *Location: `/TEAM/SESSIONS/2026-01-14-logo-design-session.md`*
+*Updated: January 16, 2026 — Added Wordmark with Signature Line variant*

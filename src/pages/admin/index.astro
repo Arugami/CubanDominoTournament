@@ -20,10 +20,9 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
           <span id="matchesPlayed">--</span> matches played
         </div>
       </div>
-      <div class="hero-stat__badge">
-        <span class="badge-text">CDL</span>
-        <span class="badge-divider"></span>
-        <span class="badge-season">1</span>
+      <div class="cdl-wordmark cdl-wordmark--small">
+        <span class="cdl-wordmark__text">CDL</span>
+        <span class="cdl-wordmark__line"></span>
       </div>
     </div>
 
@@ -143,10 +142,9 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   <!-- Onboarding Welcome Modal -->
   <div class="onboarding-overlay" id="onboardingOverlay">
     <div class="onboarding-modal">
-      <div class="onboarding-badge">
-        <span class="onboarding-badge__text">CDL</span>
-        <span class="onboarding-badge__divider"></span>
-        <span class="onboarding-badge__season">1</span>
+      <div class="cdl-wordmark cdl-wordmark--medium">
+        <span class="cdl-wordmark__text">CDL</span>
+        <span class="cdl-wordmark__line"></span>
       </div>
       <h2 class="onboarding-title">Welcome to La Oficina</h2>
       <p class="onboarding-subtitle">Your command center for managing the Cuban Domino League tournament.</p>
@@ -268,34 +266,19 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     opacity: 0.3;
   }
 
-  /* CDL 1 Badge - unified with main site */
-  .hero-stat__badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+  /* ===== CDL WORDMARK - Iconic mark with signature line ===== */
+  .cdl-wordmark {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 52px;
-    height: 72px;
-    background: linear-gradient(
-      145deg,
-      rgba(20, 14, 10, 0.9) 0%,
-      rgba(12, 8, 5, 0.95) 100%
-    );
-    border: 2px solid var(--brass);
-    border-radius: 10px;
-    box-shadow:
-      0 0 20px rgba(212, 165, 116, 0.25),
-      0 0 40px rgba(212, 165, 116, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      0 6px 24px rgba(0, 0, 0, 0.5);
+    gap: 6px;
+    position: absolute;
+    top: 16px;
+    right: 16px;
   }
 
-  .badge-text,
-  .badge-season {
-    font-family: "Bodoni Moda", serif;
+  .cdl-wordmark__text {
+    font-family: "Bodoni Moda", "Didot", serif;
     font-weight: 900;
     font-style: italic;
     letter-spacing: 0.08em;
@@ -305,28 +288,37 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     background-clip: text;
   }
 
-  .badge-text {
-    font-size: 0.85rem;
-    margin-top: 8px;
+  .cdl-wordmark__line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--brass), transparent);
   }
 
-  .badge-divider {
-    width: 36px;
-    height: 2px;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      var(--brass) 20%,
-      var(--brass) 80%,
-      transparent 100%
-    );
-    margin: 5px 0;
-    opacity: 0.6;
+  /* Small variant - for hero stat corner */
+  .cdl-wordmark--small {
+    top: 12px;
+    right: 12px;
+    gap: 4px;
+  }
+  .cdl-wordmark--small .cdl-wordmark__text {
+    font-size: 1.3rem;
+  }
+  .cdl-wordmark--small .cdl-wordmark__line {
+    width: 28px;
   }
 
-  .badge-season {
-    font-size: 1.4rem;
-    margin-bottom: 6px;
+  /* Medium variant - for onboarding modal */
+  .cdl-wordmark--medium {
+    position: relative;
+    top: auto;
+    right: auto;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .cdl-wordmark--medium .cdl-wordmark__text {
+    font-size: 2.4rem;
+  }
+  .cdl-wordmark--medium .cdl-wordmark__line {
+    width: 60px;
   }
 
   /* ===== TOOLS SECTION ===== */
@@ -739,6 +731,11 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   .empty-state__icon {
     width: 48px;
     height: 48px;
+    min-width: 48px;
+    max-width: 48px;
+    min-height: 48px;
+    max-height: 48px;
+    flex-shrink: 0;
     margin-bottom: 16px;
     color: var(--brass);
     opacity: 0.4;
@@ -821,65 +818,6 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   .onboarding-overlay.active .onboarding-modal {
     transform: translateY(0) scale(1);
-  }
-
-  /* CDL 1 Badge - unified with main site */
-  .onboarding-badge {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 52px;
-    height: 72px;
-    background: linear-gradient(
-      145deg,
-      rgba(20, 14, 10, 0.9) 0%,
-      rgba(12, 8, 5, 0.95) 100%
-    );
-    border: 2px solid var(--brass);
-    border-radius: 10px;
-    margin-bottom: 24px;
-    box-shadow:
-      0 0 20px rgba(212, 165, 116, 0.25),
-      0 0 40px rgba(212, 165, 116, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      0 6px 24px rgba(0, 0, 0, 0.5);
-  }
-
-  .onboarding-badge__text,
-  .onboarding-badge__season {
-    font-family: "Bodoni Moda", serif;
-    font-weight: 900;
-    font-style: italic;
-    letter-spacing: 0.08em;
-    background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .onboarding-badge__text {
-    font-size: 0.85rem;
-    margin-top: 8px;
-  }
-
-  .onboarding-badge__divider {
-    width: 36px;
-    height: 2px;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      var(--brass) 20%,
-      var(--brass) 80%,
-      transparent 100%
-    );
-    margin: 5px 0;
-    opacity: 0.6;
-  }
-
-  .onboarding-badge__season {
-    font-size: 1.4rem;
-    margin-bottom: 6px;
   }
 
   .onboarding-title {
@@ -1232,7 +1170,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       } else {
         recentPlayersEl.innerHTML = `
           <div class="empty-state-rich">
-            <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <svg class="empty-state__icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <circle cx="12" cy="8" r="4" />
               <path d="M4 20v-1a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1" />
             </svg>
@@ -1274,7 +1212,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       } else {
         bracketStatusEl.innerHTML = `
           <div class="empty-state-rich">
-            <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <svg class="empty-state__icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M4 6h4v4H4zM16 6h4v4h-4zM4 14h4v4H4zM16 14h4v4h-4z" />
               <path d="M8 8h2v8H8M14 8h2v8h-2" />
               <path d="M10 12h4" />
@@ -1305,7 +1243,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       } else {
         messagesEl.innerHTML = `
           <div class="empty-state-rich">
-            <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <svg class="empty-state__icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M3 11l18-5v12L3 13v-2z" />
               <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
             </svg>
