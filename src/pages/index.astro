@@ -1060,18 +1060,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* "SALIDA" - THE EXIT. The moment of truth. */
+      /* Reduced from 7 to 4 layers - hero shouldn't outshine the climax */
       .salida-line--main {
         font-size: clamp(4.5rem, 18vw, 12rem);
         color: var(--cream);
-        /* Layered glow: inner light → mid aureole → outer atmosphere → depth shadow */
         text-shadow:
-          0 0 10px rgba(255, 252, 245, 0.6),
-          0 0 30px rgba(255, 252, 245, 0.3),
-          0 0 50px rgba(212, 165, 116, 0.5),
-          0 0 90px rgba(212, 165, 116, 0.35),
-          0 0 140px rgba(212, 165, 116, 0.2),
-          0 4px 20px rgba(0, 0, 0, 0.9),
-          0 8px 40px rgba(0, 0, 0, 0.7);
+          0 0 20px rgba(255, 252, 245, 0.4),
+          0 0 50px rgba(212, 165, 116, 0.4),
+          0 0 80px rgba(212, 165, 116, 0.2),
+          0 4px 25px rgba(0, 0, 0, 0.85);
         filter: brightness(1.05);
       }
 
@@ -1453,6 +1450,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: revisitBreathNoOpacity 380ms ease-out both;
       }
 
+      /* Form panel - subtle breath on re-entry */
+      .panel--form.reentering .form-shell,
+      .panel--form.reentering .progress-tracker {
+        animation: revisitBreath 380ms ease-out both;
+      }
+
       @keyframes revisitBreathNoOpacity {
         from { transform: translateY(2px) scale(1.01); }
         to { transform: translateY(0) scale(1); }
@@ -1491,35 +1494,37 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         pointer-events: none;
       }
 
-      /* Setup whisper - like the room whispering to you */
-      .whisper-setup {
-        font-family: "IBM Plex Sans", system-ui, sans-serif;
-        font-weight: 400;
-        font-size: clamp(0.7rem, 2.5vw, 0.95rem);
-        color: rgba(212, 165, 116, 0.6);
-        letter-spacing: 0.08em;
-        text-align: center;
-        opacity: 0;
-        text-shadow:
-          0 0 20px rgba(212, 165, 116, 0.2),
-          0 2px 10px rgba(0, 0, 0, 0.5);
-      }
-
+      /* "Que Bola Asere" - The Cuban welcome. You've arrived. */
       .whisper-greeting {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: clamp(0.9rem, 3.5vw, 1.3rem); /* Smaller, contextual */
+        font-size: clamp(1.4rem, 5vw, 2.2rem);  /* Larger - the entry point */
         color: var(--brass);
-        letter-spacing: 0.04em;
-        text-transform: none; /* "Que Bola Asere" not "QUE BOLA ASERE" */
+        letter-spacing: 0.03em;
+        text-transform: none;
         text-align: center;
         opacity: 0;
-        /* Subtle brass glow — setup, not climax */
+        margin-bottom: 1.5vh;
         text-shadow:
-          0 0 25px rgba(212, 165, 116, 0.35),
-          0 0 50px rgba(212, 165, 116, 0.15),
-          0 2px 12px rgba(0, 0, 0, 0.6);
+          0 0 30px rgba(212, 165, 116, 0.5),
+          0 0 60px rgba(212, 165, 116, 0.25),
+          0 2px 15px rgba(0, 0, 0, 0.6);
+      }
+
+      /* "This table remembers." - The table whispers after the greeting */
+      .whisper-setup {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(0.8rem, 2.8vw, 1.05rem);  /* Smaller - intimate whisper */
+        color: rgba(212, 165, 116, 0.85);  /* Warmer brass, more present */
+        letter-spacing: 0.05em;
+        text-align: center;
+        opacity: 0;
+        text-shadow:
+          0 0 20px rgba(212, 165, 116, 0.3),
+          0 2px 10px rgba(0, 0, 0, 0.5);
       }
 
       /* BOTTOM LETTERBOX - The recognition, lower to connect with table */
@@ -1587,9 +1592,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Animation for main line - the recognition statement */
-      /* +3.3s breathing room after greeting - let it land */
+      /* Arrives after challenge lands - the answer to "Can you play like they did?" */
       .panel--whisper.in-view:not(.has-played) .whisper-line--ancestors {
-        animation: recognitionStatement 1.8s cubic-bezier(0.16, 1, 0.3, 1) 5.5s forwards;
+        animation: recognitionStatement 1.8s cubic-bezier(0.16, 1, 0.3, 1) 6.0s forwards;
       }
 
       /* Recognition statement - Camera cut. Emerges once, lands clean. No fidgeting. */
@@ -1655,16 +1660,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Cinematic animations - slow, weighted, like memories surfacing */
       /* Lin-Manuel: "Build the pauses into the animation timing. The words that matter need room to BREATHE." */
+
+      /* Narrative sequence: Setup (narrator whisper) → Greeting (direct speech) → Recognition */
+      /* The whisper sets atmosphere first, THEN you're spoken to directly */
       .panel--whisper.in-view:not(.has-played) .whisper-setup {
-        animation: setupWhisper 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        animation: setupWhisper 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingSmoke 2s cubic-bezier(0.16, 1, 0.3, 1) 2.5s forwards;
+        animation: greetingSmoke 1.6s cubic-bezier(0.16, 1, 0.3, 1) 2.0s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
-        animation: mysterySlam 1.4s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards;
+        animation: mysterySlam 1.6s cubic-bezier(0.16, 1, 0.3, 1) 3.8s forwards;
       }
 
       /* Mystery slam - Clean cut. Lands with weight. */
@@ -1802,7 +1810,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--whisper.in-view .whisper-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 7.5s forwards;
+        animation: scrollHintReveal 1s ease-out 8.5s forwards;
       }
 
       /* Once played: returning should feel "static" and inevitable (no replays). */
@@ -1986,12 +1994,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* "Now the ficha is yours." - Torch pass as bottom-left signature */
+      /* Lightened to 75% - signature whispers, doesn't shout */
       .build-word--torch {
         font-family: "Bodoni Moda", serif;
         font-size: clamp(0.85rem, 3vw, 1.15rem);
         font-weight: 400;
         font-style: italic;
-        color: var(--brass);
+        color: rgba(212, 165, 116, 0.75);
         letter-spacing: 0.05em;
         line-height: 1.4;
         display: block;
@@ -2436,16 +2445,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* "ALL" - THE MONEY. Everything on the line. */
+      /* Increased from 4 to 6 layers - THE climax moment needs proper weight */
       .slam-word--all {
         font-size: clamp(4.5rem, 22vw, 14rem);
         color: #fff;
         line-height: 0.8;
-        /* Gold glow - money should SHINE */
         text-shadow:
-          0 0 40px rgba(212, 165, 116, 0.6),
-          0 0 80px rgba(212, 165, 116, 0.4),
-          0 0 120px rgba(212, 165, 116, 0.2),
-          0 4px 40px rgba(0, 0, 0, 0.6);
+          0 0 30px rgba(255, 255, 255, 0.3),
+          0 0 60px rgba(212, 165, 116, 0.6),
+          0 0 100px rgba(212, 165, 116, 0.4),
+          0 0 150px rgba(212, 165, 116, 0.2),
+          0 4px 30px rgba(0, 0, 0, 0.8),
+          0 8px 50px rgba(0, 0, 0, 0.5);
       }
 
       /* BOTTOM LETTERBOX - Scroll hint after the stakes */
@@ -2540,11 +2551,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Event context - grounds the stakes in reality */
+      /* Dimmed to 65% - context recedes, doesn't compete with headlines */
       .slam-context {
         font-family: "IBM Plex Sans", sans-serif;
         font-size: clamp(0.65rem, 2vw, 0.8rem);
         font-weight: 500;
-        color: var(--cream);
+        color: rgba(248, 239, 230, 0.65);
         opacity: 0;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -2639,7 +2651,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .whisper-greeting {
-          font-size: clamp(0.9rem, 3.5vw, 1.2rem); /* Small whisper */
+          font-size: clamp(1.2rem, 5vw, 1.8rem); /* Entry greeting - prominent on mobile */
         }
 
         /* Mobile: Larger, bolder for impact on small screens */
@@ -7649,10 +7661,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
 
-        <!-- TOP LETTERBOX - Setup whisper, then greeting -->
+        <!-- TOP LETTERBOX - Greeting first, then the table whispers -->
         <div class="whisper-top">
-          <p class="whisper-setup">This table remembers.</p>
           <p class="whisper-greeting">Que Bola Asere</p>
+          <p class="whisper-setup">This table remembers.</p>
         </div>
 
         <!-- BOTTOM LETTERBOX - The recognition -->
@@ -8380,12 +8392,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           // Initial check
           updateBackToTopVisibility();
 
-          // Click to scroll to top
+          // Click to teleport to hero
           backToTop.addEventListener('click', () => {
-            storyEl.scrollTo({
-              top: 0,
-              behavior: 'smooth'
-            });
+            // Ensure nothing can "fight" the teleport
+            unlockScroll();
+            snapToPanelTop(heroPanel);
           });
         }
       }
@@ -8615,6 +8626,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             // Update spots left (desktop and mobile button)
             spotsLeftEl.textContent = (PLAYERS_GOAL - PLAYERS_REGISTERED) + " spots left";
             if (spotsLeftButtonEl) spotsLeftButtonEl.textContent = (PLAYERS_GOAL - PLAYERS_REGISTERED);
+
+            // Mark as played for re-entry animation consistency
+            formPanel?.classList.add('has-played');
           }
         });
       }, { threshold: 0.3 });
