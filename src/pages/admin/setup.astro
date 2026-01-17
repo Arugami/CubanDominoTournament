@@ -1,0 +1,687 @@
+---
+// Admin Setup - La Oficina (Commissioner Access)
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>La Oficina Setup | CDL Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400;1,6..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #1c130f;
+        --copper: #b76a3b;
+        --cream: #f8efe6;
+        --bone: #fff7ef;
+        --brass: #d4a574;
+        --gold: #e8c17a;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+      }
+
+      body {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background: #0a0705;
+        color: #fff;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      /* ===== ATMOSPHERIC BACKGROUND ===== */
+      .atmosphere {
+        position: fixed;
+        inset: 0;
+        background:
+          /* Warm copper glow from top */
+          radial-gradient(ellipse at 50% 0%, rgba(183, 106, 59, 0.12) 0%, transparent 50%),
+          /* Brass warmth from corner */
+          radial-gradient(ellipse at 80% 80%, rgba(212, 165, 116, 0.08) 0%, transparent 40%),
+          /* Base warm dark */
+          radial-gradient(ellipse at center, #1a120d 0%, #0a0705 100%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Film grain */
+      .grain {
+        position: fixed;
+        inset: -50%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.04;
+        pointer-events: none;
+        z-index: 1;
+        animation: grainShift 0.4s steps(10) infinite;
+      }
+
+      @keyframes grainShift {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(-3%, -3%); }
+        50% { transform: translate(3%, 1%); }
+        75% { transform: translate(-1%, 2%); }
+      }
+
+      /* Warm vignette - tobacco room edges */
+      .vignette {
+        position: fixed;
+        inset: 0;
+        background:
+          /* Subtle brass glow at center */
+          radial-gradient(ellipse at 50% 30%, rgba(212, 165, 116, 0.04) 0%, transparent 50%),
+          /* Dark vignette edges */
+          radial-gradient(ellipse at center, transparent 0%, rgba(10, 7, 5, 0.7) 100%);
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* ===== MAIN CONTAINER ===== */
+      .setup-container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 360px;
+      }
+
+      /* ===== HEADER ===== */
+      .page-header {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      /* CDL 1 Badge - unified with main site */
+      .page-badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 72px;
+        margin: 0 auto 16px auto;
+        background: linear-gradient(
+          145deg,
+          rgba(20, 14, 10, 0.9) 0%,
+          rgba(12, 8, 5, 0.95) 100%
+        );
+        border: 2px solid var(--brass);
+        border-radius: 10px;
+        position: relative;
+        box-shadow:
+          0 0 20px rgba(212, 165, 116, 0.25),
+          0 0 40px rgba(212, 165, 116, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          0 6px 24px rgba(0, 0, 0, 0.5);
+      }
+
+      .page-badge::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 8px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 50%,
+          rgba(0, 0, 0, 0.1) 100%
+        );
+        pointer-events: none;
+      }
+
+      .page-badge__top,
+      .page-badge__bottom {
+        font-family: "Bodoni Moda", serif;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: 0.08em;
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .page-badge__top {
+        font-size: 0.85rem;
+        margin-top: 8px;
+      }
+
+      .page-badge__divider {
+        width: 36px;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          var(--brass) 20%,
+          var(--brass) 80%,
+          transparent 100%
+        );
+        margin: 5px 0;
+        opacity: 0.6;
+      }
+
+      .page-badge__bottom {
+        font-size: 1.4rem;
+        font-style: italic;
+        margin-bottom: 6px;
+      }
+
+      .page-title {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.8rem;
+        font-weight: 400;
+        font-style: italic;
+        color: var(--cream);
+        letter-spacing: 0.02em;
+        line-height: 1.2;
+        margin-bottom: 8px;
+      }
+
+      .page-subtitle {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--brass);
+        opacity: 0.7;
+      }
+
+      /* ===== FORM AREA - Open feel, carved into the room ===== */
+      .form-area {
+        position: relative;
+        /* No full border - left accent only */
+        border: none;
+        border-left: 3px solid var(--brass);
+        padding: 0 0 0 28px;
+        /* Subtle inner shadow for depth */
+        background: transparent;
+      }
+
+      /* Subtle glow on the left accent */
+      .form-area::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -3px;
+        width: 3px;
+        height: 100%;
+        background: var(--brass);
+        box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+        pointer-events: none;
+      }
+
+      /* ===== FORM STYLES - Underline inputs ===== */
+      .form-group {
+        margin-bottom: 24px;
+      }
+
+      .form-label {
+        display: block;
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.85rem;
+        font-weight: 400;
+        color: var(--cream);
+        margin-bottom: 8px;
+        letter-spacing: 0.02em;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 12px 0;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.5);
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.4);
+        border-radius: 0;
+        outline: none;
+        transition: all 0.3s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .form-input:focus {
+        color: var(--cream);
+        border-bottom-color: var(--brass);
+      }
+
+      .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.25);
+        font-style: italic;
+      }
+
+      .form-input:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .form-hint {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.3);
+        margin-top: 8px;
+        font-style: italic;
+      }
+
+      /* ===== SUBMIT BUTTON - Brass bar ===== */
+      .submit-btn {
+        width: 100%;
+        padding: 16px 24px;
+        margin-top: 8px;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--ink);
+        background: linear-gradient(
+          180deg,
+          var(--gold) 0%,
+          var(--brass) 50%,
+          var(--copper) 100%
+        );
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow:
+          0 4px 16px rgba(183, 106, 59, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 8px 24px rgba(183, 106, 59, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+
+      .submit-btn:active {
+        transform: translateY(0) scale(0.98);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* ===== DIVIDER ===== */
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 28px 0;
+      }
+
+      .divider-line {
+        flex: 1;
+        height: 1px;
+        background: rgba(212, 165, 116, 0.2);
+      }
+
+      .divider-text {
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--brass);
+        opacity: 0.6;
+      }
+
+      /* ===== MESSAGES ===== */
+      .message {
+        text-align: center;
+        padding: 14px 16px;
+        margin-bottom: 20px;
+        font-size: 0.8rem;
+        letter-spacing: 0.02em;
+        border: 1px solid;
+      }
+
+      .message--error {
+        background: rgba(180, 60, 50, 0.1);
+        border-color: rgba(180, 60, 50, 0.3);
+        color: #e07a72;
+      }
+
+      .message--success {
+        background: rgba(76, 175, 80, 0.1);
+        border-color: rgba(76, 175, 80, 0.3);
+        color: #8bc990;
+      }
+
+      /* ===== ADMIN IDENTITY CARD ===== */
+      .admin-identity {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px;
+        background: rgba(212, 165, 116, 0.05);
+        border: 1px solid rgba(212, 165, 116, 0.15);
+        margin-bottom: 24px;
+      }
+
+      .admin-avatar {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, var(--brass), var(--copper));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.2rem;
+        font-weight: 400;
+        color: var(--ink);
+      }
+
+      .admin-details {
+        flex: 1;
+      }
+
+      .admin-name {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--cream);
+        margin-bottom: 2px;
+      }
+
+      .admin-role {
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--brass);
+        opacity: 0.75;
+      }
+
+      /* ===== FOOTER LINK ===== */
+      .footer-link {
+        display: block;
+        text-align: center;
+        margin-top: 28px;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--brass);
+        text-decoration: none;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+      }
+
+      .footer-link:hover {
+        opacity: 0.8;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 400px) {
+        .form-area {
+          padding-left: 20px;
+        }
+
+        .page-title {
+          font-size: 1.4rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Atmospheric layers -->
+    <div class="atmosphere"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
+    <div class="setup-container">
+      <div class="page-header">
+        <div class="page-badge">
+          <span class="page-badge__top">CDL</span>
+          <div class="page-badge__divider"></div>
+          <span class="page-badge__bottom">1</span>
+        </div>
+        <h1 class="page-title">La Oficina</h1>
+        <p class="page-subtitle">Commissioner Access</p>
+      </div>
+
+      <div class="form-area">
+        <div id="errorMessage" class="message message--error hidden"></div>
+        <div id="successMessage" class="message message--success hidden"></div>
+
+        <!-- Step 1: Email verification -->
+        <form id="step1Form">
+          <div class="form-group">
+            <label class="form-label" for="email">Admin Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="your@email.com"
+              required
+              autocomplete="email"
+            />
+          </div>
+
+          <button type="submit" class="submit-btn" id="verifyBtn">
+            Verify
+          </button>
+        </form>
+
+        <!-- Step 2: Password creation -->
+        <form id="step2Form" class="hidden">
+          <div id="adminInfo" class="admin-identity">
+            <div class="admin-avatar" id="adminAvatar">?</div>
+            <div class="admin-details">
+              <div class="admin-name" id="adminName">Admin</div>
+              <div class="admin-role" id="adminRole">Admin</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Create Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              placeholder="at least 6 characters"
+              required
+              minlength="6"
+              autocomplete="new-password"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              class="form-input"
+              placeholder="re-enter password"
+              required
+              minlength="6"
+              autocomplete="new-password"
+            />
+          </div>
+
+          <button type="submit" class="submit-btn" id="createBtn">
+            Set Up Access
+          </button>
+        </form>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">CDL I</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <a href="/admin/login" class="footer-link">Already set up? Sign in</a>
+      </div>
+    </div>
+
+    <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
+      async function initSupabase() {
+        const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+        return createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+
+      let verifiedAdmin = null;
+
+      const step1Form = document.getElementById('step1Form');
+      const step2Form = document.getElementById('step2Form');
+      const errorMessage = document.getElementById('errorMessage');
+      const successMessage = document.getElementById('successMessage');
+
+      function showError(text) {
+        errorMessage.textContent = text;
+        errorMessage.classList.remove('hidden');
+        successMessage.classList.add('hidden');
+      }
+
+      function showSuccess(text) {
+        successMessage.textContent = text;
+        successMessage.classList.remove('hidden');
+        errorMessage.classList.add('hidden');
+      }
+
+      function hideMessages() {
+        errorMessage.classList.add('hidden');
+        successMessage.classList.add('hidden');
+      }
+
+      function goToStep2(admin) {
+        verifiedAdmin = admin;
+
+        const initial = admin.name ? admin.name[0].toUpperCase() : admin.email[0].toUpperCase();
+        document.getElementById('adminAvatar').textContent = initial;
+        document.getElementById('adminName').textContent = admin.name || admin.email.split('@')[0];
+        document.getElementById('adminRole').textContent = admin.role === 'super_admin' ? 'Commissioner' : 'Administrator';
+
+        step1Form.classList.add('hidden');
+        step2Form.classList.remove('hidden');
+        hideMessages();
+      }
+
+      // Step 1: Verify email
+      step1Form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideMessages();
+
+        const email = document.getElementById('email').value.trim().toLowerCase();
+        const verifyBtn = document.getElementById('verifyBtn');
+
+        verifyBtn.disabled = true;
+        verifyBtn.textContent = 'Verifying...';
+
+        try {
+          const supabase = await initSupabase();
+
+          const { data: adminUser, error } = await supabase
+            .from('admin_users')
+            .select('*')
+            .eq('email', email)
+            .single();
+
+          console.log('Admin lookup result:', { adminUser, error });
+
+          if (error || !adminUser) {
+            showError('This email is not registered as an admin.');
+            verifyBtn.disabled = false;
+            verifyBtn.textContent = 'Verify Identity';
+            return;
+          }
+
+          // Proceed to password creation
+          goToStep2(adminUser);
+
+        } catch (err) {
+          console.error('Verify error:', err);
+          showError('Something went wrong. Please try again.');
+        }
+
+        verifyBtn.disabled = false;
+        verifyBtn.textContent = 'Verify';
+      });
+
+      // Step 2: Create password
+      step2Form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideMessages();
+
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const createBtn = document.getElementById('createBtn');
+
+        if (password !== confirmPassword) {
+          showError('Passwords do not match.');
+          return;
+        }
+
+        if (password.length < 6) {
+          showError('Password must be at least 6 characters.');
+          return;
+        }
+
+        createBtn.disabled = true;
+        createBtn.textContent = 'Creating...';
+
+        try {
+          const supabase = await initSupabase();
+
+          const { data, error } = await supabase.auth.signUp({
+            email: verifiedAdmin.email,
+            password: password
+          });
+
+          if (error) {
+            showError(error.message);
+            createBtn.disabled = false;
+            createBtn.textContent = 'Set Up Access';
+            return;
+          }
+
+          await supabase
+            .from('admin_users')
+            .update({ last_login: new Date().toISOString() })
+            .eq('email', verifiedAdmin.email);
+
+          showSuccess('Welcome to La Oficina. Redirecting...');
+
+          setTimeout(() => {
+            window.location.href = '/admin';
+          }, 1500);
+
+        } catch (err) {
+          console.error('Create error:', err);
+          showError('Something went wrong. Please try again.');
+          createBtn.disabled = false;
+          createBtn.textContent = 'Set Up Access';
+        }
+      });
+    </script>
+  </body>
+</html>

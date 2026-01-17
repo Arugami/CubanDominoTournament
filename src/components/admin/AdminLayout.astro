@@ -1,0 +1,1132 @@
+---
+// AdminLayout - Shared layout for all admin pages
+// Includes navigation, auth check, and consistent styling
+
+interface Props {
+  title: string;
+  activeNav?: 'dashboard' | 'registrations' | 'teams' | 'bracket' | 'announcements';
+}
+
+const { title, activeNav = 'dashboard' } = Astro.props;
+
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+const navItems = [
+  { id: 'dashboard', label: 'Dashboard', href: '/admin', icon: 'grid' },
+  { id: 'registrations', label: 'Players', href: '/admin/registrations', icon: 'users' },
+  { id: 'teams', label: 'Teams', href: '/admin/teams', icon: 'team' },
+  { id: 'bracket', label: 'Bracket', href: '/admin/bracket', icon: 'bracket' },
+  { id: 'announcements', label: 'Ticker', href: '/admin/announcements', icon: 'megaphone' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} | CDL Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400;1,6..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style is:global>
+      :root {
+        color-scheme: dark;
+        --ink: #1c130f;
+        --muted: #594a3f;
+        --copper: #b76a3b;
+        --cream: #f8efe6;
+        --bone: #fff7ef;
+        --brass: #d4a574;
+        --gold: #ffd700;
+        --bg-dark: #0a0705;
+        --bg-card: rgba(28, 19, 15, 0.9);
+        --border-subtle: rgba(212, 165, 116, 0.15);
+        --border-accent: rgba(212, 165, 116, 0.3);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        height: 100%;
+      }
+
+      body {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background: var(--bg-dark);
+        color: #fff;
+        line-height: 1.5;
+      }
+
+      /* ===== ATMOSPHERIC BACKGROUND SYSTEM ===== */
+      /* Warm cigar lounge atmosphere - same as main site */
+      .admin-atmosphere {
+        position: fixed;
+        inset: 0;
+        background:
+          /* Warm copper glow from top center */
+          radial-gradient(ellipse at 50% 0%, rgba(183, 106, 59, 0.12) 0%, transparent 50%),
+          /* Brass warmth from bottom right corner */
+          radial-gradient(ellipse at 85% 85%, rgba(212, 165, 116, 0.06) 0%, transparent 40%),
+          /* Secondary brass warmth from left */
+          radial-gradient(ellipse at 10% 60%, rgba(212, 165, 116, 0.04) 0%, transparent 35%),
+          /* Base warm dark gradient */
+          radial-gradient(ellipse at center, #1a120d 0%, #0d0906 50%, #0a0705 100%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Film grain with warmth */
+      .admin-grain {
+        position: fixed;
+        inset: -50%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.035;
+        pointer-events: none;
+        z-index: 1;
+        mix-blend-mode: overlay;
+      }
+
+      /* Warm vignette - tobacco room edges */
+      .admin-vignette {
+        position: fixed;
+        inset: 0;
+        background:
+          /* Subtle brass glow at center-top */
+          radial-gradient(ellipse at 50% 20%, rgba(212, 165, 116, 0.03) 0%, transparent 50%),
+          /* Dark vignette edges for depth */
+          radial-gradient(ellipse at center, transparent 30%, rgba(10, 7, 5, 0.5) 100%);
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* Common button styles */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+      }
+
+      .btn--primary {
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        color: var(--ink);
+        box-shadow: 0 2px 8px rgba(183, 106, 59, 0.3);
+      }
+
+      .btn--primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(183, 106, 59, 0.4);
+      }
+
+      .btn--secondary {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--brass);
+        border: 1px solid var(--border-accent);
+      }
+
+      .btn--secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .btn--danger {
+        background: rgba(244, 67, 54, 0.1);
+        color: #e57373;
+        border: 1px solid rgba(244, 67, 54, 0.3);
+      }
+
+      .btn--danger:hover {
+        background: rgba(244, 67, 54, 0.2);
+      }
+
+      .btn--sm {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+
+      /* Card styles - with depth and warmth */
+      .card {
+        background:
+          linear-gradient(180deg, rgba(28, 19, 15, 0.95) 0%, rgba(20, 14, 10, 0.98) 100%);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 24px;
+        position: relative;
+        /* Inner glow for depth */
+        box-shadow:
+          inset 0 1px 0 rgba(212, 165, 116, 0.08),
+          inset 0 0 20px rgba(0, 0, 0, 0.2),
+          0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .card__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .card__title {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--brass);
+        letter-spacing: 0.02em;
+      }
+
+      /* Table styles */
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .table th,
+      .table td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .table th {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--brass);
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      .table td {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .table tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      /* Form inputs - with warm depth */
+      .input {
+        width: 100%;
+        padding: 10px 14px;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.9rem;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-subtle);
+        border-radius: 6px;
+        outline: none;
+        transition: all 0.2s ease;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .input:focus {
+        border-color: var(--brass);
+        box-shadow:
+          inset 0 2px 4px rgba(0, 0, 0, 0.2),
+          0 0 0 2px rgba(212, 165, 116, 0.1);
+      }
+
+      .input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+        font-style: italic;
+      }
+
+      /* Status badges */
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 4px;
+      }
+
+      .badge--pending {
+        background: rgba(255, 193, 7, 0.15);
+        color: #ffc107;
+      }
+
+      .badge--active, .badge--confirmed {
+        background: rgba(76, 175, 80, 0.15);
+        color: #81c784;
+      }
+
+      .badge--completed {
+        background: rgba(33, 150, 243, 0.15);
+        color: #64b5f6;
+      }
+
+      .badge--cancelled {
+        background: rgba(244, 67, 54, 0.15);
+        color: #e57373;
+      }
+
+      /* ===== GLOBAL MODAL STYLES (inherited by child pages) ===== */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+      }
+
+      .modal {
+        background:
+          linear-gradient(180deg, rgba(28, 19, 15, 0.98) 0%, rgba(20, 14, 10, 0.98) 100%);
+        border: 1px solid var(--border-subtle);
+        box-shadow:
+          inset 0 1px 0 rgba(212, 165, 116, 0.08),
+          0 8px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      .modal__header {
+        background:
+          linear-gradient(180deg, rgba(28, 19, 15, 0.98) 0%, rgba(24, 16, 12, 0.98) 100%);
+        border-bottom: 1px solid var(--border-subtle);
+        box-shadow: inset 0 -1px 0 rgba(212, 165, 116, 0.05);
+      }
+    </style>
+    <style>
+      /* MOBILE-FIRST: Base styles are mobile, desktop overrides at bottom */
+
+      .admin-layout {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        min-height: 100dvh;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Mobile Header - with warm depth */
+      .mobile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background:
+          linear-gradient(180deg, rgba(28, 19, 15, 0.98) 0%, rgba(20, 14, 10, 0.95) 100%);
+        border-bottom: 1px solid var(--border-subtle);
+        box-shadow:
+          inset 0 -1px 0 rgba(212, 165, 116, 0.05),
+          0 4px 20px rgba(0, 0, 0, 0.3);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .mobile-header__brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+
+      .mobile-header__logo {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.5rem;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: 0.2em;
+        color: var(--brass);
+        line-height: 1;
+      }
+
+      .mobile-header__title {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .mobile-header__user {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--brass), var(--copper));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Bodoni Moda", serif;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--ink);
+        border: none;
+        cursor: pointer;
+        /* Online glow effect */
+        box-shadow:
+          0 0 0 2px rgba(10, 7, 5, 0.8),
+          0 0 12px rgba(212, 165, 116, 0.4);
+      }
+
+      /* Online indicator dot */
+      .mobile-header__user::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 10px;
+        height: 10px;
+        background: #4ade80;
+        border: 2px solid #0a0705;
+        border-radius: 50%;
+        box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
+      }
+
+      /* Desktop Sidebar - HIDDEN on mobile */
+      .admin-sidebar {
+        display: none;
+      }
+
+      /* Main Content Area - Full width on mobile */
+      .admin-main {
+        flex: 1;
+        min-height: 0;
+        padding-bottom: 80px; /* Space for bottom nav */
+        overflow-y: auto;
+      }
+
+      .admin-header {
+        display: none; /* Use mobile header instead */
+      }
+
+      .admin-content {
+        padding: 16px;
+      }
+
+      /* Mobile Bottom Navigation - with warm depth */
+      .mobile-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background:
+          linear-gradient(0deg, rgba(20, 14, 10, 0.98) 0%, rgba(28, 19, 15, 0.95) 100%);
+        border-top: 1px solid var(--border-subtle);
+        box-shadow:
+          inset 0 1px 0 rgba(212, 165, 116, 0.05),
+          0 -4px 20px rgba(0, 0, 0, 0.3);
+        display: flex;
+        justify-content: space-around;
+        padding: 8px 0;
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+        z-index: 100;
+      }
+
+      .mobile-nav__item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 12px;
+        min-width: 60px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.5);
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .mobile-nav__item.active {
+        color: var(--brass);
+      }
+
+      /* Active indicator dot */
+      .mobile-nav__item.active::after {
+        content: '';
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        background: var(--brass);
+        border-radius: 50%;
+        box-shadow: 0 0 8px rgba(212, 165, 116, 0.6);
+      }
+
+      .mobile-nav__item:active {
+        transform: scale(0.95);
+      }
+
+      .mobile-nav__icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .mobile-nav__label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;  /* Consistent sports broadcast tracking */
+      }
+
+      /* User Menu (mobile) */
+      .user-menu {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 200;
+        display: flex;
+        align-items: flex-end;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .user-menu.open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .user-menu__content {
+        width: 100%;
+        background:
+          linear-gradient(180deg, rgba(28, 19, 15, 0.98) 0%, rgba(20, 14, 10, 0.95) 100%);
+        border-top: 1px solid var(--border-subtle);
+        border-radius: 20px 20px 0 0;
+        padding: 24px 20px;
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+        box-shadow:
+          inset 0 1px 0 rgba(212, 165, 116, 0.08),
+          0 -8px 30px rgba(0, 0, 0, 0.4);
+      }
+
+      .user-menu.open .user-menu__content {
+        transform: translateY(0);
+      }
+
+      .user-menu__header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-subtle);
+        margin-bottom: 20px;
+      }
+
+      .user-menu__avatar {
+        width: 56px;
+        height: 56px;
+        background: linear-gradient(135deg, var(--brass), var(--copper));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Bodoni Moda", serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--ink);
+      }
+
+      .user-menu__info {
+        flex: 1;
+      }
+
+      .user-menu__name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      .user-menu__role {
+        font-size: 0.75rem;
+        color: var(--copper);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .user-menu__close {
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .user-menu__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .user-menu__btn {
+        width: 100%;
+        padding: 16px 20px;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .user-menu__btn--logout {
+        background: rgba(244, 67, 54, 0.1);
+        color: #e57373;
+        border: 1px solid rgba(244, 67, 54, 0.3);
+      }
+
+      .user-menu__btn--back {
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.7);
+        border: 1px solid var(--border-subtle);
+      }
+
+      /* Auth loading state - with atmospheric background */
+      .auth-loading {
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(183, 106, 59, 0.12) 0%, transparent 50%),
+          radial-gradient(ellipse at center, #1a120d 0%, #0a0705 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+
+      .auth-loading.hidden {
+        display: none;
+      }
+
+      .auth-spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--border-subtle);
+        border-top-color: var(--brass);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        box-shadow: 0 0 20px rgba(212, 165, 116, 0.2);
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      /* ===== DESKTOP OVERRIDES (768px+) ===== */
+      @media (min-width: 769px) {
+        .admin-layout {
+          flex-direction: row;
+        }
+
+        .mobile-header {
+          display: none;
+        }
+
+        .mobile-nav {
+          display: none;
+        }
+
+        .user-menu {
+          display: none;
+        }
+
+        /* Show Desktop Sidebar - with warm depth */
+        .admin-sidebar {
+          width: 240px;
+          background:
+            linear-gradient(90deg, rgba(20, 14, 10, 0.98) 0%, rgba(28, 19, 15, 0.95) 100%);
+          border-right: 1px solid var(--border-subtle);
+          box-shadow:
+            inset -1px 0 0 rgba(212, 165, 116, 0.05),
+            4px 0 20px rgba(0, 0, 0, 0.3);
+          display: flex;
+          flex-direction: column;
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          z-index: 100;
+        }
+
+        .sidebar-header {
+          padding: 24px 20px;
+          border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .sidebar-brand {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          text-decoration: none;
+        }
+
+        .sidebar-logo {
+          font-family: "Bodoni Moda", serif;
+          font-size: 1.8rem;
+          font-weight: 900;
+          font-style: italic;
+          letter-spacing: 0.2em;
+          color: var(--brass);
+          line-height: 1;
+        }
+
+        .sidebar-title {
+          font-family: "IBM Plex Sans Condensed", sans-serif;
+          font-size: 0.65rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          color: var(--copper);
+          opacity: 0.8;
+        }
+
+        .sidebar-nav {
+          flex: 1;
+          padding: 16px 12px;
+        }
+
+        .nav-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 16px;
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: rgba(255, 255, 255, 0.6);
+          text-decoration: none;
+          border-radius: 8px;
+          margin-bottom: 4px;
+          transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+          background: rgba(255, 255, 255, 0.05);
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .nav-item.active {
+          background: rgba(212, 165, 116, 0.1);
+          color: var(--brass);
+        }
+
+        .nav-item__icon {
+          width: 20px;
+          height: 20px;
+          opacity: 0.7;
+        }
+
+        .nav-item.active .nav-item__icon {
+          opacity: 1;
+        }
+
+        .sidebar-footer {
+          padding: 16px 12px;
+          border-top: 1px solid var(--border-subtle);
+        }
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 16px;
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 8px;
+          margin-bottom: 12px;
+        }
+
+        .user-avatar {
+          position: relative;
+          width: 36px;
+          height: 36px;
+          background: linear-gradient(135deg, var(--brass), var(--copper));
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: "Bodoni Moda", serif;
+          font-weight: 700;
+          font-size: 1rem;
+          color: var(--ink);
+          /* Online glow */
+          box-shadow:
+            0 0 0 2px rgba(10, 7, 5, 0.8),
+            0 0 10px rgba(212, 165, 116, 0.3);
+        }
+
+        /* Online indicator */
+        .user-avatar::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          right: -1px;
+          width: 10px;
+          height: 10px;
+          background: #4ade80;
+          border: 2px solid #14100c;
+          border-radius: 50%;
+          box-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
+        }
+
+        .user-details {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .user-name {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #fff;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .user-role {
+          font-size: 0.7rem;
+          color: var(--copper);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .logout-btn {
+          width: 100%;
+          padding: 10px 16px;
+          background: transparent;
+          border: 1px solid var(--border-subtle);
+          border-radius: 8px;
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: rgba(255, 255, 255, 0.6);
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+          background: rgba(255, 255, 255, 0.05);
+          color: #fff;
+          border-color: var(--border-accent);
+        }
+
+        /* Main Content Area */
+        .admin-main {
+          flex: 1;
+          margin-left: 240px;
+          min-height: 100vh;
+          padding-bottom: 0;
+        }
+
+        .admin-header {
+          display: block;
+          background:
+            linear-gradient(180deg, rgba(28, 19, 15, 0.98) 0%, rgba(20, 14, 10, 0.95) 100%);
+          border-bottom: 1px solid var(--border-subtle);
+          box-shadow:
+            inset 0 -1px 0 rgba(212, 165, 116, 0.05),
+            0 4px 20px rgba(0, 0, 0, 0.3);
+          padding: 20px 32px;
+          position: sticky;
+          top: 0;
+          z-index: 50;
+        }
+
+        .admin-header__title {
+          font-family: "Bodoni Moda", serif;
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--brass);
+          letter-spacing: 0.02em;
+        }
+
+        .admin-content {
+          padding: 32px;
+          max-width: 1400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Atmospheric layers - cigar lounge depth -->
+    <div class="admin-atmosphere"></div>
+    <div class="admin-grain"></div>
+    <div class="admin-vignette"></div>
+
+    <!-- Auth Loading State -->
+    <div id="authLoading" class="auth-loading">
+      <div class="auth-spinner"></div>
+    </div>
+
+    <div id="adminApp" class="admin-layout" style="display: none;">
+      <!-- Mobile Header -->
+      <header class="mobile-header">
+        <a href="/admin" class="mobile-header__brand">
+          <span class="mobile-header__logo">CDL</span>
+        </a>
+        <h1 class="mobile-header__title">{title}</h1>
+        <button class="mobile-header__user" id="mobileUserBtn" aria-label="User menu">
+          <span id="mobileUserAvatar">?</span>
+        </button>
+      </header>
+
+      <!-- Mobile User Menu -->
+      <div class="user-menu" id="userMenu">
+        <div class="user-menu__content">
+          <div class="user-menu__header">
+            <div class="user-menu__avatar" id="menuAvatar">?</div>
+            <div class="user-menu__info">
+              <div class="user-menu__name" id="menuUserName">Loading...</div>
+              <div class="user-menu__role" id="menuUserRole">Admin</div>
+            </div>
+            <button class="user-menu__close" id="closeUserMenu">&times;</button>
+          </div>
+          <div class="user-menu__actions">
+            <a href="/" class="user-menu__btn user-menu__btn--back">Back to Site</a>
+            <button class="user-menu__btn user-menu__btn--logout" id="mobileLogoutBtn">Sign Out</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop Sidebar (hidden on mobile) -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-header">
+          <a href="/admin" class="sidebar-brand">
+            <span class="sidebar-logo">CDL</span>
+            <span class="sidebar-title">Admin</span>
+          </a>
+        </div>
+
+        <nav class="sidebar-nav">
+          {navItems.map((item) => (
+            <a
+              href={item.href}
+              class={`nav-item ${activeNav === item.id ? 'active' : ''}`}
+            >
+              <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                {item.icon === 'grid' && (
+                  <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+                )}
+                {item.icon === 'users' && (
+                  <>
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                  </>
+                )}
+                {item.icon === 'team' && (
+                  <>
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M20 8v6M23 11h-6" />
+                  </>
+                )}
+                {item.icon === 'bracket' && (
+                  <>
+                    <path d="M2 6h6M2 18h6M8 6v4a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4V6M8 18v-4a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v4M16 6h6M16 18h6" />
+                  </>
+                )}
+                {item.icon === 'megaphone' && (
+                  <>
+                    <path d="m3 11 18-5v12L3 13v-2z" />
+                    <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+                  </>
+                )}
+              </svg>
+              <span>{item.label}</span>
+            </a>
+          ))}
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <div class="user-avatar" id="userAvatar">?</div>
+            <div class="user-details">
+              <div class="user-name" id="userName">Loading...</div>
+              <div class="user-role" id="userRole">Admin</div>
+            </div>
+          </div>
+          <button class="logout-btn" id="logoutBtn">Sign Out</button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+        <header class="admin-header">
+          <h1 class="admin-header__title">{title}</h1>
+        </header>
+
+        <div class="admin-content">
+          <slot />
+        </div>
+      </main>
+
+      <!-- Mobile Bottom Navigation -->
+      <nav class="mobile-nav">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class={`mobile-nav__item ${activeNav === item.id ? 'active' : ''}`}
+          >
+            <svg class="mobile-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              {item.icon === 'grid' && (
+                <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+              )}
+              {item.icon === 'users' && (
+                <>
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                </>
+              )}
+              {item.icon === 'team' && (
+                <>
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M20 8v6M23 11h-6" />
+                </>
+              )}
+              {item.icon === 'bracket' && (
+                <>
+                  <path d="M2 6h6M2 18h6M8 6v4a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4V6M8 18v-4a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v4M16 6h6M16 18h6" />
+                </>
+              )}
+              {item.icon === 'megaphone' && (
+                <>
+                  <path d="m3 11 18-5v12L3 13v-2z" />
+                  <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+                </>
+              )}
+            </svg>
+            <span class="mobile-nav__label">{item.label}</span>
+          </a>
+        ))}
+      </nav>
+    </div>
+
+    <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
+      // Store supabase instance globally for child pages
+      window.SUPABASE_URL = SUPABASE_URL;
+      window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
+
+      async function initAdmin() {
+        const authLoading = document.getElementById('authLoading');
+        const adminApp = document.getElementById('adminApp');
+
+        try {
+          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+          const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+          // Store for use by child pages
+          window.supabase = supabase;
+
+          // Check auth session
+          const { data: { session } } = await supabase.auth.getSession();
+
+          if (!session) {
+            window.location.href = '/admin/login';
+            return;
+          }
+
+          // Verify admin status
+          const { data: adminUser, error } = await supabase
+            .from('admin_users')
+            .select('id, name, role')
+            .eq('email', session.user.email)
+            .single();
+
+          if (error || !adminUser) {
+            await supabase.auth.signOut();
+            window.location.href = '/admin/login';
+            return;
+          }
+
+          // Store admin info
+          window.currentAdmin = adminUser;
+
+          // Update UI with user info (both mobile and desktop)
+          const displayName = adminUser.name || session.user.email.split('@')[0];
+          const displayRole = adminUser.role === 'super_admin' ? 'Super Admin' : 'Admin';
+          const avatarInitial = (adminUser.name || session.user.email)[0].toUpperCase();
+
+          // Desktop sidebar
+          document.getElementById('userName').textContent = displayName;
+          document.getElementById('userRole').textContent = displayRole;
+          document.getElementById('userAvatar').textContent = avatarInitial;
+
+          // Mobile header and user menu
+          document.getElementById('mobileUserAvatar').textContent = avatarInitial;
+          document.getElementById('menuAvatar').textContent = avatarInitial;
+          document.getElementById('menuUserName').textContent = displayName;
+          document.getElementById('menuUserRole').textContent = displayRole;
+
+          // Show admin app
+          authLoading.classList.add('hidden');
+          adminApp.style.display = 'flex';
+
+          // Mobile user menu handlers
+          const userMenu = document.getElementById('userMenu');
+          const mobileUserBtn = document.getElementById('mobileUserBtn');
+          const closeUserMenu = document.getElementById('closeUserMenu');
+
+          mobileUserBtn.addEventListener('click', () => {
+            userMenu.classList.add('open');
+          });
+
+          closeUserMenu.addEventListener('click', () => {
+            userMenu.classList.remove('open');
+          });
+
+          // Close menu when tapping backdrop
+          userMenu.addEventListener('click', (e) => {
+            if (e.target === userMenu) {
+              userMenu.classList.remove('open');
+            }
+          });
+
+          // Logout handlers (both mobile and desktop)
+          const handleLogout = async () => {
+            await supabase.auth.signOut();
+            window.location.href = '/admin/login';
+          };
+
+          document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+          document.getElementById('mobileLogoutBtn').addEventListener('click', handleLogout);
+
+          // Dispatch ready event for child pages
+          window.dispatchEvent(new CustomEvent('adminReady', { detail: { supabase, adminUser } }));
+
+        } catch (err) {
+          console.error('Admin init error:', err);
+          window.location.href = '/admin/login';
+        }
+      }
+
+      initAdmin();
+    </script>
+  </body>
+</html>

@@ -20,7 +20,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,800;6..96,900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400;1,6..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Serif:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -2538,20 +2538,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         50% { transform: translateX(-50%) translateY(8px); }
       }
 
-      /* Progress Tracker */
+      /* Progress Tracker - Hidden, replaced by unified .form-scarcity */
       .progress-tracker {
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 14px;
-        padding: 14px 18px;
-        margin-top: 18px;
-        margin-bottom: 18px;
-        max-width: 400px;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
+        display: none;
       }
 
       .progress-header {
@@ -3748,18 +3737,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 15000;
         width: min(280px, calc(100vw - 28px));
         margin: 0;
-        background: linear-gradient(135deg, rgba(18, 12, 8, 0.98) 0%, rgba(12, 8, 5, 0.98) 100%);
+        /* Darker, richer background — like a laminated badge */
+        background: linear-gradient(135deg, rgba(10, 7, 5, 0.98) 0%, rgba(6, 4, 3, 0.98) 100%);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        /* Sharp edges — credential, not notification */
-        border: 1px solid rgba(212, 165, 116, 0.3);
-        border-left: 3px solid var(--brass);
+        /* Sharp brass edge — credential strip */
+        border: 1px solid rgba(183, 106, 59, 0.4);
+        border-left: 4px solid var(--brass);
         border-radius: 2px;
         padding: 0;
         overflow: hidden;
         box-shadow:
-          0 20px 60px rgba(0, 0, 0, 0.6),
-          0 4px 16px rgba(0, 0, 0, 0.4);
+          0 20px 60px rgba(0, 0, 0, 0.7),
+          0 4px 16px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(212, 165, 116, 0.08);
         opacity: 0;
         transform: translateX(20px);
         pointer-events: none;
@@ -3780,13 +3771,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* ACCESS badge — like a credential strip */
+      /* ACCESS badge — subtle, doesn't compete with CTA */
       .mesa-help__badge {
-        background: var(--brass);
-        color: #0a0705;
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.5);
         font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
-        font-weight: 700;
-        font-size: 0.65rem;
+        font-weight: 600;
+        font-size: 0.6rem;
         letter-spacing: 0.12em;
         padding: 5px 14px;
         text-transform: uppercase;
@@ -3806,6 +3797,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-transform: uppercase;
       }
 
+      .mesa-help__highlight {
+        color: var(--copper);
+      }
+
       .mesa-help__text {
         font-family: "IBM Plex Sans", system-ui, sans-serif;
         color: rgba(255, 255, 255, 0.6);
@@ -3818,9 +3813,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         appearance: none;
         width: 100%;
         border: none;
-        border-top: 1px solid rgba(212, 165, 116, 0.15);
-        background: rgba(212, 165, 116, 0.06);
-        color: var(--brass);
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        background: transparent;
+        color: rgba(255, 255, 255, 0.4);
         padding: 11px 16px;
         font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
         font-weight: 600;
@@ -3828,15 +3823,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         cursor: pointer;
-        transition: background 150ms ease;
+        transition: background 150ms ease, color 150ms ease;
       }
 
       .mesa-help__dismiss:hover {
-        background: rgba(212, 165, 116, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.6);
       }
 
       .mesa-help__dismiss:active {
-        background: rgba(212, 165, 116, 0.08);
+        background: rgba(255, 255, 255, 0.02);
       }
 
       @keyframes tickerScroll {
@@ -5165,8 +5161,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .rules-header__subtitle {
         font-family: "IBM Plex Sans", sans-serif;
         font-size: 0.65rem;
-        font-weight: 400;
-        letter-spacing: 0.25em;
+        font-weight: 600;  /* Sports energy - upgraded from 400 */
+        letter-spacing: 0.08em;  /* Consistent with rule cards */
         text-transform: uppercase;
         color: var(--brass);
         opacity: 0;
@@ -5182,11 +5178,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-bottom: 20px;
       }
 
-      /* Rule Cards - Etched brass plaques */
+      /* Rule Cards - Subtle, receding into the room */
       .rule-card {
         background:
-          linear-gradient(145deg, rgba(28, 20, 14, 0.9) 0%, rgba(14, 10, 7, 0.95) 100%);
-        border: 1px solid rgba(212, 165, 116, 0.2);
+          linear-gradient(145deg, rgba(28, 20, 14, 0.8) 0%, rgba(14, 10, 7, 0.9) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: var(--radius);
         padding: 14px 12px;
         text-align: center;
@@ -5194,49 +5190,40 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0;
         transform: translateY(12px);
         position: relative;
-        /* Etched/pressed effect - inset shadows */
+        /* Subtle depth */
         box-shadow:
-          inset 0 2px 4px rgba(0, 0, 0, 0.4),
-          inset 0 -1px 0 rgba(212, 165, 116, 0.1),
-          0 1px 0 rgba(255, 255, 255, 0.03);
+          inset 0 2px 4px rgba(0, 0, 0, 0.3),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.02),
+          0 1px 0 rgba(255, 255, 255, 0.02);
       }
 
-      /* Brass corner accents - subtle */
+      /* Remove inner border accent */
       .rule-card::before {
-        content: "";
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        right: 4px;
-        bottom: 4px;
-        border: 1px solid rgba(212, 165, 116, 0.08);
-        border-radius: calc(var(--radius) - 3px);
-        pointer-events: none;
+        display: none;
       }
 
-      /* Primary rules - brass accent */
+      /* Primary rules - subtle left accent, slightly more presence */
       .rule-card--primary {
-        border-left: 3px solid var(--brass);
+        border-left: 2px solid rgba(212, 165, 116, 0.4);
         background:
-          linear-gradient(145deg, rgba(40, 28, 20, 0.9) 0%, rgba(22, 15, 10, 0.98) 100%);
+          linear-gradient(145deg, rgba(35, 25, 18, 0.85) 0%, rgba(18, 12, 8, 0.95) 100%);
         box-shadow:
-          0 1px 0 rgba(212, 165, 116, 0.15) inset,
+          0 1px 0 rgba(255, 255, 255, 0.03) inset,
           0 -1px 0 rgba(0, 0, 0, 0.3) inset,
-          0 8px 24px rgba(0, 0, 0, 0.5),
-          0 0 20px rgba(212, 165, 116, 0.05);
+          0 8px 24px rgba(0, 0, 0, 0.4);
       }
 
       .rule-card--primary .rule-card__title {
-        color: var(--brass);
-        text-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+        color: rgba(212, 165, 116, 0.9);  /* Slightly brighter brass for primary rules */
       }
 
       .rule-card__title {
-        font-family: "Bodoni Moda", serif;
-        font-size: 0.92rem;
-        font-weight: 500;
-        color: var(--cream);
-        letter-spacing: 0.02em;
+        font-family: "IBM Plex Sans", sans-serif;  /* Sports typography - matches ticker */
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.85);
         line-height: 1.2;
         margin: 0 0 3px 0;
       }
@@ -5244,24 +5231,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .rule-card__desc {
         font-family: "IBM Plex Sans", sans-serif;
         font-size: 0.65rem;
-        color: rgba(255, 255, 255, 0.45);
-        letter-spacing: 0.01em;
+        color: rgba(255, 255, 255, 0.4);
+        letter-spacing: 0.02em;
         line-height: 1.3;
         margin: 0;
       }
 
-      /* Hover - subtle lift */
+      /* Hover - subtle lift, no brass */
       .rule-card:hover {
-        border-color: rgba(212, 165, 116, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
         transform: translateY(-2px);
         box-shadow:
-          0 1px 0 rgba(212, 165, 116, 0.1) inset,
-          0 12px 32px rgba(0, 0, 0, 0.5),
-          0 0 20px rgba(212, 165, 116, 0.08);
+          0 1px 0 rgba(255, 255, 255, 0.04) inset,
+          0 12px 32px rgba(0, 0, 0, 0.5);
       }
 
       .rule-card--primary:hover {
-        border-left-color: var(--copper);
+        border-left-color: rgba(212, 165, 116, 0.5);
       }
 
       /* Footer section - tightly coupled */
@@ -5452,7 +5438,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .rule-card__title {
-          font-size: 0.82rem;
+          font-size: 0.7rem;  /* Slightly smaller on mobile for uppercase */
         }
 
         .rule-card__desc {
@@ -5476,18 +5462,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Form Shell - Tobias: The Ledger Style */
+      /* Form Shell - Tobias: The Ledger Style, subtle borders */
       .form-shell {
         background:
           /* Inner vignette - the cigar smoke settling */
-          radial-gradient(ellipse at 50% 0%, rgba(212, 165, 116, 0.03) 0%, transparent 50%),
+          radial-gradient(ellipse at 50% 0%, rgba(212, 165, 116, 0.02) 0%, transparent 50%),
           /* Depth gradient */
           linear-gradient(180deg, rgba(35, 25, 18, 0.6) 0%, rgba(20, 14, 10, 0.8) 100%),
           /* Noise texture */
           url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-        border: 1px solid rgba(183, 106, 59, 0.2);
-        border-top-color: rgba(212, 165, 116, 0.25);
-        border-radius: 4px;
+        /* Subtle borders — doesn't compete with CTA */
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
         padding: 34px 34px;
         max-width: 520px;
         width: 100%;
@@ -5495,7 +5482,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         position: relative;
         /* Layered shadows for depth - Tobias: "Weight" */
         box-shadow:
-          0 1px 0 rgba(212, 165, 116, 0.1) inset,
+          0 1px 0 rgba(255, 255, 255, 0.04) inset,
           0 20px 50px rgba(0, 0, 0, 0.5),
           0 0 100px rgba(0, 0, 0, 0.3);
       }
@@ -5660,10 +5647,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-radius: 2px;
         padding: 22px 42px;
         font-weight: 700;
-        font-size: 1.1rem;
-        font-family: "Bodoni Moda", serif;
+        font-size: 1rem;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;
         text-transform: uppercase;
-        letter-spacing: 0.25em;
+        letter-spacing: 0.12em;
         background: linear-gradient(180deg, #c4784a 0%, var(--copper) 50%, #9a5a30 100%);
         color: #fff;
         cursor: pointer;
@@ -5853,7 +5840,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 20px rgba(212, 165, 116, 0.15);
       }
 
-      /* Inline Scarcity - Urgency inside the form */
+      /* Inline Scarcity - Unified across all screen sizes */
       .form-scarcity {
         display: flex;
         align-items: center;
@@ -5899,22 +5886,40 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-weight: 700;
       }
 
-      /* Button Scarcity - small text below button, mobile only */
+      /* Button Scarcity - Subtle status indicator, matches ticker energy */
       .button-scarcity {
         display: none; /* Hidden on desktop */
-        margin: 12px 0 0 0;
-        font-family: "IBM Plex Sans", sans-serif;
-        font-size: 0.7rem;
-        font-weight: 500;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.5);
+        margin: 14px 0 0 0;
         text-align: center;
       }
 
-      .button-scarcity span {
-        color: var(--brass);
+      .button-scarcity__inner {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .button-scarcity__pulse {
+        width: 6px;
+        height: 6px;
+        background: rgba(212, 165, 116, 0.5);  /* Muted brass */
+        border-radius: 50%;
+        animation: scarcityPulse 2s ease-in-out infinite;
+      }
+
+      .button-scarcity__text {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.7rem;
         font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .button-scarcity__text span {
+        color: rgba(212, 165, 116, 0.7);  /* Muted brass */
+        font-weight: 700;
       }
 
       /* Primary Label - WHO YOU ARE at the table */
@@ -6628,15 +6633,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           display: none !important;
         }
 
-        /* Hide TOP scarcity on mobile - moved below button */
-        .form-scarcity {
-          display: none;
-        }
-
-        /* Show button scarcity on mobile */
-        .button-scarcity {
-          display: block;
-        }
+        /* Unified scarcity - keep form-scarcity visible on mobile too */
+        /* button-scarcity removed for consistency */
 
         /* Form spacing - comfortable, not cramped */
         form {
@@ -6646,14 +6644,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         /* Panel needs room to BREATHE at the top */
         .panel--form {
           padding-top: max(60px, 10vh); /* At least 60px, scales with screen */
-          padding-bottom: 60px; /* Ticker clearance */
+          padding-bottom: 160px; /* Clearance for mesa-help tooltip + ticker */
           justify-content: flex-start;
           scroll-snap-align: start; /* Snap to start, not center */
         }
 
         .form-shell {
           padding: 24px 20px;
-          margin-bottom: 0;
+          margin-bottom: 140px; /* Clearance for mesa-help tooltip */
         }
 
 	        .footer-contact {
@@ -7204,8 +7202,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               </label>
 
               <button type="submit" id="submitBtn">Claim Your Seat</button>
-              <!-- Mobile scarcity - below button -->
-              <p class="button-scarcity"><span id="spotsLeftButton">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span> seats remain</p>
+              <!-- Mobile scarcity - larger pulsing badge -->
+              <div class="button-scarcity">
+                <div class="button-scarcity__inner">
+                  <span class="button-scarcity__pulse"></span>
+                  <span class="button-scarcity__text"><span id="spotsLeftButton">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span> SEATS REMAIN</span>
+                </div>
+              </div>
 	              <p class="status" id="status" aria-live="polite"></p>
 	            </form>
 	          </div>
@@ -7515,7 +7518,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <div class="mesa-help" id="mesaHelp" role="status" aria-live="polite" aria-atomic="true">
       <div class="mesa-help__badge">ACCESS</div>
       <div class="mesa-help__content">
-        <div class="mesa-help__title">UNLOCK LA MESA</div>
+        <div class="mesa-help__title">UNLOCK <span class="mesa-help__highlight">LA MESA</span></div>
         <p class="mesa-help__text">Register first. Then the domino opens.</p>
       </div>
       <button class="mesa-help__dismiss" id="mesaHelpDismiss" type="button">DISMISS</button>
@@ -8479,6 +8482,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	      // Make the bubble feel like a toast, not a modal: tapping it dismisses immediately.
 	      mesaHelp?.addEventListener('click', hideMesaHelp);
 	      mesaHelpDismiss?.addEventListener('click', hideMesaHelp);
+
+	      // Dismiss tooltip when clicking the domino button
+	      tickerChatBtn?.addEventListener('click', hideMesaHelp);
+
+	      // Dismiss tooltip when clicking anywhere outside it
+	      document.addEventListener('click', (e) => {
+	        if (!mesaHelp?.classList.contains('is-visible')) return;
+	        // Don't dismiss if clicking inside the tooltip itself
+	        if (mesaHelp.contains(e.target)) return;
+	        // Don't dismiss if clicking the domino button (handled separately)
+	        if (tickerChatBtn?.contains(e.target)) return;
+	        hideMesaHelp();
+	      });
+
       storyEl?.addEventListener(
         'scroll',
         () => {

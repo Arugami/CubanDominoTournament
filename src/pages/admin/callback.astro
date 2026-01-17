@@ -1,0 +1,254 @@
+---
+// Admin Auth Callback - Handles magic link verification
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Authenticating... | CDL Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400;1,6..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #1c130f;
+        --copper: #b76a3b;
+        --brass: #d4a574;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background: radial-gradient(ellipse at center, #1a120d 0%, #080503 100%);
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .callback-container {
+        text-align: center;
+        max-width: 400px;
+      }
+
+      .callback-card {
+        background: rgba(28, 19, 15, 0.9);
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 16px;
+        padding: 48px 40px;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+      }
+
+      .callback-title {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--brass);
+        margin-bottom: 16px;
+      }
+
+      .callback-text {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 24px;
+      }
+
+      .spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid rgba(212, 165, 116, 0.2);
+        border-top-color: var(--brass);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 24px;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .error-message {
+        background: rgba(244, 67, 54, 0.1);
+        border: 1px solid rgba(244, 67, 54, 0.3);
+        color: #e57373;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+      }
+
+      .access-denied {
+        background: rgba(255, 152, 0, 0.1);
+        border: 1px solid rgba(255, 152, 0, 0.3);
+        color: #ffb74d;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+      }
+
+      .back-link {
+        display: inline-block;
+        font-size: 0.9rem;
+        color: var(--copper);
+        text-decoration: none;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+      }
+
+      .back-link:hover {
+        opacity: 1;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="callback-container">
+      <div class="callback-card">
+        <div id="loadingState">
+          <div class="spinner"></div>
+          <h1 class="callback-title">Authenticating</h1>
+          <p class="callback-text">Verifying your access...</p>
+        </div>
+
+        <div id="errorState" class="hidden">
+          <h1 class="callback-title">Authentication Failed</h1>
+          <div id="errorMessage" class="error-message"></div>
+          <a href="/admin/login" class="back-link">Try Again</a>
+        </div>
+
+        <div id="deniedState" class="hidden">
+          <h1 class="callback-title">Access Denied</h1>
+          <div class="access-denied">
+            Your email is not registered as an admin. Contact the tournament organizer for access.
+          </div>
+          <a href="/" class="back-link">Return to Tournament Site</a>
+        </div>
+      </div>
+    </div>
+
+    <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
+      const loadingState = document.getElementById('loadingState');
+      const errorState = document.getElementById('errorState');
+      const deniedState = document.getElementById('deniedState');
+      const errorMessage = document.getElementById('errorMessage');
+
+      function showError(message) {
+        loadingState.classList.add('hidden');
+        errorMessage.textContent = message;
+        errorState.classList.remove('hidden');
+      }
+
+      function showDenied() {
+        loadingState.classList.add('hidden');
+        deniedState.classList.remove('hidden');
+      }
+
+      async function handleCallback() {
+        try {
+          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+          const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+          // Get the session from URL hash (Supabase puts tokens there)
+          const { data: { session }, error } = await supabase.auth.getSession();
+
+          // If no session yet, try to exchange the code from URL
+          if (!session) {
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            const accessToken = hashParams.get('access_token');
+            const refreshToken = hashParams.get('refresh_token');
+
+            if (accessToken && refreshToken) {
+              const { data, error: setSessionError } = await supabase.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken,
+              });
+
+              if (setSessionError) {
+                showError(setSessionError.message);
+                return;
+              }
+
+              if (data.session) {
+                await verifyAdmin(supabase, data.session);
+                return;
+              }
+            }
+
+            // Check for code parameter (PKCE flow)
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+
+            if (code) {
+              const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+
+              if (exchangeError) {
+                showError(exchangeError.message);
+                return;
+              }
+
+              if (data.session) {
+                await verifyAdmin(supabase, data.session);
+                return;
+              }
+            }
+
+            showError('No authentication tokens found. Please try logging in again.');
+            return;
+          }
+
+          await verifyAdmin(supabase, session);
+        } catch (err) {
+          console.error('Callback error:', err);
+          showError('An unexpected error occurred. Please try again.');
+        }
+      }
+
+      async function verifyAdmin(supabase, session) {
+        const userEmail = session.user.email;
+
+        // Verify the user is in admin_users table
+        const { data: adminUser, error: adminError } = await supabase
+          .from('admin_users')
+          .select('id, name, role')
+          .eq('email', userEmail)
+          .single();
+
+        if (adminError || !adminUser) {
+          // Sign out the user since they're not an admin
+          await supabase.auth.signOut();
+          showDenied();
+          return;
+        }
+
+        // Update last_login timestamp
+        await supabase
+          .from('admin_users')
+          .update({ last_login: new Date().toISOString() })
+          .eq('id', adminUser.id);
+
+        // Redirect to admin dashboard
+        window.location.href = '/admin';
+      }
+
+      // Run callback handler
+      handleCallback();
+    </script>
+  </body>
+</html>

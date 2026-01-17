@@ -1,0 +1,1033 @@
+---
+// Admin Bracket - Tournament Bracket Editor
+import AdminLayout from '../../components/admin/AdminLayout.astro';
+---
+
+<AdminLayout title="Bracket Editor" activeNav="bracket">
+  <div class="bracket-page">
+    <!-- Header Actions -->
+    <div class="page-actions">
+      <div class="bracket-status">
+        <span id="bracketStatus">Loading...</span>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn--secondary" id="assignTeamsBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="8.5" cy="7" r="4" />
+            <polyline points="17 11 19 13 23 9" />
+          </svg>
+          Auto-Assign by Seed
+        </button>
+        <button class="btn btn--secondary" id="resetBracketBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
+          Reset Bracket
+        </button>
+      </div>
+    </div>
+
+    <!-- Visual Bracket -->
+    <div class="bracket-container">
+      <div class="bracket">
+        <!-- Quarterfinals (Round 1) -->
+        <div class="bracket-round" data-round="1">
+          <div class="round-header">
+            <span class="round-title">Quarterfinals</span>
+            <span class="round-count">4 matches</span>
+          </div>
+          <div class="round-matches">
+            <div class="match" data-match="1" data-round="1">
+              <div class="match-header">
+                <span class="match-number">Match 1</span>
+                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
+              </div>
+              <div class="match-teams">
+                <div class="match-team" data-position="1">
+                  <span class="team-seed">#1</span>
+                  <span class="team-name" data-team1-name>TBD</span>
+                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
+                </div>
+                <div class="match-team" data-position="2">
+                  <span class="team-seed">#8</span>
+                  <span class="team-name" data-team2-name>TBD</span>
+                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
+                </div>
+              </div>
+              <button class="save-match-btn" data-save-btn>Save Scores</button>
+            </div>
+
+            <div class="match" data-match="2" data-round="1">
+              <div class="match-header">
+                <span class="match-number">Match 2</span>
+                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
+              </div>
+              <div class="match-teams">
+                <div class="match-team" data-position="1">
+                  <span class="team-seed">#4</span>
+                  <span class="team-name" data-team1-name>TBD</span>
+                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
+                </div>
+                <div class="match-team" data-position="2">
+                  <span class="team-seed">#5</span>
+                  <span class="team-name" data-team2-name>TBD</span>
+                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
+                </div>
+              </div>
+              <button class="save-match-btn" data-save-btn>Save Scores</button>
+            </div>
+
+            <div class="match" data-match="3" data-round="1">
+              <div class="match-header">
+                <span class="match-number">Match 3</span>
+                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
+              </div>
+              <div class="match-teams">
+                <div class="match-team" data-position="1">
+                  <span class="team-seed">#3</span>
+                  <span class="team-name" data-team1-name>TBD</span>
+                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
+                </div>
+                <div class="match-team" data-position="2">
+                  <span class="team-seed">#6</span>
+                  <span class="team-name" data-team2-name>TBD</span>
+                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
+                </div>
+              </div>
+              <button class="save-match-btn" data-save-btn>Save Scores</button>
+            </div>
+
+            <div class="match" data-match="4" data-round="1">
+              <div class="match-header">
+                <span class="match-number">Match 4</span>
+                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
+              </div>
+              <div class="match-teams">
+                <div class="match-team" data-position="1">
+                  <span class="team-seed">#2</span>
+                  <span class="team-name" data-team1-name>TBD</span>
+                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
+                </div>
+                <div class="match-team" data-position="2">
+                  <span class="team-seed">#7</span>
+                  <span class="team-name" data-team2-name>TBD</span>
+                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
+                </div>
+              </div>
+              <button class="save-match-btn" data-save-btn>Save Scores</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connector lines -->
+        <div class="bracket-connectors">
+          <svg class="connector-svg" viewBox="0 0 60 400" preserveAspectRatio="none">
+            <path d="M0 50 H30 V150 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
+            <path d="M0 150 H30 V150 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
+            <path d="M0 250 H30 V350 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
+            <path d="M0 350 H30 V350 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
+          </svg>
+        </div>
+
+        <!-- Semifinals (Round 2) -->
+        <div class="bracket-round" data-round="2">
+          <div class="round-header">
+            <span class="round-title">Semifinals</span>
+            <span class="round-count">2 matches</span>
+          </div>
+          <div class="round-matches round-matches--semifinal">
+            <div class="match" data-match="1" data-round="2">
+              <div class="match-header">
+                <span class="match-number">Semi 1</span>
+                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
+              </div>
+              <div class="match-teams">
+                <div class="match-team" data-position="1">
+                  <span class="team-name" data-team1-name>Winner M1</span>
+                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
+                </div>
+                <div class="match-team" data-position="2">
+                  <span class="team-name" data-team2-name>Winner M2</span>
+                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
+                </div>
+              </div>
+              <button class="save-match-btn" data-save-btn>Save Scores</button>
+            </div>
+
+            <div class="match" data-match="2" data-round="2">
+              <div class="match-header">
+                <span class="match-number">Semi 2</span>
+                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
+              </div>
+              <div class="match-teams">
+                <div class="match-team" data-position="1">
+                  <span class="team-name" data-team1-name>Winner M3</span>
+                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
+                </div>
+                <div class="match-team" data-position="2">
+                  <span class="team-name" data-team2-name>Winner M4</span>
+                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
+                </div>
+              </div>
+              <button class="save-match-btn" data-save-btn>Save Scores</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connector to Finals -->
+        <div class="bracket-connectors">
+          <svg class="connector-svg connector-svg--final" viewBox="0 0 60 200" preserveAspectRatio="none">
+            <path d="M0 50 H30 V100 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
+            <path d="M0 150 H30 V100 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
+          </svg>
+        </div>
+
+        <!-- Finals (Round 3) -->
+        <div class="bracket-round" data-round="3">
+          <div class="round-header">
+            <span class="round-title">Finals</span>
+            <span class="round-count">Championship</span>
+          </div>
+          <div class="round-matches round-matches--final">
+            <div class="match match--final" data-match="1" data-round="3">
+              <div class="match-header">
+                <span class="match-number">Championship</span>
+                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
+              </div>
+              <div class="match-teams">
+                <div class="match-team" data-position="1">
+                  <span class="team-name" data-team1-name>Winner Semi 1</span>
+                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
+                </div>
+                <div class="match-team" data-position="2">
+                  <span class="team-name" data-team2-name>Winner Semi 2</span>
+                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
+                </div>
+              </div>
+              <button class="save-match-btn" data-save-btn>Save Scores</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Champion Display -->
+        <div class="champion-display" id="championDisplay">
+          <div class="champion-label">Champion</div>
+          <div class="champion-name" id="championName">TBD</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Confirmation Modal -->
+  <div class="modal-backdrop" id="resetModal">
+    <div class="modal modal--sm">
+      <div class="modal__header">
+        <h2 class="modal__title">Reset Bracket</h2>
+      </div>
+      <div class="modal__body">
+        <p>Are you sure you want to reset the entire bracket?</p>
+        <p class="warning-text">All match results will be cleared. This cannot be undone.</p>
+      </div>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--secondary" id="cancelReset">Cancel</button>
+        <button type="button" class="btn btn--danger" id="confirmReset">Reset Bracket</button>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  /* MOBILE-FIRST STYLES */
+  .bracket-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .page-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .bracket-status {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .action-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* MOBILE: Vertical bracket layout */
+  .bracket-container {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .bracket {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+    padding: 0;
+  }
+
+  /* Hide connectors on mobile */
+  .bracket-connectors {
+    display: none;
+  }
+
+  /* Round Styling - Mobile */
+  .bracket-round {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .round-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    margin-bottom: 4px;
+  }
+
+  .round-title {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--brass);
+  }
+
+  .round-count {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    padding: 4px 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+  }
+
+  .round-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .round-matches--semifinal,
+  .round-matches--final {
+    padding-top: 0;
+    gap: 12px;
+  }
+
+  /* Match Card - Mobile */
+  .match {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 14px;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .match--final {
+    background: rgba(212, 165, 116, 0.05);
+    border-color: var(--border-accent);
+  }
+
+  .match-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .match-number {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--copper);
+  }
+
+  .match-teams {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .match-team {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+  }
+
+  .match-team.winner {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.2);
+  }
+
+  .team-seed {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--copper);
+    opacity: 0.6;
+    min-width: 26px;
+  }
+
+  .team-name {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .score-input {
+    width: 56px;
+    padding: 10px 8px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .score-input:focus {
+    border-color: var(--brass);
+  }
+
+  .score-input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Hide spin buttons */
+  .score-input::-webkit-outer-spin-button,
+  .score-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .score-input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  .save-match-btn {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--brass);
+    background: rgba(212, 165, 116, 0.1);
+    border: 1px solid var(--border-accent);
+    border-radius: 8px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .save-match-btn:active {
+    background: rgba(212, 165, 116, 0.25);
+    transform: scale(0.98);
+  }
+
+  .save-match-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Champion Display - Mobile */
+  .champion-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    margin: 0;
+  }
+
+  .champion-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--copper);
+    margin-bottom: 10px;
+  }
+
+  .champion-name {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--brass);
+    padding: 14px 20px;
+    background: linear-gradient(135deg, rgba(212, 165, 116, 0.1), rgba(183, 106, 59, 0.1));
+    border: 2px solid var(--brass);
+    border-radius: 10px;
+    text-align: center;
+    min-width: 140px;
+  }
+
+  .champion-name.has-champion {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(212, 165, 116, 0.1));
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* Modal Styles - Mobile */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .modal-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .modal-backdrop.open .modal {
+    transform: translateY(0);
+  }
+
+  .modal--sm {
+    max-height: 50vh;
+  }
+
+  .modal__header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .modal__title {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--brass);
+  }
+
+  .modal__body {
+    padding: 20px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
+  .modal__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
+    margin-top: 8px;
+  }
+
+  .modal__actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+
+  .warning-text {
+    color: #e57373;
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+
+  /* ===== DESKTOP OVERRIDES (769px+) ===== */
+  @media (min-width: 769px) {
+    .bracket-page {
+      gap: 24px;
+    }
+
+    .page-actions {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bracket-status {
+      font-size: 0.9rem;
+      text-align: left;
+    }
+
+    .action-buttons {
+      flex-direction: row;
+      gap: 12px;
+    }
+
+    .action-buttons .btn {
+      width: auto;
+    }
+
+    /* DESKTOP: Horizontal bracket */
+    .bracket-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 32px;
+      overflow-x: auto;
+    }
+
+    .bracket {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 0;
+      min-width: 1000px;
+      padding: 20px 0;
+    }
+
+    .bracket-connectors {
+      display: flex;
+      width: 60px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .connector-svg {
+      width: 60px;
+      height: 400px;
+    }
+
+    .connector-svg--final {
+      height: 200px;
+    }
+
+    .bracket-round {
+      background: transparent;
+      border: none;
+      padding: 0;
+      gap: 16px;
+    }
+
+    .round-header {
+      flex-direction: column;
+      gap: 4px;
+      padding: 0 8px;
+      margin-bottom: 8px;
+    }
+
+    .round-count {
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .round-matches--semifinal {
+      padding-top: 48px;
+      gap: 100px;
+    }
+
+    .round-matches--final {
+      padding-top: 96px;
+    }
+
+    .match {
+      width: 240px;
+      padding: 12px;
+    }
+
+    .match:hover {
+      border-color: var(--border-accent);
+    }
+
+    .match-team {
+      padding: 8px 10px;
+      gap: 8px;
+    }
+
+    .team-name {
+      font-size: 0.85rem;
+    }
+
+    .score-input {
+      width: 48px;
+      padding: 6px 8px;
+      font-size: 0.9rem;
+    }
+
+    .save-match-btn {
+      padding: 8px 12px;
+      font-size: 0.75rem;
+    }
+
+    .save-match-btn:hover {
+      background: rgba(212, 165, 116, 0.2);
+    }
+
+    .champion-display {
+      padding: 24px;
+      margin-left: 20px;
+      margin-top: 96px;
+      background: transparent;
+      border: none;
+    }
+
+    .champion-name {
+      font-size: 1.4rem;
+      padding: 16px 24px;
+      min-width: 160px;
+    }
+
+    /* Modal - centered on desktop */
+    .modal-backdrop {
+      align-items: center;
+    }
+
+    .modal {
+      border-radius: 16px;
+      max-width: 400px;
+      transform: translateY(20px);
+    }
+
+    .modal--sm {
+      max-width: 380px;
+      max-height: 90vh;
+    }
+
+    .modal__header {
+      padding: 20px 24px;
+    }
+
+    .modal__body {
+      padding: 24px;
+    }
+
+    .modal__actions {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+
+    .modal__actions .btn {
+      width: auto;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1200px) {
+    .bracket {
+      min-width: 900px;
+    }
+
+    .match {
+      width: 200px;
+    }
+  }
+</style>
+
+<script>
+  let teams = [];
+  let matches = [];
+
+  // Seeding bracket: 1v8, 4v5, 3v6, 2v7 (standard bracket seeding)
+  const SEED_MATCHUPS = [
+    [1, 8], // Match 1
+    [4, 5], // Match 2
+    [3, 6], // Match 3
+    [2, 7]  // Match 4
+  ];
+
+  window.addEventListener('adminReady', async ({ detail: { supabase } }) => {
+    await loadData(supabase);
+    setupEventListeners(supabase);
+  });
+
+  async function loadData(supabase) {
+    const [teamsRes, matchesRes] = await Promise.all([
+      supabase.from('teams').select('*').order('seed'),
+      supabase.from('matches').select('*').order('round').order('match_number')
+    ]);
+
+    teams = teamsRes.data || [];
+    matches = matchesRes.data || [];
+    renderBracket();
+    updateStatus();
+  }
+
+  function renderBracket() {
+    // Render each match
+    matches.forEach(match => {
+      const matchEl = document.querySelector(`[data-round="${match.round}"][data-match="${match.match_number}"]`);
+      if (!matchEl) return;
+
+      const team1 = teams.find(t => t.id === match.team1_id);
+      const team2 = teams.find(t => t.id === match.team2_id);
+      const winner = match.winner_id ? teams.find(t => t.id === match.winner_id) : null;
+
+      // Update team names
+      const team1NameEl = matchEl.querySelector('[data-team1-name]');
+      const team2NameEl = matchEl.querySelector('[data-team2-name]');
+
+      if (team1) {
+        team1NameEl.textContent = team1.name;
+      } else if (match.round === 1) {
+        team1NameEl.textContent = 'TBD';
+      } else {
+        // Show which match winner goes here
+        const prevMatchNum = match.round === 2
+          ? (match.match_number === 1 ? 'M1' : 'M3')
+          : 'Semi 1';
+        team1NameEl.textContent = `Winner ${prevMatchNum}`;
+      }
+
+      if (team2) {
+        team2NameEl.textContent = team2.name;
+      } else if (match.round === 1) {
+        team2NameEl.textContent = 'TBD';
+      } else {
+        const prevMatchNum = match.round === 2
+          ? (match.match_number === 1 ? 'M2' : 'M4')
+          : 'Semi 2';
+        team2NameEl.textContent = `Winner ${prevMatchNum}`;
+      }
+
+      // Update scores
+      const score1Input = matchEl.querySelector('[data-team1-score]');
+      const score2Input = matchEl.querySelector('[data-team2-score]');
+
+      if (match.team1_score !== null && match.team1_score !== undefined) {
+        score1Input.value = match.team1_score;
+      } else {
+        score1Input.value = '';
+      }
+
+      if (match.team2_score !== null && match.team2_score !== undefined) {
+        score2Input.value = match.team2_score;
+      } else {
+        score2Input.value = '';
+      }
+
+      // Highlight winner
+      const teamEls = matchEl.querySelectorAll('.match-team');
+      teamEls.forEach(el => el.classList.remove('winner'));
+
+      if (winner) {
+        if (match.team1_id === winner.id) {
+          teamEls[0].classList.add('winner');
+        } else {
+          teamEls[1].classList.add('winner');
+        }
+      }
+
+      // Update status badge
+      const statusBadge = matchEl.querySelector('[data-status-badge]');
+      statusBadge.className = `match-status badge badge--${match.status}`;
+      statusBadge.textContent = match.status.charAt(0).toUpperCase() + match.status.slice(1);
+    });
+
+    // Update champion display
+    const finalMatch = matches.find(m => m.round === 3 && m.match_number === 1);
+    const championNameEl = document.getElementById('championName');
+
+    if (finalMatch && finalMatch.winner_id) {
+      const champion = teams.find(t => t.id === finalMatch.winner_id);
+      championNameEl.textContent = champion ? champion.name : 'TBD';
+      championNameEl.classList.add('has-champion');
+    } else {
+      championNameEl.textContent = 'TBD';
+      championNameEl.classList.remove('has-champion');
+    }
+  }
+
+  function updateStatus() {
+    const statusEl = document.getElementById('bracketStatus');
+    const completed = matches.filter(m => m.status === 'completed').length;
+    const teamsWithSeed = teams.filter(t => t.seed).length;
+
+    if (teamsWithSeed < 8) {
+      statusEl.textContent = `${teamsWithSeed}/8 teams seeded | ${completed}/7 matches completed`;
+    } else {
+      statusEl.textContent = `All teams seeded | ${completed}/7 matches completed`;
+    }
+  }
+
+  function setupEventListeners(supabase) {
+    // Auto-assign teams by seed
+    document.getElementById('assignTeamsBtn').addEventListener('click', async () => {
+      const seededTeams = teams.filter(t => t.seed).sort((a, b) => a.seed - b.seed);
+
+      if (seededTeams.length < 8) {
+        alert(`Need 8 seeded teams to auto-assign. Currently have ${seededTeams.length}.`);
+        return;
+      }
+
+      try {
+        // Assign teams to quarterfinal matches based on seeding
+        for (let i = 0; i < 4; i++) {
+          const [seed1, seed2] = SEED_MATCHUPS[i];
+          const team1 = seededTeams.find(t => t.seed === seed1);
+          const team2 = seededTeams.find(t => t.seed === seed2);
+
+          const match = matches.find(m => m.round === 1 && m.match_number === i + 1);
+          if (match) {
+            await supabase.from('matches').update({
+              team1_id: team1?.id || null,
+              team2_id: team2?.id || null
+            }).eq('id', match.id);
+          }
+        }
+
+        await loadData(supabase);
+      } catch (err) {
+        console.error('Auto-assign error:', err);
+        alert('Failed to auto-assign teams');
+      }
+    });
+
+    // Save match scores
+    document.querySelectorAll('[data-save-btn]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const matchEl = e.target.closest('.match');
+        const round = parseInt(matchEl.dataset.round);
+        const matchNumber = parseInt(matchEl.dataset.match);
+
+        const score1 = parseInt(matchEl.querySelector('[data-team1-score]').value) || 0;
+        const score2 = parseInt(matchEl.querySelector('[data-team2-score]').value) || 0;
+
+        const match = matches.find(m => m.round === round && m.match_number === matchNumber);
+        if (!match) return;
+
+        // Determine winner (higher score wins, must have both teams)
+        let winnerId = null;
+        let status = 'pending';
+
+        if (match.team1_id && match.team2_id) {
+          if (score1 > 0 || score2 > 0) {
+            status = 'in_progress';
+          }
+          if (score1 > 0 && score2 > 0 && score1 !== score2) {
+            winnerId = score1 > score2 ? match.team1_id : match.team2_id;
+            status = 'completed';
+          }
+        }
+
+        try {
+          // Update this match
+          await supabase.from('matches').update({
+            team1_score: score1,
+            team2_score: score2,
+            winner_id: winnerId,
+            status,
+            completed_at: status === 'completed' ? new Date().toISOString() : null
+          }).eq('id', match.id);
+
+          // If completed, advance winner to next round
+          if (winnerId && round < 3) {
+            await advanceWinner(supabase, round, matchNumber, winnerId);
+          }
+
+          await loadData(supabase);
+        } catch (err) {
+          console.error('Save scores error:', err);
+          alert('Failed to save scores');
+        }
+      });
+    });
+
+    // Advance winner to next round
+    async function advanceWinner(supabase, currentRound, currentMatchNumber, winnerId) {
+      const nextRound = currentRound + 1;
+      let nextMatchNumber, position;
+
+      if (currentRound === 1) {
+        // QF -> SF: M1/M2 -> Semi1, M3/M4 -> Semi2
+        nextMatchNumber = currentMatchNumber <= 2 ? 1 : 2;
+        position = currentMatchNumber % 2 === 1 ? 'team1_id' : 'team2_id';
+      } else if (currentRound === 2) {
+        // SF -> Final
+        nextMatchNumber = 1;
+        position = currentMatchNumber === 1 ? 'team1_id' : 'team2_id';
+      }
+
+      const nextMatch = matches.find(m => m.round === nextRound && m.match_number === nextMatchNumber);
+      if (nextMatch) {
+        await supabase.from('matches').update({ [position]: winnerId }).eq('id', nextMatch.id);
+      }
+    }
+
+    // Reset bracket
+    const resetModal = document.getElementById('resetModal');
+    document.getElementById('resetBracketBtn').addEventListener('click', () => {
+      resetModal.classList.add('open');
+    });
+
+    document.getElementById('cancelReset').addEventListener('click', () => {
+      resetModal.classList.remove('open');
+    });
+
+    resetModal.addEventListener('click', (e) => {
+      if (e.target === resetModal) resetModal.classList.remove('open');
+    });
+
+    document.getElementById('confirmReset').addEventListener('click', async () => {
+      try {
+        // Reset all matches
+        for (const match of matches) {
+          await supabase.from('matches').update({
+            team1_id: null,
+            team2_id: null,
+            team1_score: 0,
+            team2_score: 0,
+            winner_id: null,
+            status: 'pending',
+            completed_at: null
+          }).eq('id', match.id);
+        }
+
+        resetModal.classList.remove('open');
+        await loadData(supabase);
+      } catch (err) {
+        console.error('Reset error:', err);
+        alert('Failed to reset bracket');
+      }
+    });
+  }
+</script>

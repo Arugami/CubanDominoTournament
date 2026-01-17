@@ -1,0 +1,926 @@
+---
+// Admin Teams - Team Assignment Interface
+import AdminLayout from '../../components/admin/AdminLayout.astro';
+---
+
+<AdminLayout title="Team Management" activeNav="teams">
+  <div class="teams-page">
+    <!-- Header Actions -->
+    <div class="page-actions">
+      <div class="team-stats">
+        <span id="teamStats">Loading...</span>
+      </div>
+      <button class="btn btn--primary" id="createTeamBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        Create Team
+      </button>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="teams-layout">
+      <!-- Teams List -->
+      <div class="teams-column">
+        <div class="column-header">
+          <h2 class="column-title">Teams</h2>
+          <span class="column-count" id="teamsCount">0</span>
+        </div>
+        <div class="teams-list" id="teamsList">
+          <div class="loading-placeholder">Loading teams...</div>
+        </div>
+      </div>
+
+      <!-- Unassigned Players -->
+      <div class="players-column">
+        <div class="column-header">
+          <h2 class="column-title">Unassigned Players</h2>
+          <span class="column-count" id="unassignedCount">0</span>
+        </div>
+        <div class="players-list" id="unassignedList">
+          <div class="loading-placeholder">Loading players...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Team Modal -->
+  <div class="modal-backdrop" id="teamModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Create Team</h2>
+        <button class="modal__close" id="closeModal">&times;</button>
+      </div>
+      <form class="modal__body" id="teamForm">
+        <input type="hidden" id="teamId" />
+
+        <div class="form-group">
+          <label class="form-label" for="teamName">Team Name *</label>
+          <input type="text" id="teamName" class="input" placeholder="e.g., Team Havana" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="teamSeed">Seed (1-8)</label>
+          <input type="number" id="teamSeed" class="input" min="1" max="8" placeholder="Leave blank for auto-assign" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Player 1</label>
+          <select id="player1Select" class="input">
+            <option value="">-- Select Player --</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Player 2</label>
+          <select id="player2Select" class="input">
+            <option value="">-- Select Player --</option>
+          </select>
+        </div>
+
+        <div class="modal__actions">
+          <button type="button" class="btn btn--secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn--primary" id="saveBtn">Save Team</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Team Modal -->
+  <div class="modal-backdrop" id="deleteModal">
+    <div class="modal modal--sm">
+      <div class="modal__header">
+        <h2 class="modal__title">Delete Team</h2>
+      </div>
+      <div class="modal__body">
+        <p>Are you sure you want to delete <strong id="deleteTeamName"></strong>?</p>
+        <p class="warning-text">Players will become unassigned but won't be deleted.</p>
+      </div>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--secondary" id="cancelDelete">Cancel</button>
+        <button type="button" class="btn btn--danger" id="confirmDelete">Delete Team</button>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  /* MOBILE-FIRST STYLES */
+  .teams-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .page-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .team-stats {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+  }
+
+  /* Single column on mobile */
+  .teams-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .teams-column,
+  .players-column {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .column-title {
+    font-family: "Bodoni Moda", serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--brass);
+  }
+
+  .column-count {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    background: rgba(212, 165, 116, 0.1);
+    color: var(--brass);
+    border-radius: 12px;
+  }
+
+  .teams-list,
+  .players-list {
+    padding: 12px;
+    max-height: 50vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ===== DESKTOP OVERRIDES (769px+) ===== */
+  @media (min-width: 769px) {
+    .teams-page {
+      gap: 24px;
+    }
+
+    .page-actions {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .team-stats {
+      font-size: 0.9rem;
+      text-align: left;
+    }
+
+    .teams-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    .column-header {
+      padding: 16px 20px;
+    }
+
+    .column-title {
+      font-size: 1rem;
+    }
+
+    .teams-list,
+    .players-list {
+      padding: 16px;
+      max-height: 600px;
+    }
+  }
+
+  /* Team Cards - Mobile first */
+  .team-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .team-card:last-child {
+    margin-bottom: 0;
+  }
+
+  .team-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .team-card__name {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .team-card__seed {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border-radius: 4px;
+  }
+
+  .team-card__players {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .team-player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+  }
+
+  .team-player__avatar {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, var(--brass), var(--copper));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Bodoni Moda", serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+
+  .team-player__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .team-player__name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .team-player__email {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .team-player--empty {
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  .team-card__actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .team-action-btn {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .team-action-btn:active {
+    transform: scale(0.98);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .team-action-btn--delete {
+    color: #e57373;
+    border-color: rgba(244, 67, 54, 0.3);
+    background: rgba(244, 67, 54, 0.05);
+  }
+
+  .team-action-btn--delete:active {
+    background: rgba(244, 67, 54, 0.15);
+  }
+
+  /* Unassigned Player Items */
+  .player-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .player-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .player-item__avatar {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, var(--brass), var(--copper));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Bodoni Moda", serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+
+  .player-item__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .player-item__name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .player-item__email {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .loading-placeholder {
+    padding: 24px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+  }
+
+  .empty-state {
+    padding: 24px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+  }
+
+  /* Modal Styles - Full screen on mobile */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .modal-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .modal-backdrop.open .modal {
+    transform: translateY(0);
+  }
+
+  .modal--sm {
+    max-height: 50vh;
+  }
+
+  .modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+    z-index: 1;
+  }
+
+  .modal__title {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--brass);
+  }
+
+  .modal__close {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    border-radius: 50%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .modal__body {
+    padding: 20px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--brass);
+    margin-bottom: 8px;
+  }
+
+  .modal__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
+    margin-top: 8px;
+  }
+
+  .modal__actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+
+  .warning-text {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+
+  /* ===== DESKTOP OVERRIDES for cards/modals ===== */
+  @media (min-width: 769px) {
+    .team-card {
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .team-card:hover {
+      border-color: var(--border-accent);
+    }
+
+    .team-card__name {
+      font-size: 1.1rem;
+    }
+
+    .team-card__seed {
+      font-size: 0.7rem;
+      padding: 4px 10px;
+    }
+
+    .team-player__avatar {
+      width: 32px;
+      height: 32px;
+      font-size: 0.8rem;
+    }
+
+    .team-player__name {
+      font-size: 0.9rem;
+    }
+
+    .team-player__email {
+      font-size: 0.75rem;
+    }
+
+    .team-action-btn {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+    }
+
+    .team-action-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .team-action-btn--delete:hover {
+      background: rgba(244, 67, 54, 0.1);
+      border-color: rgba(244, 67, 54, 0.3);
+      color: #e57373;
+    }
+
+    .player-item {
+      padding: 12px;
+      gap: 12px;
+      cursor: grab;
+    }
+
+    .player-item:hover {
+      border-color: var(--border-accent);
+      transform: translateX(4px);
+    }
+
+    .player-item__avatar {
+      width: 36px;
+      height: 36px;
+      font-size: 0.9rem;
+    }
+
+    .player-item__name {
+      font-size: 0.9rem;
+    }
+
+    .player-item__email {
+      font-size: 0.75rem;
+    }
+
+    /* Modal - centered on desktop */
+    .modal-backdrop {
+      align-items: center;
+    }
+
+    .modal {
+      border-radius: 16px;
+      max-width: 480px;
+      transform: translateY(20px);
+    }
+
+    .modal--sm {
+      max-width: 380px;
+      max-height: 90vh;
+    }
+
+    .modal__header {
+      padding: 20px 24px;
+    }
+
+    .modal__body {
+      padding: 24px;
+    }
+
+    .modal__actions {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+
+    .modal__actions .btn {
+      width: auto;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+<script>
+  let players = [];
+  let teams = [];
+  let editingTeamId = null;
+
+  window.addEventListener('adminReady', async ({ detail: { supabase } }) => {
+    await loadData(supabase);
+    setupEventListeners(supabase);
+  });
+
+  async function loadData(supabase) {
+    const [playersRes, teamsRes] = await Promise.all([
+      supabase.from('players').select('*').order('name'),
+      supabase.from('teams').select('*').order('seed')
+    ]);
+
+    players = playersRes.data || [];
+    teams = teamsRes.data || [];
+    renderAll();
+  }
+
+  function renderAll() {
+    renderTeams();
+    renderUnassignedPlayers();
+    updateStats();
+  }
+
+  function renderTeams() {
+    const container = document.getElementById('teamsList');
+    const countEl = document.getElementById('teamsCount');
+
+    countEl.textContent = teams.length;
+
+    if (teams.length === 0) {
+      container.innerHTML = '<div class="empty-state">No teams created yet</div>';
+      return;
+    }
+
+    container.innerHTML = teams.map(team => {
+      const player1 = players.find(p => p.id === team.player1_id);
+      const player2 = players.find(p => p.id === team.player2_id);
+
+      return `
+        <div class="team-card" data-id="${team.id}">
+          <div class="team-card__header">
+            <span class="team-card__name">${team.name}</span>
+            ${team.seed ? `<span class="team-card__seed">Seed #${team.seed}</span>` : ''}
+          </div>
+          <div class="team-card__players">
+            ${player1 ? `
+              <div class="team-player">
+                <div class="team-player__avatar">${player1.name[0].toUpperCase()}</div>
+                <div class="team-player__info">
+                  <div class="team-player__name">${player1.name}</div>
+                  <div class="team-player__email">${player1.email}</div>
+                </div>
+              </div>
+            ` : `
+              <div class="team-player team-player--empty">Player 1 not assigned</div>
+            `}
+            ${player2 ? `
+              <div class="team-player">
+                <div class="team-player__avatar">${player2.name[0].toUpperCase()}</div>
+                <div class="team-player__info">
+                  <div class="team-player__name">${player2.name}</div>
+                  <div class="team-player__email">${player2.email}</div>
+                </div>
+              </div>
+            ` : `
+              <div class="team-player team-player--empty">Player 2 not assigned</div>
+            `}
+          </div>
+          <div class="team-card__actions">
+            <button class="team-action-btn edit-team-btn" data-id="${team.id}">Edit</button>
+            <button class="team-action-btn team-action-btn--delete delete-team-btn" data-id="${team.id}">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderUnassignedPlayers() {
+    const container = document.getElementById('unassignedList');
+    const countEl = document.getElementById('unassignedCount');
+
+    // Players not assigned to any team
+    const assignedIds = new Set();
+    teams.forEach(t => {
+      if (t.player1_id) assignedIds.add(t.player1_id);
+      if (t.player2_id) assignedIds.add(t.player2_id);
+    });
+
+    const unassigned = players.filter(p => !assignedIds.has(p.id));
+    countEl.textContent = unassigned.length;
+
+    if (unassigned.length === 0) {
+      container.innerHTML = '<div class="empty-state">All players assigned to teams</div>';
+      return;
+    }
+
+    container.innerHTML = unassigned.map(player => `
+      <div class="player-item" data-id="${player.id}">
+        <div class="player-item__avatar">${player.name[0].toUpperCase()}</div>
+        <div class="player-item__info">
+          <div class="player-item__name">${player.name}</div>
+          <div class="player-item__email">${player.email}</div>
+        </div>
+        <span class="badge badge--${player.status}">${player.status}</span>
+      </div>
+    `).join('');
+  }
+
+  function updateStats() {
+    const statsEl = document.getElementById('teamStats');
+    const fullTeams = teams.filter(t => t.player1_id && t.player2_id).length;
+    statsEl.textContent = `${teams.length} teams | ${fullTeams} complete | Need ${8 - fullTeams} more for bracket`;
+  }
+
+  function populatePlayerSelects(excludePlayer1Id = null, excludePlayer2Id = null) {
+    const player1Select = document.getElementById('player1Select');
+    const player2Select = document.getElementById('player2Select');
+
+    // Get all assigned player IDs except for current team being edited
+    const assignedIds = new Set();
+    teams.forEach(t => {
+      if (editingTeamId && t.id === editingTeamId) return;
+      if (t.player1_id) assignedIds.add(t.player1_id);
+      if (t.player2_id) assignedIds.add(t.player2_id);
+    });
+
+    // Available for selection: unassigned + current team's players
+    const availableForPlayer1 = players.filter(p =>
+      !assignedIds.has(p.id) || p.id === excludePlayer1Id || p.id === excludePlayer2Id
+    );
+    const availableForPlayer2 = players.filter(p =>
+      !assignedIds.has(p.id) || p.id === excludePlayer1Id || p.id === excludePlayer2Id
+    );
+
+    player1Select.innerHTML = '<option value="">-- Select Player --</option>' +
+      availableForPlayer1.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+
+    player2Select.innerHTML = '<option value="">-- Select Player --</option>' +
+      availableForPlayer2.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  }
+
+  function setupEventListeners(supabase) {
+    const modal = document.getElementById('teamModal');
+    const deleteModal = document.getElementById('deleteModal');
+    const form = document.getElementById('teamForm');
+
+    // Create team button
+    document.getElementById('createTeamBtn').addEventListener('click', () => {
+      editingTeamId = null;
+      document.getElementById('modalTitle').textContent = 'Create Team';
+      form.reset();
+      populatePlayerSelects();
+      modal.classList.add('open');
+    });
+
+    // Close modal
+    document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('open'));
+    document.getElementById('cancelBtn').addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('open');
+    });
+
+    // Edit team
+    document.getElementById('teamsList').addEventListener('click', (e) => {
+      if (e.target.classList.contains('edit-team-btn')) {
+        const id = e.target.dataset.id;
+        const team = teams.find(t => t.id === id);
+        if (team) {
+          editingTeamId = id;
+          document.getElementById('modalTitle').textContent = 'Edit Team';
+          document.getElementById('teamId').value = id;
+          document.getElementById('teamName').value = team.name;
+          document.getElementById('teamSeed').value = team.seed || '';
+          populatePlayerSelects(team.player1_id, team.player2_id);
+          document.getElementById('player1Select').value = team.player1_id || '';
+          document.getElementById('player2Select').value = team.player2_id || '';
+          modal.classList.add('open');
+        }
+      }
+
+      if (e.target.classList.contains('delete-team-btn')) {
+        const id = e.target.dataset.id;
+        const team = teams.find(t => t.id === id);
+        if (team) {
+          document.getElementById('deleteTeamName').textContent = team.name;
+          document.getElementById('confirmDelete').dataset.id = id;
+          deleteModal.classList.add('open');
+        }
+      }
+    });
+
+    // Form submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const player1Id = document.getElementById('player1Select').value || null;
+      const player2Id = document.getElementById('player2Select').value || null;
+
+      // Validate same player not selected twice
+      if (player1Id && player2Id && player1Id === player2Id) {
+        alert('Cannot assign the same player twice');
+        return;
+      }
+
+      const teamData = {
+        name: document.getElementById('teamName').value.trim(),
+        seed: document.getElementById('teamSeed').value ? parseInt(document.getElementById('teamSeed').value) : null,
+        player1_id: player1Id,
+        player2_id: player2Id
+      };
+
+      try {
+        if (editingTeamId) {
+          // Update players' team_id references
+          const oldTeam = teams.find(t => t.id === editingTeamId);
+
+          // Clear old assignments
+          if (oldTeam.player1_id) {
+            await supabase.from('players').update({ team_id: null }).eq('id', oldTeam.player1_id);
+          }
+          if (oldTeam.player2_id) {
+            await supabase.from('players').update({ team_id: null }).eq('id', oldTeam.player2_id);
+          }
+
+          // Update team
+          await supabase.from('teams').update(teamData).eq('id', editingTeamId);
+
+          // Set new assignments
+          if (player1Id) {
+            await supabase.from('players').update({ team_id: editingTeamId }).eq('id', player1Id);
+          }
+          if (player2Id) {
+            await supabase.from('players').update({ team_id: editingTeamId }).eq('id', player2Id);
+          }
+        } else {
+          // Create new team
+          const { data: newTeam } = await supabase.from('teams').insert(teamData).select().single();
+
+          // Assign players to team
+          if (player1Id) {
+            await supabase.from('players').update({ team_id: newTeam.id }).eq('id', player1Id);
+          }
+          if (player2Id) {
+            await supabase.from('players').update({ team_id: newTeam.id }).eq('id', player2Id);
+          }
+        }
+
+        modal.classList.remove('open');
+        await loadData(supabase);
+      } catch (err) {
+        console.error('Save error:', err);
+        alert('Failed to save team');
+      }
+    });
+
+    // Delete confirmation
+    document.getElementById('cancelDelete').addEventListener('click', () => deleteModal.classList.remove('open'));
+    deleteModal.addEventListener('click', (e) => {
+      if (e.target === deleteModal) deleteModal.classList.remove('open');
+    });
+
+    document.getElementById('confirmDelete').addEventListener('click', async () => {
+      const id = document.getElementById('confirmDelete').dataset.id;
+      const team = teams.find(t => t.id === id);
+
+      try {
+        // Clear player assignments first
+        if (team.player1_id) {
+          await supabase.from('players').update({ team_id: null }).eq('id', team.player1_id);
+        }
+        if (team.player2_id) {
+          await supabase.from('players').update({ team_id: null }).eq('id', team.player2_id);
+        }
+
+        // Delete team
+        await supabase.from('teams').delete().eq('id', id);
+
+        deleteModal.classList.remove('open');
+        await loadData(supabase);
+      } catch (err) {
+        console.error('Delete error:', err);
+        alert('Failed to delete team');
+      }
+    });
+  }
+</script>
