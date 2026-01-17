@@ -1024,16 +1024,45 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         position: relative;
       }
 
-      /* La Salida - THE HERO (cream = brightest, unmissable) */
-      /* Tobias: "The headline should RADIATE" - luminous glow that cuts through darkness */
+      /* La Salida - THE HERO - Stacked bold treatment */
+      /* Matches LA LEY energy - commanding, carved in stone */
       .event-numeral--salida {
-        font-family: "Bodoni Moda", serif;
-        font-style: italic;
-        font-weight: 400;
-        font-size: clamp(4.5rem, 16vw, 11rem);
-        color: var(--cream);
-        line-height: 0.9;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
         margin: 0;
+        position: relative;
+      }
+
+      .event-numeral--salida::before {
+        content: none;
+      }
+
+      .event-numeral--salida::after {
+        content: none;
+      }
+
+      /* Stacked LA SALIDA lines */
+      .salida-line {
+        font-family: "Bodoni Moda", serif;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        line-height: 0.82;
+        color: rgba(255, 252, 245, 0.7);
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+      }
+
+      /* "LA" - the setup */
+      .salida-line:first-child {
+        font-size: clamp(2.2rem, 8vw, 5rem);
+      }
+
+      /* "SALIDA" - THE EXIT. The moment of truth. */
+      .salida-line--main {
+        font-size: clamp(4.5rem, 18vw, 12rem);
+        color: var(--cream);
         /* Layered glow: inner light → mid aureole → outer atmosphere → depth shadow */
         text-shadow:
           0 0 10px rgba(255, 252, 245, 0.6),
@@ -1043,19 +1072,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 140px rgba(212, 165, 116, 0.2),
           0 4px 20px rgba(0, 0, 0, 0.9),
           0 8px 40px rgba(0, 0, 0, 0.7);
-        letter-spacing: -0.02em;
-        position: relative;
-        display: inline-block;
-        /* Slight brightness boost for mobile readability */
         filter: brightness(1.05);
-      }
-
-      .event-numeral--salida::before {
-        content: none;
-      }
-
-      .event-numeral--salida::after {
-        content: none;
       }
 
       /* Metallic shine effect on numeral */
@@ -1255,8 +1272,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* MOBILE HERO ENHANCEMENTS - 99% of users are on iPhone */
       @media (max-width: 768px) {
-        /* La Salida needs MAXIMUM presence on mobile */
-        .event-numeral--salida {
+        /* La Salida stacked treatment on mobile */
+        .salida-line:first-child {
+          font-size: clamp(1.8rem, 8vw, 3.5rem);
+        }
+
+        .salida-line--main {
+          font-size: clamp(3.5rem, 18vw, 8rem);
           filter: brightness(1.1);
           text-shadow:
             0 0 12px rgba(255, 252, 245, 0.7),
@@ -1484,12 +1506,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .whisper-greeting {
-        font-family: "IBM Plex Sans", system-ui, sans-serif;
-        font-weight: 500;
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-weight: 400;
         font-size: clamp(0.9rem, 3.5vw, 1.3rem); /* Smaller, contextual */
         color: var(--brass);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        text-transform: none; /* "Que Bola Asere" not "QUE BOLA ASERE" */
         text-align: center;
         opacity: 0;
         /* Subtle brass glow — setup, not climax */
@@ -1539,7 +1562,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
       }
 
-      /* THE LINE - "You know this table." - the recognition */
+      /* THE LINE - "You've sat here before." - the recognition */
       .whisper-line--ancestors {
         font-size: clamp(1.6rem, 6vw, 2.8rem);
         font-style: italic;
@@ -1564,8 +1587,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Animation for main line - the recognition statement */
+      /* +3.3s breathing room after greeting - let it land */
       .panel--whisper.in-view:not(.has-played) .whisper-line--ancestors {
-        animation: recognitionStatement 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards;
+        animation: recognitionStatement 1.8s cubic-bezier(0.16, 1, 0.3, 1) 5.5s forwards;
       }
 
       /* Recognition statement - Camera cut. Emerges once, lands clean. No fidgeting. */
@@ -1630,12 +1654,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Cinematic animations - slow, weighted, like memories surfacing */
+      /* Lin-Manuel: "Build the pauses into the animation timing. The words that matter need room to BREATHE." */
       .panel--whisper.in-view:not(.has-played) .whisper-setup {
-        animation: setupWhisper 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        animation: setupWhisper 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingSmoke 2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+        animation: greetingSmoke 2s cubic-bezier(0.16, 1, 0.3, 1) 2.5s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
@@ -1777,7 +1802,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--whisper.in-view .whisper-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 4s forwards;
+        animation: scrollHintReveal 1s ease-out 7.5s forwards;
       }
 
       /* Once played: returning should feel "static" and inevitable (no replays). */
@@ -1943,37 +1968,37 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 4px 30px rgba(0, 0, 0, 0.8);
       }
 
-      /* "Every weekend. Every holiday." - Supporting context, not the punch */
+      /* "Every Sunday. Every quinceañera. Every goodbye." - Life cycle punch, poetic brass */
       .build-word--secondary {
-        font-family: "IBM Plex Sans", system-ui, sans-serif;
-        font-size: clamp(0.85rem, 3.2vw, 1.3rem);
+        font-family: "Bodoni Moda", serif;
+        font-size: clamp(0.9rem, 3.2vw, 1.35rem);
         font-weight: 400;
+        font-style: italic;
         color: var(--brass);
-        letter-spacing: 0.04em;
-        line-height: 1.5;
+        letter-spacing: 0.05em;
+        line-height: 1.4;
         display: block;
-        opacity: 0.8;
+        opacity: 0;  /* Start hidden, animation reveals at 3.5s delay */
         margin-top: 1.5vh;
         text-shadow:
-          0 0 18px rgba(212, 165, 116, 0.3),
-          0 2px 12px rgba(0, 0, 0, 0.5);
+          0 0 20px rgba(212, 165, 116, 0.4),
+          0 2px 12px rgba(0, 0, 0, 0.6);
       }
 
-      /* "Now the ficha passes to you." - The torch pass, forward momentum */
+      /* "Now the ficha is yours." - Torch pass as bottom-left signature */
       .build-word--torch {
-        font-family: "IBM Plex Sans", system-ui, sans-serif;
-        font-size: clamp(0.75rem, 2.8vw, 1.1rem);
-        font-weight: 500;
+        font-family: "Bodoni Moda", serif;
+        font-size: clamp(0.85rem, 3vw, 1.15rem);
+        font-weight: 400;
         font-style: italic;
-        color: rgba(212, 165, 116, 0.85);
-        letter-spacing: 0.06em;
-        line-height: 1.5;
+        color: var(--brass);
+        letter-spacing: 0.05em;
+        line-height: 1.4;
         display: block;
         opacity: 0;
-        margin-top: 3vh;
         text-shadow:
           0 0 20px rgba(212, 165, 116, 0.4),
-          0 2px 10px rgba(0, 0, 0, 0.5);
+          0 2px 12px rgba(0, 0, 0, 0.6);
       }
 
       /* Legacy: keep inherited for backwards compat */
@@ -1992,14 +2017,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 8px 50px rgba(0, 0, 0, 0.8);
       }
 
-      /* BOTTOM LETTERBOX - Scroll hint emerges after revelation */
+      /* BOTTOM LETTERBOX - Torch signature + scroll hint */
       .build-bottom {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 10vh 6vw 14vh;
+        padding: 8vh 6vw 12vh;
         background: linear-gradient(
           to top,
           rgba(10, 7, 5, 0.98) 0%,
@@ -2009,8 +2034,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         );
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;  /* Torch aligns left */
         justify-content: flex-end;
+        gap: 3vh;
         pointer-events: none;
       }
 
@@ -2019,6 +2045,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transition: opacity 420ms ease;
         display: flex;
         justify-content: center;
+        align-self: center;  /* Center scroll hint even though parent is flex-start */
       }
 
       .build-scroll-hint__chevron {
@@ -2036,16 +2063,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Heritage lines appear - staggered, weighted reveals */
+      /* Lin-Manuel: "After 'Your abuelo sat here.' — PAUSE. Let it land. Silence isn't empty. It's where the feeling lives." */
       .panel--build.in-view:not(.has-played) .build-word--primary {
-        animation: memorySurface 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+        animation: memorySurface 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
       }
 
       .panel--build.in-view:not(.has-played) .build-word--secondary {
-        animation: memoryEcho 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2s forwards;
+        animation: memoryEcho 1.8s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
       }
 
       .panel--build.in-view:not(.has-played) .build-word--torch {
-        animation: torchPass 1.5s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
+        animation: torchPass 1.5s cubic-bezier(0.16, 1, 0.3, 1) 5.5s forwards;
       }
 
       /* Legacy: keep inherited animation */
@@ -2054,7 +2082,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--build.in-view:not(.has-played) .build-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 4s forwards;
+        animation: scrollHintReveal 1s ease-out 7s forwards;
       }
 
       /* Memory surface - clean camera cut. The memory is THERE or it isn't. */
@@ -2441,20 +2469,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         pointer-events: none;
       }
 
-      /* "La mesa te espera." - The slogan landing, signature moment */
+      /* "La mesa te espera." - The slogan landing, tucked under SEAT as signature */
       .slam-slogan {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
         font-size: clamp(1rem, 4vw, 1.5rem);
         color: var(--brass);
-        letter-spacing: 0.08em;
+        letter-spacing: 0.06em;
         text-align: center;
         opacity: 0;
-        margin-bottom: 3vh;
+        margin-top: 2vh;  /* Tighter gap below SEAT */
+        margin-bottom: 0;
         text-shadow:
-          0 0 30px rgba(212, 165, 116, 0.5),
-          0 0 60px rgba(212, 165, 116, 0.25),
+          0 0 25px rgba(212, 165, 116, 0.5),
+          0 0 50px rgba(212, 165, 116, 0.25),
           0 2px 15px rgba(0, 0, 0, 0.6);
       }
 
@@ -2475,24 +2504,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Scene 3 animation sequence - context first, then rapid fire SLAM */
+      /* Tobias: "The breath between messages. These moments are where feeling lives." */
       .panel--slam.in-view:not(.has-played) .slam-word--winner {
-        animation: slamWord 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+        animation: slamWord 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
       }
 
       .panel--slam.in-view:not(.has-played) .slam-word--takes {
-        animation: slamWord 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+        animation: slamWord 0.5s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
       }
 
       .panel--slam.in-view:not(.has-played) .slam-word--all {
-        animation: slamFinal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+        animation: slamFinal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 2.0s forwards;
       }
 
       .panel--slam.in-view:not(.has-played) .slam-slogan {
-        animation: sloganLanding 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards;
+        animation: sloganLanding 1.8s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
       }
 
       .panel--slam.in-view:not(.has-played) .slam-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 3.5s forwards;
+        animation: scrollHintReveal 1s ease-out 5s forwards;
       }
 
       .panel--slam.has-played .slam-word {
@@ -5136,7 +5166,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         box-sizing: border-box;
         /* Base `.panel` uses `overflow: hidden`; allow the form scene to scroll when content exceeds the viewport. */
         overflow-x: hidden;
-        overflow-y: hidden;
+        overflow-y: auto;
         /* Atmospheric depth - Tobias: "Rooms, Not Hallways" */
         background:
           /* Top vignette - ceiling darkness */
@@ -5228,7 +5258,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           /* Top fade to black - seamless transition from previous panel */
           linear-gradient(to bottom, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.7) 15%, rgba(10, 7, 5, 0.3) 30%, transparent 50%),
           /* Bottom fade to black - seamless transition to footer */
-          linear-gradient(to top, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.8) 12%, rgba(10, 7, 5, 0.4) 25%, transparent 45%),
+          linear-gradient(to top, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.95) 8%, rgba(10, 7, 5, 0.7) 18%, rgba(10, 7, 5, 0.3) 30%, transparent 45%),
           /* Side vignettes - tunnel vision, focus on center */
           linear-gradient(90deg, rgba(10, 7, 5, 0.85) 0%, rgba(10, 7, 5, 0.4) 15%, transparent 30%, transparent 70%, rgba(10, 7, 5, 0.4) 85%, rgba(10, 7, 5, 0.85) 100%),
           /* Deep radial vignette - the room is a memory */
@@ -5278,8 +5308,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),
             /* Top fade - SHORT, only 20% of panel */
             linear-gradient(to bottom, rgba(10, 7, 5, 0.95) 0%, rgba(10, 7, 5, 0.5) 10%, transparent 20%),
-            /* Bottom fade - SHORT, only 20% of panel */
-            linear-gradient(to top, rgba(10, 7, 5, 0.95) 0%, rgba(10, 7, 5, 0.6) 10%, transparent 22%),
+            /* Bottom fade - extended for seamless footer transition */
+            linear-gradient(to top, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.85) 10%, rgba(10, 7, 5, 0.5) 18%, transparent 28%),
             /* Side vignettes - softer */
             linear-gradient(90deg, rgba(10, 7, 5, 0.7) 0%, transparent 15%, transparent 85%, rgba(10, 7, 5, 0.7) 100%),
             /* Soft radial vignette - center is clear */
@@ -5319,6 +5349,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 1;
         box-sizing: border-box;
         background:
+          /* Top fade - blend seamlessly with postscript */
+          linear-gradient(to bottom, rgba(10, 7, 5, 1) 0%, rgba(10, 7, 5, 0.7) 10%, transparent 25%),
           radial-gradient(ellipse at 50% 30%, rgba(183, 106, 59, 0.04) 0%, transparent 50%),
           linear-gradient(180deg, #0a0705 0%, #0d0906 100%);
       }
@@ -5392,24 +5424,41 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	      }
 
 	      .rules-header__title {
-	        font-family: "Bodoni Moda", serif;
-	        font-size: clamp(3.1rem, 12vw, 5rem);
-	        font-weight: 400;
-	        font-style: italic;
-	        color: #fff;
-	        letter-spacing: -0.02em;
-	        line-height: 0.9;
+	        display: flex;
+	        flex-direction: column;
+	        align-items: center;
+	        gap: 0;
 	        margin: 0 0 8px 0;
 	        opacity: 0;
+	      }
+
+	      /* Stacked LA LEY - commanding presence like TAKE YOUR SEAT */
+	      .rules-title__line {
+	        font-family: "Bodoni Moda", serif;
+	        font-weight: 900;
+	        text-transform: uppercase;
+	        letter-spacing: 0.04em;
+	        line-height: 0.82;
+	        color: rgba(255, 255, 255, 0.7);
 	        text-shadow:
-	          0 0 10px rgba(255, 252, 245, 0.55),
-	          0 0 30px rgba(255, 252, 245, 0.25),
-	          0 0 60px rgba(212, 165, 116, 0.35),
-	          0 0 100px rgba(212, 165, 116, 0.18),
-	          0 4px 20px rgba(0, 0, 0, 0.9),
-	          0 8px 40px rgba(0, 0, 0, 0.7);
+	          0 2px 20px rgba(0, 0, 0, 0.5);
+	      }
+
+	      /* "LA" - the setup */
+	      .rules-title__line:first-child {
+	        font-size: clamp(2rem, 8vw, 4rem);
+	      }
+
+	      /* "LEY" - THE LAW. Carved in stone. */
+	      .rules-title__line--ley {
+	        font-size: clamp(4rem, 18vw, 10rem);
+	        color: #fff;
+	        text-shadow:
+	          0 0 40px rgba(212, 165, 116, 0.5),
+	          0 0 80px rgba(212, 165, 116, 0.3),
+	          0 0 120px rgba(212, 165, 116, 0.15),
+	          0 4px 20px rgba(0, 0, 0, 0.9);
 	        filter: brightness(1.04);
-	        display: inline-block;
 	      }
 
       .rules-header__subtitle {
@@ -5673,8 +5722,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           margin-bottom: 20px;
         }
 
-        .rules-header__title {
-          font-size: clamp(2.4rem, 10vw, 3.5rem);
+        .rules-title__line:first-child {
+          font-size: clamp(1.6rem, 8vw, 2.5rem);
+        }
+
+        .rules-title__line--ley {
+          font-size: clamp(3rem, 16vw, 6rem);
         }
 
         .rules-header__subtitle {
@@ -7254,11 +7307,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: center;
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-8px);
+        transform: translateY(-8px) scale(0.9);
         transition:
-          opacity 0.3s ease,
-          visibility 0.3s ease,
-          transform 0.3s ease;
+          opacity 0.6s ease-out,
+          visibility 0.6s ease-out,
+          transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .back-to-top.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
       }
 
       .back-to-top__pip {
@@ -7272,19 +7331,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           var(--copper) 100%
         );
         box-shadow:
-          0 0 12px rgba(212, 165, 116, 0.5),
-          0 0 24px rgba(212, 165, 116, 0.25),
+          0 0 8px rgba(212, 165, 116, 0.3),
+          0 0 16px rgba(212, 165, 116, 0.15),
           inset 0 -2px 4px rgba(0, 0, 0, 0.3),
           inset 0 2px 4px rgba(255, 255, 255, 0.2);
         transition:
           transform 0.2s ease,
-          box-shadow 0.2s ease;
+          box-shadow 0.6s ease-out;
       }
 
-      .back-to-top.is-visible {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
+      /* Glow bloom on entrance - like glowCrescendo */
+      .back-to-top.is-visible .back-to-top__pip {
+        box-shadow:
+          0 0 12px rgba(212, 165, 116, 0.5),
+          0 0 24px rgba(212, 165, 116, 0.25),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+          inset 0 2px 4px rgba(255, 255, 255, 0.2);
       }
 
       .back-to-top:hover .back-to-top__pip,
@@ -7564,7 +7626,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
           <!-- THE HERO - Tournament Name -->
           <h1 class="event-title">
-            <span class="event-numeral event-numeral--salida" data-text="La Salida">La Salida</span>
+            <span class="event-numeral event-numeral--salida">
+              <span class="salida-line">LA</span>
+              <span class="salida-line salida-line--main">SALIDA</span>
+            </span>
           </h1>
 
           <!-- Championship stamp -->
@@ -7586,13 +7651,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         <!-- TOP LETTERBOX - Setup whisper, then greeting -->
         <div class="whisper-top">
-          <p class="whisper-setup">Some tables never forget.</p>
+          <p class="whisper-setup">This table remembers.</p>
           <p class="whisper-greeting">Que Bola Asere</p>
         </div>
 
         <!-- BOTTOM LETTERBOX - The recognition -->
         <div class="whisper-bottom">
-          <p class="whisper-line whisper-line--ancestors">You know this table.</p>
+          <p class="whisper-line whisper-line--ancestors">You've sat here before.</p>
           <!-- Scroll hint - appears after narrative -->
           <div class="whisper-scroll-hint">
             <div class="whisper-scroll-hint__chevron"></div>
@@ -7615,13 +7680,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="build-center">
           <div class="build-revelation">
             <span class="build-word build-word--primary">Your abuelo sat here.</span>
-            <span class="build-word build-word--secondary">Every weekend. Every holiday.</span>
-            <span class="build-word build-word--torch">Now the ficha passes to you.</span>
+            <span class="build-word build-word--secondary">Every Sunday. Every quinceañera. Every goodbye.</span>
           </div>
         </div>
 
-        <!-- BOTTOM LETTERBOX - Scroll hint after revelation -->
+        <!-- BOTTOM LETTERBOX - Torch pass as signature + scroll hint -->
         <div class="build-bottom">
+          <span class="build-word build-word--torch">Now the ficha is yours.</span>
           <div class="build-scroll-hint">
             <div class="build-scroll-hint__chevron"></div>
           </div>
@@ -7630,7 +7695,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="smoke-layer"></div>
       </section>
 
-      <!-- Panel 4: The Hype Card - "CLAIM YOUR SEAT" -->
+      <!-- Panel 4: The Hype Card - "TAKE YOUR SEAT" -->
       <section class="panel panel--slam" id="panelSlam">
         <div class="panel-bg" style="background-image: url('/FRAMES/frame-4.webp')"></div>
         <div class="fog-layer"></div>
@@ -7651,15 +7716,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
 
           <div class="slam-container">
-            <span class="slam-word slam-word--winner">Claim</span>
+            <span class="slam-word slam-word--winner">Take</span>
             <span class="slam-word slam-word--takes">Your</span>
             <span class="slam-word slam-word--all">SEAT</span>
           </div>
+          <p class="slam-slogan">La mesa te espera.</p>
         </div>
 
-        <!-- BOTTOM LETTERBOX - Slogan landing + scroll hint -->
+        <!-- BOTTOM LETTERBOX - Scroll hint only -->
         <div class="slam-bottom">
-          <p class="slam-slogan">La mesa te espera.</p>
           <div class="slam-scroll-hint" aria-hidden="true">
             <div class="slam-scroll-hint__chevron"></div>
           </div>
@@ -7680,7 +7745,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	              <div class="hero-badge__divider"></div>
 	              <span class="hero-badge__bottom">1</span>
 	            </div>
-	            <h2 class="rules-header__title">La Ley</h2>
+	            <h2 class="rules-header__title">
+	              <span class="rules-title__line">LA</span>
+	              <span class="rules-title__line rules-title__line--ley">LEY</span>
+	            </h2>
 	            <p class="rules-header__subtitle">The Law of the Table</p>
 	          </div>
 
@@ -7747,25 +7815,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             </div>
           </div>
 
-          <!-- Form - Accordion Disclosure -->
+          <!-- Registration Form -->
           <div class="form-shell" id="formShell">
-            <!-- Teaser - Always visible -->
-            <div class="form-teaser">
-              <div class="form-scarcity" id="formScarcity">
-                <div class="form-scarcity__display">
-                  <span class="form-scarcity__number" id="spotsLeftInline">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span>
-                </div>
-                <span class="form-scarcity__label">SEATS LEFT</span>
+            <!-- Scarcity Counter -->
+            <div class="form-scarcity" id="formScarcity">
+              <div class="form-scarcity__display">
+                <span class="form-scarcity__number" id="spotsLeftInline">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span>
               </div>
-              <p class="form-teaser__tagline">First come, first served. No substitutes.</p>
-              <button type="button" class="form-teaser__trigger" id="formTrigger">
-                <span class="form-teaser__trigger-text">Register Now</span>
-                <span class="form-teaser__trigger-arrow">↓</span>
-              </button>
+              <span class="form-scarcity__label">SEATS LEFT</span>
             </div>
 
-            <!-- Disclosure - Expands on click -->
-            <div class="form-disclosure" id="formDisclosure">
 <form id="signup" novalidate>
               <input
                 type="text"
@@ -7839,7 +7898,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               </div>
 	              <p class="status" id="status" aria-live="polite"></p>
 	            </form>
-            </div><!-- /.form-disclosure -->
 	          </div>
 	        </div>
 	      </section>
@@ -8187,7 +8245,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        // Let the loading screen breathe, but stop blocking scroll/taps quickly.
 	        // The ritual takes ~3.5s, then heartbeat begins. Hold for one full breath.
 	        const INTERACTION_RELEASE_MS = 180;
-	        const VISUAL_HOLD_MS = 5500;  // 5.5 seconds — tighter, less waiting
+	        const VISUAL_HOLD_MS = 4000;  // 4 seconds — ritual completes, one breath, then cut
 
 	        setTimeout(() => {
 	          loadingScreen.classList.add('is-passive');
@@ -8216,8 +8274,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        document.addEventListener('DOMContentLoaded', dismissLoadingScreen, { once: true });
 	      }
 
-	      // Fallback: Force dismissal after 8 seconds (ritual takes ~5.5s now)
-	      setTimeout(dismissLoadingScreen, 8000);
+	      // Fallback: Force dismissal after 6 seconds (ritual ~4s + buffer)
+	      setTimeout(dismissLoadingScreen, 6000);
 
       // Panel parallax and content animations
       const allPanels = document.querySelectorAll('.panel');
@@ -8288,19 +8346,29 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       // Back to Top - CDL Monogram
-      // Shows after scrolling past the hero panel, scrolls to top on click
+      // Shows on all panels (including hero), hides only on form panel
       {
         const backToTop = document.getElementById('backToTop');
         const heroPanel = document.getElementById('heroPanel');
+        const formPanel = document.querySelector('.panel--form');
 
         if (backToTop && storyEl && heroPanel) {
-          // Show/hide based on scroll position
+          // Show/hide based on scroll position and current panel
           const updateBackToTopVisibility = () => {
             const heroHeight = heroPanel.offsetHeight;
             const scrolled = storyEl.scrollTop;
 
-            // Show after scrolling past 80% of hero panel
-            if (scrolled > heroHeight * 0.8) {
+            // Check if form panel is visible (more than 40% in viewport)
+            let formInView = false;
+            if (formPanel) {
+              const rect = formPanel.getBoundingClientRect();
+              const viewportHeight = window.innerHeight;
+              const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
+              formInView = visibleHeight > viewportHeight * 0.4;
+            }
+
+            // Show on all panels except form panel
+            if (!formInView) {
               backToTop.classList.add('is-visible');
             } else {
               backToTop.classList.remove('is-visible');
@@ -8433,7 +8501,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !whisperHasPlayed) {
             whisperHasPlayed = true;
             alignPanelAfterSettle(whisperPanel);
-            lockScroll(4500, () => whisperPanel?.classList.add('has-played'));
+            lockScroll(8000, () => whisperPanel?.classList.add('has-played'));
           }
         });
       }, { threshold: 0.6 });
@@ -8444,7 +8512,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !buildHasPlayed) {
             buildHasPlayed = true;
             alignPanelAfterSettle(buildPanel);
-            lockScroll(5500, () => buildPanel?.classList.add('has-played'));
+            lockScroll(7500, () => buildPanel?.classList.add('has-played'));
           }
         });
       }, { threshold: 0.6 });
@@ -8455,7 +8523,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !slamHasPlayed) {
             slamHasPlayed = true;
             alignPanelAfterSettle(slamPanel);
-            lockScroll(3500, () => slamPanel?.classList.add('has-played'));
+            lockScroll(6000, () => slamPanel?.classList.add('has-played'));
           }
         });
       }, { threshold: 0.6 });
