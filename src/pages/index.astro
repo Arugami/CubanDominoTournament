@@ -62,9 +62,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          "The ritual before the game"
          ============================================ */
 
-      /* Master timing - synchronized heartbeat (3s = confident rhythm) */
+      /* Master timing - synchronized heartbeat (4s = meditative breathing) */
       :root {
-        --heartbeat: 3s;
+        --heartbeat: 4s;
+        --breath-ease: cubic-bezier(0.4, 0, 0.2, 1); /* Fast inhale, slow exhale */
         --ember-color: rgba(255, 180, 100, 0.9);
         --glow-warm: rgba(232, 190, 140, 1);
         --glow-deep: rgba(183, 106, 59, 0.8);
@@ -398,7 +399,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Synchronized heartbeat glow - all letters breathe together */
+      /* Synchronized heartbeat glow - all letters breathe together (5-step smooth curve) */
       @keyframes letterPulse {
         0%, 100% {
           /* Must match base .cdl-tile__letter text-shadow to avoid jerk on animation switch */
@@ -412,6 +413,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             0 0 150px rgba(183, 106, 59, 0.4);
           filter: brightness(1);
         }
+        25% {
+          opacity: 1;
+          text-shadow:
+            0 0 6px rgba(255, 255, 255, 0.52),
+            0 0 17px var(--glow-warm),
+            0 0 38px var(--glow-warm),
+            0 0 75px rgba(212, 165, 116, 0.85),
+            0 0 100px var(--glow-deep),
+            0 0 150px rgba(183, 106, 59, 0.45);
+          filter: brightness(1.03);
+        }
         50% {
           opacity: 1;
           text-shadow:
@@ -420,7 +432,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             0 0 50px rgba(212, 165, 116, 0.9),
             0 0 100px var(--glow-deep),
             0 0 150px rgba(183, 106, 59, 0.5);
-          filter: brightness(1.08);
+          filter: brightness(1.06);
+        }
+        75% {
+          opacity: 1;
+          text-shadow:
+            0 0 6px rgba(255, 255, 255, 0.52),
+            0 0 17px var(--glow-warm),
+            0 0 38px var(--glow-warm),
+            0 0 75px rgba(212, 165, 116, 0.85),
+            0 0 100px var(--glow-deep),
+            0 0 150px rgba(183, 106, 59, 0.45);
+          filter: brightness(1.03);
         }
       }
 
@@ -477,7 +500,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Synchronized with letter heartbeat - unified pulse intensity */
+      /* Synchronized with letter heartbeat - unified pulse intensity (5-step smooth curve) */
       @keyframes dividerPulse {
         0%, 100% {
           opacity: 0.85;
@@ -486,12 +509,26 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             0 0 15px rgba(212, 165, 116, 0.3),
             0 0 30px rgba(183, 106, 59, 0.15);
         }
+        25% {
+          opacity: 0.9;
+          box-shadow:
+            0 0 9px rgba(232, 190, 140, 0.6),
+            0 0 22px rgba(212, 165, 116, 0.5),
+            0 0 45px rgba(183, 106, 59, 0.25);
+        }
         50% {
           opacity: 1;
           box-shadow:
             0 0 14px var(--glow-warm),
             0 0 35px rgba(212, 165, 116, 0.8),
             0 0 70px var(--glow-deep);
+        }
+        75% {
+          opacity: 0.9;
+          box-shadow:
+            0 0 9px rgba(232, 190, 140, 0.6),
+            0 0 22px rgba(212, 165, 116, 0.5),
+            0 0 45px rgba(183, 106, 59, 0.25);
         }
       }
 
@@ -539,14 +576,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
+      /* 5-step smooth curve for hypnotic breathing */
       @keyframes glowPulse {
         0%, 100% {
           transform: translate(-50%, -50%) scale(1);
           opacity: 0.5;  /* Matches crescendo end — no jerk */
         }
+        25% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.55;
+        }
         50% {
           transform: translate(-50%, -50%) scale(1);  /* No scale — prevents gradient edge visibility */
           opacity: 0.65;  /* Slightly increased to compensate for no scale */
+        }
+        75% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.55;
         }
       }
 
@@ -1582,7 +1628,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         pointer-events: none;
       }
 
-      /* "Que Bola Asere" - Drifts in from the RIGHT like smoke curling */
+      /* "Que bola asere" - Drifts in from the RIGHT like smoke curling */
       .whisper-greeting {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
@@ -1687,9 +1733,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Animation for main line - the recognition statement */
-      /* Emerges SECOND - smooth fade-up (memory surfacing) */
+      /* Emerges THIRD - smooth fade-up (memory surfacing) */
       .panel--whisper.in-view:not(.has-played) .whisper-line--ancestors {
-        animation: recognitionSlide 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2.5s forwards;
+        animation: recognitionSlide 1.8s cubic-bezier(0.16, 1, 0.3, 1) 4.0s forwards;
       }
 
       /* Recognition statement - SMOOTH fade-up from blur (memory surfacing) */
@@ -1758,18 +1804,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Lin-Manuel: "Build the pauses into the animation timing. The words that matter need room to BREATHE." */
       /* Tobias: "Text isn't a domino tile. It shouldn't SLAM. Text should EMERGE — like smoke, like memory surfacing." */
 
-      /* NEW TIMELINE (only 2 elements):
-         0.3s: "Que Bola Asere" drifts in (1.5s smoke emerge)
-         1.8s: Animation complete
-         ← 0.7s PAUSE (greeting lands)
-         2.5s: "You've sat here before." emerges (1.8s memory surface)
-         4.3s: Animation complete
+      /* NEW TIMELINE (3-beat reveal: Room → Greeting → Recognition):
+         0.3s: "This table remembers." emerges from blur (1.2s, the room whispers)
+         1.5s: Animation complete
+         ← 0.5s PAUSE (let the room settle)
+         2.0s: "Que bola asere" drifts in (1.5s smoke emerge)
+         3.5s: Animation complete
+         ← 0.5s PAUSE (greeting lands)
+         4.0s: "You've sat here before." emerges (1.8s memory surface)
+         5.8s: Animation complete
          ← 0.7s PAUSE (recognition sinks in)
-         5.0s: Scroll hint fades in
+         6.5s: Scroll hint fades in
       */
 
+      .panel--whisper.in-view:not(.has-played) .whisper-setup {
+        animation: setupEmerge 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+      }
+
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingDrift 1.5s ease-out 0.3s forwards;
+        animation: greetingDrift 1.5s ease-out 2.0s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
@@ -1917,7 +1970,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--whisper.in-view .whisper-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 5.0s forwards;  /* Appears at 5.0s (new timeline) */
+        animation: scrollHintReveal 1s ease-out 6.5s forwards;  /* Appears at 6.5s (3-beat timeline) */
       }
 
       /* Once played: returning should feel "static" and inevitable (no replays). */
@@ -2085,19 +2138,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 4px 30px rgba(0, 0, 0, 0.8);
       }
 
-      /* Life cycle reveal: "Every Sunday. Every quinceañera. Every goodbye." */
-      /* DIAGONAL STAIR-STEP: Eye travels right → center → left */
-      .build-poetry {
+      /* Family cascade: "Your tío." → "Your father." */
+      /* Generational descent building to the torch pass */
+      .build-family {
         display: flex;
         flex-direction: column;
-        align-items: stretch;  /* Allow children to position themselves */
-        width: 85vw;  /* Full width container for stair-step */
-        gap: 1.2vh;
-        margin-top: 2vh;
-        margin-left: -4vw;  /* Shift left to start the diagonal */
+        align-items: stretch;
+        width: 85vw;
+        gap: 1.0vh;
+        margin-top: 1.5vh;
       }
 
-      .build-poetry__line {
+      .build-family__line {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
@@ -2108,40 +2160,51 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 2px 12px rgba(0, 0, 0, 0.5);
       }
 
-      /* STAIR-STEP POSITIONS: Diagonal eye travel */
-      .build-poetry__line--routine {
-        align-self: flex-end;     /* RIGHT - starts the diagonal */
-        text-align: right;
-        padding-right: 4vw;
-        font-size: clamp(1.1rem, 4.5vw, 1.8rem);  /* Smallest */
-        color: rgba(212, 165, 116, 0.75);
-      }
-
-      .build-poetry__line--celebration {
-        align-self: center;       /* CENTER - middle of diagonal */
+      /* "Your tío. Your father." - Two generations on one line (direct lineage) */
+      .build-family__line--generations {
+        align-self: center;
         text-align: center;
-        font-size: clamp(1.3rem, 5.5vw, 2.2rem);  /* Medium */
-        color: rgba(212, 165, 116, 0.85);
+        font-size: clamp(1.3rem, 5vw, 2rem);
+        color: rgba(212, 165, 116, 0.9);
       }
 
-      .build-poetry__line--loss {
-        align-self: flex-start;   /* LEFT - completes the diagonal */
-        text-align: left;
-        padding-left: 4vw;
-        font-size: clamp(1.5rem, 6.5vw, 2.6rem);  /* Larger - weight builds */
-        color: rgba(212, 165, 116, 1.0);
+      /* Life cycle container - the passage of time */
+      .build-lifecycle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5vh;
+        margin-top: 2vh;
       }
 
-      /* "Now the ficha is yours." - THE CLIMAX - LARGEST text, RISES from below */
-      /* This is the torch pass - the emotional payoff of the panel */
+      /* "Every Sunday. Every celebration. Every goodbye." - Universal, spans time */
+      /* Typography: ITALIC = memory/time passing, different from the family names */
+      .build-lifecycle__line {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;  /* Time flows differently */
+        font-weight: 400;
+        font-size: clamp(1rem, 4vw, 1.6rem);
+        color: rgba(248, 239, 230, 0.75);  /* Cream - softer, more ethereal */
+        letter-spacing: 0.04em;
+        line-height: 1.6;
+        text-align: center;
+        opacity: 0;
+        text-shadow:
+          0 0 20px rgba(248, 239, 230, 0.3),
+          0 0 40px rgba(212, 165, 116, 0.2),
+          0 2px 15px rgba(0, 0, 0, 0.6);
+      }
+
+      /* "Te toca." - THE CLIMAX - RISES from below */
+      /* Pure Cuban table-talk: "It's your turn." The torch passes. */
       /* Typography: UPRIGHT + BOLD = the climax lands with full weight */
       .build-word--torch {
         font-family: "Bodoni Moda", serif;
-        font-size: clamp(1.6rem, 7vw, 3rem);  /* Reduced from 10vw to fit single line on mobile */
+        font-size: clamp(2rem, 9vw, 4rem);  /* Larger - shorter text can be bigger */
         font-weight: 600;    /* BOLDER - the climax */
         font-style: normal;  /* UPRIGHT - definitive, final */
         color: #fff;  /* Full white - maximum impact */
-        letter-spacing: 0.03em;
+        letter-spacing: 0.05em;
         line-height: 1.2;
         display: block;
         white-space: nowrap;  /* Force single line on all devices */
@@ -2209,51 +2272,49 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0.5;
       }
 
-      /* PANEL 3 ANIMATION SEQUENCE - ASCENT & DESCENT */
-      /* Ancestors DESCEND from above. The torch RISES from below. They meet. */
-      /* Lin-Manuel: "The pause after 'Every goodbye.' is where people will feel it. Don't rush past the grief." */
+      /* PANEL 3 ANIMATION SEQUENCE - FAMILY + LIFE CYCLE HYBRID */
+      /* Lin-Manuel: "Names give you FACES. Life cycle gives you TIME. Together, WEIGHT." */
 
-      /* NEW TIMELINE (emotional pacing):
-         0.3s: "Your abuelo sat here" descends (1.8s)
-         2.1s: Animation complete
-         ← 0.9s PAUSE (ancestor lands)
-         3.0s: "Every Sunday." slides in (0.8s)
-         3.8s: "Every quinceañera." scales in (0.8s)
-         4.6s: "Every goodbye." slides in (0.8s)
-         5.4s: Poetry complete
-         ← 1.6s THE BREATH (life cycle absorbs)
-         7.0s: "Now the ficha is yours." rises (2.0s)
-         9.0s: Climax complete
-         ← 1.0s PAUSE (climax rings)
-         10.0s: Scroll hint fades in
+      /* NEW TIMELINE (family + life cycle):
+         0.3s: "Your abuelo sat here." descends (2.2s + glow pulse)
+         2.5s: Animation complete
+         ← 0.5s PAUSE
+         3.0s: "Your tío. Your father." scales in (1.0s, centered)
+         4.0s: Animation complete
+         ← 0.5s PAUSE
+         4.5s: "Every Sunday. Every celebration. Every goodbye." fades in (1.5s)
+         6.0s: Animation complete
+         ← 1.5s THE BREATH (time + lineage absorbs — now it's YOUR turn)
+         7.5s: "Te toca." rises (2.0s, from below with weight)
+         9.5s: Animation complete
+         ← 1.0s PAUSE (let it ring)
+         10.5s: Scroll hint fades in
+         11.5s: Scroll lock releases
       */
 
       .panel--build.in-view:not(.has-played) .build-setup {
         animation: cinematicReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
       }
 
-      /* "Your abuelo sat here" - DESCENDS from above (smooth, no bounce) */
+      /* "Your abuelo sat here." - DESCENDS from above with emotional glow pulse */
       .panel--build.in-view:not(.has-played) .build-word--primary {
-        animation: ancestorDescend 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        animation: ancestorDescendWithGlow 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
       }
 
-      /* DIAGONAL STAIR-STEP poetry - smooth emergence, 0.8s each */
-      .panel--build.in-view:not(.has-played) .build-poetry__line--routine {
-        animation: slideFromRight 0.8s ease-out 3.0s forwards;
+      /* "Your tío. Your father." - Two generations scale in together */
+      .panel--build.in-view:not(.has-played) .build-family__line--generations {
+        animation: scaleFromCenter 1.0s ease-out 3.0s forwards;
       }
 
-      .panel--build.in-view:not(.has-played) .build-poetry__line--celebration {
-        animation: scaleFromCenter 0.8s ease-out 3.8s forwards;
+      /* "Every Sunday. Every celebration. Every goodbye." - Time fades in */
+      .panel--build.in-view:not(.has-played) .build-lifecycle__line {
+        animation: lifeCycleFade 1.5s ease-out 4.5s forwards;
       }
 
-      .panel--build.in-view:not(.has-played) .build-poetry__line--loss {
-        animation: slideFromLeft 0.8s ease-out 4.6s forwards;
-      }
-
-      /* "Now the ficha is yours" - THE CLIMAX - RISES from below (smooth, no bounce) */
-      /* THE BREATH: 1.6s pause after poetry before climax */
+      /* "Te toca." - THE CLIMAX - RISES from below */
+      /* THE BREATH: 1.5s pause after life cycle before torch pass */
       .panel--build.in-view:not(.has-played) .build-word--torch {
-        animation: torchRise 2.0s cubic-bezier(0.16, 1, 0.3, 1) 7.0s forwards;
+        animation: torchRise 2.0s cubic-bezier(0.16, 1, 0.3, 1) 7.5s forwards;
       }
 
       /* Legacy: keep inherited animation */
@@ -2262,7 +2323,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--build.in-view:not(.has-played) .build-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 10.0s forwards;  /* Appears at 10s (new timeline) */
+        animation: scrollHintReveal 1s ease-out 10.5s forwards;  /* Appears at 10.5s (family + life cycle timeline) */
       }
 
       /* ANCESTOR DESCENDS - SMOOTH drop from above (no bounce) */
@@ -2280,6 +2341,60 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           text-shadow:
             0 0 30px rgba(255, 255, 255, 0.35),
             0 0 60px rgba(212, 165, 116, 0.6),
+            0 0 100px rgba(212, 165, 116, 0.4),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+      }
+
+      /* ANCESTOR DESCENDS WITH GLOW - Emotional version with longer blur + glow pulse */
+      /* The ancestor emerges from deeper memory, then warms into presence */
+      @keyframes ancestorDescendWithGlow {
+        0% {
+          opacity: 0;
+          transform: translateY(-40px) scale(1.02);
+          filter: blur(12px);  /* Starts blurrier - emerging from deeper memory */
+          text-shadow:
+            0 0 20px rgba(255, 255, 255, 0),
+            0 0 40px rgba(212, 165, 116, 0),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+        50% {
+          opacity: 0.85;
+          transform: translateY(-5px) scale(1.0);
+          filter: blur(2px);  /* Still slightly soft */
+          text-shadow:
+            0 0 25px rgba(255, 255, 255, 0.25),
+            0 0 50px rgba(212, 165, 116, 0.4),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+        70% {
+          opacity: 1;
+          transform: translateY(0) scale(1.0);
+          filter: blur(0);
+          text-shadow:
+            0 0 30px rgba(255, 255, 255, 0.35),
+            0 0 60px rgba(212, 165, 116, 0.5),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+        85% {
+          /* GLOW PULSE - the memory warms */
+          opacity: 1;
+          transform: translateY(0) scale(1.0);
+          filter: blur(0);
+          text-shadow:
+            0 0 50px rgba(255, 255, 255, 0.5),
+            0 0 80px rgba(212, 165, 116, 0.8),
+            0 0 120px rgba(212, 165, 116, 0.5),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+        100% {
+          /* Settle to final state */
+          opacity: 1;
+          transform: translateY(0) scale(1.0);
+          filter: blur(0);
+          text-shadow:
+            0 0 35px rgba(255, 255, 255, 0.4),
+            0 0 65px rgba(212, 165, 116, 0.65),
             0 0 100px rgba(212, 165, 116, 0.4),
             0 4px 30px rgba(0, 0, 0, 0.8);
         }
@@ -2324,6 +2439,30 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           opacity: 0.85;
           transform: translateX(0);
           filter: blur(0);
+        }
+      }
+
+      /* LIFE CYCLE FADE - Time passes, ethereal fade-in */
+      /* The universal moments: routine, celebration, loss */
+      @keyframes lifeCycleFade {
+        0% {
+          opacity: 0;
+          transform: scale(0.95);
+          filter: blur(8px);
+        }
+        60% {
+          opacity: 0.85;
+          transform: scale(1.01);
+          filter: blur(1px);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+          filter: blur(0);
+          text-shadow:
+            0 0 25px rgba(248, 239, 230, 0.4),
+            0 0 50px rgba(212, 165, 116, 0.3),
+            0 2px 15px rgba(0, 0, 0, 0.6);
         }
       }
 
@@ -2427,8 +2566,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: none;
         filter: none;
       }
-      .panel--build.has-played .build-poetry__line {
+      .panel--build.has-played .build-family__line {
         opacity: 0.85;
+        transform: none;
+        filter: none;
+      }
+      .panel--build.has-played .build-lifecycle__line {
+        opacity: 1;
         transform: none;
         filter: none;
       }
@@ -2951,12 +3095,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           margin-bottom: 0.4em;
         }
 
-        .build-poetry {
-          transform: translateX(-1em);  /* Smaller offset on mobile */
+        .build-family {
+          margin-top: 1vh;
         }
 
-        .build-poetry__line {
-          font-size: clamp(0.85rem, 3.5vw, 1.3rem);
+        .build-family__line {
+          font-size: clamp(1rem, 4vw, 1.5rem);
         }
 
         /* Panel 4 mobile - cinematic frame */
@@ -5426,8 +5570,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .panel--form {
         min-height: 100vh;
         min-height: 100dvh;
-        height: auto; /* Allow growth for footer */
-        padding: 5vh 24px 90px; /* Top breathing room + ticker clearance */
+        padding: 5vh 24px 60px; /* Less bottom padding - no footer to clear */
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -5437,33 +5580,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow-x: hidden;
         overflow-y: auto;
         /* Atmospheric depth - Tobias: "Rooms, Not Hallways"
-         * KEY: Form background DISSOLVES at bottom - no hard edge.
-         * The cigar lounge was always there, just obscured by fog.
+         * Self-contained scene - clean ending, no dissolving.
          */
         background:
           /* Top vignette - ceiling darkness */
           linear-gradient(to bottom, rgba(10, 7, 5, 0.95) 0%, transparent 20%),
-          /* NO bottom vignette - form dissolves into footer fog instead */
+          /* Bottom vignette - clean ending */
+          linear-gradient(to top, rgba(10, 7, 5, 0.9) 0%, transparent 15%),
           /* Central warm glow - where the action is */
           radial-gradient(ellipse at 50% 45%, rgba(183, 106, 59, 0.12) 0%, transparent 45%),
-          /* Secondary warmth - depth layer */
-          radial-gradient(ellipse at 50% 50%, rgba(212, 165, 116, 0.06) 0%, transparent 60%),
-          /* Corner fog - top left */
-          radial-gradient(ellipse at 15% 15%, rgba(139, 90, 43, 0.08) 0%, transparent 40%),
-          /* Corner fog - top right */
-          radial-gradient(ellipse at 85% 15%, rgba(139, 90, 43, 0.06) 0%, transparent 35%),
           /* Ambient room depth */
           radial-gradient(ellipse at 50% 50%, rgba(28, 19, 15, 0.5) 0%, transparent 80%),
-          /* Base tobacco room - DISSOLVES at bottom for seamless footer blend */
-          linear-gradient(180deg,
-            #0a0705 0%,
-            #1a120d 35%,
-            #120c08 55%,
-            rgba(13, 9, 6, 0.85) 70%,
-            rgba(10, 7, 5, 0.5) 85%,
-            rgba(10, 7, 5, 0.2) 95%,
-            transparent 100%
-          );
+          /* Solid base - no transparency */
+          linear-gradient(180deg, #0a0705 0%, #1a120d 35%, #120c08 70%, #0d0906 100%);
       }
 
       /* Form panel content always visible (no fade-in animation) */
@@ -5496,19 +5625,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-bottom: 24px;
       }
 
-      /* Footer atmosphere wrapper - cigar lounge image with dark mood
-       * The room was always there. Fog clears to reveal it.
-       */
-      .footer-atmosphere {
+      /* ========================================
+         EXIT PANEL - The Cigar Lounge Reveal
+         A separate swipe - its own scene. The room reveals itself.
+         Tobias: "a second swipe" - each panel is complete.
+         ======================================== */
+      .panel--exit {
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 48px 24px;
+        padding-bottom: 100px; /* Ticker clearance */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         position: relative;
-        width: 100vw;
-        margin-left: calc(-50vw + 50%);
-        margin-top: -180px;  /* Aggressive pull - room exists BEHIND form */
-        padding: 240px 24px 120px; /* Large overlap zone for seamless blend */
-        overflow: hidden;
       }
 
-      .footer-atmosphere__bg {
+      /* Background image layer */
+      .panel-bg--exit {
         position: absolute;
         inset: 0;
         background-size: cover;
@@ -5516,108 +5651,38 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 0;
       }
 
-      .footer-atmosphere__overlay {
+      /* Overlay - vignette for depth, lets lounge show through */
+      .panel-overlay--exit {
         position: absolute;
         inset: 0;
         z-index: 1;
-        /*
-         * Tobias: "Dark UI needs fog—subtle gradients that create distance"
-         * The room was always here. Fog clears to reveal it.
-         * Top starts nearly opaque to blend with form's dissolved edge.
-         */
         background:
-          /* Layer 1: Top fog - matches form's dissolved edge */
-          linear-gradient(to bottom,
-            rgba(10, 7, 5, 0.95) 0%,      /* Nearly opaque - blends with form */
-            rgba(10, 7, 5, 0.85) 10%,
-            rgba(10, 7, 5, 0.65) 25%,
-            rgba(10, 7, 5, 0.45) 40%,     /* Smoke clearing */
-            rgba(10, 7, 5, 0.35) 55%,     /* Room emerges */
-            rgba(10, 7, 5, 0.45) 75%,
-            rgba(10, 7, 5, 0.6) 100%      /* Bottom vignette */
+          /* Vignette for depth */
+          radial-gradient(ellipse 80% 70% at 50% 50%,
+            rgba(10, 7, 5, 0.3) 0%,
+            rgba(10, 7, 5, 0.6) 60%,
+            rgba(10, 7, 5, 0.8) 100%
           ),
-          /* Layer 2: Center clearing - the room reveals itself */
-          radial-gradient(ellipse 80% 60% at 50% 55%,
-            rgba(10, 7, 5, 0.1) 0%,
-            rgba(10, 7, 5, 0.3) 50%,
-            rgba(10, 7, 5, 0.45) 100%
-          ),
-          /* Layer 3: Corner vignette for depth */
-          radial-gradient(ellipse 100% 100% at 50% 50%,
-            transparent 20%,
-            rgba(10, 7, 5, 0.25) 60%,
-            rgba(10, 7, 5, 0.4) 100%
+          /* Subtle overall dim */
+          linear-gradient(180deg,
+            rgba(10, 7, 5, 0.5) 0%,
+            rgba(10, 7, 5, 0.4) 50%,
+            rgba(10, 7, 5, 0.6) 100%
           );
       }
 
-      /* Warm ember glow - the cigar lounge feeling */
-      .footer-atmosphere::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          /* Warm center glow */
-          radial-gradient(
-            ellipse 50% 40% at 50% 50%,
-            rgba(183, 106, 59, 0.06) 0%,
-            transparent 70%
-          ),
-          /* Subtle amber at bottom */
-          linear-gradient(to top,
-            rgba(139, 90, 43, 0.04) 0%,
-            transparent 30%
-          );
-        pointer-events: none;
-        z-index: 2;
-      }
-
-      .footer-atmosphere .event-footer-section {
+      /* Content layer above overlay */
+      .exit-content {
         position: relative;
-        z-index: 3;
-        margin-top: 0;
-        padding-bottom: 0;
-      }
-
-      /* ========================================
-         EXIT PANEL - The Quiet Fade
-         The form is the climax. This is the graceful departure.
-         "Silence isn't empty. It's where the feeling lives." — Lin-Manuel
-         ======================================== */
-      .panel--exit {
-        min-height: 70vh;
-        min-height: 70dvh;
-        height: auto; /* Allow content to determine height */
-        padding: 48px 24px;
-        padding-bottom: 140px; /* Ticker clearance + copyright breathing room */
+        z-index: 2;
+        text-align: center;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-end; /* Footer content at bottom */
-        position: relative;
-        z-index: 1;
-        box-sizing: border-box;
+        gap: 32px;
       }
 
-      /* Dimmed overlay - lets image show through but quiet */
-      .panel-overlay--exit {
-        background:
-          /* Heavy top fade from form panel */
-          linear-gradient(to bottom,
-            rgba(10, 7, 5, 1) 0%,
-            rgba(10, 7, 5, 0.85) 15%,
-            rgba(10, 7, 5, 0.6) 35%,
-            rgba(10, 7, 5, 0.4) 60%,
-            rgba(10, 7, 5, 0.7) 100%
-          ),
-          /* Soft vignette */
-          radial-gradient(ellipse 80% 70% at 50% 50%,
-            transparent 20%,
-            rgba(10, 7, 5, 0.5) 70%,
-            rgba(10, 7, 5, 0.8) 100%
-          );
-      }
-
-      /* Subtle warmth at center - ember memory, not a glow */
+      /* Subtle warmth at center - ember memory */
       .panel--exit::after {
         content: "";
         position: absolute;
@@ -5631,14 +5696,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 2;
       }
 
-      /* Mobile: Adjust height */
+      /* Mobile adjustments */
       @media (max-width: 768px) {
         .panel--exit {
-          min-height: 65vh;
-          min-height: 65dvh;
-          height: auto;
-          padding-top: 40px;
-          padding-bottom: 90px;
+          padding: 32px 20px;
+          padding-bottom: 100px;
+          justify-content: center;
+        }
+
+        .exit-content {
+          gap: 24px;
         }
       }
 
@@ -7480,14 +7547,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         /* Panel needs room to BREATHE at the top */
         .panel--form {
           padding-top: max(60px, 10vh); /* At least 60px, scales with screen */
-          padding-bottom: 160px; /* Clearance for mesa-help tooltip + ticker */
+          padding-bottom: 80px; /* Just ticker clearance - footer is separate panel now */
           justify-content: flex-start;
           scroll-snap-align: start; /* Snap to start, not center */
         }
 
         .form-shell {
           padding: 28px 20px 24px; /* More top breathing room */
-          margin-bottom: 140px; /* Clearance for mesa-help tooltip */
+          margin-bottom: 24px; /* Clean ending - footer is its own panel */
         }
 
 	        .footer-contact {
@@ -7538,11 +7605,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       @media (max-width: 480px) {
         .panel--form {
           padding-top: max(50px, 8vh); /* Never less than 50px */
+          padding-bottom: 80px; /* Ticker clearance */
         }
 
         .form-shell {
           padding: 20px 16px 28px; /* Extra bottom for button clearance */
-          margin-bottom: 160px; /* Increased clearance for ticker */
+          margin-bottom: 20px; /* Clean ending */
         }
 
         form {
@@ -7607,7 +7675,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: translateY(0) scale(1);
       }
 
+      /* Base pip - static inner highlights only */
       .back-to-top__pip {
+        position: relative;
         width: 14px;
         height: 14px;
         border-radius: 50%;
@@ -7617,40 +7687,77 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           var(--brass) 40%,
           var(--copper) 100%
         );
+        /* Static inset shadows - never animated */
         box-shadow:
-          0 0 8px rgba(212, 165, 116, 0.3),
-          0 0 16px rgba(212, 165, 116, 0.15),
           inset 0 -2px 4px rgba(0, 0, 0, 0.3),
           inset 0 2px 4px rgba(255, 255, 255, 0.2);
-        transition:
-          transform 0.2s ease,
-          box-shadow 0.6s ease-out;
+        transition: transform 0.2s ease;
+        will-change: transform;
       }
 
-      /* Connected to loading screen heartbeat */
-      @keyframes pipPulse {
-        0%, 100% {
-          box-shadow:
-            0 0 8px rgba(212, 165, 116, 0.3),
-            0 0 16px rgba(212, 165, 116, 0.15),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.3),
-            inset 0 2px 4px rgba(255, 255, 255, 0.2);
-          filter: brightness(1);
-        }
-        50% {
-          box-shadow:
-            0 0 12px var(--glow-warm),
-            0 0 24px rgba(212, 165, 116, 0.4),
-            0 0 40px var(--glow-deep),
-            inset 0 -2px 4px rgba(0, 0, 0, 0.3),
-            inset 0 2px 4px rgba(255, 255, 255, 0.2);
-          filter: brightness(1.08);
-        }
+      /* Dim glow layer - always visible baseline */
+      .back-to-top__pip::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        box-shadow:
+          0 0 8px rgba(212, 165, 116, 0.4),
+          0 0 16px rgba(212, 165, 116, 0.25),
+          0 0 24px rgba(183, 106, 59, 0.12);
+        pointer-events: none;
       }
 
-      /* Glow bloom on entrance + continuous heartbeat */
-      .back-to-top.is-visible .back-to-top__pip {
-        animation: pipPulse var(--heartbeat) ease-in-out infinite;
+      /* Bloom glow layer - animated opacity for breathing */
+      .back-to-top__pip::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        box-shadow:
+          0 0 12px var(--glow-warm),
+          0 0 24px rgba(212, 165, 116, 0.55),
+          0 0 40px var(--glow-deep),
+          0 0 56px rgba(183, 106, 59, 0.2);
+        opacity: 0;
+        pointer-events: none;
+        will-change: opacity;
+      }
+
+      /* Smooth 2-step sine wave breathing */
+      @keyframes pipBreath {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+      /* Visible state - continuous breathing */
+      .back-to-top.is-visible .back-to-top__pip::after {
+        animation: pipBreath calc(var(--heartbeat) / 2) var(--breath-ease) infinite alternate;
+      }
+
+      /* Flare layer - one-shot entrance burst */
+      .back-to-top__pip .pip-flare {
+        position: absolute;
+        inset: -8px;
+        border-radius: 50%;
+        box-shadow:
+          0 0 20px var(--glow-warm),
+          0 0 40px rgba(212, 165, 116, 0.7),
+          0 0 60px var(--glow-deep),
+          0 0 80px rgba(183, 106, 59, 0.35);
+        opacity: 0;
+        pointer-events: none;
+        will-change: opacity;
+      }
+
+      @keyframes pipFlareOut {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+
+      /* On ember-release: flare fades while breathing starts */
+      .back-to-top.ember-release .back-to-top__pip .pip-flare {
+        animation: pipFlareOut 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
       }
 
       /* ===== MICRO-EMBERS - wisps rising from the pip like cigar smoke ===== */
@@ -7670,8 +7777,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-left: -1.5px;
       }
 
-      /* Only show embers when pip is visible - one-shot burst on entry */
-      .back-to-top.is-visible .pip-ember {
+      /* One-shot ember burst when page loads - visual handoff from loading screen */
+      .back-to-top.ember-release .pip-ember {
         animation: emberRelease 2.5s ease-out forwards;
       }
 
@@ -7720,11 +7827,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .back-to-top:hover .back-to-top__pip,
       .back-to-top:focus .back-to-top__pip {
         transform: scale(1.15);
-        box-shadow:
-          0 0 16px rgba(212, 165, 116, 0.7),
-          0 0 32px rgba(212, 165, 116, 0.4),
-          inset 0 -2px 4px rgba(0, 0, 0, 0.3),
-          inset 0 2px 4px rgba(255, 255, 255, 0.2);
+      }
+
+      /* Hover locks bloom to full */
+      .back-to-top:hover .back-to-top__pip::after,
+      .back-to-top:focus .back-to-top__pip::after {
+        animation: none;
+        opacity: 1;
       }
 
       .back-to-top:active .back-to-top__pip {
@@ -7743,6 +7852,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .back-to-top__pip {
           width: 12px;
           height: 12px;
+        }
+
+        .back-to-top__pip::after {
+          box-shadow:
+            0 0 10px var(--glow-warm),
+            0 0 20px rgba(212, 165, 116, 0.5),
+            0 0 32px var(--glow-deep);
         }
 
         /* Scaled drift for smaller pip */
@@ -8032,9 +8148,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="fog-layer"></div>
         <div class="panel-overlay"></div>
 
-        <!-- TOP LETTERBOX - Greeting comes first (greeting before recognition) -->
+        <!-- TOP LETTERBOX - 3-beat reveal: Setup → Greeting → Recognition -->
         <div class="whisper-top">
-          <p class="whisper-greeting">Que Bola Asere</p>
+          <p class="whisper-setup">This table remembers.</p>
+          <p class="whisper-greeting">Que bola asere</p>
         </div>
 
         <!-- BOTTOM LETTERBOX - The recognition -->
@@ -8062,17 +8179,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <div class="build-center">
           <div class="build-revelation">
             <span class="build-word build-word--primary">Your abuelo sat here.</span>
-            <div class="build-poetry">
-              <span class="build-poetry__line build-poetry__line--routine">Every Sunday.</span>
-              <span class="build-poetry__line build-poetry__line--celebration">Every quinceañera.</span>
-              <span class="build-poetry__line build-poetry__line--loss">Every goodbye.</span>
+            <div class="build-family">
+              <span class="build-family__line build-family__line--generations">Your tío. Your father.</span>
+            </div>
+            <div class="build-lifecycle">
+              <span class="build-lifecycle__line">Every Sunday. Every celebration. Every goodbye.</span>
             </div>
           </div>
         </div>
 
         <!-- BOTTOM LETTERBOX - Torch pass as signature + scroll hint -->
         <div class="build-bottom">
-          <span class="build-word build-word--torch">Now the ficha is yours.</span>
+          <span class="build-word build-word--torch">Te toca.</span>
           <div class="build-scroll-hint">
             <div class="build-scroll-hint__chevron"></div>
           </div>
@@ -8285,35 +8403,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	              <p class="status" id="status" aria-live="polite"></p>
 	            </form>
 	          </div>
-
-          <!-- Footer Section with cigar lounge atmosphere -->
-          <div class="footer-atmosphere">
-            <div class="footer-atmosphere__bg" style="background-image: url('/FRAMES/frame-footer.webp')"></div>
-            <div class="footer-atmosphere__overlay"></div>
-            <div class="event-footer-section">
-              <div class="footer-contact">
-                <div class="footer-contact__item">
-                  <span class="footer-contact__label">Direct Line</span>
-                  <a href="mailto:Erik@CubanDominoLeague.com" class="footer-contact__link">Erik@CubanDominoLeague.com</a>
-                </div>
-                <div class="footer-contact__divider"></div>
-                <div class="footer-contact__item">
-                  <span class="footer-contact__label">Venue</span>
-                  <a href="https://share.google/Bd3ZofPsvccfdT7EC" target="_blank" rel="noreferrer" class="footer-contact__link">Mr Garcia Cigars</a>
-                </div>
-              </div>
-
-              <footer class="brand-footer">
-                <div class="brand-footer__wordmark">
-                  <span class="brand-footer__logo">CDL</span>
-                  <span class="brand-footer__line"></span>
-                </div>
-                <span class="brand-footer__text">© 2026 Cuban Domino League</span>
-              </footer>
-            </div>
-          </div>
 	        </div>
 	      </section>
+
+      <!-- Panel 7: Exit - "The Room Reveals" -->
+      <section class="panel panel--exit">
+        <div class="panel-bg panel-bg--exit" style="background-image: url('/FRAMES/frame-footer.webp')"></div>
+        <div class="panel-overlay panel-overlay--exit"></div>
+        <div class="exit-content">
+          <div class="footer-contact">
+            <div class="footer-contact__item">
+              <span class="footer-contact__label">Direct Line</span>
+              <a href="mailto:Erik@CubanDominoLeague.com" class="footer-contact__link">Erik@CubanDominoLeague.com</a>
+            </div>
+            <div class="footer-contact__divider"></div>
+            <div class="footer-contact__item">
+              <span class="footer-contact__label">Venue</span>
+              <a href="https://share.google/Bd3ZofPsvccfdT7EC" target="_blank" rel="noreferrer" class="footer-contact__link">Mr Garcia Cigars</a>
+            </div>
+          </div>
+          <footer class="brand-footer">
+            <div class="brand-footer__wordmark">
+              <span class="brand-footer__logo">CDL</span>
+              <span class="brand-footer__line"></span>
+            </div>
+            <span class="brand-footer__text">© 2026 Cuban Domino League</span>
+          </footer>
+        </div>
+      </section>
 	    </main>
 	    </div>
 
@@ -8393,7 +8510,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
     <!-- Back to Top - Domino Pip (with ember particles from loading screen's soul) -->
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
-      <span class="back-to-top__pip"></span>
+      <span class="back-to-top__pip">
+        <span class="pip-flare"></span>
+      </span>
       <!-- Micro-embers - wisps of the cigar lounge following the pip -->
       <span class="pip-ember pip-ember--bright"></span>
       <span class="pip-ember"></span>
@@ -8655,11 +8774,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	        setTimeout(() => {
 	          loadingScreen.classList.add('is-hidden');
-	          // "Darkness beat" — wait for loading to fade before hero reveals
-	          // This creates a brief moment of darkness (the "cut") before the scene begins
+	          // "Darkness beat" — brief pause before hero reveals (tightened for smooth handoff)
+	          // Reduced from 300ms to 150ms for more hypnotic continuity
 	          setTimeout(() => {
 	            markReady();
-	          }, 300);
+	          }, 150);
 	          // Fully remove from DOM after fade completes (700ms exit + buffer)
 	          setTimeout(() => {
 	            if (loadingScreen.parentNode) {
@@ -8755,22 +8874,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         const formPanel = document.querySelector('.panel--form');
 
         if (backToTop && storyEl && heroPanel) {
-          // Show/hide based on scroll position and current panel
+          // Show/hide based on form fields position (not entire panel)
           const updateBackToTopVisibility = () => {
-            const heroHeight = heroPanel.offsetHeight;
-            const scrolled = storyEl.scrollTop;
+            // Get the actual form element (the inputs, not the counter above)
+            const signupForm = document.getElementById('signup');
 
-            // Check if form panel is visible (more than 40% in viewport)
-            let formInView = false;
-            if (formPanel) {
-              const rect = formPanel.getBoundingClientRect();
-              const viewportHeight = window.innerHeight;
-              const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
-              formInView = visibleHeight > viewportHeight * 0.4;
+            // Hide pip when form fields would collide with it
+            // Pip is at top: 20px, so hide when form top approaches that area
+            let formFieldsInWay = false;
+            if (signupForm) {
+              const formRect = signupForm.getBoundingClientRect();
+              // Hide when form's top edge is within 80px of viewport top
+              // (pip is at 20px + its height ~50px + breathing room)
+              formFieldsInWay = formRect.top < 80;
             }
 
-            // Show on all panels except form panel
-            if (!formInView) {
+            if (!formFieldsInWay) {
               backToTop.classList.add('is-visible');
             } else {
               backToTop.classList.remove('is-visible');
@@ -8781,6 +8900,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
           // Initial check
           updateBackToTopVisibility();
+
+          // Fire ember release when loading screen completes - visual handoff
+          const triggerEmberRelease = () => {
+            backToTop.classList.add('ember-release');
+          };
+
+          // Listen for loading complete event
+          if (document.body.classList.contains('is-ready')) {
+            // Already ready (fast load or reload)
+            triggerEmberRelease();
+          } else {
+            window.addEventListener('cdl:ready', triggerEmberRelease, { once: true });
+          }
 
           // Click handler: hero → form, elsewhere → hero
           backToTop.addEventListener('click', () => {
@@ -8913,7 +9045,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !whisperHasPlayed) {
             whisperHasPlayed = true;
             alignPanelAfterSettle(whisperPanel);
-            lockScroll(6000, () => whisperPanel?.classList.add('has-played'));  // 6s (simpler, fewer elements)
+            lockScroll(7500, () => whisperPanel?.classList.add('has-played'));  // 7.5s (3-beat reveal: room→greeting→recognition)
           }
         });
       }, { threshold: 0.6 });
@@ -8924,7 +9056,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !buildHasPlayed) {
             buildHasPlayed = true;
             alignPanelAfterSettle(buildPanel);
-            lockScroll(10500, () => buildPanel?.classList.add('has-played'));  // 10.5s (respect the emotional weight)
+            lockScroll(11500, () => buildPanel?.classList.add('has-played'));  // 11.5s (family + life cycle hybrid)
           }
         });
       }, { threshold: 0.6 });
