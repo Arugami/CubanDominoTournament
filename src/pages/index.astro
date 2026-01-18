@@ -62,9 +62,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          "The ritual before the game"
          ============================================ */
 
-      /* Master timing - synchronized heartbeat (3.5s = meditative rhythm) */
+      /* Master timing - synchronized heartbeat (3s = confident rhythm) */
       :root {
-        --heartbeat: 3.5s;
+        --heartbeat: 3s;
         --ember-color: rgba(255, 180, 100, 0.9);
         --glow-warm: rgba(232, 190, 140, 1);
         --glow-deep: rgba(183, 106, 59, 0.8);
@@ -420,7 +420,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             0 0 50px rgba(212, 165, 116, 0.9),
             0 0 100px var(--glow-deep),
             0 0 150px rgba(183, 106, 59, 0.5);
-          filter: brightness(1.1);
+          filter: brightness(1.08);
         }
       }
 
@@ -477,10 +477,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Synchronized with letter heartbeat */
+      /* Synchronized with letter heartbeat - unified pulse intensity */
       @keyframes dividerPulse {
         0%, 100% {
-          opacity: 0.8;
+          opacity: 0.85;
           box-shadow:
             0 0 6px rgba(232, 190, 140, 0.5),
             0 0 15px rgba(212, 165, 116, 0.3),
@@ -489,9 +489,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         50% {
           opacity: 1;
           box-shadow:
-            0 0 12px var(--glow-warm),
-            0 0 30px rgba(212, 165, 116, 0.7),
-            0 0 60px var(--glow-deep);
+            0 0 14px var(--glow-warm),
+            0 0 35px rgba(212, 165, 116, 0.8),
+            0 0 70px var(--glow-deep);
         }
       }
 
@@ -545,8 +545,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           opacity: 0.5;  /* Matches crescendo end — no jerk */
         }
         50% {
-          transform: translate(-50%, -50%) scale(1.05);  /* Subtle pulse, no blob */
-          opacity: 0.6;
+          transform: translate(-50%, -50%) scale(1);  /* No scale — prevents gradient edge visibility */
+          opacity: 0.65;  /* Slightly increased to compensate for no scale */
         }
       }
 
@@ -1560,14 +1560,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1;
       }
 
-      /* TOP LETTERBOX - Setup whisper + Greeting descend from darkness */
+      /* TOP LETTERBOX - Setup whisper + Greeting converge from different directions */
       .whisper-top {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 6vh 8vw 10vh;
+        padding: 8vh 6vw 12vh;
         background: linear-gradient(
           to bottom,
           rgba(10, 7, 5, 0.95) 0%,
@@ -1577,53 +1577,55 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         );
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 1.5vh;
+        align-items: stretch; /* Allow children to position themselves */
+        gap: 2vh;
         pointer-events: none;
       }
 
-      /* "Que Bola Asere" - The Cuban welcome. You've arrived. */
+      /* "Que Bola Asere" - Drifts in from the RIGHT like smoke curling */
       .whisper-greeting {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: clamp(1.4rem, 5vw, 2.2rem);  /* Larger - the entry point */
+        font-size: clamp(1.4rem, 5vw, 2.2rem);
         color: var(--brass);
         letter-spacing: 0.03em;
         text-transform: none;
-        text-align: center;
+        text-align: right;  /* Right-aligned - asymmetric */
+        align-self: flex-end;  /* Push to right */
+        padding-right: 6vw;
         opacity: 0;
-        margin-bottom: 1.5vh;
+        margin-bottom: 1vh;
         text-shadow:
           0 0 30px rgba(212, 165, 116, 0.5),
           0 0 60px rgba(212, 165, 116, 0.25),
           0 2px 15px rgba(0, 0, 0, 0.6);
       }
 
-      /* "This table remembers." - The ROOM whispers (narrator voice, not character) */
-      /* Cream @ 50% = ghostly, ethereal, memory — distinct from brass human voice */
+      /* "This table remembers." - Emerges from blur in CENTER (the room whispers) */
       .whisper-setup {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: clamp(0.8rem, 2.8vw, 1.05rem);
-        color: rgba(248, 239, 230, 0.50);  /* Cream @ 50% — narrator/room voice */
+        font-size: clamp(1rem, 3.5vw, 1.3rem);  /* Slightly larger */
+        color: rgba(248, 239, 230, 0.55);  /* Cream @ 55% — narrator/room voice */
         letter-spacing: 0.05em;
-        text-align: center;
+        text-align: center;  /* Centered - the room */
+        align-self: center;
         opacity: 0;
         text-shadow:
           0 0 25px rgba(248, 239, 230, 0.2),
           0 2px 10px rgba(0, 0, 0, 0.5);
       }
 
-      /* BOTTOM LETTERBOX - The recognition, lower to connect with table */
+      /* BOTTOM LETTERBOX - The recognition slides from LEFT (asymmetric payoff) */
       .whisper-bottom {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 8vh 8vw 18vh; /* More bottom padding — text sits lower */
+        padding: 8vh 6vw 16vh;
         background: linear-gradient(
           to top,
           rgba(10, 7, 5, 0.98) 0%,
@@ -1633,15 +1635,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         );
         display: flex;
         flex-direction: column;
-        align-items: center; /* Centered — symmetry */
-        text-align: center;
+        align-items: flex-start; /* LEFT-aligned - asymmetry */
+        text-align: left;
         pointer-events: none;
       }
 
       .whisper-narrative {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         gap: 1.2vh;
       }
 
@@ -1656,15 +1658,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
       }
 
-      /* THE LINE - "You've sat here before." - the recognition */
+      /* THE LINE - "You've sat here before." - LARGEST, slides from left */
       .whisper-line--ancestors {
-        font-size: clamp(1.6rem, 6vw, 2.8rem);
+        font-size: clamp(1.8rem, 7vw, 3.2rem);  /* Larger - the payoff */
         font-style: italic;
         color: #fff;
         letter-spacing: 0.04em;
+        padding-left: 6vw;  /* Left offset */
+        text-align: left;
         margin-bottom: 4vh;
         text-shadow:
-          0 0 30px rgba(255, 255, 255, 0.2),
+          0 0 30px rgba(255, 255, 255, 0.25),
           0 0 50px rgba(212, 165, 116, 0.5),
           0 0 80px rgba(212, 165, 116, 0.3),
           0 4px 25px rgba(0, 0, 0, 0.8);
@@ -1681,21 +1685,29 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Animation for main line - the recognition statement */
-      /* Arrives after challenge lands - the answer to "Can you play like they did?" */
+      /* Arrives LAST - diagonal slide from left with bounce (the payoff) */
       .panel--whisper.in-view:not(.has-played) .whisper-line--ancestors {
-        animation: recognitionStatement 1.8s cubic-bezier(0.16, 1, 0.3, 1) 6.0s forwards;
+        animation: recognitionSlide 2.2s cubic-bezier(0.34, 1.56, 0.64, 1) 5.0s forwards;
       }
 
-      /* Recognition statement - Camera cut. Emerges once, lands clean. No fidgeting. */
-      @keyframes recognitionStatement {
+      /* Recognition statement - Diagonal slide from left + bounce overshoot */
+      @keyframes recognitionSlide {
         0% {
           opacity: 0;
-          transform: translateY(20px);
-          filter: blur(8px);
+          transform: translateX(-80px) translateY(30px) scale(0.95);
+          filter: blur(10px);
+        }
+        50% {
+          opacity: 0.95;
+          transform: translateX(8px) translateY(-4px) scale(1.02);  /* Overshoot */
+          filter: blur(0);
+        }
+        70% {
+          transform: translateX(-3px) translateY(2px) scale(0.99);  /* Settle back */
         }
         100% {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateX(0) translateY(0) scale(1);
           filter: blur(0);
           text-shadow:
             0 0 35px rgba(255, 255, 255, 0.25),
@@ -1747,17 +1759,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 50px rgba(212, 165, 116, 0.4);
       }
 
-      /* Cinematic animations - slow, weighted, like memories surfacing */
+      /* Cinematic animations - multi-axis motion, smoke curling in from different directions */
       /* Lin-Manuel: "Build the pauses into the animation timing. The words that matter need room to BREATHE." */
 
-      /* Narrative sequence: Setup (narrator) → Greeting (character) → Recognition (payoff) */
-      /* Tighter timing: 0.3s → 1.6s → 2.8s (no dead air between beats) */
+      /* THE DRIFT-IN: Text converges from different directions like smoke */
+      /* Timeline: 0.3s (setup emerges) → PAUSE → 2.2s (greeting drifts) → PAUSE → 5.0s (recognition) */
+
       .panel--whisper.in-view:not(.has-played) .whisper-setup {
-        animation: setupWhisper 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        animation: setupEmerge 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingSmoke 1.6s cubic-bezier(0.16, 1, 0.3, 1) 1.6s forwards;
+        animation: greetingDrift 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s forwards;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
@@ -1781,30 +1794,43 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Setup whisper - fades in like the room remembering */
-      @keyframes setupWhisper {
+      /* Setup emerges from blur - scale + blur like focus pulling (the room whispers) */
+      @keyframes setupEmerge {
         0% {
           opacity: 0;
-          transform: translateY(8px);
-          filter: blur(6px);
+          transform: scale(0.92);
+          filter: blur(12px);
+        }
+        60% {
+          opacity: 0.9;
+          transform: scale(1.01);
+          filter: blur(2px);
         }
         100% {
           opacity: 1;
-          transform: translateY(0);
+          transform: scale(1);
           filter: blur(0);
         }
       }
 
-      /* Greeting forms from cigar smoke - one clean emergence, like focus pulling */
-      @keyframes greetingSmoke {
+      /* Greeting drifts from RIGHT with overshoot - smoke curling in */
+      @keyframes greetingDrift {
         0% {
           opacity: 0;
-          transform: translateY(12px);
-          filter: blur(12px);
+          transform: translateX(60px) scale(0.96);
+          filter: blur(8px);
+        }
+        50% {
+          opacity: 0.95;
+          transform: translateX(-8px) scale(1.02);  /* Overshoot left */
+          filter: blur(0);
+        }
+        70% {
+          transform: translateX(4px) scale(0.99);  /* Settle back */
         }
         100% {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateX(0) scale(1);
           filter: blur(0);
           text-shadow:
             0 0 50px rgba(212, 165, 116, 0.6),
@@ -1825,7 +1851,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Greeting reveals right-to-left - smoother, smoky, jazz-like */
+      /* Legacy: greeting reveals right-to-left */
       @keyframes greetingRevealRTL {
         0% {
           opacity: 0;
@@ -1899,7 +1925,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--whisper.in-view .whisper-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 8.5s forwards;
+        animation: scrollHintReveal 1s ease-out 7.5s forwards;  /* Appears at 7.5s */
       }
 
       /* Once played: returning should feel "static" and inevitable (no replays). */
@@ -2008,25 +2034,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
       }
 
-      /* CENTER - The revelation commands the space */
+      /* CENTER - Asymmetric layout with LEFT offset for visual journey */
       .build-center {
         position: relative;
         z-index: 10;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;  /* LEFT-aligned - asymmetry */
         justify-content: center;
-        text-align: center;
+        text-align: left;
+        padding-left: 8vw;  /* Left offset */
         pointer-events: none;
-        /* Position slightly above center for better visual weight */
-        margin-top: -5vh;
+        margin-top: -8vh;  /* Position above center */
       }
 
       .build-revelation {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 1.5vh; /* Breathing room between lines */
+        align-items: flex-start;
+        gap: 2vh; /* More breathing room */
       }
 
       .build-word {
@@ -2048,7 +2074,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 2px 15px rgba(0, 0, 0, 0.5);
       }
 
-      /* "Your abuelo sat here." - The heritage line */
+      /* "Your abuelo sat here." - DESCENDS from above (ancestors arriving) */
       .build-word--primary {
         font-size: clamp(1.6rem, 7vw, 3.2rem);
         font-style: italic;
@@ -2057,6 +2083,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.03em;
         line-height: 1.15;
         display: block;
+        text-align: left;
         /* Luminous glow - memory surfacing from darkness */
         text-shadow:
           0 0 25px rgba(255, 255, 255, 0.3),
@@ -2066,20 +2093,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Life cycle reveal: "Every Sunday. Every quinceañera. Every goodbye." */
-      /* Lin-Manuel: Each beat needs room to breathe and land */
+      /* DIAGONAL STAIR-STEP: Eye travels right → center → left */
       .build-poetry {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 0.8vh;
-        margin-top: 1.5vh;
+        align-items: stretch;  /* Allow children to position themselves */
+        width: 85vw;  /* Full width container for stair-step */
+        gap: 1.2vh;
+        margin-top: 2vh;
+        margin-left: -4vw;  /* Shift left to start the diagonal */
       }
 
       .build-poetry__line {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
-        font-size: clamp(0.9rem, 3.2vw, 1.35rem);
         letter-spacing: 0.05em;
         opacity: 0;
         text-shadow:
@@ -2087,34 +2115,47 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 2px 12px rgba(0, 0, 0, 0.5);
       }
 
-      /* Color crescendo - each line builds in brightness */
+      /* STAIR-STEP POSITIONS: Diagonal eye travel */
       .build-poetry__line--routine {
-        color: rgba(212, 165, 116, 0.75);  /* brass @ 75% - soft, familiar */
+        align-self: flex-end;     /* RIGHT - starts the diagonal */
+        text-align: right;
+        padding-right: 4vw;
+        font-size: clamp(1.1rem, 4.5vw, 1.8rem);  /* Smallest */
+        color: rgba(212, 165, 116, 0.75);
       }
 
       .build-poetry__line--celebration {
-        color: rgba(212, 165, 116, 0.85);  /* brass @ 85% - warmer, celebration */
+        align-self: center;       /* CENTER - middle of diagonal */
+        text-align: center;
+        font-size: clamp(1.3rem, 5.5vw, 2.2rem);  /* Medium */
+        color: rgba(212, 165, 116, 0.85);
       }
 
       .build-poetry__line--loss {
-        color: rgba(212, 165, 116, 1.0);   /* brass @ 100% - full weight, the gut-punch */
+        align-self: flex-start;   /* LEFT - completes the diagonal */
+        text-align: left;
+        padding-left: 4vw;
+        font-size: clamp(1.5rem, 6.5vw, 2.6rem);  /* Larger - weight builds */
+        color: rgba(212, 165, 116, 1.0);
       }
 
-      /* "Now the ficha is yours." - Torch pass as bottom-left signature */
-      /* Lightened to 75% - signature whispers, doesn't shout */
+      /* "Now the ficha is yours." - THE CLIMAX - LARGEST text, RISES from below */
+      /* This is the torch pass - the emotional payoff of the panel */
       .build-word--torch {
         font-family: "Bodoni Moda", serif;
-        font-size: clamp(0.85rem, 3vw, 1.15rem);
+        font-size: clamp(2.2rem, 10vw, 4.5rem);  /* LARGEST - the climax */
         font-weight: 400;
         font-style: italic;
-        color: rgba(212, 165, 116, 0.75);
-        letter-spacing: 0.05em;
-        line-height: 1.4;
+        color: #fff;  /* Full white - maximum impact */
+        letter-spacing: 0.03em;
+        line-height: 1.2;
         display: block;
         opacity: 0;
         text-shadow:
-          0 0 20px rgba(212, 165, 116, 0.4),
-          0 2px 12px rgba(0, 0, 0, 0.6);
+          0 0 30px rgba(255, 255, 255, 0.3),
+          0 0 50px rgba(212, 165, 116, 0.6),
+          0 0 80px rgba(212, 165, 116, 0.4),
+          0 4px 25px rgba(0, 0, 0, 0.8);
       }
 
       /* Legacy: keep inherited for backwards compat */
@@ -2133,24 +2174,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 8px 50px rgba(0, 0, 0, 0.8);
       }
 
-      /* BOTTOM LETTERBOX - Torch signature + scroll hint */
+      /* BOTTOM LETTERBOX - Torch RISES from below as the climax */
       .build-bottom {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 10;
-        padding: 8vh 6vw 12vh;
+        padding: 6vh 6vw 10vh;
         background: linear-gradient(
           to top,
           rgba(10, 7, 5, 0.98) 0%,
-          rgba(10, 7, 5, 0.85) 30%,
-          rgba(10, 7, 5, 0.4) 70%,
+          rgba(10, 7, 5, 0.88) 35%,
+          rgba(10, 7, 5, 0.5) 70%,
           rgba(10, 7, 5, 0) 100%
         );
         display: flex;
         flex-direction: column;
-        align-items: flex-start;  /* Torch aligns left */
+        align-items: center;  /* CENTER - the climax commands the space */
         justify-content: flex-end;
         gap: 3vh;
         pointer-events: none;
@@ -2173,32 +2214,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0.5;
       }
 
-      /* Scene 2 animation sequence - timed for impact */
+      /* PANEL 3 ANIMATION SEQUENCE - ASCENT & DESCENT */
+      /* Ancestors DESCEND from above. The torch RISES from below. They meet. */
+      /* Timeline: 0.3s → PAUSE → 2.0s → 2.6s → 3.2s → PAUSE → 5.0s → 7.0s */
+
       .panel--build.in-view:not(.has-played) .build-setup {
         animation: cinematicReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
       }
 
-      /* Heritage lines appear - staggered, weighted reveals */
-      /* Lin-Manuel: "After 'Your abuelo sat here.' — PAUSE. Let it land. Silence isn't empty. It's where the feeling lives." */
+      /* "Your abuelo sat here" - DESCENDS from above with overshoot */
       .panel--build.in-view:not(.has-played) .build-word--primary {
-        animation: memorySurface 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+        animation: ancestorDescend 2.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
       }
 
-      /* Staggered poetry reveal - each line gets its moment to breathe */
+      /* DIAGONAL STAIR-STEP poetry - each from a different direction */
       .panel--build.in-view:not(.has-played) .build-poetry__line--routine {
-        animation: poetryLineReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 3.5s forwards;
+        animation: slideFromRight 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) 2.0s forwards;
       }
 
       .panel--build.in-view:not(.has-played) .build-poetry__line--celebration {
-        animation: poetryLineReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 4.2s forwards;
+        animation: scaleFromCenter 1.3s cubic-bezier(0.34, 1.56, 0.64, 1) 2.6s forwards;
       }
 
       .panel--build.in-view:not(.has-played) .build-poetry__line--loss {
-        animation: poetryLineReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) 4.9s forwards;
+        animation: slideFromLeft 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) 3.2s forwards;
       }
 
+      /* "Now the ficha is yours" - THE CLIMAX - RISES from below with bounce */
       .panel--build.in-view:not(.has-played) .build-word--torch {
-        animation: torchPass 1.5s cubic-bezier(0.16, 1, 0.3, 1) 6.5s forwards;
+        animation: torchRise 2.0s cubic-bezier(0.34, 1.56, 0.64, 1) 5.0s forwards;
       }
 
       /* Legacy: keep inherited animation */
@@ -2207,10 +2251,130 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--build.in-view:not(.has-played) .build-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 8s forwards;
+        animation: scrollHintReveal 1s ease-out 7.0s forwards;  /* Appears at 7s */
       }
 
-      /* Memory surface - clean camera cut. The memory is THERE or it isn't. */
+      /* ANCESTOR DESCENDS - drops from above with overshoot + settle */
+      @keyframes ancestorDescend {
+        0% {
+          opacity: 0;
+          transform: translateY(-60px) scale(1.15);
+          filter: blur(10px);
+        }
+        50% {
+          opacity: 0.95;
+          transform: translateY(8px) scale(0.98);  /* Overshoot down */
+          filter: blur(0);
+        }
+        70% {
+          transform: translateY(-3px) scale(1.01);  /* Bounce back */
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+          text-shadow:
+            0 0 30px rgba(255, 255, 255, 0.35),
+            0 0 60px rgba(212, 165, 116, 0.6),
+            0 0 100px rgba(212, 165, 116, 0.4),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+      }
+
+      /* SLIDE FROM RIGHT - poetry line enters from right side */
+      @keyframes slideFromRight {
+        0% {
+          opacity: 0;
+          transform: translateX(50px);
+          filter: blur(4px);
+        }
+        50% {
+          opacity: 0.9;
+          transform: translateX(-6px);  /* Overshoot left */
+          filter: blur(0);
+        }
+        70% {
+          transform: translateX(3px);  /* Settle back */
+        }
+        100% {
+          opacity: 0.85;
+          transform: translateX(0);
+          filter: blur(0);
+        }
+      }
+
+      /* SCALE FROM CENTER - poetry line emerges from center */
+      @keyframes scaleFromCenter {
+        0% {
+          opacity: 0;
+          transform: scale(0.8);
+          filter: blur(6px);
+        }
+        50% {
+          opacity: 0.9;
+          transform: scale(1.05);  /* Overshoot */
+          filter: blur(0);
+        }
+        70% {
+          transform: scale(0.98);  /* Settle back */
+        }
+        100% {
+          opacity: 0.85;
+          transform: scale(1);
+          filter: blur(0);
+        }
+      }
+
+      /* SLIDE FROM LEFT - poetry line enters from left side */
+      @keyframes slideFromLeft {
+        0% {
+          opacity: 0;
+          transform: translateX(-50px);
+          filter: blur(4px);
+        }
+        50% {
+          opacity: 0.9;
+          transform: translateX(6px);  /* Overshoot right */
+          filter: blur(0);
+        }
+        70% {
+          transform: translateX(-3px);  /* Settle back */
+        }
+        100% {
+          opacity: 0.85;
+          transform: translateX(0);
+          filter: blur(0);
+        }
+      }
+
+      /* TORCH RISES - THE CLIMAX - rises from below with bounce physics */
+      @keyframes torchRise {
+        0% {
+          opacity: 0;
+          transform: translateY(80px) scale(0.85);
+          filter: blur(12px);
+        }
+        50% {
+          opacity: 0.95;
+          transform: translateY(-12px) scale(1.03);  /* Overshoot up */
+          filter: blur(0);
+        }
+        70% {
+          transform: translateY(5px) scale(0.99);  /* Settle back */
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+          text-shadow:
+            0 0 30px rgba(255, 255, 255, 0.35),
+            0 0 60px rgba(212, 165, 116, 0.6),
+            0 0 100px rgba(212, 165, 116, 0.4),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+      }
+
+      /* Legacy: Memory surface - kept for backwards compat */
       @keyframes memorySurface {
         0% {
           opacity: 0;
@@ -2229,7 +2393,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Poetry line reveal - gentle emergence, each line breathes */
+      /* Legacy: Poetry line reveal */
       @keyframes poetryLineReveal {
         0% {
           opacity: 0;
@@ -2243,7 +2407,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Torch pass - the baton handoff, forward momentum */
+      /* Legacy: Torch pass */
       @keyframes torchPass {
         0% {
           opacity: 0;
@@ -2812,6 +2976,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .build-word--primary {
           font-size: clamp(1.4rem, 6vw, 2.5rem);
           margin-bottom: 0.4em;
+        }
+
+        .build-poetry {
+          transform: translateX(-1em);  /* Smaller offset on mobile */
         }
 
         .build-poetry__line {
@@ -5285,8 +5453,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .panel--form {
         min-height: 100vh;
         min-height: 100dvh;
-        height: 100vh;
-        height: 100dvh;
+        height: auto; /* Allow growth for footer */
         padding: 5vh 24px 90px; /* Top breathing room + ticker clearance */
         display: flex;
         flex-direction: column;
@@ -5344,6 +5511,84 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .panel--form .panel-subtitle {
         margin-bottom: 24px;
+      }
+
+      /* Footer atmosphere wrapper - cigar lounge image with dark mood */
+      .footer-atmosphere {
+        position: relative;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        margin-top: -80px;  /* Pull UP behind form content - MORE overlap */
+        padding: 140px 24px 120px; /* Extra top padding to compensate for overlap */
+        overflow: hidden;
+      }
+
+      .footer-atmosphere__bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center 40%;
+        z-index: 0;
+      }
+
+      .footer-atmosphere__overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        /*
+         * Tobias: "Dark UI is about depth, not darkness. It's layers of smoke, not a black wall."
+         * Start FULLY opaque (matching form panel) and fade DOWN to reveal cigar lounge
+         */
+        background:
+          /* Layer 1: Match form panel's darkness at top, then reveal image */
+          linear-gradient(to bottom,
+            rgba(10, 7, 5, 1) 0%,        /* Fully opaque - seamless with form */
+            rgba(10, 7, 5, 0.95) 10%,    /* Still very dark */
+            rgba(10, 7, 5, 0.7) 30%,     /* Starting to reveal */
+            rgba(10, 7, 5, 0.5) 50%,     /* Image emerging */
+            rgba(10, 7, 5, 0.55) 75%,    /* Atmospheric depth */
+            rgba(10, 7, 5, 0.7) 100%     /* Darker at bottom for ticker */
+          ),
+          /* Layer 2: Center clearing where room reveals itself */
+          radial-gradient(ellipse 70% 50% at 50% 55%,
+            rgba(10, 7, 5, 0.2) 0%,
+            rgba(10, 7, 5, 0.5) 60%,
+            rgba(10, 7, 5, 0.6) 100%
+          ),
+          /* Layer 3: Corner vignette for depth */
+          radial-gradient(ellipse 100% 80% at 50% 50%,
+            transparent 30%,
+            rgba(10, 7, 5, 0.4) 70%,
+            rgba(10, 7, 5, 0.6) 100%
+          );
+      }
+
+      /* Warm ember glow - the cigar lounge feeling */
+      .footer-atmosphere::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          /* Warm center glow */
+          radial-gradient(
+            ellipse 50% 40% at 50% 50%,
+            rgba(183, 106, 59, 0.06) 0%,
+            transparent 70%
+          ),
+          /* Subtle amber at bottom */
+          linear-gradient(to top,
+            rgba(139, 90, 43, 0.04) 0%,
+            transparent 30%
+          );
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .footer-atmosphere .event-footer-section {
+        position: relative;
+        z-index: 3;
+        margin-top: 0;
+        padding-bottom: 0;
       }
 
       /* ========================================
@@ -6794,11 +7039,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         inset: -6px;
         border-radius: 14px;
         background: radial-gradient(ellipse at center, rgba(212, 165, 116, 0.3) 0%, transparent 70%);
-        animation: glowPulse 2s ease-in-out infinite;
+        animation: dominoGlowPulse 2s ease-in-out infinite;
         z-index: -1;
       }
 
-      @keyframes glowPulse {
+      @keyframes dominoGlowPulse {
         0%, 100% { opacity: 0.5; transform: scale(1); }
         50% { opacity: 1; transform: scale(1.05); }
       }
@@ -7395,13 +7640,30 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           box-shadow 0.6s ease-out;
       }
 
-      /* Glow bloom on entrance - like glowCrescendo */
+      /* Connected to loading screen heartbeat */
+      @keyframes pipPulse {
+        0%, 100% {
+          box-shadow:
+            0 0 8px rgba(212, 165, 116, 0.3),
+            0 0 16px rgba(212, 165, 116, 0.15),
+            inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.2);
+          filter: brightness(1);
+        }
+        50% {
+          box-shadow:
+            0 0 12px var(--glow-warm),
+            0 0 24px rgba(212, 165, 116, 0.4),
+            0 0 40px var(--glow-deep),
+            inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.2);
+          filter: brightness(1.08);
+        }
+      }
+
+      /* Glow bloom on entrance + continuous heartbeat */
       .back-to-top.is-visible .back-to-top__pip {
-        box-shadow:
-          0 0 12px rgba(212, 165, 116, 0.5),
-          0 0 24px rgba(212, 165, 116, 0.25),
-          inset 0 -2px 4px rgba(0, 0, 0, 0.3),
-          inset 0 2px 4px rgba(255, 255, 255, 0.2);
+        animation: pipPulse var(--heartbeat) ease-in-out infinite;
       }
 
       .back-to-top:hover .back-to-top__pip,
@@ -7966,38 +8228,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	              <p class="status" id="status" aria-live="polite"></p>
 	            </form>
 	          </div>
+
+          <!-- Footer Section with cigar lounge atmosphere -->
+          <div class="footer-atmosphere">
+            <div class="footer-atmosphere__bg" style="background-image: url('/FRAMES/frame-footer.webp')"></div>
+            <div class="footer-atmosphere__overlay"></div>
+            <div class="event-footer-section">
+              <div class="footer-contact">
+                <div class="footer-contact__item">
+                  <span class="footer-contact__label">Direct Line</span>
+                  <a href="mailto:Erik@CubanDominoLeague.com" class="footer-contact__link">Erik@CubanDominoLeague.com</a>
+                </div>
+                <div class="footer-contact__divider"></div>
+                <div class="footer-contact__item">
+                  <span class="footer-contact__label">Venue</span>
+                  <a href="https://share.google/Bd3ZofPsvccfdT7EC" target="_blank" rel="noreferrer" class="footer-contact__link">Mr Garcia Cigars</a>
+                </div>
+              </div>
+
+              <footer class="brand-footer">
+                <div class="brand-footer__wordmark">
+                  <span class="brand-footer__logo">CDL</span>
+                  <span class="brand-footer__line"></span>
+                </div>
+                <span class="brand-footer__text">© 2026 Cuban Domino League</span>
+              </footer>
+            </div>
+          </div>
 	        </div>
 	      </section>
-	
-	      <!-- Panel 7: Exit - Quiet Fade + Footer (merged postscript + footer) -->
-      <!-- "Silence isn't empty. It's where the feeling lives." -->
-      <section class="panel panel--exit" id="panelExit">
-        <div class="panel-bg" style="background-image: url('/FRAMES/frame-footer.webp')"></div>
-        <div class="panel-overlay panel-overlay--exit"></div>
-        <div class="panel-content">
-          <div class="event-footer-section">
-            <div class="footer-contact">
-              <div class="footer-contact__item">
-                <span class="footer-contact__label">Direct Line</span>
-                <a href="mailto:Erik@CubanDominoLeague.com" class="footer-contact__link">Erik@CubanDominoLeague.com</a>
-              </div>
-              <div class="footer-contact__divider"></div>
-              <div class="footer-contact__item">
-                <span class="footer-contact__label">Venue</span>
-                <a href="https://share.google/Bd3ZofPsvccfdT7EC" target="_blank" rel="noreferrer" class="footer-contact__link">Mr Garcia Cigars</a>
-              </div>
-            </div>
-
-            <footer class="brand-footer">
-              <div class="brand-footer__wordmark">
-                <span class="brand-footer__logo">CDL</span>
-                <span class="brand-footer__line"></span>
-              </div>
-              <span class="brand-footer__text">© 2026 Cuban Domino League</span>
-            </footer>
-          </div>
-        </div>
-      </section>
 	    </main>
 	    </div>
 
@@ -8305,10 +8564,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        }
 
 	        // Let the loading screen breathe, but stop blocking scroll/taps quickly.
-	        // The ritual takes ~3.5s, then heartbeat begins. Hold for one full breath.
+	        // The ritual takes ~3s, then heartbeat begins. Hold for one full breath.
 	        const INTERACTION_RELEASE_MS = 180;
 	        const BREATHING_START_MS = 2700;  // Entrance completes, room starts breathing
-	        const ANTICIPATION_MS = 3500;     // Final breath before release
+	        const ANTICIPATION_MS = 3300;     // Final breath before release (700ms held breath)
 	        const VISUAL_HOLD_MS = 4000;      // 4 seconds — ritual completes, then cut
 	        const EXIT_ANIMATION_MS = 200;    // Start exit animation before fade
 
@@ -8460,11 +8719,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           // Initial check
           updateBackToTopVisibility();
 
-          // Click to teleport to hero
+          // Click handler: hero → form, elsewhere → hero
           backToTop.addEventListener('click', () => {
             // Ensure nothing can "fight" the teleport
             unlockScroll();
-            snapToPanelTop(heroPanel);
+
+            // Check if currently on hero panel
+            const heroRect = heroPanel.getBoundingClientRect();
+            const isOnHero = heroRect.top >= -50 && heroRect.top <= 50;
+
+            if (isOnHero && formPanel) {
+              // On hero → go to form (claim your seat)
+              snapToPanelTop(formPanel);
+            } else {
+              // Elsewhere → go to hero (back to top)
+              snapToPanelTop(heroPanel);
+            }
           });
         }
       }
