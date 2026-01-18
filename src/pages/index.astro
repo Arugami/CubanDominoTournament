@@ -8972,24 +8972,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             window.addEventListener('cdl:ready', triggerEmberRelease, { once: true });
           }
 
-          // Click handler: hero → form, elsewhere → hero
-          backToTop.addEventListener('click', () => {
-            // Ensure nothing can "fight" the teleport
-            unlockScroll();
-
-            // Check if currently on hero panel
-            const heroRect = heroPanel.getBoundingClientRect();
-            const isOnHero = heroRect.top >= -50 && heroRect.top <= 50;
-
-            if (isOnHero && formPanel) {
-              // On hero → go to form (claim your seat)
-              snapToPanelTop(formPanel);
-            } else {
-              // Elsewhere → go to hero (back to top)
-              snapToPanelTop(heroPanel);
-            }
-          });
-
           // Tooltip: guide users to the chat button when pip is touched
           const chatTooltip = document.getElementById('chatTooltip');
           let tooltipTimer = null;
@@ -9007,8 +8989,29 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             }, 3000);
           };
 
-          // Show chat tooltip on pip touch/hover (first interaction only)
-          backToTop.addEventListener('touchstart', showChatTooltip, { passive: true });
+          // Click handler: first click shows tooltip, subsequent clicks navigate
+          backToTop.addEventListener('click', (e) => {
+            // First interaction: show tooltip, don't navigate
+            if (!tooltipShown) {
+              e.preventDefault();
+              showChatTooltip();
+              return;
+            }
+
+            // Subsequent clicks: navigate as normal
+            unlockScroll();
+
+            const heroRect = heroPanel.getBoundingClientRect();
+            const isOnHero = heroRect.top >= -50 && heroRect.top <= 50;
+
+            if (isOnHero && formPanel) {
+              snapToPanelTop(formPanel);
+            } else {
+              snapToPanelTop(heroPanel);
+            }
+          });
+
+          // Also show tooltip on hover (desktop)
           backToTop.addEventListener('mouseenter', showChatTooltip);
         }
       }
