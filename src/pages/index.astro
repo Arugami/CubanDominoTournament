@@ -7869,6 +7869,64 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .pip-ember:nth-child(6) { --drift-x: 7px; }
       }
 
+      /* Pip Tooltip - subtle guide to chat */
+      .pip-tooltip {
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%) translateX(8px);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(28, 19, 15, 0.95);
+        border: 1px solid rgba(183, 106, 59, 0.5);
+        border-radius: 20px;
+        padding: 8px 14px;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        pointer-events: none;
+      }
+
+      .pip-tooltip.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(-50%) translateX(12px);
+      }
+
+      .pip-tooltip__text {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        color: #d4a574;
+        letter-spacing: 0.02em;
+      }
+
+      .pip-tooltip__arrow {
+        font-size: 14px;
+        color: var(--glow-warm);
+        animation: tooltipBounce 1.5s ease-in-out infinite;
+      }
+
+      @keyframes tooltipBounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(3px); }
+      }
+
+      /* Mobile: tooltip below pip instead of beside */
+      @media (max-width: 768px) {
+        .pip-tooltip {
+          left: 50%;
+          top: 100%;
+          transform: translateX(-50%) translateY(8px);
+        }
+
+        .pip-tooltip.is-visible {
+          transform: translateX(-50%) translateY(12px);
+        }
+      }
+
       /* Floating Music Toggle */
       .music-toggle {
         position: fixed;
@@ -8519,6 +8577,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       <span class="pip-ember pip-ember--faint"></span>
       <span class="pip-ember pip-ember--bright"></span>
       <span class="pip-ember pip-ember--faint"></span>
+      <!-- Tooltip guiding to chat -->
+      <span class="pip-tooltip" id="pipTooltip">
+        <span class="pip-tooltip__text">Chat below</span>
+        <span class="pip-tooltip__arrow">↓</span>
+      </span>
     </button>
 
     <!-- Music Toggle Button -->
@@ -8931,6 +8994,27 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               snapToPanelTop(heroPanel);
             }
           });
+
+          // Tooltip: guide users to the chat button on touch
+          const pipTooltip = document.getElementById('pipTooltip');
+          let tooltipTimer = null;
+          let tooltipShown = false; // Only show once per session
+
+          const showPipTooltip = () => {
+            if (!pipTooltip || tooltipShown) return;
+            tooltipShown = true;
+            pipTooltip.classList.add('is-visible');
+
+            // Auto-hide after 3 seconds
+            if (tooltipTimer) clearTimeout(tooltipTimer);
+            tooltipTimer = setTimeout(() => {
+              pipTooltip.classList.remove('is-visible');
+            }, 3000);
+          };
+
+          // Show on touch/mouseenter (first interaction only)
+          backToTop.addEventListener('touchstart', showPipTooltip, { passive: true });
+          backToTop.addEventListener('mouseenter', showPipTooltip);
         }
       }
 
