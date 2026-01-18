@@ -5463,12 +5463,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         /* Base `.panel` uses `overflow: hidden`; allow the form scene to scroll when content exceeds the viewport. */
         overflow-x: hidden;
         overflow-y: auto;
-        /* Atmospheric depth - Tobias: "Rooms, Not Hallways" */
+        /* Atmospheric depth - Tobias: "Rooms, Not Hallways"
+         * KEY: Form background DISSOLVES at bottom - no hard edge.
+         * The cigar lounge was always there, just obscured by fog.
+         */
         background:
           /* Top vignette - ceiling darkness */
           linear-gradient(to bottom, rgba(10, 7, 5, 0.95) 0%, transparent 20%),
-          /* Bottom vignette - floor darkness */
-          linear-gradient(to top, rgba(10, 7, 5, 0.95) 0%, transparent 25%),
+          /* NO bottom vignette - form dissolves into footer fog instead */
           /* Central warm glow - where the action is */
           radial-gradient(ellipse at 50% 45%, rgba(183, 106, 59, 0.12) 0%, transparent 45%),
           /* Secondary warmth - depth layer */
@@ -5479,8 +5481,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           radial-gradient(ellipse at 85% 15%, rgba(139, 90, 43, 0.06) 0%, transparent 35%),
           /* Ambient room depth */
           radial-gradient(ellipse at 50% 50%, rgba(28, 19, 15, 0.5) 0%, transparent 80%),
-          /* Base tobacco room gradient */
-          linear-gradient(180deg, #0a0705 0%, #1a120d 35%, #120c08 70%, #0d0906 100%);
+          /* Base tobacco room - DISSOLVES at bottom for seamless footer blend */
+          linear-gradient(180deg,
+            #0a0705 0%,
+            #1a120d 35%,
+            #120c08 55%,
+            rgba(13, 9, 6, 0.85) 70%,
+            rgba(10, 7, 5, 0.5) 85%,
+            rgba(10, 7, 5, 0.2) 95%,
+            transparent 100%
+          );
       }
 
       /* Form panel content always visible (no fade-in animation) */
@@ -5513,13 +5523,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-bottom: 24px;
       }
 
-      /* Footer atmosphere wrapper - cigar lounge image with dark mood */
+      /* Footer atmosphere wrapper - cigar lounge image with dark mood
+       * The room was always there. Fog clears to reveal it.
+       */
       .footer-atmosphere {
         position: relative;
         width: 100vw;
         margin-left: calc(-50vw + 50%);
-        margin-top: -80px;  /* Pull UP behind form content - MORE overlap */
-        padding: 140px 24px 120px; /* Extra top padding to compensate for overlap */
+        margin-top: -180px;  /* Aggressive pull - room exists BEHIND form */
+        padding: 240px 24px 120px; /* Large overlap zone for seamless blend */
         overflow: hidden;
       }
 
@@ -5536,30 +5548,32 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         inset: 0;
         z-index: 1;
         /*
-         * Tobias: "Dark UI is about depth, not darkness. It's layers of smoke, not a black wall."
-         * Start FULLY opaque (matching form panel) and fade DOWN to reveal cigar lounge
+         * Tobias: "Dark UI needs fog—subtle gradients that create distance"
+         * The room was always here. Fog clears to reveal it.
+         * Top starts nearly opaque to blend with form's dissolved edge.
          */
         background:
-          /* Layer 1: Match form panel's darkness at top, then reveal image */
+          /* Layer 1: Top fog - matches form's dissolved edge */
           linear-gradient(to bottom,
-            rgba(10, 7, 5, 1) 0%,        /* Fully opaque - seamless with form */
-            rgba(10, 7, 5, 0.95) 10%,    /* Still very dark */
-            rgba(10, 7, 5, 0.7) 30%,     /* Starting to reveal */
-            rgba(10, 7, 5, 0.5) 50%,     /* Image emerging */
-            rgba(10, 7, 5, 0.55) 75%,    /* Atmospheric depth */
-            rgba(10, 7, 5, 0.7) 100%     /* Darker at bottom for ticker */
+            rgba(10, 7, 5, 0.95) 0%,      /* Nearly opaque - blends with form */
+            rgba(10, 7, 5, 0.85) 10%,
+            rgba(10, 7, 5, 0.65) 25%,
+            rgba(10, 7, 5, 0.45) 40%,     /* Smoke clearing */
+            rgba(10, 7, 5, 0.35) 55%,     /* Room emerges */
+            rgba(10, 7, 5, 0.45) 75%,
+            rgba(10, 7, 5, 0.6) 100%      /* Bottom vignette */
           ),
-          /* Layer 2: Center clearing where room reveals itself */
-          radial-gradient(ellipse 70% 50% at 50% 55%,
-            rgba(10, 7, 5, 0.2) 0%,
-            rgba(10, 7, 5, 0.5) 60%,
-            rgba(10, 7, 5, 0.6) 100%
+          /* Layer 2: Center clearing - the room reveals itself */
+          radial-gradient(ellipse 80% 60% at 50% 55%,
+            rgba(10, 7, 5, 0.1) 0%,
+            rgba(10, 7, 5, 0.3) 50%,
+            rgba(10, 7, 5, 0.45) 100%
           ),
           /* Layer 3: Corner vignette for depth */
-          radial-gradient(ellipse 100% 80% at 50% 50%,
-            transparent 30%,
-            rgba(10, 7, 5, 0.4) 70%,
-            rgba(10, 7, 5, 0.6) 100%
+          radial-gradient(ellipse 100% 100% at 50% 50%,
+            transparent 20%,
+            rgba(10, 7, 5, 0.25) 60%,
+            rgba(10, 7, 5, 0.4) 100%
           );
       }
 
@@ -7666,6 +7680,66 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: pipPulse var(--heartbeat) ease-in-out infinite;
       }
 
+      /* ===== MICRO-EMBERS - wisps orbiting the pip like cigar smoke ===== */
+      .pip-ember {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: var(--ember-color);
+        border-radius: 50%;
+        filter: blur(0.5px);
+        opacity: 0;
+        pointer-events: none;
+        /* Start at center of button (where pip lives) */
+        top: 50%;
+        left: 50%;
+        margin-top: -1px;
+        margin-left: -1px;
+      }
+
+      /* Only show embers when pip is visible - one-shot burst on entry */
+      .back-to-top.is-visible .pip-ember {
+        animation: emberRelease 1.5s ease-out forwards;
+      }
+
+      /* Ember Release - upward float matching loading screen's smoke aesthetic */
+      @keyframes emberRelease {
+        0% {
+          opacity: 0;
+          transform: translate(0, 0) scale(0.3);
+        }
+        15% {
+          opacity: 0.8;  /* Peak opacity matches loading screen */
+          transform: translate(var(--drift-x), -8px) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(calc(var(--drift-x) * 2), -35px) scale(0.2);
+          filter: blur(2px);
+        }
+      }
+
+      /* Each ember has unique upward drift path - like sparks from a struck match */
+      .pip-ember:nth-child(2) { --drift-x: 6px;  animation-delay: 0s; }
+      .pip-ember:nth-child(3) { --drift-x: -5px; animation-delay: 0.12s; }
+      .pip-ember:nth-child(4) { --drift-x: -8px; animation-delay: 0.24s; }
+      .pip-ember:nth-child(5) { --drift-x: 4px;  animation-delay: 0.36s; }
+      .pip-ember:nth-child(6) { --drift-x: 10px; animation-delay: 0.48s; }
+
+      /* Ember size variations - some brighter, some fainter */
+      .pip-ember--bright {
+        width: 2.5px;
+        height: 2.5px;
+        filter: blur(0.3px);
+      }
+      .pip-ember--faint {
+        width: 1.5px;
+        height: 1.5px;
+        filter: blur(1px);
+      }
+
+      /* Embers are one-shot, so no hover pause needed - they'll have finished by the time user interacts */
+
       .back-to-top:hover .back-to-top__pip,
       .back-to-top:focus .back-to-top__pip {
         transform: scale(1.15);
@@ -7693,6 +7767,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           width: 12px;
           height: 12px;
         }
+
+        /* Scaled drift for smaller pip */
+        .pip-ember:nth-child(2) { --drift-x: 4px; }
+        .pip-ember:nth-child(3) { --drift-x: -3px; }
+        .pip-ember:nth-child(4) { --drift-x: -5px; }
+        .pip-ember:nth-child(5) { --drift-x: 3px; }
+        .pip-ember:nth-child(6) { --drift-x: 7px; }
       }
 
       /* Floating Music Toggle */
@@ -8334,9 +8415,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       </div>
     </div>
 
-    <!-- Back to Top - Domino Pip -->
+    <!-- Back to Top - Domino Pip (with ember particles from loading screen's soul) -->
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
       <span class="back-to-top__pip"></span>
+      <!-- Micro-embers - wisps of the cigar lounge following the pip -->
+      <span class="pip-ember pip-ember--bright"></span>
+      <span class="pip-ember"></span>
+      <span class="pip-ember pip-ember--faint"></span>
+      <span class="pip-ember pip-ember--bright"></span>
+      <span class="pip-ember pip-ember--faint"></span>
     </button>
 
     <!-- Music Toggle Button -->
