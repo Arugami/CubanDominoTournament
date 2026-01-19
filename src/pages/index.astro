@@ -706,6 +706,42 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 1;
       }
 
+      /* ============================================
+         VIGNETTE INTENSITY VARIATIONS BY PANEL
+         Tobias: "Vignettes should breathe with the story"
+         Hero: Standard | Whisper: Intimate | Build: Opening | Slam: Focused
+         ============================================ */
+
+      /* Panel 2 (Whisper): 85% intensity - intimate, close focus */
+      .panel--whisper .vignette-overlay {
+        background: radial-gradient(
+          circle at center,
+          transparent 12%,
+          rgba(0, 0, 0, 0.40) 55%,
+          rgba(0, 0, 0, 0.92) 100%
+        );
+      }
+
+      /* Panel 3 (Build): 75% intensity - opening up, room to breathe */
+      .panel--build .vignette-overlay {
+        background: radial-gradient(
+          circle at center,
+          transparent 20%,
+          rgba(0, 0, 0, 0.30) 65%,
+          rgba(0, 0, 0, 0.78) 100%
+        );
+      }
+
+      /* Panel 4 (Slam): 90% intensity - maximum focus on SEAT */
+      .panel--slam .vignette-overlay {
+        background: radial-gradient(
+          circle at center,
+          transparent 10%,
+          rgba(0, 0, 0, 0.45) 50%,
+          rgba(0, 0, 0, 0.95) 100%
+        );
+      }
+
       /* Film grain overlay - "Like photos from 1978" — Wes Anderson
          2-3% noise - not visible, but felt. Memory texture. */
       .panel-bg::after {
@@ -1662,16 +1698,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* "This table remembers." - Emerges from blur in CENTER (the room whispers) */
+      /* Voice differentiation: More ghostly than greeting (45% vs brass) */
       .whisper-setup {
         font-family: "Bodoni Moda", serif;
         font-style: italic;
         font-weight: 400;
         font-size: clamp(1rem, 3.5vw, 1.3rem);  /* Slightly larger */
-        color: rgba(248, 239, 230, 0.55);  /* Cream @ 55% — narrator/room voice */
+        color: rgba(248, 239, 230, 0.45);  /* Cream @ 45% — ethereal room voice */
         letter-spacing: 0.05em;
         text-align: center;  /* Centered - the room */
         align-self: center;
         opacity: 0;
+        filter: blur(0.3px);  /* Soft memory — keeps it dreamlike */
         text-shadow:
           0 0 25px rgba(248, 239, 230, 0.2),
           0 2px 10px rgba(0, 0, 0, 0.5);
@@ -1748,9 +1786,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Animation for main line - the recognition statement */
-      /* Emerges THIRD - smooth fade-up (memory surfacing) */
+      /* Emerges THIRD - smooth fade-up (memory surfacing), then gentle glow breath */
       .panel--whisper.in-view:not(.has-played) .whisper-line--ancestors {
-        animation: recognitionSlide 1.8s cubic-bezier(0.16, 1, 0.3, 1) 4.0s forwards;
+        animation:
+          recognitionSlide 1.8s cubic-bezier(0.16, 1, 0.3, 1) 4.0s forwards,
+          recognitionGlowBreath 2.5s ease-in-out 6.0s infinite;  /* Starts after slide lands, pulses gently */
       }
 
       /* Recognition statement - SMOOTH fade-up from blur (memory surfacing) */
@@ -1774,10 +1814,29 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
+      /* Glow breath - subtle brass pulse after recognition lands (living memory) */
+      @keyframes recognitionGlowBreath {
+        0%, 100% {
+          text-shadow:
+            0 0 40px rgba(255, 255, 255, 0.4),
+            0 0 70px rgba(212, 165, 116, 0.6),
+            0 0 110px rgba(212, 165, 116, 0.35),
+            0 4px 30px rgba(0, 0, 0, 0.85);
+        }
+        50% {
+          text-shadow:
+            0 0 50px rgba(255, 255, 255, 0.5),
+            0 0 90px rgba(212, 165, 116, 0.75),
+            0 0 130px rgba(212, 165, 116, 0.45),
+            0 4px 30px rgba(0, 0, 0, 0.85);
+        }
+      }
+
       .panel--whisper.has-played .whisper-line--ancestors {
         opacity: 1;
         transform: none;
         filter: none;
+        animation: recognitionGlowBreath 2.5s ease-in-out infinite;  /* Keep breathing when revisited */
         text-shadow:
           0 0 40px rgba(255, 255, 255, 0.4),
           0 0 70px rgba(212, 165, 116, 0.6),
@@ -1844,7 +1903,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingDrift 1.5s ease-out 1.0s forwards;
+        animation: greetingDrift 1.5s ease-out 1.3s forwards;  /* 1.3s delay - breath after room whispers */
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
@@ -1999,7 +2058,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .panel--whisper.has-played .whisper-setup {
         opacity: 1;
         transform: none;
-        filter: none;
+        filter: blur(0.3px);  /* Keep subtle blur - room voice stays dreamlike */
       }
       .panel--whisper.has-played .whisper-greeting {
         opacity: 1;
@@ -2066,6 +2125,66 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: center;
         align-items: center;
         padding: 0;
+        position: relative;
+      }
+
+      /* ============================================
+         GOLDEN HOUR LIGHT SHIFT
+         Temperature rises from cool → warm as heritage builds to "Te toca"
+         Lin-Manuel: "The light follows the feeling"
+         ============================================ */
+      .panel--build::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 5;  /* Above background, below text */
+        opacity: 0;
+        background: radial-gradient(
+          ellipse 80% 60% at center,
+          rgba(212, 165, 116, 0.08) 0%,
+          transparent 70%
+        );
+      }
+
+      .panel--build.in-view:not(.has-played)::after {
+        animation: goldenHourShift 5.5s ease-out forwards;
+      }
+
+      .panel--build.has-played::after {
+        opacity: 0.5;
+        background: radial-gradient(
+          ellipse 80% 60% at center,
+          rgba(212, 165, 116, 0.12) 0%,
+          transparent 70%
+        );
+      }
+
+      @keyframes goldenHourShift {
+        0% {
+          opacity: 0;
+          background: radial-gradient(
+            ellipse 80% 60% at center,
+            rgba(150, 170, 200, 0.06) 0%,  /* Cool blue tint - dawn */
+            transparent 70%
+          );
+        }
+        40% {
+          opacity: 0.3;
+          background: radial-gradient(
+            ellipse 80% 60% at center,
+            rgba(180, 170, 160, 0.08) 0%,  /* Neutral - midday */
+            transparent 70%
+          );
+        }
+        100% {
+          opacity: 0.5;
+          background: radial-gradient(
+            ellipse 80% 60% at center,
+            rgba(212, 165, 116, 0.12) 0%,  /* Warm brass - golden hour */
+            transparent 70%
+          );
+        }
       }
 
       /* TOP LETTERBOX - The setup whispered from darkness */
@@ -2275,6 +2394,52 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 110px rgba(212, 165, 116, 0.45),
           0 0 150px rgba(212, 165, 116, 0.25),
           0 4px 30px rgba(0, 0, 0, 0.85);
+        position: relative;
+      }
+
+      /* Radial glow pulse behind "Te toca" - the torch ignites */
+      .build-word--torch::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 250%;
+        height: 200%;
+        transform: translate(-50%, -50%) scale(0);
+        background: radial-gradient(
+          ellipse 50% 40% at center,
+          rgba(212, 165, 116, 0.4) 0%,
+          rgba(212, 165, 116, 0.15) 40%,
+          transparent 70%
+        );
+        pointer-events: none;
+        z-index: -1;
+        opacity: 0;
+      }
+
+      /* Pulse animation when Te toca lands */
+      @keyframes torchIgnite {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.3);
+        }
+        40% {
+          opacity: 0.9;
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+        100% {
+          opacity: 0.6;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      .panel--build.in-view:not(.has-played) .build-word--torch::before {
+        animation: torchIgnite 1.5s ease-out 3.8s forwards;  /* Slightly after torch rise starts */
+      }
+
+      .panel--build.has-played .build-word--torch::before {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1);
       }
 
       /* Legacy: keep inherited for backwards compat */
@@ -2911,18 +3076,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1;
       }
 
+      /* Badge reveal - ceremonial entrance with subtle rotation */
       @keyframes badgeReveal {
         0% {
           opacity: 0;
-          transform: scale(0.8) translateY(10px);
-          filter: blur(4px);
+          transform: scale(0) rotate(-8deg) translateY(15px);
+          filter: blur(6px);
         }
-        60% {
-          transform: scale(1.02) translateY(0);
+        50% {
+          opacity: 0.9;
+          transform: scale(1.05) rotate(2deg) translateY(-3px);
+          filter: blur(1px);
+        }
+        70% {
+          transform: scale(0.98) rotate(-1deg) translateY(2px);
         }
         100% {
           opacity: 1;
-          transform: scale(1) translateY(0);
+          transform: scale(1) rotate(0) translateY(0);
           filter: blur(0);
         }
       }
@@ -3149,6 +3320,115 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           transform: translateY(0);
           filter: blur(0);
         }
+      }
+
+      /* ============================================
+         PANEL 4 CLIMAX IMPACT - Screen Shake + Light Burst
+         "SEAT" is the money shot — make it hit HARD
+         George Lois: "You SCREAM. But you scream something true."
+         ============================================ */
+
+      /* Screen shake - micro-tremor when SEAT lands */
+      @keyframes slamShake {
+        0%, 100% { transform: translate(0, 0); }
+        15% { transform: translate(-2px, 1px); }
+        30% { transform: translate(2px, -1px); }
+        45% { transform: translate(-1px, 2px); }
+        60% { transform: translate(2px, 0); }
+        75% { transform: translate(-1px, -1px); }
+        90% { transform: translate(1px, 1px); }
+      }
+
+      /* Light burst - radial brass explosion behind SEAT */
+      @keyframes seatBurst {
+        0% {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+        30% {
+          opacity: 0.8;
+          transform: scale(1.2);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(1.8);
+        }
+      }
+
+      /* Signature underline - draws from center on slogan */
+      @keyframes underlineDraw {
+        0% {
+          width: 0;
+          left: 50%;
+        }
+        100% {
+          width: 100%;
+          left: 0;
+        }
+      }
+
+      /* Apply screen shake to slam center when SEAT lands */
+      .panel--slam.in-view:not(.has-played) .slam-center {
+        animation: slamShake 0.35s ease-out 2.7s;  /* Triggers when SEAT bounce finishes */
+      }
+
+      /* Light burst behind SEAT - brass radial explosion */
+      .slam-word--all {
+        position: relative;
+      }
+
+      .slam-word--all::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200%;
+        height: 200%;
+        transform: translate(-50%, -50%) scale(0);
+        background: radial-gradient(
+          circle,
+          rgba(212, 165, 116, 0.6) 0%,
+          rgba(212, 165, 116, 0.3) 30%,
+          transparent 70%
+        );
+        pointer-events: none;
+        z-index: -1;
+        opacity: 0;
+      }
+
+      .panel--slam.in-view:not(.has-played) .slam-word--all::before {
+        animation: seatBurst 0.8s ease-out 2.5s forwards;  /* Starts slightly before shake */
+      }
+
+      /* Signature underline on slogan */
+      .slam-slogan {
+        position: relative;
+      }
+
+      .slam-slogan::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        width: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          var(--brass) 20%,
+          var(--brass) 80%,
+          transparent 100%
+        );
+        opacity: 0.6;
+      }
+
+      .panel--slam.in-view:not(.has-played) .slam-slogan::after {
+        animation: underlineDraw 1.2s ease-out 4.2s forwards;  /* Draws after slogan lands */
+      }
+
+      .panel--slam.has-played .slam-slogan::after {
+        width: 100%;
+        left: 0;
       }
 
       /* Mobile adjustments for cinematic panels */
@@ -4237,51 +4517,60 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* "LA MESA" badge on left - ESPN sporty energy */
+      /* "LA MESA" badge on left - ESPN broadcast style with copper/brass warmth */
       .mesa-ticker__badge {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        padding: 0 18px;
-        background: linear-gradient(135deg, #cc0000 0%, #8a0000 100%);
-        color: #ffffff;
+        gap: 6px;
+        padding: 0 20px 0 16px;
+        /* ESPN-style solid copper/brass gradient - warm broadcast energy */
+        background: linear-gradient(
+          135deg,
+          #d4a574 0%,
+          #c99a5c 25%,
+          #b76a3b 75%,
+          #a05a2c 100%
+        );
+        color: #0a0604;
         font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', system-ui, sans-serif;
-        font-size: 0.8rem;
-        font-weight: 700;
+        font-size: 0.85rem;
+        font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.02em; /* Tighter — sporty condensed feel */
+        letter-spacing: 0.04em;
         flex-shrink: 0;
         position: relative;
         z-index: 3;
-        /* Slight skew — motion energy */
-        transform: skewX(-6deg);
+        /* ESPN angled edge - sharp, modern */
+        transform: skewX(-8deg);
         box-shadow:
-          4px 0 15px rgba(0,0,0,0.6),
-          inset 0 1px 0 rgba(255,255,255,0.2),
-          0 0 25px rgba(204, 0, 0, 0.4);
-        /* Hard edge on right — ESPN style */
-        clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
+          4px 0 20px rgba(0,0,0,0.7),
+          inset 0 1px 0 rgba(255,255,255,0.3),
+          inset 0 -1px 0 rgba(0,0,0,0.2),
+          0 0 30px rgba(212, 165, 116, 0.3);
+        /* Hard angled cut on right — ESPN category label style */
+        clip-path: polygon(0 0, 100% 0, 92% 100%, 0 100%);
       }
 
-      /* Un-skew the text inside */
+      /* Un-skew the text inside for readability */
       .mesa-ticker__badge-dot,
       .mesa-ticker__badge-text {
-        transform: skewX(6deg);
+        transform: skewX(8deg);
       }
 
+      /* Live indicator dot - ESPN red "LIVE" style */
       .mesa-ticker__badge-dot {
-        width: 8px;
-        height: 8px;
-        background: #ffffff;
+        width: 7px;
+        height: 7px;
+        background: #cc0000;
         border-radius: 50%;
         animation: badgePulse 1.2s ease-in-out infinite;
-        box-shadow: 0 0 10px rgba(255,255,255,0.8);
+        box-shadow: 0 0 8px rgba(204, 0, 0, 0.8), 0 0 12px rgba(204, 0, 0, 0.4);
       }
 
       @keyframes badgePulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.4; transform: scale(0.8); }
+        0%, 100% { opacity: 1; transform: skewX(8deg) scale(1); }
+        50% { opacity: 0.5; transform: skewX(8deg) scale(0.85); }
       }
 
       /* Scrolling content area */
@@ -4431,8 +4720,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           -webkit-transform: translate3d(0, 0, 0);
         }
         .mesa-ticker__badge {
-          transform: skewX(-6deg) translate3d(0, 0, 0);
-          -webkit-transform: skewX(-6deg) translate3d(0, 0, 0);
+          transform: skewX(-8deg) translate3d(0, 0, 0);
+          -webkit-transform: skewX(-8deg) translate3d(0, 0, 0);
         }
         .mesa-ticker__track,
         .mesa-ticker__chat-btn {
@@ -4920,6 +5209,126 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 2px 4px rgba(0, 0, 0, 0.2),
           inset 0 1px 2px rgba(255, 255, 255, 0.05);
         cursor: not-allowed;
+      }
+
+      /* ===========================================
+         LEAVE TABLE MODAL - Tobias: "The room should never feel like a browser"
+         Custom modal to replace native confirm() for theatrical immersion.
+         =========================================== */
+      .leave-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 10010;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+      }
+
+      .leave-modal.is-open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .leave-modal__backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(10, 6, 4, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      .leave-modal__dialog {
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          rgba(28, 19, 15, 0.98) 0%,
+          rgba(20, 14, 10, 0.98) 100%
+        );
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 16px;
+        padding: 32px 28px;
+        max-width: 320px;
+        width: calc(100% - 48px);
+        text-align: center;
+        box-shadow:
+          0 24px 60px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transform: translateY(20px) scale(0.95);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .leave-modal.is-open .leave-modal__dialog {
+        transform: translateY(0) scale(1);
+      }
+
+      .leave-modal__title {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--brass);
+        margin: 0 0 12px 0;
+        letter-spacing: 0.05em;
+      }
+
+      .leave-modal__message {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 0 0 28px 0;
+        line-height: 1.5;
+      }
+
+      .leave-modal__actions {
+        display: flex;
+        gap: 12px;
+      }
+
+      .leave-modal__btn {
+        flex: 1;
+        padding: 14px 20px;
+        border-radius: 10px;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .leave-modal__btn--stay {
+        background: transparent;
+        border: 1px solid var(--brass);
+        color: var(--brass);
+      }
+
+      .leave-modal__btn--stay:hover {
+        background: rgba(212, 165, 116, 0.1);
+        transform: translateY(-1px);
+      }
+
+      .leave-modal__btn--stay:active {
+        transform: scale(0.97);
+      }
+
+      .leave-modal__btn--leave {
+        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
+        border: none;
+        color: #0d0906;
+      }
+
+      .leave-modal__btn--leave:hover {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(212, 165, 116, 0.3);
+      }
+
+      .leave-modal__btn--leave:active {
+        transform: scale(0.97);
       }
 
       /* Identity Screen - Centered Cluster Layout */
@@ -8984,6 +9393,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
         </div>
       </div>
+
+      <!-- Leave Table Confirmation Modal - Tobias: "The room should never feel like a browser" -->
+      <div class="leave-modal" id="leaveModal">
+        <div class="leave-modal__backdrop"></div>
+        <div class="leave-modal__dialog">
+          <h3 class="leave-modal__title">Leave the Table?</h3>
+          <p class="leave-modal__message">You'll need to pick your name again to re-enter.</p>
+          <div class="leave-modal__actions">
+            <button class="leave-modal__btn leave-modal__btn--stay" id="leaveModalStay" type="button">Stay</button>
+            <button class="leave-modal__btn leave-modal__btn--leave" id="leaveModalLeave" type="button">Leave</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- "Unlock La Mesa" — ESPN credential, not app notification -->
@@ -10758,15 +11180,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       initTickerMock();
 
       // Mobile: Pause ticker on touch (touchend may not fire on the same element if user drags)
+      let tickerPauseTimeout = null;
       function pauseTickerOnTouch() {
         if (!tickerTrack) return;
         tickerTrack.style.animationPlayState = 'paused';
 
+        // Clear any pending resume
+        if (tickerPauseTimeout) {
+          clearTimeout(tickerPauseTimeout);
+          tickerPauseTimeout = null;
+        }
+
         const resume = () => {
-          // Resume after a brief moment so user can read (and avoid "stuck paused" states)
-          setTimeout(() => {
+          // Resume after a longer delay so user can read (1500ms prevents "stuck" feel)
+          tickerPauseTimeout = setTimeout(() => {
             if (tickerTrack) tickerTrack.style.animationPlayState = 'running';
-          }, 900);
+            tickerPauseTimeout = null;
+          }, 1500);
         };
 
         window.addEventListener('touchend', resume, { passive: true, once: true });
@@ -10821,19 +11251,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         // Tobias: Add micro-moment feel with subtle vibration for registrations
         if (type === 'register' || type === 'update') {
           vibrate([10, 30, 20]);
-          
-          // Tobias: "Breath spacing" - slow down the room when big news arrives
-          if (tickerTrack) {
-            tickerTrack.style.animationDuration = '60s'; // Slow down to let it breathe
-            setTimeout(() => {
-              if (tickerTrack) tickerTrack.style.animationDuration = '24s'; // Resume normal pace
-            }, 3000);
-          }
+          // Note: Removed dynamic animationDuration changes - they caused visible jerks on mobile
         }
       }
 
+      // Store last ticker content to detect actual changes
+      let lastTickerContent = '';
+
       function updateTicker(state, forceUpdate = false) {
-        // Skip if already initialized (prevents animation reset)
+        // Skip if already initialized (prevents animation reset) unless forced
         if (tickerInitialized && !forceUpdate) return;
 
         const users = [];
@@ -10879,9 +11305,49 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         const content = items.join('');
+
+        // Skip if content hasn't changed (prevents unnecessary animation resets)
+        if (content === lastTickerContent && tickerInitialized) {
+          return;
+        }
+        lastTickerContent = content;
+
         // Duplicate for seamless infinite scroll - add spacer for clean loop
         const newHTML = content + '<span class="ticker-spacer"></span>' + content + '<span class="ticker-spacer"></span>';
+
+        // ANIMATION-PRESERVING UPDATE:
+        // Capture current animation progress before DOM update
+        let animationOffset = 0;
+        if (tickerInitialized && tickerTrack) {
+          const computedStyle = window.getComputedStyle(tickerTrack);
+          const transform = computedStyle.transform;
+          if (transform && transform !== 'none') {
+            // Extract translateX value from matrix(a, b, c, d, tx, ty)
+            const matrix = transform.match(/matrix.*\((.+)\)/);
+            if (matrix) {
+              const values = matrix[1].split(', ');
+              animationOffset = parseFloat(values[4]) || 0;
+            }
+          }
+        }
+
+        // Update DOM
         tickerTrack.innerHTML = newHTML;
+
+        // Restore animation position to prevent jump
+        if (tickerInitialized && animationOffset !== 0) {
+          // Pause animation, set offset, then resume
+          tickerTrack.style.animationPlayState = 'paused';
+          tickerTrack.style.transform = `translateX(${animationOffset}px)`;
+          // Force reflow to apply transform
+          void tickerTrack.offsetWidth;
+          // Clear inline transform and resume - CSS animation takes over
+          requestAnimationFrame(() => {
+            tickerTrack.style.transform = '';
+            tickerTrack.style.animationPlayState = 'running';
+          });
+        }
+
         tickerInitialized = true;
       }
 
