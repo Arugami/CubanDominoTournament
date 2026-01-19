@@ -657,6 +657,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: center;
         padding: 24px;
         overflow: hidden; /* Prevent horizontal scroll from parallax bg */
+        /* Camera cut transitions - panels fade in subtly as they enter view */
+        /* Per Tobias: "transitions should feel like camera cuts, never like the browser nudged" */
+        opacity: 0.92;
+        transition: opacity 0.4s ease-out;
+        /* Performance hint for upcoming transition */
+        will-change: opacity;
+      }
+
+      /* Panel fully visible - "camera cut" moment */
+      .panel.in-view {
+        opacity: 1;
+        /* Clear will-change after transition to free GPU memory */
+        will-change: auto;
       }
 
       .panel-bg {
@@ -3286,17 +3299,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         gap: 8px;
         color: rgba(255, 255, 255, 0.6);
         font-size: 0.85rem;
-        animation: bounce 2s infinite;
+        /* Removed bounce - per Tobias: "calm, felt, not coached" */
+        /* Static hint that fades in; no motion that screams "UI element" */
       }
 
       .scroll-indicator svg {
         width: 24px;
         height: 24px;
-      }
-
-      @keyframes bounce {
-        0%, 100% { transform: translateX(-50%) translateY(0); }
-        50% { transform: translateX(-50%) translateY(8px); }
       }
 
       /* Progress Tracker - Hidden, replaced by unified .form-scarcity */
@@ -5698,16 +5707,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           linear-gradient(180deg, #0a0705 0%, #1a120d 35%, #120c08 70%, #0d0906 100%);
       }
 
-      /* Form panel content always visible (no fade-in animation) */
+      /* Form panel content - cinematic entrance as its own scene */
       .panel--form .panel-content {
-        opacity: 1;
-        transform: none;
+        opacity: 0;
+        transform: translateY(8px);
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
         width: 100%;
         max-width: 480px;
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+
+      /* Form content fades in when panel is in view - "camera cut" moment */
+      .panel--form.in-view .panel-content {
+        opacity: 1;
+        transform: translateY(0);
       }
 
       /* Form slogan - confident invitation, Cuban elegance meets UFC edge */
@@ -8048,14 +8064,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.02em;
       }
 
-      /* Subtle bounce animation when visible */
+      /* Subtle breathing animation when visible - per Tobias: "felt, not coached" */
       .chat-tooltip.is-visible {
-        animation: chatTooltipBounce 2s ease-in-out infinite;
+        animation: chatTooltipBreath 3s ease-in-out infinite;
       }
 
-      @keyframes chatTooltipBounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-3px); }
+      @keyframes chatTooltipBreath {
+        0%, 100% { opacity: 0.85; }
+        50% { opacity: 1; }
       }
 
       /* Floating Music Toggle */
@@ -9259,6 +9275,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         storyEl.addEventListener('touchend', () => { lastTouchY = null; }, { passive: true });
       }
 
+      // Track when scroll-snap is disabled for form panel navigation
+      let scrollSnapDisabledForForm = false;
+
       function snapToPanelTop(panelEl) {
         if (!storyEl || !panelEl) return;
         const storyRect = storyEl.getBoundingClientRect();
@@ -9282,6 +9301,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (panelSnapAlign.includes('none')) {
           // Panel has no snap anchor - leave scroll-snap disabled
           // This allows natural scroll flow on Form panel (mobile)
+          scrollSnapDisabledForForm = true;
           return;
         }
 
@@ -9307,6 +9327,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         };
         requestAnimationFrame(waitForStable);
       }
+
+      // Re-enable scroll-snap when user scrolls away from form panel
+      // This fixes the issue where scroll-snap stays disabled after visiting the form
+      storyEl?.addEventListener('scroll', () => {
+        if (!scrollSnapDisabledForForm) return;
+
+        const formPanel = document.querySelector('.panel--form');
+        if (!formPanel) return;
+
+        const formRect = formPanel.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        // If form panel is mostly out of view (less than 30% visible), re-enable snap
+        if (formRect.top > viewportHeight * 0.7 || formRect.bottom < viewportHeight * 0.3) {
+          // Enable smooth scroll so snap correction feels like a camera cut
+          storyEl.style.scrollBehavior = 'smooth';
+          storyEl.style.scrollSnapType = '';
+          scrollSnapDisabledForForm = false;
+
+          // Reset scroll behavior after snap settles
+          setTimeout(() => {
+            if (storyEl) storyEl.style.scrollBehavior = '';
+          }, 500);
+        }
+      }, { passive: true });
 
       function alignPanelAfterSettle(panelEl) {
         if (!storyEl || !panelEl) return;
@@ -9379,9 +9424,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       function unlockScroll() {
-        scrollLocked = false;
-        scrollBlockTarget.removeEventListener('wheel', preventScroll);
-        scrollBlockTarget.removeEventListener('touchmove', preventScroll);
+        // "Breath" delay before unlock - per Tobias: transitions should feel like camera cuts
+        // This prevents the jarring micro-jerk when snap correction kicks in
+        setTimeout(() => {
+          scrollLocked = false;
+          scrollBlockTarget.removeEventListener('wheel', preventScroll);
+          scrollBlockTarget.removeEventListener('touchmove', preventScroll);
+
+          // Enable smooth scroll temporarily so any snap correction feels cinematic
+          // This prevents the "browser nudged the page" feeling
+          if (storyEl) {
+            storyEl.style.scrollBehavior = 'smooth';
+            // Reset after any snap correction completes
+            setTimeout(() => {
+              if (storyEl) storyEl.style.scrollBehavior = '';
+            }, 400);
+          }
+        }, 100); // 100ms breath - enough to feel intentional, not enough to feel laggy
+
         if (scrollLockTimer) {
           clearTimeout(scrollLockTimer);
           scrollLockTimer = null;
@@ -10660,6 +10720,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Initialize ticker with mock data for preview
       function initTickerMock() {
+        console.log('[Ticker] initTickerMock called');
         const mockEvents = [
           { type: 'register', playerName: 'Alex Torres' },
           { type: 'register', playerName: 'Carmen Ruiz' },
@@ -10672,10 +10733,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         ];
 
         tickerEvents = mockEvents;
+        console.log('[Ticker] Calling updateTicker with', tickerEvents.length, 'events');
         updateTicker({}, true); // true = force update
+        console.log('[Ticker] tickerTrack innerHTML length:', tickerTrack?.innerHTML?.length || 0);
       }
 
       // Show mock data initially
+      console.log('[Ticker] About to call initTickerMock, tickerTrack exists:', !!tickerTrack);
       initTickerMock();
 
       // Mobile: Pause ticker on touch (touchend may not fire on the same element if user drags)
