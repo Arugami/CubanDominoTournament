@@ -2,6 +2,33 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Critical Context: Mobile-First Design
+
+**99% of users access this site on mobile devices.** Every decision must prioritize the mobile experience.
+
+### Design Principles
+- **Feel like a native app** - Not a website squeezed onto a phone. Smooth, responsive, instant feedback.
+- **Touch-first interactions** - Buttons need generous tap targets (44px+), haptic feedback where supported
+- **Respect iOS Safari quirks** - 100dvh for true viewport, touch-action: manipulation to avoid delays
+- **Performance over polish** - Disable heavy effects (parallax, blend modes) on mobile
+
+### Scroll Architecture (5-Panel Scroll-Snap)
+The site uses a cinematic scroll-snap layout with 5 panels:
+1. **Hero** - Event branding, date/venue
+2. **Whisper** - "You've sat here before" (ancestry/recognition)
+3. **Build** - "We didn't build La Mesa" (heritage narrative)
+4. **Slam** - "Te toca" (the challenge)
+5. **Form** - Registration (the conversion)
+
+Each panel snaps to viewport on scroll. **Known friction point**: The form panel content can exceed viewport height on mobile, making it feel "stuck". Consider this when making changes.
+
+### La Mesa (Chat Widget)
+- Fixed ticker at bottom with live activity feed
+- Domino button opens chat panel
+- Only visible after registration (localStorage flag: `cdl_registered`)
+
+---
+
 ## Development Commands
 
 ```bash

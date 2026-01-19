@@ -5720,10 +5720,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Mobile adjustments */
       @media (max-width: 768px) {
+        /* Exit panel: NATURAL FLOW on mobile (follows form without snap) */
         .panel--exit {
-          padding: 32px 20px;
+          min-height: auto;
+          height: auto;
+          padding: 48px 20px;
           padding-bottom: 100px;
           justify-content: center;
+          scroll-snap-align: none;
+          scroll-snap-stop: normal;
         }
 
         .exit-content {
@@ -7566,12 +7571,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           gap: 16px;
         }
 
-        /* Panel needs room to BREATHE at the top */
+        /* Form panel: NATURAL FLOW on mobile (no scroll-snap)
+           - Content dictates height, not viewport
+           - Footer follows naturally below
+           - More app-like scrolling behavior */
         .panel--form {
-          padding-top: max(60px, 10vh); /* At least 60px, scales with screen */
-          padding-bottom: 80px; /* Just ticker clearance - footer is separate panel now */
+          min-height: auto;
+          height: auto;
+          padding-top: max(60px, 10vh);
+          padding-bottom: 60px; /* Ticker clearance */
           justify-content: flex-start;
-          scroll-snap-align: start; /* Snap to start, not center */
+          scroll-snap-align: none; /* NO SNAP - natural flow */
+          scroll-snap-stop: normal; /* Allow scroll-through */
         }
 
         .form-shell {
