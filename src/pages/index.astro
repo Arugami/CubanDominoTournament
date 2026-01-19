@@ -7652,10 +7652,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           gap: 16px;
         }
 
-        /* Slam panel: NATURAL FLOW on mobile (allows scroll to Rules)
-           - Without this, scroll-snap-stop: always traps users on Slam */
+        /* Mobile: Disable mandatory scroll-snap to allow natural flow.
+           With mandatory snap + scroll-lock, users get trapped on panels.
+           Proximity snap lets users scroll freely while still having gentle snap points. */
+        .story {
+          scroll-snap-type: y proximity;
+        }
+
+        /* All panels: Natural flow on mobile - no hard snap stops */
+        .panel--hero,
+        .panel--whisper,
+        .panel--build,
         .panel--slam {
-          scroll-snap-align: none;
           scroll-snap-stop: normal;
         }
 
@@ -9221,6 +9229,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Scroll-lock system for cinematic panels
       // Prevents scrolling until animations complete
+      // DISABLED on mobile (<=768px) - CSS uses proximity snap for natural flow
+      const isMobile = window.innerWidth <= 768;
       const whisperPanel = document.getElementById('panelWhisper');
       const buildPanel = document.getElementById('panelBuild');
       const slamPanel = document.getElementById('panelSlam');
@@ -9349,6 +9359,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       function lockScroll(duration, afterUnlock) {
+        // Skip scroll lock on mobile - let CSS proximity snap handle it
+        if (isMobile) {
+          if (typeof afterUnlock === 'function') {
+            setTimeout(afterUnlock, duration);
+          }
+          return;
+        }
+
         scrollLocked = true;
         scrollBlockTarget.addEventListener('wheel', preventScroll, { passive: false });
         scrollBlockTarget.addEventListener('touchmove', preventScroll, { passive: false });
@@ -9376,7 +9394,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !whisperHasPlayed) {
             whisperHasPlayed = true;
             alignPanelAfterSettle(whisperPanel);
-            lockScroll(7500, () => whisperPanel?.classList.add('has-played'));  // 7.5s (3-beat reveal: room→greeting→recognition)
+            lockScroll(3000, () => whisperPanel?.classList.add('has-played'));  // 3s - allows animation to start, doesn't trap user
           }
         });
       }, { threshold: 0.6 });
@@ -9387,7 +9405,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !buildHasPlayed) {
             buildHasPlayed = true;
             alignPanelAfterSettle(buildPanel);
-            lockScroll(11500, () => buildPanel?.classList.add('has-played'));  // 11.5s (family + life cycle hybrid)
+            lockScroll(3000, () => buildPanel?.classList.add('has-played'));  // 3s - allows animation to start, doesn't trap user
           }
         });
       }, { threshold: 0.6 });
@@ -9398,7 +9416,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !slamHasPlayed) {
             slamHasPlayed = true;
             alignPanelAfterSettle(slamPanel);
-            lockScroll(6000, () => slamPanel?.classList.add('has-played'));
+            lockScroll(3000, () => slamPanel?.classList.add('has-played'));  // 3s - allows animation to start, doesn't trap user
           }
         });
       }, { threshold: 0.6 });
@@ -10220,8 +10238,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         requestAnimationFrame(tryShow);
       }
 
-      let tickerActivatedByTouch = false;
-
       function handleTickerActivate() {
         const now = Date.now();
         // Reduced debounce: 100ms prevents accidental double-taps while staying snappy
@@ -10236,43 +10252,41 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         toggleChat();
       }
 
-      // Instant visual feedback on touch (iOS :active is unreliable)
+      // Touch: use touchstart/touchend for reliable iOS Safari support
+      // (pointerup doesn't fire if finger moves even slightly during tap)
+      tickerChatBtn?.addEventListener('touchstart', (e) => {
+        tickerChatBtn.classList.add('is-pressed');
+      }, { passive: true });
+
+      tickerChatBtn?.addEventListener('touchend', (e) => {
+        tickerChatBtn.classList.remove('is-pressed');
+        // Prevent the synthetic click from also firing
+        e.preventDefault();
+        handleTickerActivate();
+      }, { passive: false });
+
+      tickerChatBtn?.addEventListener('touchcancel', () => {
+        tickerChatBtn.classList.remove('is-pressed');
+      });
+
+      // Mouse/keyboard: use click (more accessible, works with Enter key)
+      // Touch already handled via touchend with preventDefault, so click only fires for mouse/keyboard
+      tickerChatBtn?.addEventListener('click', (e) => {
+        handleTickerActivate();
+      });
+
+      // Visual feedback for mouse (iOS :active is unreliable, so we handle this manually)
       tickerChatBtn?.addEventListener('pointerdown', (e) => {
-        if (e.pointerType === 'touch') {
+        if (e.pointerType === 'mouse') {
           tickerChatBtn.classList.add('is-pressed');
         }
       });
-      // Touch: use pointerup for instant response (no 300ms click delay on iOS)
-      tickerChatBtn?.addEventListener('pointerup', (e) => {
+      tickerChatBtn?.addEventListener('pointerup', () => {
         tickerChatBtn.classList.remove('is-pressed');
-        if (e.pointerType === 'touch') {
-          tickerActivatedByTouch = true;
-          handleTickerActivate();
-        }
       });
       tickerChatBtn?.addEventListener('pointerleave', () => {
         tickerChatBtn.classList.remove('is-pressed');
       });
-      tickerChatBtn?.addEventListener('pointercancel', () => {
-        tickerChatBtn.classList.remove('is-pressed');
-      });
-      // Mouse/keyboard: use click (more accessible, works with Enter key)
-      tickerChatBtn?.addEventListener('click', (e) => {
-        // Skip if touch already handled this interaction
-        if (tickerActivatedByTouch) {
-          tickerActivatedByTouch = false;
-          return;
-        }
-        handleTickerActivate();
-      });
-      // iOS Safari fallback: pointerup may not fire if finger moves slightly
-      tickerChatBtn?.addEventListener('touchend', (e) => {
-        if (!tickerActivatedByTouch) {
-          tickerActivatedByTouch = true;
-          handleTickerActivate();
-          setTimeout(() => { tickerActivatedByTouch = false; }, 150);
-        }
-      }, { passive: true });
       chatBackdrop.addEventListener('click', toggleChat);
       // Leave the table: clears identity + presence, then closes the panel
       chatClose.addEventListener('click', () => {
