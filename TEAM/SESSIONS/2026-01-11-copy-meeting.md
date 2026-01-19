@@ -931,4 +931,107 @@ Key questions explored:
 
 *Revision documented: January 17, 2026 (Session 2)*
 
+---
+
+# Revision: January 19, 2026
+## Panel 3 Animation Timing — "Let the Ancestors Land"
+
+**Creative Lead:** Lin-Manuel Miranda
+**Focus:** Panel 3 had the same overlapping problem as Panel 2 & 4 (now fixed). The torch pass ("Te toca.") was competing with the lifecycle line instead of emerging from SILENCE.
+
+---
+
+### Lin-Manuel's Principle
+
+> "Silence isn't empty. It's where the feeling lives."
+
+The torch pass moment ("Te toca.") must emerge from SILENCE after the life cycle sinks in.
+
+---
+
+### The Problem (Before)
+
+```
+CURRENT TIMELINE (RUSHED):
+
+0.2s  "Your abuelo sat here."     [2.2s] ──→ 2.4s
+1.5s  "Your tío. Your father."    [1.0s] ──→ 2.5s   ← STARTS BEFORE ABUELO LANDS!
+2.5s  "Every Sunday..."           [1.5s] ──→ 4.0s   ← ZERO BREATH
+3.5s  "Te toca."                  [2.0s] ──→ 5.5s   ← STARTS BEFORE LIFECYCLE LANDS!
+5.0s  Scroll hint                                   ← APPEARS BEFORE TORCH LANDS!
+
+Scroll lock: 5500ms (5.5s)
+```
+
+**Problem:** Every element steps on the previous one. "Te toca." should be THE moment — but it was competing with the lifecycle line.
+
+---
+
+### The Solution (After)
+
+```
+NEW TIMELINE — "LET THE ANCESTORS LAND":
+
+0.3s  "Your abuelo sat here."     [2.2s] ──→ 2.5s
+           ↓ 0.5s SILENCE (ancestor lands)
+3.0s  "Your tío. Your father."    [1.0s] ──→ 4.0s
+           ↓ 0.8s SILENCE (generations settle)
+4.8s  "Every Sunday..."           [1.5s] ──→ 6.3s
+           ↓ 1.2s SILENCE (life cycle absorbs — THE BREATH)
+7.5s  "Te toca."                  [2.0s] ──→ 9.5s
+           ↓ 0.5s SILENCE (torch reverberates)
+10.0s Scroll hint fades in
+
+Scroll lock: 10500ms (10.5s)
+```
+
+---
+
+### CSS Changes Summary
+
+| Element | CSS Class | Before | After | Change |
+|---------|-----------|--------|-------|--------|
+| Primary (abuelo) | `.build-word--primary` | 0.2s | 0.3s | +0.1s |
+| Generations | `.build-family__line--generations` | 1.5s | 3.0s | +1.5s (wait for abuelo to land) |
+| Lifecycle | `.build-lifecycle__line` | 2.5s | 4.8s | +2.3s (0.8s silence after generations) |
+| Torch ("Te toca.") | `.build-word--torch` | 3.5s | 7.5s | +4.0s (1.2s THE BREATH) |
+| Scroll hint | `.build-scroll-hint` | 5.0s | 10.0s | +5.0s |
+| **Scroll lock** | `lockScroll()` | 5500ms | 10500ms | +5000ms |
+
+**Total sequence:** 5.5s → 10.5s (+5.0s of meaningful silence)
+
+---
+
+### The Breathing Room Principle
+
+> **Every element needs room to land.**
+>
+> - Don't start the next element until the previous one FULLY completes
+> - Add SILENCE between elements (0.5s–1.2s depending on emotional weight)
+> - The most important moment (torch pass) needs the LONGEST pause before it
+> - Scroll hint waits until everything reverberates
+
+This principle was already applied to Panels 2 & 4. Now Panel 3 matches.
+
+---
+
+### Verification Checklist
+
+- [ ] **Abuelo check:** Does "Your abuelo sat here" land fully before generations appear?
+- [ ] **Lifecycle check:** Does "Every Sunday..." have room to absorb before "Te toca."?
+- [ ] **Torch check:** Does "Te toca." emerge from SILENCE? Does it feel like a torch being passed?
+- [ ] **Lin-Manuel test:** "Is there silence where the feeling lives?"
+
+---
+
+### Team Sign-off
+
+**Lin-Manuel Miranda:** "Now the torch pass has WEIGHT. You feel the generations before you feel the responsibility. That 1.2s silence before 'Te toca.' is where the goosebumps live."
+
+**Status:** ✅ IMPLEMENTED
+
+---
+
+*Revision documented: January 19, 2026*
+
 *"La mesa te espera."*
