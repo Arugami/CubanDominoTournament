@@ -222,6 +222,8 @@
 - [x] **Domino button redesign** - 50% larger with heartbeat pulse animation
 - [x] **Touch-to-pause** - Mobile users can tap ticker to pause and read
 - [x] **Focus hierarchy** - Ticker dims when chat is open, restored on close
+- [x] **Pip visibility refinement** - Stays visible above form header, hides only when fields reach top
+- [x] **Pip tooltip** - First touch shows "Chat here" above domino button, guiding chat discovery
 
 ---
 
@@ -242,7 +244,7 @@ Every `git push` to `main` automatically deploys to cubandominoleague.com.
 ```
 APP_SCRIPT_URL=https://script.google.com/macros/s/XXXXX/exec
 APP_SCRIPT_SECRET=your-shared-secret
-VENUE_URL=https://mrgarciacigars.com/
+VENUE_URL=https://share.google/Bd3ZofPsvccfdT7EC
 ```
 
 ### Deploy Workflow
@@ -288,6 +290,6 @@ Key principles applied:
 
 ---
 
-**Last Updated:** January 14, 2026 (La Mesa redesign + mobile fixes)
+**Last Updated:** January 17, 2026 (pip visibility + tooltip)
 
 *"Your seat's waiting."*

@@ -1706,20 +1706,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* THE LINE - "You've sat here before." - LARGEST, emerges from below */
       /* Typography: UPRIGHT (not italic) = recognition lands harder */
+      /* Visual cohesion: Increased size (~15%) for stronger hierarchy contrast */
       .whisper-line--ancestors {
-        font-size: clamp(1.8rem, 7vw, 3.2rem);  /* Larger - the payoff */
+        font-size: clamp(2.1rem, 8vw, 3.7rem);  /* Increased ~15% - the payoff dominates */
         font-style: normal;  /* UPRIGHT - statement of fact, not whisper */
         font-weight: 500;    /* Slightly bolder for impact */
         color: #fff;
         letter-spacing: 0.04em;
         padding-left: 6vw;  /* Left offset */
         text-align: left;
+        margin-top: 2.5vh;  /* Breathing room - pause before recognition */
         margin-bottom: 4vh;
         text-shadow:
-          0 0 30px rgba(255, 255, 255, 0.25),
-          0 0 50px rgba(212, 165, 116, 0.5),
-          0 0 80px rgba(212, 165, 116, 0.3),
-          0 4px 25px rgba(0, 0, 0, 0.8);
+          0 0 35px rgba(255, 255, 255, 0.35),
+          0 0 60px rgba(212, 165, 116, 0.6),
+          0 0 100px rgba(212, 165, 116, 0.35),
+          0 4px 30px rgba(0, 0, 0, 0.85);
       }
 
       /* "They" — the ancestors, emphasized in brass */
@@ -1740,6 +1742,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Recognition statement - SMOOTH fade-up from blur (memory surfacing) */
       /* Tobias: Small translations (60% reduction), blur as memory */
+      /* Visual cohesion: Strengthened final glow to match payoff prominence */
       @keyframes recognitionSlide {
         0% {
           opacity: 0;
@@ -1751,9 +1754,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           transform: translateY(0);
           filter: blur(0);
           text-shadow:
-            0 0 35px rgba(255, 255, 255, 0.25),
-            0 0 60px rgba(212, 165, 116, 0.5),
-            0 4px 25px rgba(0, 0, 0, 0.8);
+            0 0 40px rgba(255, 255, 255, 0.4),
+            0 0 70px rgba(212, 165, 116, 0.6),
+            0 0 110px rgba(212, 165, 116, 0.35),
+            0 4px 30px rgba(0, 0, 0, 0.85);
         }
       }
 
@@ -1761,6 +1765,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1;
         transform: none;
         filter: none;
+        text-shadow:
+          0 0 40px rgba(255, 255, 255, 0.4),
+          0 0 70px rgba(212, 165, 116, 0.6),
+          0 0 110px rgba(212, 165, 116, 0.35),
+          0 4px 30px rgba(0, 0, 0, 0.85);
       }
 
       /* THE LINE - The challenge that sets up INHERITED */
@@ -2198,9 +2207,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* "Te toca." - THE CLIMAX - RISES from below */
       /* Pure Cuban table-talk: "It's your turn." The torch passes. */
       /* Typography: UPRIGHT + BOLD = the climax lands with full weight */
+      /* Visual cohesion: Increased prominence - this is THE moment */
       .build-word--torch {
         font-family: "Bodoni Moda", serif;
-        font-size: clamp(2rem, 9vw, 4rem);  /* Larger - shorter text can be bigger */
+        font-size: clamp(2.4rem, 11vw, 4.8rem);  /* Increased ~20% - THE climax */
         font-weight: 600;    /* BOLDER - the climax */
         font-style: normal;  /* UPRIGHT - definitive, final */
         color: #fff;  /* Full white - maximum impact */
@@ -2208,12 +2218,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         line-height: 1.2;
         display: block;
         white-space: nowrap;  /* Force single line on all devices */
+        margin-top: 3vh;  /* Breathing room - Lin-Manuel's "pause" before the torch */
         opacity: 0;
         text-shadow:
-          0 0 30px rgba(255, 255, 255, 0.3),
-          0 0 50px rgba(212, 165, 116, 0.6),
-          0 0 80px rgba(212, 165, 116, 0.4),
-          0 4px 25px rgba(0, 0, 0, 0.8);
+          0 0 40px rgba(255, 255, 255, 0.4),
+          0 0 70px rgba(212, 165, 116, 0.7),
+          0 0 110px rgba(212, 165, 116, 0.45),
+          0 0 150px rgba(212, 165, 116, 0.25),
+          0 4px 30px rgba(0, 0, 0, 0.85);
       }
 
       /* Legacy: keep inherited for backwards compat */
@@ -2468,6 +2480,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* TORCH RISES - THE CLIMAX - SMOOTH rise from below (weight, presence) */
       /* Tobias: Small translations (25px instead of 80px), blur as memory surfacing */
+      /* Visual cohesion: Torch animation with intensified final glow */
       @keyframes torchRise {
         0% {
           opacity: 0;
@@ -2479,10 +2492,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           transform: translateY(0);
           filter: blur(0);
           text-shadow:
-            0 0 30px rgba(255, 255, 255, 0.35),
-            0 0 60px rgba(212, 165, 116, 0.6),
-            0 0 100px rgba(212, 165, 116, 0.4),
-            0 4px 30px rgba(0, 0, 0, 0.8);
+            0 0 45px rgba(255, 255, 255, 0.45),
+            0 0 80px rgba(212, 165, 116, 0.75),
+            0 0 120px rgba(212, 165, 116, 0.5),
+            0 0 160px rgba(212, 165, 116, 0.3),
+            0 4px 35px rgba(0, 0, 0, 0.85);
         }
       }
 
@@ -2580,6 +2594,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1;
         transform: none;
         filter: none;
+        text-shadow:
+          0 0 45px rgba(255, 255, 255, 0.45),
+          0 0 80px rgba(212, 165, 116, 0.75),
+          0 0 120px rgba(212, 165, 116, 0.5),
+          0 0 160px rgba(212, 165, 116, 0.3),
+          0 4px 35px rgba(0, 0, 0, 0.85);
       }
 
       /* Like wordBuild, but lands at full presence */
@@ -4236,12 +4256,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Tobias: "The Slam" - quick scale-down on click */
-      .mesa-ticker__chat-btn:active {
-        transform: scale(0.96);
+      .mesa-ticker__chat-btn:active,
+      .mesa-ticker__chat-btn.is-pressed {
+        transform: scale(0.92);
         filter: brightness(1.02) contrast(1.05);
         box-shadow:
           -4px 0 12px rgba(0,0,0,0.45),
           inset 0 2px 10px rgba(0, 0, 0, 0.25);
+        transition: transform 0.05s ease-out; /* Instant feedback on press */
       }
 
       .mesa-ticker__chat-btn:focus {
@@ -8989,26 +9011,26 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             }, 3000);
           };
 
-          // Click handler: first click shows tooltip, subsequent clicks navigate
+          // Story trigger: pip click initiates the narrative journey
+          // First click → Begin story at Panel 2
+          // Subsequent clicks → Return to hero (back to top)
+          let storyStarted = false;
+
           backToTop.addEventListener('click', (e) => {
-            // First interaction: show tooltip, don't navigate
-            if (!tooltipShown) {
-              e.preventDefault();
-              showChatTooltip();
+            unlockScroll();
+
+            if (!storyStarted) {
+              // First click: Begin the story journey
+              storyStarted = true;
+              const whisperPanel = document.getElementById('panelWhisper');
+              if (whisperPanel) {
+                snapToPanelTop(whisperPanel);
+              }
               return;
             }
 
-            // Subsequent clicks: navigate as normal
-            unlockScroll();
-
-            const heroRect = heroPanel.getBoundingClientRect();
-            const isOnHero = heroRect.top >= -50 && heroRect.top <= 50;
-
-            if (isOnHero && formPanel) {
-              snapToPanelTop(formPanel);
-            } else {
-              snapToPanelTop(heroPanel);
-            }
+            // Subsequent clicks: Back to top (hero)
+            snapToPanelTop(heroPanel);
           });
 
           // Also show tooltip on hover (desktop)
@@ -9965,9 +9987,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         requestAnimationFrame(tryShow);
       }
 
+      let tickerActivatedByTouch = false;
+
       function handleTickerActivate() {
         const now = Date.now();
-        if (now - lastTickerActivateAt < 350) return;
+        // Reduced debounce: 100ms prevents accidental double-taps while staying snappy
+        if (now - lastTickerActivateAt < 100) return;
         lastTickerActivateAt = now;
 
         const isRegistered = localStorage.getItem('cdl_registered') === 'true';
@@ -9978,10 +10003,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         toggleChat();
       }
 
-      tickerChatBtn?.addEventListener('click', handleTickerActivate);
-      // iOS Safari reliability: treat a touch pointer-up as activation (guarded to avoid double fire).
+      // Instant visual feedback on touch (iOS :active is unreliable)
+      tickerChatBtn?.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'touch') {
+          tickerChatBtn.classList.add('is-pressed');
+        }
+      });
+      // Touch: use pointerup for instant response (no 300ms click delay on iOS)
       tickerChatBtn?.addEventListener('pointerup', (e) => {
-        if (e.pointerType === 'touch') handleTickerActivate();
+        tickerChatBtn.classList.remove('is-pressed');
+        if (e.pointerType === 'touch') {
+          tickerActivatedByTouch = true;
+          handleTickerActivate();
+        }
+      });
+      tickerChatBtn?.addEventListener('pointerleave', () => {
+        tickerChatBtn.classList.remove('is-pressed');
+      });
+      tickerChatBtn?.addEventListener('pointercancel', () => {
+        tickerChatBtn.classList.remove('is-pressed');
+      });
+      // Mouse/keyboard: use click (more accessible, works with Enter key)
+      tickerChatBtn?.addEventListener('click', (e) => {
+        // Skip if touch already handled this interaction
+        if (tickerActivatedByTouch) {
+          tickerActivatedByTouch = false;
+          return;
+        }
+        handleTickerActivate();
       });
       chatBackdrop.addEventListener('click', toggleChat);
       // Leave the table: clears identity + presence, then closes the panel
