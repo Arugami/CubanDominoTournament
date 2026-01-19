@@ -224,6 +224,8 @@
 - [x] **Focus hierarchy** - Ticker dims when chat is open, restored on close
 - [x] **Pip visibility refinement** - Stays visible above form header, hides only when fields reach top
 - [x] **Pip tooltip** - First touch shows "Chat here" above domino button, guiding chat discovery
+- [x] **Admin announcements UI redesign** - Color-coded type badges (cyan info, red alert, purple hype, gold winner), visual priority system (orange glow for high, red pulse for urgent), improved card contrast and button styling
+- [x] **Panel 2-4 animation timing fix** - Removed 1.5s mobile lock cap, compressed animation timings so climax moments ("Te toca", "SEAT") land before scroll unlock on iPhone Safari
 
 ---
 
@@ -290,6 +292,6 @@ Key principles applied:
 
 ---
 
-**Last Updated:** January 17, 2026 (pip visibility + tooltip)
+**Last Updated:** January 19, 2026 (panel animation timing fix for mobile)
 
 *"Your seat's waiting."*
