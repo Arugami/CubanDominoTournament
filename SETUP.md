@@ -47,7 +47,7 @@ The browser submits to a Cloudflare Pages Function (`/api/register`), which forw
 ```
 APP_SCRIPT_URL="https://script.google.com/macros/s/REPLACE/exec"
 APP_SCRIPT_SECRET="REPLACE_WITH_SAME_LONG_RANDOM"
-VENUE_URL="https://mrgarciacigars.com/"
+VENUE_URL="https://share.google/Bd3ZofPsvccfdT7EC"
 ```
 
 ### Optional: realtime chat

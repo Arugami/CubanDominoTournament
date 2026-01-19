@@ -3,15 +3,19 @@
 import AdminLayout from '../../components/admin/AdminLayout.astro';
 ---
 
-<AdminLayout title="Team Management" activeNav="teams">
+<AdminLayout title="Teams" activeNav="teams">
   <div class="teams-page">
-    <!-- Header Actions -->
-    <div class="page-actions">
-      <div class="team-stats">
-        <span id="teamStats">Loading...</span>
-      </div>
-      <button class="btn btn--primary" id="createTeamBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+    <!-- Hero Stat -->
+    <div class="page-hero">
+      <span class="hero-number" id="teamsCount">0</span>
+      <span class="hero-label">teams</span>
+      <div class="hero-context" id="teamsContext">loading...</div>
+    </div>
+
+    <!-- Primary CTA -->
+    <div class="page-cta">
+      <button class="btn btn--primary btn--large" id="createTeamBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
@@ -19,14 +23,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       </button>
     </div>
 
-    <!-- Two Column Layout -->
+    <!-- Two Column Layout - no headers -->
     <div class="teams-layout">
       <!-- Teams List -->
       <div class="teams-column">
-        <div class="column-header">
-          <h2 class="column-title">Teams</h2>
-          <span class="column-count" id="teamsCount">0</span>
-        </div>
         <div class="teams-list" id="teamsList">
           <div class="loading-placeholder">Loading teams...</div>
         </div>
@@ -34,9 +34,9 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
       <!-- Unassigned Players -->
       <div class="players-column">
-        <div class="column-header">
-          <h2 class="column-title">Unassigned Players</h2>
+        <div class="column-label">
           <span class="column-count" id="unassignedCount">0</span>
+          <span class="column-label-text">unassigned</span>
         </div>
         <div class="players-list" id="unassignedList">
           <div class="loading-placeholder">Loading players...</div>
@@ -103,6 +103,25 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       </div>
     </div>
   </div>
+
+  <!-- Quick Assign Player Modal -->
+  <div class="modal-backdrop" id="quickAssignModal">
+    <div class="modal modal--quick-assign">
+      <div class="modal__header">
+        <h2 class="modal__title">Quick Assign</h2>
+        <button class="modal__close" id="closeQuickAssign">&times;</button>
+      </div>
+      <div class="modal__body">
+        <div class="quick-assign-player" id="quickAssignPlayerInfo">
+          <div class="quick-assign-avatar" id="quickAssignAvatar">?</div>
+          <div class="quick-assign-name" id="quickAssignName">Player Name</div>
+        </div>
+        <div class="quick-assign-teams" id="quickAssignTeams">
+          <!-- Teams will be populated here -->
+        </div>
+      </div>
+    </div>
+  </div>
 </AdminLayout>
 
 <style>
@@ -113,16 +132,48 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     gap: 16px;
   }
 
-  .page-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  /* Hero Stat - Tobias style */
+  .page-hero {
+    text-align: center;
+    padding: 24px 20px 16px;
   }
 
-  .team-stats {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
-    text-align: center;
+  .page-hero .hero-number {
+    font-family: "Bodoni Moda", serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--brass);
+    line-height: 1;
+    display: block;
+    text-shadow: 0 0 40px rgba(212, 165, 116, 0.15);
+  }
+
+  .page-hero .hero-label {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: lowercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-top: 4px;
+  }
+
+  .page-hero .hero-context {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.25);
+  }
+
+  /* Primary CTA - prominent */
+  .page-cta {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 8px;
+  }
+
+  .btn--large {
+    padding: 14px 28px;
+    font-size: 1rem;
   }
 
   /* Single column on mobile */
@@ -132,7 +183,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     gap: 16px;
   }
 
-  .teams-column,
+  .teams-column {
+    background: transparent;
+  }
+
   .players-column {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
@@ -140,35 +194,37 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     overflow: hidden;
   }
 
-  .column-header {
+  /* Subtle column label for unassigned */
+  .column-label {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 14px 16px;
-    background: rgba(0, 0, 0, 0.2);
+    gap: 8px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border-subtle);
   }
 
-  .column-title {
-    font-family: "Bodoni Moda", serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--brass);
-  }
-
   .column-count {
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 4px 10px;
-    background: rgba(212, 165, 116, 0.1);
-    color: var(--brass);
-    border-radius: 12px;
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
   }
 
-  .teams-list,
+  .column-label-text {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-transform: lowercase;
+  }
+
+  .teams-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .players-list {
     padding: 12px;
-    max-height: 50vh;
+    max-height: 40vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
@@ -176,38 +232,43 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   /* ===== DESKTOP OVERRIDES (769px+) ===== */
   @media (min-width: 769px) {
     .teams-page {
-      gap: 24px;
+      gap: 20px;
     }
 
-    .page-actions {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
+    .page-hero {
+      padding: 32px 20px 20px;
     }
 
-    .team-stats {
-      font-size: 0.9rem;
-      text-align: left;
+    .page-hero .hero-number {
+      font-size: 5rem;
+    }
+
+    .page-cta {
+      justify-content: flex-start;
     }
 
     .teams-layout {
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 24px;
+      align-items: start;
     }
 
-    .column-header {
-      padding: 16px 20px;
+    .teams-list {
+      gap: 16px;
     }
 
-    .column-title {
-      font-size: 1rem;
-    }
-
-    .teams-list,
     .players-list {
       padding: 16px;
-      max-height: 600px;
+      max-height: 500px;
+    }
+
+    .column-label {
+      padding: 14px 16px;
+    }
+
+    .column-count {
+      font-size: 1.4rem;
     }
   }
 
@@ -215,8 +276,8 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   .team-card {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    padding: 14px;
+    border-radius: 12px;
+    padding: 16px;
     margin-bottom: 10px;
     -webkit-tap-highlight-color: transparent;
   }
@@ -359,6 +420,24 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     margin-bottom: 0;
   }
 
+  .player-item__assign {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64b5f6;
+    background: rgba(33, 150, 243, 0.1);
+    border: 1px solid rgba(33, 150, 243, 0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .player-item__assign:active {
+    transform: scale(0.98);
+    background: rgba(33, 150, 243, 0.2);
+  }
+
   .player-item__avatar {
     width: 34px;
     height: 34px;
@@ -400,11 +479,23 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     font-size: 0.9rem;
   }
 
+  /* Empty states - visual, not verbal */
   .empty-state {
-    padding: 24px;
+    padding: 32px 24px;
     text-align: center;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.85rem;
+  }
+
+  .empty-state__icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    opacity: 0.15;
+    color: #fff;
+  }
+
+  .empty-state--success .empty-state__icon {
+    opacity: 0.3;
+    color: #81c784;
   }
 
   /* Modal Styles - Full screen on mobile */
@@ -520,6 +611,120 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     color: rgba(255, 255, 255, 0.5);
     font-size: 0.85rem;
     margin-top: 8px;
+  }
+
+  /* Quick Assign Modal */
+  .modal--quick-assign {
+    max-height: 70vh;
+  }
+
+  .quick-assign-player {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+
+  .quick-assign-avatar {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--brass), var(--copper));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Bodoni Moda", serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+
+  .quick-assign-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .quick-assign-teams {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .quick-assign-team {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .quick-assign-team:active {
+    transform: scale(0.98);
+  }
+
+  .quick-assign-team:hover {
+    border-color: var(--border-accent);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .quick-assign-team--full {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .quick-assign-team--full:hover {
+    border-color: var(--border-subtle);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .quick-assign-team__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .quick-assign-team__name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .quick-assign-team__slots {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .quick-assign-team__slots--available {
+    color: #81c784;
+  }
+
+  .quick-assign-team__seed {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border-radius: 4px;
+  }
+
+  .quick-assign-empty {
+    text-align: center;
+    padding: 24px;
+    color: rgba(255, 255, 255, 0.4);
   }
 
   /* ===== DESKTOP OVERRIDES for cards/modals ===== */
@@ -664,11 +869,21 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   function renderTeams() {
     const container = document.getElementById('teamsList');
     const countEl = document.getElementById('teamsCount');
+    const contextEl = document.getElementById('teamsContext');
 
     countEl.textContent = teams.length;
 
+    // Update context
+    const fullTeams = teams.filter(t => t.player1_id && t.player2_id).length;
+    const assignedPlayers = new Set();
+    teams.forEach(t => {
+      if (t.player1_id) assignedPlayers.add(t.player1_id);
+      if (t.player2_id) assignedPlayers.add(t.player2_id);
+    });
+    contextEl.textContent = `${assignedPlayers.size}/${players.length} players assigned`;
+
     if (teams.length === 0) {
-      container.innerHTML = '<div class="empty-state">No teams created yet</div>';
+      container.innerHTML = '<div class="empty-state"><svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>';
       return;
     }
 
@@ -680,7 +895,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         <div class="team-card" data-id="${team.id}">
           <div class="team-card__header">
             <span class="team-card__name">${team.name}</span>
-            ${team.seed ? `<span class="team-card__seed">Seed #${team.seed}</span>` : ''}
+            ${team.seed ? `<span class="team-card__seed">#${team.seed}</span>` : ''}
           </div>
           <div class="team-card__players">
             ${player1 ? `
@@ -691,9 +906,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
                   <div class="team-player__email">${player1.email}</div>
                 </div>
               </div>
-            ` : `
-              <div class="team-player team-player--empty">Player 1 not assigned</div>
-            `}
+            ` : `<div class="team-player team-player--empty"></div>`}
             ${player2 ? `
               <div class="team-player">
                 <div class="team-player__avatar">${player2.name[0].toUpperCase()}</div>
@@ -702,9 +915,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
                   <div class="team-player__email">${player2.email}</div>
                 </div>
               </div>
-            ` : `
-              <div class="team-player team-player--empty">Player 2 not assigned</div>
-            `}
+            ` : `<div class="team-player team-player--empty"></div>`}
           </div>
           <div class="team-card__actions">
             <button class="team-action-btn edit-team-btn" data-id="${team.id}">Edit</button>
@@ -730,7 +941,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     countEl.textContent = unassigned.length;
 
     if (unassigned.length === 0) {
-      container.innerHTML = '<div class="empty-state">All players assigned to teams</div>';
+      container.innerHTML = '<div class="empty-state empty-state--success"><svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>';
       return;
     }
 
@@ -741,15 +952,13 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
           <div class="player-item__name">${player.name}</div>
           <div class="player-item__email">${player.email}</div>
         </div>
-        <span class="badge badge--${player.status}">${player.status}</span>
+        <button class="player-item__assign quick-assign-btn" data-id="${player.id}">Assign</button>
       </div>
     `).join('');
   }
 
   function updateStats() {
-    const statsEl = document.getElementById('teamStats');
-    const fullTeams = teams.filter(t => t.player1_id && t.player2_id).length;
-    statsEl.textContent = `${teams.length} teams | ${fullTeams} complete | Need ${8 - fullTeams} more for bracket`;
+    // Stats are now shown in the hero section via renderTeams
   }
 
   function populatePlayerSelects(excludePlayer1Id = null, excludePlayer2Id = null) {
@@ -920,6 +1129,101 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       } catch (err) {
         console.error('Delete error:', err);
         alert('Failed to delete team');
+      }
+    });
+
+    // Quick Assign Modal
+    const quickAssignModal = document.getElementById('quickAssignModal');
+    let assigningPlayerId = null;
+
+    document.getElementById('closeQuickAssign').addEventListener('click', () => quickAssignModal.classList.remove('open'));
+    quickAssignModal.addEventListener('click', (e) => {
+      if (e.target === quickAssignModal) quickAssignModal.classList.remove('open');
+    });
+
+    // Handle quick assign button clicks
+    document.getElementById('unassignedList').addEventListener('click', (e) => {
+      if (e.target.classList.contains('quick-assign-btn')) {
+        const playerId = e.target.dataset.id;
+        const player = players.find(p => p.id === playerId);
+        if (player) {
+          openQuickAssignModal(player);
+        }
+      }
+    });
+
+    function openQuickAssignModal(player) {
+      assigningPlayerId = player.id;
+      document.getElementById('quickAssignAvatar').textContent = player.name[0].toUpperCase();
+      document.getElementById('quickAssignName').textContent = player.name;
+
+      // Build team options
+      const optionsContainer = document.getElementById('quickAssignTeams');
+
+      // Find teams with available slots
+      const teamsWithSlots = teams.map(team => {
+        const hasPlayer1 = team.player1_id !== null;
+        const hasPlayer2 = team.player2_id !== null;
+        const isFull = hasPlayer1 && hasPlayer2;
+        const slotsUsed = (hasPlayer1 ? 1 : 0) + (hasPlayer2 ? 1 : 0);
+        return { ...team, isFull, slotsUsed };
+      });
+
+      if (teamsWithSlots.length === 0) {
+        optionsContainer.innerHTML = `
+          <div class="quick-assign-empty">
+            <p>No teams created yet</p>
+            <button class="btn btn--primary" onclick="document.getElementById('quickAssignModal').classList.remove('open'); document.getElementById('createTeamBtn').click();" style="margin-top: 12px;">Create Team</button>
+          </div>
+        `;
+      } else {
+        optionsContainer.innerHTML = teamsWithSlots.map(team => `
+          <div class="quick-assign-team ${team.isFull ? 'quick-assign-team--full' : ''}"
+               data-team-id="${team.id}"
+               data-is-full="${team.isFull}">
+            <div class="quick-assign-team__info">
+              <span class="quick-assign-team__name">${team.name}</span>
+              <span class="quick-assign-team__slots ${!team.isFull ? 'quick-assign-team__slots--available' : ''}">
+                ${team.isFull ? 'Full (2/2)' : `${team.slotsUsed}/2 players`}
+              </span>
+            </div>
+            ${team.seed ? `<span class="quick-assign-team__seed">#${team.seed}</span>` : ''}
+          </div>
+        `).join('');
+      }
+
+      quickAssignModal.classList.add('open');
+    }
+
+    // Handle team selection in quick assign
+    document.getElementById('quickAssignTeams').addEventListener('click', async (e) => {
+      const teamOption = e.target.closest('.quick-assign-team');
+      if (!teamOption || teamOption.dataset.isFull === 'true') return;
+
+      const teamId = teamOption.dataset.teamId;
+      const team = teams.find(t => t.id === teamId);
+      if (!team || !assigningPlayerId) return;
+
+      try {
+        // Assign to team (fill first available slot)
+        const slot = team.player1_id === null ? 'player1_id' : 'player2_id';
+        await supabase.from('teams').update({ [slot]: assigningPlayerId }).eq('id', teamId);
+
+        // Update player's team_id reference
+        await supabase.from('players').update({ team_id: teamId }).eq('id', assigningPlayerId);
+
+        quickAssignModal.classList.remove('open');
+
+        // Show toast if available
+        if (window.showToast) {
+          const player = players.find(p => p.id === assigningPlayerId);
+          window.showToast(`${player.name} assigned to ${team.name}`, 'success');
+        }
+
+        await loadData(supabase);
+      } catch (err) {
+        console.error('Quick assign error:', err);
+        alert('Failed to assign player to team');
       }
     });
   }

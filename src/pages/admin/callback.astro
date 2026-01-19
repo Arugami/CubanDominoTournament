@@ -8,12 +8,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <title>Authenticating... | CDL Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400;1,6..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400;1,6..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -21,7 +21,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         color-scheme: dark;
         --ink: #1c130f;
         --copper: #b76a3b;
+        --cream: #f8efe6;
+        --bone: #fff7ef;
         --brass: #d4a574;
+        --gold: #e8c17a;
       }
 
       * {
@@ -30,44 +33,145 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         padding: 0;
       }
 
+      html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+      }
+
       body {
         font-family: "IBM Plex Sans", system-ui, sans-serif;
-        background: radial-gradient(ellipse at center, #1a120d 0%, #080503 100%);
+        background: #0a0705;
         color: #fff;
-        min-height: 100vh;
+        min-height: 100dvh;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 24px;
       }
 
+      /* ===== ATMOSPHERIC BACKGROUND ===== */
+      .atmosphere {
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(183, 106, 59, 0.12) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 80%, rgba(212, 165, 116, 0.08) 0%, transparent 40%),
+          radial-gradient(ellipse at center, #1a120d 0%, #0a0705 100%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .grain {
+        position: fixed;
+        inset: -50%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.04;
+        pointer-events: none;
+        z-index: 1;
+        animation: grainShift 0.4s steps(10) infinite;
+      }
+
+      @keyframes grainShift {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(-3%, -3%); }
+        50% { transform: translate(3%, 1%); }
+        75% { transform: translate(-1%, 2%); }
+      }
+
+      .vignette {
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 50% 30%, rgba(212, 165, 116, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at center, transparent 0%, rgba(10, 7, 5, 0.7) 100%);
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* ===== MAIN CONTAINER ===== */
       .callback-container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 360px;
         text-align: center;
-        max-width: 400px;
       }
 
-      .callback-card {
-        background: rgba(28, 19, 15, 0.9);
-        border: 1px solid rgba(212, 165, 116, 0.2);
-        border-radius: 16px;
-        padding: 48px 40px;
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+      /* ===== HEADER ===== */
+      .page-header {
+        text-align: center;
+        margin-bottom: 32px;
       }
 
-      .callback-title {
-        font-family: "Bodoni Moda", serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--brass);
+      .cdl-wordmark {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
         margin-bottom: 16px;
       }
 
-      .callback-text {
-        font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.6);
-        margin-bottom: 24px;
+      .cdl-wordmark__text {
+        font-family: "Bodoni Moda", "Didot", serif;
+        font-size: 2.4rem;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: 0.08em;
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
+      .cdl-wordmark__line {
+        width: 60px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--brass), transparent);
+      }
+
+      .page-title {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.8rem;
+        font-weight: 400;
+        font-style: italic;
+        color: var(--cream);
+        letter-spacing: 0.02em;
+        line-height: 1.2;
+        margin-bottom: 8px;
+      }
+
+      .page-subtitle {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--brass);
+        opacity: 0.7;
+      }
+
+      /* ===== CONTENT AREA ===== */
+      .content-area {
+        position: relative;
+        border: none;
+        border-left: 3px solid var(--brass);
+        padding: 28px 0 28px 28px;
+        text-align: left;
+      }
+
+      .content-area::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -3px;
+        width: 3px;
+        height: 100%;
+        background: var(--brass);
+        box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+        pointer-events: none;
+      }
+
+      /* ===== SPINNER ===== */
       .spinner {
         width: 48px;
         height: 48px;
@@ -82,65 +186,173 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         to { transform: rotate(360deg); }
       }
 
-      .error-message {
-        background: rgba(244, 67, 54, 0.1);
-        border: 1px solid rgba(244, 67, 54, 0.3);
-        color: #e57373;
-        padding: 16px;
-        border-radius: 8px;
-        margin-bottom: 24px;
+      /* ===== STATE TITLES ===== */
+      .state-title {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.3rem;
+        font-weight: 400;
+        font-style: italic;
+        color: var(--cream);
+        margin-bottom: 16px;
+        text-align: center;
       }
 
-      .access-denied {
-        background: rgba(255, 152, 0, 0.1);
-        border: 1px solid rgba(255, 152, 0, 0.3);
-        color: #ffb74d;
-        padding: 16px;
-        border-radius: 8px;
-        margin-bottom: 24px;
+      .state-text {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+        font-style: italic;
+      }
+
+      /* ===== MESSAGES ===== */
+      .message {
+        text-align: center;
+        padding: 14px 16px;
+        margin-bottom: 20px;
+        font-size: 0.8rem;
+        letter-spacing: 0.02em;
+        border: 1px solid;
+      }
+
+      .message--error {
+        background: rgba(180, 60, 50, 0.1);
+        border-color: rgba(180, 60, 50, 0.3);
+        color: #e07a72;
+      }
+
+      .message--warning {
+        background: rgba(212, 165, 116, 0.1);
+        border-color: rgba(212, 165, 116, 0.3);
+        color: var(--brass);
+      }
+
+      /* ===== LINKS ===== */
+      .action-link {
+        display: inline-block;
+        width: 100%;
+        padding: 16px 24px;
+        margin-top: 8px;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        text-decoration: none;
+        text-align: center;
+        color: var(--ink);
+        background: linear-gradient(
+          180deg,
+          var(--gold) 0%,
+          var(--brass) 50%,
+          var(--copper) 100%
+        );
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow:
+          0 4px 16px rgba(183, 106, 59, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
+
+      .action-link:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 8px 24px rgba(183, 106, 59, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
       }
 
       .back-link {
-        display: inline-block;
-        font-size: 0.9rem;
-        color: var(--copper);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 32px;
+        padding: 12px 20px;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.85rem;
+        color: var(--brass);
+        opacity: 0.6;
         text-decoration: none;
-        opacity: 0.8;
-        transition: opacity 0.3s ease;
+        transition: all 0.3s ease;
+        border-radius: 8px;
       }
 
       .back-link:hover {
         opacity: 1;
+        background: rgba(212, 165, 116, 0.08);
+      }
+
+      .back-link__arrow {
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+      }
+
+      .back-link:hover .back-link__arrow {
+        transform: translateX(-4px);
+      }
+
+      .back-link__text {
+        font-style: italic;
       }
 
       .hidden {
         display: none !important;
       }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 400px) {
+        .content-area {
+          padding-left: 20px;
+        }
+
+        .page-title {
+          font-size: 1.4rem;
+        }
+      }
     </style>
   </head>
   <body>
+    <!-- Atmospheric layers -->
+    <div class="atmosphere"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
     <div class="callback-container">
-      <div class="callback-card">
+      <div class="page-header">
+        <div class="cdl-wordmark">
+          <span class="cdl-wordmark__text">CDL</span>
+          <span class="cdl-wordmark__line"></span>
+        </div>
+        <h1 class="page-title">La Oficina</h1>
+        <p class="page-subtitle">Commissioner Access</p>
+      </div>
+
+      <div class="content-area">
         <div id="loadingState">
           <div class="spinner"></div>
-          <h1 class="callback-title">Authenticating</h1>
-          <p class="callback-text">Verifying your access...</p>
+          <h2 class="state-title">Authenticating</h2>
+          <p class="state-text">Verifying your access...</p>
         </div>
 
         <div id="errorState" class="hidden">
-          <h1 class="callback-title">Authentication Failed</h1>
-          <div id="errorMessage" class="error-message"></div>
-          <a href="/admin/login" class="back-link">Try Again</a>
+          <h2 class="state-title">Authentication Failed</h2>
+          <div id="errorMessage" class="message message--error"></div>
+          <a href="/admin/login" class="action-link">Try Again</a>
         </div>
 
         <div id="deniedState" class="hidden">
-          <h1 class="callback-title">Access Denied</h1>
-          <div class="access-denied">
+          <h2 class="state-title">Access Denied</h2>
+          <div class="message message--warning">
             Your email is not registered as an admin. Contact the tournament organizer for access.
           </div>
-          <a href="/" class="back-link">Return to Tournament Site</a>
+          <a href="/" class="action-link">Return to Site</a>
         </div>
       </div>
+
+      <a href="/" class="back-link">
+        <span class="back-link__arrow">←</span>
+        <span class="back-link__text">Back to main site</span>
+      </a>
     </div>
 
     <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>

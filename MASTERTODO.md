@@ -275,6 +275,15 @@
 - [x] **Loading screen hypnotic redesign** — Synchronized 3.5s heartbeat pulse, ember particles, orbital float, enhanced letter reveal
 - [x] **Loading screen timing extended** — 400ms → 1400ms for proper cinematic effect
 - [x] **Form slogan styling** — "La mesa te espera" in Bodoni Moda italic, confident (not precious) per Dana White's UFC edge
+- [x] **La Ley rules panel sports typography** — Rule card titles switched from Bodoni Moda to IBM Plex Sans 600, uppercase, 0.08em tracking
+- [x] **Sitewide typography audit** — Identified all broadcast vs elegant typography moments
+- [x] **Sports broadcast tracking consistency** — Standardized 0.08em tracking across rule cards, rules subtitle, mobile nav labels, ticker preview badge
+- [x] **Loading screen: removed looping animations** — Per Tobias, removed heartbeat/orbital animations that "drew the eye without purpose"
+- [x] **Mobile postscript fix** — Shorter edge fades, image now visible on mobile
+- [x] **Admin redesign: cigar lounge cohesion** — Unified design system across admin panels
+- [x] **CDL Logo System: Wordmark with Signature Line** — Final logo treatment with brass typography
+- [x] **Panels 2-4: Complete narrative arc** — Typography hierarchy refined for storytelling flow
+- [x] **Back-to-top pip cinematic animations** — Matching loading screen visual language (scale 0.9→1, elastic pop easing, glow bloom)
 
 ---
 
@@ -295,7 +304,7 @@ Every `git push` to `main` automatically deploys to cubandominoleague.com.
 ```
 APP_SCRIPT_URL=https://script.google.com/macros/s/XXXXX/exec
 APP_SCRIPT_SECRET=your-shared-secret
-VENUE_URL=https://mrgarciacigars.com/
+VENUE_URL=https://share.google/Bd3ZofPsvccfdT7EC
 ```
 
 ### Deploy Workflow
@@ -328,9 +337,103 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 15, 2026 (Mobile Polish + Loading Screen Hypnotic + Form Slogan)
+**Last Updated:** January 17, 2026 (Back-to-Top Pip Cinematic Animations)
 
 *"La mesa te espera."*
+
+---
+
+## Recent Session Notes (Jan 17, 2026) — Back-to-Top Pip Cinematic Animations
+
+### The Goal
+Refine the back-to-top pip's entrance/exit animations to match the loading screen's visual language (Tobias van Schneider's "micro-moments" philosophy).
+
+### Loading Screen Animation Language Reference
+| Element | Entry Pattern | Easing | Duration |
+|---------|--------------|--------|----------|
+| CDL Tile | `scale(0.9→1)` + fade | `cubic-bezier(0.16, 1, 0.3, 1)` | 1.2s |
+| Letters | `translateY(15px→0)` + `scale(0.95→1)` + unblur | same | 1.2s |
+| Divider | Slam with overshoot | `cubic-bezier(0.34, 1.56, 0.64, 1)` | 0.5s |
+| Glow | `scale(0.6→1)` bloom | `ease-out` | 1.5s |
+
+### Changes Made
+
+**1. Refined Entrance Animation**
+```css
+.back-to-top {
+  transform: translateY(-8px) scale(0.9);
+  transition:
+    opacity 0.6s ease-out,
+    visibility 0.6s ease-out,
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+```
+
+- `scale(0.9→1)` — matches tile's entrance, not too dramatic
+- `translateY(-8px→0)` — subtle drop-in, like it's being placed
+- `0.6s` duration — matches loading screen fade timing
+- `cubic-bezier(0.16, 1, 0.3, 1)` — elastic pop easing from tile/letters
+
+**2. Glow Bloom on Entrance**
+```css
+.back-to-top__pip {
+  box-shadow: 0 0 8px rgba(..., 0.3), 0 0 16px rgba(..., 0.15); /* dim */
+  transition: box-shadow 0.6s ease-out;
+}
+.back-to-top.is-visible .back-to-top__pip {
+  box-shadow: 0 0 12px rgba(..., 0.5), 0 0 24px rgba(..., 0.25); /* full */
+}
+```
+
+Like `glowCrescendo` — pip starts dim and blooms to full glow on appearance.
+
+**3. Graceful Exit**
+Same easing in reverse creates symmetry — it "lifts away" as gracefully as it arrives.
+
+### Key Insight
+The pip IS a mini CDL tile, so it should animate like one.
+
+---
+
+## Recent Session Notes (Jan 16, 2026) — Sports Typography Consistency
+
+### The Problem
+The La Ley rules panel felt like a wine menu, not a competitive tournament. Too much serif typography (Bodoni Moda) created elegance but lacked the sports broadcast energy that the La Mesa ticker delivers.
+
+### Typography Audit
+Analyzed all pages to identify broadcast vs elegant moments:
+
+**Already Correct (Sports Energy):**
+- La Mesa ticker — IBM Plex Sans Condensed, 700, uppercase
+- Hero tagline "LA SALIDA" — IBM Plex Sans, 600, uppercase, 0.18em
+- Admin table headers — 600, uppercase, 0.1em
+- Admin form labels — 600, uppercase, 0.1em
+
+**Needed Updates:**
+| Element | Before | After |
+|---------|--------|-------|
+| Rule card titles | Bodoni Moda 500 | IBM Plex Sans 600, uppercase, 0.08em |
+| Rules subtitle | Weight 400, 0.25em | Weight 600, 0.08em |
+| Mobile nav labels | 0.02em tracking | 0.08em tracking |
+| Ticker preview badge | 0.05em tracking | 0.08em tracking |
+
+**Kept Elegant (Brand Moments):**
+- "La Ley" main title — Bodoni Moda (brand moment)
+- Panel headlines — Bodoni Moda 900 (cinematic)
+- "Respect the table." — Serif tagline (statement)
+- Admin card titles — Workspace UI
+
+### Design Principle
+**Sports Broadcast Energy** (IBM Plex Sans, 600, uppercase, 0.08em): Live data, stats, rules, admin interfaces
+**Elegant/Cinematic** (Bodoni Moda, 400-900, mixed case): Story moments, brand elements, emotional content
+
+### Files Changed
+- `src/pages/index.astro` — Rule card titles, rules subtitle
+- `src/components/admin/AdminLayout.astro` — Mobile nav labels
+- `src/pages/admin/announcements.astro` — Preview badge
+
+### Key Takeaway
+The La Ley panel now matches the La Mesa ticker energy. Rules feel like stats on a scoreboard while the header stays elegant as a brand moment.
 
 ---
 

@@ -713,11 +713,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         inset: 0;
         pointer-events: none;
         z-index: 0;
-        opacity: 0.4;
-        mix-blend-mode: screen;
-        background: 
-          radial-gradient(circle at 49.8% 50%, rgba(255, 0, 0, 0.08) 0%, transparent 80%),
-          radial-gradient(circle at 50.2% 50%, rgba(0, 0, 255, 0.08) 0%, transparent 80%);
+        opacity: 0.18;
+        mix-blend-mode: normal;
+        background:
+          radial-gradient(circle at 49.8% 50%, rgba(180, 180, 180, 0.04) 0%, transparent 80%),
+          radial-gradient(circle at 50.2% 50%, rgba(180, 180, 180, 0.04) 0%, transparent 80%);
       }
 
       /* Tobias: Tobacco Fog Layer - Depth Through Layers */
@@ -762,7 +762,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         pointer-events: none;
         z-index: 3;
         opacity: 0;
-        mix-blend-mode: screen;
+        mix-blend-mode: normal;
         transition: opacity 4s ease;
         animation: smokeDrift 40s linear infinite;
       }
@@ -2107,6 +2107,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-direction: column;
         align-items: flex-start;
         gap: 2vh; /* More breathing room */
+        /* isolation removed - was causing color flash during text-shadow animation */
       }
 
       .build-word {
@@ -2131,18 +2132,53 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* "Your abuelo sat here." - DESCENDS from above (ancestors arriving) */
       /* Typography: UPRIGHT (not italic) = statement of fact, ancestor lands */
       .build-word--primary {
-        font-size: clamp(1.6rem, 7vw, 3.2rem);
-        font-style: normal;  /* UPRIGHT - definitive statement */
-        color: #fff;
-        font-weight: 500;    /* Slightly bolder for impact */
-        letter-spacing: 0.03em;
-        line-height: 1.15;
+	        font-size: clamp(1.6rem, 7vw, 3.2rem);
+	        font-style: normal;  /* UPRIGHT - definitive statement */
+	        color: transparent; /* Render fill via animation (prevents Chrome shadow flicker) */
+	        font-weight: 500;    /* Slightly bolder for impact */
+	        letter-spacing: 0.03em;
+	        line-height: 1.15;
+	        display: block;
+	        text-align: left;
+	        position: relative;
+	        -webkit-font-smoothing: antialiased;
+	        text-shadow: none;
+      }
+
+      /* Chrome workaround: avoid animating large blurred text-shadow directly on the glyph run.
+         We render a blurred "memory" layer + a separate glow layer and animate only opacity/transform. */
+      .build-word--primary::before,
+      .build-word--primary::after {
+        content: attr(data-text);
+        position: absolute;
+        inset: 0;
         display: block;
-        text-align: left;
-        /* Luminous glow - memory surfacing from darkness */
+        pointer-events: none;
+        font: inherit;
+        letter-spacing: inherit;
+        line-height: inherit;
+        text-align: inherit;
+        white-space: inherit;
+      }
+
+      /* Blurred "memory" fill that fades out as the sharp text lands */
+      .build-word--primary::before {
+        color: rgba(255, 255, 255, 0.95);
+        filter: blur(6px);
+        opacity: 1;
         text-shadow:
-          0 0 25px rgba(255, 255, 255, 0.3),
-          0 0 50px rgba(212, 165, 116, 0.6),
+          0 0 30px rgba(212, 165, 116, 0.18),
+          0 4px 24px rgba(0, 0, 0, 0.75);
+        transform: translateZ(0);
+      }
+
+      /* Brass glow layer (transparent fill; shadow-only) that pulses in */
+      .build-word--primary::after {
+        color: transparent;
+        opacity: 0;
+        text-shadow:
+          0 0 35px rgba(255, 255, 255, 0.4),
+          0 0 65px rgba(212, 165, 116, 0.65),
           0 0 100px rgba(212, 165, 116, 0.4),
           0 4px 30px rgba(0, 0, 0, 0.8);
       }
@@ -2261,7 +2297,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         );
         display: flex;
         flex-direction: column;
-        align-items: center;  /* CENTER - the climax commands the space */
+        align-items: flex-start;  /* LEFT-aligned - visual anchor with Panel 2 */
         justify-content: flex-end;
         gap: 3vh;
         pointer-events: none;
@@ -2272,7 +2308,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transition: opacity 420ms ease;
         display: flex;
         justify-content: center;
-        align-self: center;  /* Center scroll hint even though parent is flex-start */
       }
 
       .build-scroll-hint__chevron {
@@ -2310,7 +2345,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* "Your abuelo sat here." - DESCENDS from above with emotional glow pulse */
       .panel--build.in-view:not(.has-played) .build-word--primary {
-        animation: ancestorDescendWithGlow 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        animation: ancestorDescendStable 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+      }
+      .panel--build.in-view:not(.has-played) .build-word--primary::before {
+        animation: ancestorBlurFade 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+      }
+      .panel--build.in-view:not(.has-played) .build-word--primary::after {
+        animation: ancestorGlowPulse 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
       }
 
       /* "Your tío. Your father." - Two generations scale in together */
@@ -2358,13 +2399,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* ANCESTOR DESCENDS WITH GLOW - Emotional version with longer blur + glow pulse */
+      /* ANCESTOR DESCENDS WITH GLOW - Emotional version with glow pulse */
       /* The ancestor emerges from deeper memory, then warms into presence */
       @keyframes ancestorDescendWithGlow {
         0% {
           opacity: 0;
           transform: translateY(-40px) scale(1.02);
-          filter: blur(12px);  /* Starts blurrier - emerging from deeper memory */
           text-shadow:
             0 0 20px rgba(255, 255, 255, 0),
             0 0 40px rgba(212, 165, 116, 0),
@@ -2373,7 +2413,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         50% {
           opacity: 0.85;
           transform: translateY(-5px) scale(1.0);
-          filter: blur(2px);  /* Still slightly soft */
           text-shadow:
             0 0 25px rgba(255, 255, 255, 0.25),
             0 0 50px rgba(212, 165, 116, 0.4),
@@ -2382,7 +2421,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         70% {
           opacity: 1;
           transform: translateY(0) scale(1.0);
-          filter: blur(0);
           text-shadow:
             0 0 30px rgba(255, 255, 255, 0.35),
             0 0 60px rgba(212, 165, 116, 0.5),
@@ -2392,7 +2430,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           /* GLOW PULSE - the memory warms */
           opacity: 1;
           transform: translateY(0) scale(1.0);
-          filter: blur(0);
           text-shadow:
             0 0 50px rgba(255, 255, 255, 0.5),
             0 0 80px rgba(212, 165, 116, 0.8),
@@ -2403,13 +2440,50 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           /* Settle to final state */
           opacity: 1;
           transform: translateY(0) scale(1.0);
-          filter: blur(0);
           text-shadow:
             0 0 35px rgba(255, 255, 255, 0.4),
             0 0 65px rgba(212, 165, 116, 0.65),
             0 0 100px rgba(212, 165, 116, 0.4),
             0 4px 30px rgba(0, 0, 0, 0.8);
         }
+      }
+
+      /* ANCESTOR DESCENDS (STABLE) - same motion, but no animated text-shadow/filter */
+      @keyframes ancestorDescendStable {
+        0% {
+          opacity: 0;
+          transform: translateY(-40px) scale(1.02);
+          color: transparent;
+        }
+        50% {
+          opacity: 0.85;
+          transform: translateY(-5px) scale(1.0);
+          color: transparent;
+        }
+        70% {
+          opacity: 1;
+          transform: translateY(0) scale(1.0);
+          color: rgba(255, 255, 255, 1);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1.0);
+          color: #fff;
+        }
+      }
+
+      @keyframes ancestorBlurFade {
+        0% { opacity: 1; }
+        55% { opacity: 0.9; }
+        70% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+
+      @keyframes ancestorGlowPulse {
+        0% { opacity: 0; }
+        70% { opacity: 0.65; }
+        85% { opacity: 1; }
+        100% { opacity: 0.9; }
       }
 
       /* SLIDE FROM RIGHT - SMOOTH poetry line enters from right (no bounce) */
@@ -2579,6 +2653,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1;
         transform: none;
         filter: none;
+        color: #fff;
+      }
+      .panel--build.has-played .build-word--primary::before {
+        opacity: 0;
+      }
+      .panel--build.has-played .build-word--primary::after {
+        opacity: 0.9;
       }
       .panel--build.has-played .build-family__line {
         opacity: 0.85;
@@ -7571,6 +7652,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           gap: 16px;
         }
 
+        /* Slam panel: NATURAL FLOW on mobile (allows scroll to Rules)
+           - Without this, scroll-snap-stop: always traps users on Slam */
+        .panel--slam {
+          scroll-snap-align: none;
+          scroll-snap-stop: normal;
+        }
+
+        /* Rules panel: NATURAL FLOW on mobile (allows scroll to form)
+           - Without this, scroll-snap-stop: always traps users on Rules
+           - Form panel below has height: auto, breaking snap alignment */
+        .panel--rules {
+          scroll-snap-align: none;
+          scroll-snap-stop: normal;
+        }
+
         /* Form panel: NATURAL FLOW on mobile (no scroll-snap)
            - Content dictates height, not viewport
            - Footer follows naturally below
@@ -8150,6 +8246,77 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           width: 44px;
         }
       }
+
+      /* ===========================================
+         COLOR FLASH FIX TESTS - Toggle via body class
+         Usage: Add class to <body> to test each fix
+         Issue: Green/red flash during "Your abuelo sat here" animation
+         Root cause: Chromatic aberration + blur transition interaction
+         =========================================== */
+
+      /* OPTION D: GPU Layer Isolation (preserves blur effect) */
+      body.test-fix-d .build-word--primary {
+        will-change: filter, opacity, transform;
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+
+      /* OPTION A: Disable Screen Blend Globally (loses lens effect) */
+      body.test-fix-a .chromatic-aberration {
+        mix-blend-mode: normal;
+        opacity: 0.18;
+      }
+
+      /* OPTION C: Remove Blur from Animation (loses memory effect) */
+      body.test-fix-c .build-word--primary {
+        animation-name: ancestorDescendNoBlur !important;
+      }
+
+      @keyframes ancestorDescendNoBlur {
+        0% {
+          opacity: 0;
+          transform: translateY(-40px) scale(1.02);
+          text-shadow:
+            0 0 20px rgba(255, 255, 255, 0),
+            0 0 40px rgba(212, 165, 116, 0),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+        50% {
+          opacity: 0.85;
+          transform: translateY(-5px) scale(1.0);
+          text-shadow:
+            0 0 25px rgba(255, 255, 255, 0.25),
+            0 0 50px rgba(212, 165, 116, 0.4),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+        70% {
+          opacity: 1;
+          transform: translateY(0) scale(1.0);
+          text-shadow:
+            0 0 30px rgba(255, 255, 255, 0.35),
+            0 0 60px rgba(212, 165, 116, 0.5),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+        85% {
+          opacity: 1;
+          transform: translateY(0) scale(1.0);
+          text-shadow:
+            0 0 50px rgba(255, 255, 255, 0.5),
+            0 0 80px rgba(212, 165, 116, 0.8),
+            0 0 120px rgba(212, 165, 116, 0.5),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1.0);
+          text-shadow:
+            0 0 35px rgba(255, 255, 255, 0.4),
+            0 0 65px rgba(212, 165, 116, 0.65),
+            0 0 100px rgba(212, 165, 116, 0.4),
+            0 4px 30px rgba(0, 0, 0, 0.8);
+        }
+      }
     </style>
   </head>
   <body class="is-loading">
@@ -8263,7 +8430,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <!-- CENTER - The heritage moment -->
         <div class="build-center">
           <div class="build-revelation">
-            <span class="build-word build-word--primary">Your abuelo sat here.</span>
+	            <span class="build-word build-word--primary" data-text="Your abuelo sat here.">Your abuelo sat here.</span>
             <div class="build-family">
               <span class="build-family__line build-family__line--generations">Your tío. Your father.</span>
             </div>
@@ -9044,10 +9211,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             snapToPanelTop(heroPanel);
           });
 
-          // Also show tooltip on hover (desktop)
-          backToTop.addEventListener('mouseenter', showChatTooltip);
+          // Tooltip now wired to chat button below
         }
       }
+
+      // Show tooltip on chat button hover (desktop) and first touch (mobile)
+      tickerChatBtn?.addEventListener('mouseenter', showChatTooltip);
+      tickerChatBtn?.addEventListener('touchstart', showChatTooltip, { passive: true, once: true });
 
       // Scroll-lock system for cinematic panels
       // Prevents scrolling until animations complete
@@ -9075,6 +9245,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           },
           { passive: true }
         );
+        // Reset tracking when touch ends to avoid stale values on next gesture
+        storyEl.addEventListener('touchend', () => { lastTouchY = null; }, { passive: true });
       }
 
       function snapToPanelTop(panelEl) {
@@ -9083,8 +9255,47 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         const panelRect = panelEl.getBoundingClientRect();
         const delta = panelRect.top - storyRect.top;
         if (Math.abs(delta) <= 24) return; // close enough; avoid iOS flicker/jump
+
+        // iOS Safari fix: disable scroll-snap during programmatic scroll
+        // Without this, iOS snaps to the last valid snap-point (Build panel)
+        // instead of our target (Form panel, which has scroll-snap-align: none)
+        const originalSnapType = storyEl.style.scrollSnapType;
+        storyEl.style.scrollSnapType = 'none';
+
         const targetTop = storyEl.scrollTop + delta;
         storyEl.scrollTo({ top: targetTop, behavior: 'auto' });
+
+        // Check if target panel has a snap anchor
+        // If scroll-snap-align is "none", DON'T re-enable scroll-snap
+        // (iOS would snap back to last valid anchor like Build panel)
+        const panelSnapAlign = getComputedStyle(panelEl).scrollSnapAlign;
+        if (panelSnapAlign.includes('none')) {
+          // Panel has no snap anchor - leave scroll-snap disabled
+          // This allows natural scroll flow on Form panel (mobile)
+          return;
+        }
+
+        // Re-enable scroll-snap after scroll STABILIZES (not just 2 frames)
+        // iOS Safari momentum continues 40-60ms after scrollTo
+        let lastScrollTop = storyEl.scrollTop;
+        let stableFrames = 0;
+        const waitForStable = () => {
+          const currentTop = storyEl.scrollTop;
+          if (Math.abs(currentTop - lastScrollTop) < 1) {
+            stableFrames++;
+          } else {
+            stableFrames = 0;
+          }
+          lastScrollTop = currentTop;
+
+          // Wait for 3 stable frames (~50ms) before re-enabling snap
+          if (stableFrames >= 3) {
+            storyEl.style.scrollSnapType = originalSnapType || '';
+            return;
+          }
+          requestAnimationFrame(waitForStable);
+        };
+        requestAnimationFrame(waitForStable);
       }
 
       function alignPanelAfterSettle(panelEl) {
@@ -9120,7 +9331,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           } else if (e.type === 'touchmove') {
             const currentY = e.touches?.[0]?.clientY;
             if (typeof currentY === 'number') {
-              const delta = lastTouchY == null ? 0 : currentY - lastTouchY;
+              // First touchmove of gesture - record position, don't block
+              if (lastTouchY == null) {
+                lastTouchY = currentY;
+                return;
+              }
+              const delta = currentY - lastTouchY;
               lastTouchY = currentY;
               // Finger moving DOWN => content scrolls UP (allow).
               if (delta > 0) return;
@@ -9885,8 +10101,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	      mesaHelp?.addEventListener('click', hideMesaHelp);
 	      mesaHelpDismiss?.addEventListener('click', hideMesaHelp);
 
-	      // Dismiss tooltip when clicking the domino button
-	      tickerChatBtn?.addEventListener('click', hideMesaHelp);
+	      // Dismiss tooltip when clicking the domino button (only if registered)
+	      tickerChatBtn?.addEventListener('click', () => {
+	        // Only hide tooltip when user is registered (opening chat)
+	        // Unregistered users get routed to form where tooltip should show
+	        if (localStorage.getItem('cdl_registered') === 'true') {
+	          hideMesaHelp();
+	        }
+	      });
 
 	      // Dismiss tooltip when clicking anywhere outside it
 	      document.addEventListener('click', (e) => {
@@ -10043,6 +10265,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
         handleTickerActivate();
       });
+      // iOS Safari fallback: pointerup may not fire if finger moves slightly
+      tickerChatBtn?.addEventListener('touchend', (e) => {
+        if (!tickerActivatedByTouch) {
+          tickerActivatedByTouch = true;
+          handleTickerActivate();
+          setTimeout(() => { tickerActivatedByTouch = false; }, 150);
+        }
+      }, { passive: true });
       chatBackdrop.addEventListener('click', toggleChat);
       // Leave the table: clears identity + presence, then closes the panel
       chatClose.addEventListener('click', () => {
@@ -10687,6 +10917,38 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           console.error('Failed to toggle pin:', err);
         }
       }
+
+      // ===========================================
+      // COLOR FLASH FIX TESTER
+      // Usage in console: toggleFix('d'), toggleFix('a'), toggleFix('c'), toggleFix(null)
+      // ===========================================
+      window.toggleFix = (option) => {
+        document.body.classList.remove('test-fix-d', 'test-fix-a', 'test-fix-c');
+        if (option) {
+          document.body.classList.add(`test-fix-${option}`);
+          console.log(`%c Testing fix: Option ${option.toUpperCase()} `, 'background: #D4A574; color: #1a1a1a; padding: 4px 8px; border-radius: 4px;');
+          const descriptions = {
+            'd': 'GPU Layer Isolation - preserves blur effect',
+            'a': 'Disable Screen Blend - loses lens effect',
+            'c': 'Remove Blur from Animation - loses memory effect'
+          };
+          console.log(`   → ${descriptions[option] || 'Unknown option'}`);
+        } else {
+          console.log('%c All fixes disabled (original behavior) ', 'background: #666; color: #fff; padding: 4px 8px; border-radius: 4px;');
+        }
+        // Reset Panel 3 animation to re-test
+        const panel = document.getElementById('panelBuild');
+        if (panel) {
+          panel.classList.remove('in-view', 'has-played');
+          setTimeout(() => {
+            panel.classList.add('in-view');
+            console.log('   → Animation reset. Watch for green/red flash.');
+          }, 100);
+        }
+      };
+      console.log('%c Color flash fix tester loaded ', 'background: #2a2a2a; color: #D4A574; padding: 4px 8px; border-radius: 4px;');
+      console.log('   Use toggleFix("d"), toggleFix("a"), or toggleFix("c") in console');
+      console.log('   Use toggleFix(null) to reset to original');
     </script>
   </body>
 </html>

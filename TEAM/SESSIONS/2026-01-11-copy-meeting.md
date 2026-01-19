@@ -370,4 +370,565 @@ We know who you are.
 
 *Revision documented: January 15, 2026*
 
+---
+
+# Revision: January 16, 2026
+## Panels 2-4: The Heart of the Story — Why It Doesn't Resonate Yet
+
+**Creative Lead:** Full Dream Team
+**Focus:** Making panels 2-4 the magical center of the experience
+
+---
+
+### Current Implementation (Documenting What's Live)
+
+| Panel | Position | Current Copy | Animation |
+|-------|----------|--------------|-----------|
+| **2 (Whisper)** | Top letterbox | "Que Bola Asere" | Smoke fade-in |
+| | Center | "You've been waiting for this." | Blur-to-focus reveal |
+| **3 (Build)** | Center | "SO HAVE THEY." | Dawning glow |
+| **4 (Slam)** | Top | "January 31 • Mr Garcia Cigars" | Context fade |
+| | Center | "Make / Them / PROUD" | Staggered slam |
+
+**Story Arc Intent:**
+> YOU've been waiting → THEY (ancestors) have been waiting → Make THEM proud
+
+---
+
+### The Problem: It Doesn't Match the Magic
+
+The rest of the site is *magical*:
+- **Hero:** "La Salida" — Spanish, cinematic, chapter-card framing
+- **Rules:** "La Ley" — carved brass, ceremonial weight
+- **Form:** "La mesa te espera" — ritual invitation
+- **Ticker:** ESPN broadcast energy
+
+**Panels 2-4 feel... flat.** Here's why:
+
+#### 1. Copy Doesn't Feel Cuban
+- "You've been waiting for this" could be any event. No soul.
+- "SO HAVE THEY" — who? The transition is unclear.
+- "Make Them PROUD" — generic motivational poster energy
+
+**What works elsewhere:** "La Salida," "La Ley," "Que Bola Asere," "La mesa te espera" — the Spanish GROUNDS it in culture.
+
+#### 2. No Chapter Card Framing
+Wes Anderson would frame these as title cards. Right now:
+- Text floats without composition
+- No badge, no frame, no intentional symmetry
+- Doesn't feel like "Chapter 2" of the story
+
+#### 3. Typography Lacks Hierarchy
+The hero has: Badge → Title → Tagline → Subtitle (4 levels)
+Panels 2-4 have: Greeting → Line (2 levels, both similar weight)
+
+#### 4. The Transitions Don't Build
+- Panel 2 → 3: Jarring. No callback, no thread.
+- Panel 3 → 4: "SO HAVE THEY" → "Make Them PROUD" — the "they/them" connection is lost because Panel 3 doesn't name the ancestors.
+
+---
+
+### Creative Analysis
+
+**George Lois:** "The copy doesn't SCREAM. 'You've been waiting' whispers. The image screams — man with cigar staring you down. MATCH THE ENERGY."
+
+**Wes Anderson:** "Where's the frame? Each panel should feel like a chapter card in a film. I see no composition — just text on a photo."
+
+**Tobias van Schneider:** "No depth. The hero has layers — badge, title, subtitle, tagline. These panels have one line floating. Where's the architecture?"
+
+**Daisy Expósito-Ulla:** "'You've been waiting for this' fails the Abuela Test. My grandmother wouldn't recognize this as Cuban. Where's the SOUL?"
+
+**Wifredo Lam:** "The ancestors need to be NAMED. 'SO HAVE THEY' — who? Say it: your grandfather. The kitchen table. Sunday afternoons. Make it REAL."
+
+---
+
+### What Would Make It Magical
+
+#### Option A: Lean Into Spanish Ritual
+Use Spanish titles like the rest of the site:
+
+| Panel | Title Card | Body |
+|-------|------------|------|
+| 2 | *La Bienvenida* | "Que Bola Asere" |
+| 3 | *La Sangre* | "This game is in your blood." |
+| 4 | *El Honor* | "Make them proud." |
+
+**Wes Anderson:** "Now it's a triptych. Three chapters. La Bienvenida, La Sangre, El Honor."
+
+#### Option B: Name the Ancestors
+Make the heritage explicit:
+
+| Panel | Copy |
+|-------|------|
+| 2 | "Que Bola Asere" / "Your grandfather played this game." |
+| 3 | "Your grandmother watched." / "Now it's your turn." |
+| 4 | "Make / Them / PROUD" |
+
+**Daisy:** "NOW I feel something. 'Your grandfather played.' That's the kitchen table. That's real."
+
+#### Option C: Chapter Card Structure (Wes Anderson)
+Frame each panel as a film chapter:
+
+```
+┌─────────────────────────┐
+│         CDL 1           │  ← Badge (consistent)
+├─────────────────────────┤
+│     La Bienvenida       │  ← Chapter title (Spanish)
+│    ─────────────────    │  ← Divider
+│   "Que Bola Asere"      │  ← The line
+└─────────────────────────┘
+```
+
+**Wes Anderson:** "Every panel should have the CDL 1 badge. It's the chapter marker. Symmetry. Consistency. This is how you build a world."
+
+---
+
+### Typography Direction (Tobias)
+
+**Current problem:** All text is Bodoni italic at similar sizes. No architecture.
+
+**Proposed hierarchy:**
+1. **Badge** — CDL 1 domino tile (top, small, anchors the frame)
+2. **Chapter Title** — Bodoni 900, Spanish, large (La Bienvenida)
+3. **The Line** — Bodoni italic, medium, the emotional payload
+4. **Context** — IBM Plex, small, grounding details
+
+**Tobias:** "The hero works because it has FOUR levels of hierarchy. Give these panels the same architecture."
+
+---
+
+### Animation Direction
+
+**Current:** Text fades in. Generic.
+
+**Proposed:**
+- Panel 2: Greeting smoke-reveals → pause → Line SLAMS (like a domino)
+- Panel 3: Word emerges from darkness like memory surfacing
+- Panel 4: Staggered build → Final word HITS with weight + glow
+
+**Dana White:** "Panel 4 should feel like a knockout. The word PROUD needs to land like a punch."
+
+---
+
+### Open Questions
+
+1. **Which direction?** Spanish chapter cards (A), Named ancestors (B), or both (C)?
+2. **Should every panel have the CDL 1 badge?** (Wes says yes)
+3. **How much Spanish is too much?** Balance accessibility with authenticity
+4. **What's THE line for each panel?** The one thing you remember
+
+---
+
+### Next Steps
+
+- [ ] Decide on copy direction
+- [ ] Design chapter card frame structure
+- [ ] Implement typography hierarchy (4 levels)
+- [ ] Refine animations to match "domino slam" energy
+- [ ] Test on mobile (99% of users)
+
+---
+
+## Session 2: Cuban Lingo Integration + Persona Testing
+
+**Time:** Later that day
+**Data Added:** Cuban Dominoes Lingo doc, Player Personas
+
+---
+
+### Key Cultural Insight
+
+The site uses Cuban beautifully elsewhere:
+- Hero: **"La Salida"** (the opening tile)
+- Rules: **"La Ley"** (the law)
+- Ticker: **"La Mesa"** (the table)
+
+**Panels 2-4 speak English when they should speak Cuban.**
+
+---
+
+### Relevant Lingo for Copy
+
+| Phrase | Meaning | Use |
+|--------|---------|-----|
+| "La ficha" | The tile | "Every ficha led here" |
+| "Dale agua" | Shuffle tiles | Ritual beginning |
+| "Me pegué" | I won | Victory moment |
+| "Hablar mierda" | Trash talk | Social energy |
+
+---
+
+### Four Copy Options Developed
+
+| Option | Panel 2 | Panel 3 | Panel 4 |
+|--------|---------|---------|---------|
+| **1: La Ficha** | "Every ficha you've ever played led here." | "From your grandfather's hands to yours." | "Now make them count." |
+| **2: La Mesa** | "You know this table." | "Your abuelo sat here. Your tío. Your father." | "Now it's your turn." |
+| **3: El Momento** | "You've been shuffling these bones your whole life." | "Every Sunday. Every holiday. Every borrowed table." | "Tonight, the table is YOURS." |
+| **4: La Sangre** | "This game is in your blood." | "Your grandfather knew it. Your grandmother watched." | "Make them proud." |
+
+---
+
+### Persona Test Results
+
+| Option | Landy (OG) | Maria Elena (Keeper) | Danny (Competitor) | Carmen (Connector) | Alex (NJ) | Gaby (Miami) | **AVG** |
+|--------|------------|----------------------|--------------------|--------------------|-----------|--------------|---------|
+| 1: La Ficha | 6 | 5 | 5 | 6 | 6 | 5 | **5.5** |
+| 2: La Mesa | 9 | 10 | 7 | 9 | 8 | 9 | **8.7** ⭐ |
+| 3: El Momento | 8 | 8 | 8 | 9 | 8 | 8 | **8.2** ⭐ |
+| 4: La Sangre | 6 | 8 | 5 | 6 | 6 | 5 | **6.0** |
+
+**Winners:** Option 2 (La Mesa) and Option 3 (El Momento)
+
+---
+
+### Persona Quotes
+
+**Landy on Option 2:** "Now you're talking. That's the kitchen table."
+
+**Maria Elena on Option 2:** *tears up* "That's my grandfather."
+
+**Carmen on Option 3:** "Borrowed table! That's specific. That's TRUE."
+
+**Danny on Option 3:** "'Tonight the table is yours' — competitive. I'm in."
+
+---
+
+### Random Audience Test (Non-Cuban)
+
+**Option 2** ("Your abuelo sat here"):
+- Resonates emotionally
+- Some Spanish creates slight barrier
+- Clearly heritage-focused
+
+**Option 3** ("Every Sunday. Every holiday."):
+- More universally accessible
+- "Borrowed table" is specific and relatable
+- "Tonight it's yours" is a clear payoff
+
+---
+
+### Final Recommendation: Hybrid
+
+| Panel | Copy |
+|-------|------|
+| **2** | *"Que Bola Asere"* / "You know this table." |
+| **3** | "Your abuelo sat here." / "Every Sunday. Every holiday." |
+| **4** | "Tonight, it's yours." |
+
+**Why:**
+- **Panel 2:** Insider language. Direct. "You KNOW this."
+- **Panel 3:** Specific (abuelo) AND universal (Sundays, holidays)
+- **Panel 4:** Short. Powerful. The ownership moment.
+
+---
+
+### Typography + Animation Direction
+
+**Panel 2:**
+- "Que Bola Asere" — smoke reveal, top letterbox
+- "You know this table." — slam from below, centered, Bodoni italic
+
+**Panel 3:**
+- "Your abuelo sat here." — fade in, brass glow
+- "Every Sunday. Every holiday." — staggered reveal, smaller
+
+**Panel 4:**
+- "Tonight," — build
+- "it's yours." — SLAM with glow, massive
+
+---
+
+### Action Items
+
+- [x] Test copy with personas
+- [x] Test with non-Cuban audience
+- [x] **IMPLEMENT:** Hybrid copy (Option 2 + 3) — DONE Jan 16
+- [ ] Add chapter card framing (CDL 1 badge on each panel?)
+- [ ] Refine typography hierarchy
+- [x] Test on mobile (responsive clamp values added)
+
+---
+
+## Implementation: January 16, 2026
+
+### Final Copy Deployed
+
+| Panel | Copy |
+|-------|------|
+| **2** | *"Que Bola Asere"* / **"You know this table."** |
+| **3** | **"Your abuelo sat here."** / *"Every Sunday. Every holiday."* |
+| **4** | **"Claim Your SEAT"** |
+
+### The Thread
+
+**Table → Seat → Table waiting**
+- Panel 2: "You know this **table**."
+- Panel 3: "Your abuelo **sat** here."
+- Panel 4: "Claim Your **SEAT**."
+- Tagline: "La **mesa** te espera."
+
+Perfect harmony with brand language.
+
+### Typography Treatment
+
+**Panel 3:**
+- Primary line: "Your abuelo sat here." — Bodoni italic, white, warm glow
+- Secondary line: "Every Sunday. Every holiday." — Smaller, brass color, supporting
+
+**Panel 4:**
+- "Claim" → "Your" → "SEAT" — Staggered build, final word massive with glow
+
+---
+
+*Session documented: January 16, 2026*
+
+---
+
+# Revision: January 17, 2026
+## Lin-Manuel Miranda Interview — Lyrical Polish for Panels 2-4
+
+**New Team Member:** Lin-Manuel Miranda (Lyricist / Copy Poet)
+**Focus:** Final emotional refinement for the heart of CDL
+
+---
+
+### Why Lin-Manuel
+
+**Heritage:** Puerto Rican — Caribbean diaspora, intimately knows this story
+
+**Relevant Work:**
+- "In the Heights" — community, abuela's wisdom, inherited dreams
+- "Hamilton" — legacy, "who lives, who dies, who tells your story"
+- "Moana" — ancestors calling you forward
+
+**Superpower:** Taking massive emotional truths and distilling them to the ONE line that lands in the chest.
+
+---
+
+### The Interview
+
+Full transcript: `TEAM/INTERVIEWS/interview-lin-manuel-miranda-lyricist.md`
+
+Key questions explored:
+1. Does "Some tables never forget" work as the opening?
+2. Is "know" the right verb for recognition?
+3. Does "abuelo" carry enough weight?
+4. Is "ficha" the right cultural word for the torch pass?
+5. Does "Claim Your SEAT" close the loop?
+6. What's the ONE line that makes this LAND?
+
+---
+
+### Copy Changes Implemented
+
+| Panel | Before | After | Rationale |
+|-------|--------|-------|-----------|
+| **2 Setup** | "Some tables never forget." | "This table remembers." | Active > passive. Table is alive NOW. |
+| **2 Recognition** | "You know this table." | "You've sat here before." | Body memory > intellectual knowing |
+| **3 Heritage** | "Every weekend. Every holiday." | "Every Sunday. Every quinceañera. Every goodbye." | Life cycle in seven words (routine → celebration → loss) |
+| **3 Torch Pass** | "Now the ficha passes to you." | "Now the ficha is yours." | Singular tile = singular torch. Cuban language. |
+| **4 CTA** | "CLAIM YOUR SEAT" | "TAKE YOUR SEAT" | Homecoming > conquest |
+
+---
+
+### Lin-Manuel's Key Insights
+
+1. **Active language:** "Remembers" does something. "Never forget" describes.
+
+2. **Body memory:** "You've sat here before" — the memory is in your body, not your brain.
+
+3. **Life cycle punch:** "Every Sunday. Every quinceañera. Every goodbye." — routine, celebration, loss in seven words.
+
+4. **Cuban language:** "Now the ficha is yours" — singular tile, singular torch. Your turn.
+
+5. **Homecoming over conquest:** "Take" = it was always yours. "Claim" = you're taking what wasn't.
+
+6. **Silence matters:** Build pauses into animation timing. The words that matter need room to BREATHE.
+
+---
+
+### The Complete Arc (Final)
+
+> **Panel 2:** "This table remembers." → "Que Bola Asere" → "You've sat here before."
+>
+> **Panel 3:** "Your abuelo sat here." → "Every Sunday. Every quinceañera. Every goodbye." → "Now the ficha is yours."
+>
+> **Panel 4:** "TAKE YOUR SEAT" → "La mesa te espera."
+
+**The Thread:** Table remembers → You've sat here → Abuelo sat here → Ficha is yours → Take your seat → Table waits
+
+---
+
+### Team Sign-off
+
+**Lin-Manuel Miranda:** "The life cycle line will make people cry. That's the one."
+
+**Daisy Expósito-Ulla:** "Quinceañera. That's specific Cuban. That passes the abuela test."
+
+**George Lois:** "'Now the ficha is yours' — short, Cuban, ownership. That's not marketing, that's TRUTH."
+
+**Wes Anderson:** "The arc builds correctly now. Recognition → Weight → Action. Classic three-act."
+
+**Status:** ✅ IMPLEMENTED
+
+---
+
+*Revision documented: January 17, 2026*
+
+---
+
+# Revision: January 17, 2026 (Session 2)
+## Visual Storytelling Cohesion — Shadow Hierarchy + Panel 2 Voice Analysis
+
+**Creative Lead:** Tobias van Schneider + Lin-Manuel Miranda
+**Focus:** Making visual weight match narrative arc; fixing Panel 2's "two speakers, one voice" problem
+
+---
+
+### The Shadow Hierarchy Problem
+
+**Tobias van Schneider:** "I'm looking at the full scroll. La Salida in Panel 1 has 7 layers of text-shadow. SEAT in Panel 4 has 4. The opening is outshining the climax. That's backwards."
+
+**The Fix:**
+
+| Element | Before | After | Rationale |
+|---------|--------|-------|-----------|
+| La Salida (Panel 1) | 7 shadow layers | 4 layers | Hero shouldn't outshine climax |
+| SEAT (Panel 4) | 4 shadow layers | 6 layers | THE climax moment needs weight |
+| Slam context | 100% cream | 65% cream | Context recedes, doesn't compete |
+| Torch text | 100% brass | 75% brass | Signature whispers, doesn't shout |
+
+**Tobias:** "Now the visual weight builds: Hero (4) → Build (moderate) → Climax (6). The eye knows where the money shot is."
+
+---
+
+### Panel 2: The Two Voices Problem
+
+**The Screenshots:**
+1. "This table remembers." appears first (0.3s)
+2. "Que Bola Asere" appears second (2.0s)
+3. "You've sat here before." appears last (3.8s)
+
+**Lin-Manuel Miranda:** "Wait. Look at these two lines. They're both brass. They're both italic. But they're not the same SPEAKER."
+
+| Line | Who's Speaking | What It Should Feel Like |
+|------|---------------|--------------------------|
+| "This table remembers." | The ROOM | Ethereal, ghostly, omniscient narrator |
+| "Que Bola Asere" | A PERSON | Warm, direct, someone greeting you |
+| "You've sat here before." | Recognition | Full presence, the moment lands |
+
+**Tobias:** "Same color = same voice. You're telling me the room and the person sound identical? No. The room should feel like a memory. The person should feel like warmth."
+
+**Lin-Manuel:** "In musicals, the narrator is usually a different instrument. Softer. More distant. Then the character comes in FULL. That's the contrast."
+
+---
+
+### The Color Differentiation Solution
+
+**Current (broken):**
+- "This table remembers." → brass @ 85%
+- "Que Bola Asere" → brass @ 100%
+
+**Proposed (fixed):**
+- "This table remembers." → **cream @ 50%** (ghostly, memory, the room itself)
+- "Que Bola Asere" → brass @ 100% (warm, human, someone speaking TO you)
+- "You've sat here before." → white (full presence, payoff)
+
+**Lin-Manuel:** "Now you have three distinct voices:
+1. **Ghost** (50% cream) — the room whispers its history
+2. **Human** (100% brass) — someone greets you warmly
+3. **Realization** (100% white) — you understand where you are"
+
+**Tobias:** "That's a cinematic color grade. Cool to warm to bright. The emotional temperature rises."
+
+---
+
+### The Timing Gap Problem
+
+**Current delays:**
+```
+0.3s  → "This table remembers."
+2.0s  → "Que Bola Asere"
+3.8s  → "You've sat here before."
+```
+
+**Lin-Manuel:** "That's a 1.8 second gap between the greeting and the payoff. Dead air. You'll lose them."
+
+**Proposed tighter timing:**
+```
+0.3s  → "This table remembers." (room whispers)
+1.6s  → "Que Bola Asere" (you're greeted)
+2.8s  → "You've sat here before." (recognition lands)
+```
+
+**Lin-Manuel:** "Silence is powerful, but only when EARNED. After a big revelation, pause. After a greeting? Move to the point."
+
+---
+
+### Animation Duration Normalization
+
+**Tobias flagged another issue:**
+
+**Before (accelerating — feels rushed):**
+- whisper-greeting: 1.8s duration
+- whisper-setup: 1.5s duration
+- whisper-line--mystery: 1.4s duration
+
+**After (consistent — cinematic rhythm):**
+- All three: **1.6s duration**
+
+**Tobias:** "The decreasing durations created subliminal anxiety. Like a film editor cutting faster and faster for no reason. Consistent timing = confident storytelling."
+
+---
+
+### The Complete Panel 2 Arc (Proposed)
+
+| Time | Element | Color | Voice | Animation |
+|------|---------|-------|-------|-----------|
+| 0.3s | "This table remembers." | cream 50% | Narrator (room) | Soft fade, ghostly |
+| 1.6s | "Que Bola Asere" | brass 100% | Character (human) | Warm smoke reveal |
+| 2.8s | "You've sat here before." | white 100% | Recognition (payoff) | Lands with weight |
+
+**Lin-Manuel:** "Now it's a scene:
+1. You enter a room. The room itself seems to whisper.
+2. Someone looks up and greets you warmly.
+3. You realize: you've been here before. This is home."
+
+---
+
+### Team Sign-off
+
+**Tobias van Schneider:** "The shadow hierarchy now builds to climax. The color differentiation creates distinct voices. The timing is tighter. This passes the 'room' test — it feels like a PLACE, not a slideshow."
+
+**Lin-Manuel Miranda:** "Three voices, three colors, three beats. That's musical structure. Setup, complication, resolution. The room whispers, a friend greets, you remember. Perfect."
+
+**Daisy Expósito-Ulla:** "The ghostly cream for 'This table remembers' — that's ancestors. That's not a person talking. That's the PLACE remembering. Yes."
+
+---
+
+### Action Items
+
+- [ ] Change `.whisper-setup` color from `rgba(212, 165, 116, 0.85)` to `rgba(248, 239, 230, 0.50)` (cream 50%)
+- [ ] Tighten animation delays: 0.3s → 1.6s → 2.8s
+- [ ] Keep `.whisper-greeting` at brass 100% (warm human voice)
+- [ ] Verify shadow hierarchy: Panel 1 (4 layers) < Panel 4 (6 layers)
+- [ ] Test full scroll — visual weight should BUILD to climax
+
+---
+
+### The Narrative Voice Principle (New Rule)
+
+> **Different speakers need different colors.**
+>
+> - **Narrator/Room** = cool, ethereal (cream at low opacity)
+> - **Character/Human** = warm, present (brass at full)
+> - **Revelation/Payoff** = bright, full presence (white)
+>
+> If two lines are the same color, they're the same voice.
+
+---
+
+*Revision documented: January 17, 2026 (Session 2)*
+
 *"La mesa te espera."*

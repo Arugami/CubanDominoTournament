@@ -3,9 +3,16 @@
 import AdminLayout from '../../components/admin/AdminLayout.astro';
 ---
 
-<AdminLayout title="Player Management" activeNav="registrations">
+<AdminLayout title="Registrations" activeNav="registrations">
   <div class="registrations-page">
-    <!-- Header Actions -->
+    <!-- Hero Stat -->
+    <div class="page-hero">
+      <span class="hero-number" id="playerCount">0</span>
+      <span class="hero-label">players</span>
+      <div class="hero-context" id="playerContext">loading...</div>
+    </div>
+
+    <!-- Actions Row -->
     <div class="page-actions">
       <div class="search-box">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -16,7 +23,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
           type="text"
           id="searchInput"
           class="input"
-          placeholder="Search players by name or email..."
+          placeholder="Search..."
         />
       </div>
       <button class="btn btn--primary" id="addPlayerBtn">
@@ -24,13 +31,13 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
-        Add Player
+        Add
       </button>
     </div>
 
-    <!-- Status Filter Tabs -->
+    <!-- Subtle Filter Links -->
     <div class="status-tabs">
-      <button class="status-tab active" data-status="all">All Players</button>
+      <button class="status-tab active" data-status="all">All</button>
       <button class="status-tab" data-status="registered">Registered</button>
       <button class="status-tab" data-status="confirmed">Confirmed</button>
       <button class="status-tab" data-status="waitlist">Waitlist</button>
@@ -42,32 +49,25 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       <div class="loading-placeholder">Loading players...</div>
     </div>
 
-    <!-- Desktop Table View -->
-    <div class="card players-table-card">
-      <table class="table" id="playersTable">
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Team</th>
-            <th>Status</th>
-            <th>Registered</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="playersBody">
-          <tr>
-            <td colspan="7" class="loading-cell">Loading players...</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Player Stats -->
-    <div class="stats-footer">
-      <span id="playerStats">Loading...</span>
-    </div>
+    <!-- Desktop Table View - no wrapper -->
+    <table class="players-table" id="playersTable">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Team</th>
+          <th>Status</th>
+          <th>Registered</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="playersBody">
+        <tr>
+          <td colspan="7" class="loading-cell">Loading players...</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- Add/Edit Player Modal -->
@@ -110,9 +110,9 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
           <textarea id="playerNotes" class="input" rows="3"></textarea>
         </div>
 
-        <div class="modal__actions">
+        <div class="modal__actions modal__actions--sticky">
           <button type="button" class="btn btn--secondary" id="cancelBtn">Cancel</button>
-          <button type="submit" class="btn btn--primary" id="saveBtn">Save Player</button>
+          <button type="submit" class="btn btn--primary btn-slam" id="saveBtn">Save Player</button>
         </div>
       </form>
     </div>
@@ -126,11 +126,32 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       </div>
       <div class="modal__body">
         <p>Are you sure you want to delete <strong id="deletePlayerName"></strong>?</p>
+        <p class="delete-details" id="deleteDetails"></p>
         <p class="warning-text">This action cannot be undone.</p>
       </div>
       <div class="modal__actions">
         <button type="button" class="btn btn--secondary" id="cancelDelete">Cancel</button>
         <button type="button" class="btn btn--danger" id="confirmDelete">Delete Player</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Team Assign Modal -->
+  <div class="modal-backdrop" id="teamAssignModal">
+    <div class="modal modal--team-assign">
+      <div class="modal__header">
+        <h2 class="modal__title">Assign to Team</h2>
+        <button class="modal__close" id="closeTeamAssign">&times;</button>
+      </div>
+      <div class="modal__body">
+        <div class="assign-player-info" id="assignPlayerInfo">
+          <div class="assign-player-avatar" id="assignPlayerAvatar">?</div>
+          <div class="assign-player-name" id="assignPlayerName">Player Name</div>
+        </div>
+        <div class="team-options" id="teamOptions">
+          <!-- Teams will be populated here -->
+        </div>
+        <div class="team-assign-hint">Select a team or create a new one</div>
       </div>
     </div>
   </div>
@@ -144,16 +165,49 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     gap: 16px;
   }
 
+  /* Hero Stat - Tobias style */
+  .page-hero {
+    text-align: center;
+    padding: 24px 20px 16px;
+  }
+
+  .page-hero .hero-number {
+    font-family: "Bodoni Moda", serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--brass);
+    line-height: 1;
+    display: block;
+    text-shadow: 0 0 40px rgba(212, 165, 116, 0.15);
+  }
+
+  .page-hero .hero-label {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: lowercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-top: 4px;
+  }
+
+  .page-hero .hero-context {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.25);
+  }
+
   /* Page Actions - Stack on mobile */
   .page-actions {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 12px;
+    align-items: center;
   }
 
   .search-box {
     position: relative;
-    width: 100%;
+    flex: 1;
   }
 
   .search-icon {
@@ -171,16 +225,16 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     padding-left: 42px;
   }
 
-  /* Status Tabs - Horizontal scroll on mobile */
+  /* Status Tabs - Subtle text links */
   .status-tabs {
     display: flex;
-    gap: 8px;
-    padding-bottom: 12px;
+    gap: 4px;
+    padding-bottom: 8px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     margin: 0 -16px;
-    padding: 0 16px 12px;
+    padding: 0 16px 8px;
   }
 
   .status-tabs::-webkit-scrollbar {
@@ -188,13 +242,13 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   }
 
   .status-tab {
-    padding: 8px 14px;
-    font-size: 0.8rem;
+    padding: 6px 12px;
+    font-size: 0.75rem;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.35);
     background: transparent;
-    border: 1px solid var(--border-subtle);
-    border-radius: 20px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
@@ -207,9 +261,8 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   }
 
   .status-tab.active {
-    color: var(--brass);
-    background: rgba(212, 165, 116, 0.1);
-    border-color: var(--brass);
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.05);
   }
 
   /* Mobile Card View */
@@ -219,7 +272,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     gap: 12px;
   }
 
-  .players-table-card {
+  .players-table {
     display: none;
   }
 
@@ -330,13 +383,6 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     color: rgba(255, 255, 255, 0.3);
   }
 
-  .stats-footer {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.4);
-    text-align: center;
-    padding: 8px 0;
-  }
-
   .loading-placeholder {
     text-align: center;
     padding: 48px 16px;
@@ -344,10 +390,17 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     font-size: 0.9rem;
   }
 
+  /* Empty state - visual, not verbal */
   .empty-state {
     text-align: center;
     padding: 48px 16px;
-    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .empty-state__icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+    opacity: 0.2;
   }
 
   /* Modal Styles - Full screen on mobile */
@@ -470,10 +523,168 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     margin-top: 8px;
   }
 
+  .delete-details {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 8px;
+  }
+
+  /* Quick Team Assign Modal */
+  .modal--team-assign {
+    max-height: 70vh;
+  }
+
+  .assign-player-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+
+  .assign-player-avatar {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--brass), var(--copper));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Bodoni Moda", serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+
+  .assign-player-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .team-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .team-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .team-option:active {
+    transform: scale(0.98);
+  }
+
+  .team-option:hover {
+    border-color: var(--border-accent);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .team-option--full {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .team-option--full:hover {
+    border-color: var(--border-subtle);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .team-option__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .team-option__name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .team-option__slots {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .team-option__slots--available {
+    color: #81c784;
+  }
+
+  .team-option__seed {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border-radius: 4px;
+  }
+
+  .team-option--create {
+    border-style: dashed;
+    justify-content: center;
+  }
+
+  .team-option--create .team-option__name {
+    color: var(--brass);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .team-assign-hint {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.3);
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  .team-assign-empty {
+    text-align: center;
+    padding: 24px;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  /* Team Assign Button in Cards */
+  .action-btn--team {
+    color: #64b5f6;
+    border-color: rgba(33, 150, 243, 0.3);
+    background: rgba(33, 150, 243, 0.05);
+  }
+
+  .action-btn--team:active {
+    background: rgba(33, 150, 243, 0.15);
+  }
+
   /* ===== DESKTOP OVERRIDES (769px+) ===== */
   @media (min-width: 769px) {
     .registrations-page {
-      gap: 24px;
+      gap: 20px;
+    }
+
+    .page-hero {
+      padding: 32px 20px 20px;
+    }
+
+    .page-hero .hero-number {
+      font-size: 5rem;
     }
 
     .page-actions {
@@ -482,26 +693,22 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     }
 
     .search-box {
-      flex: 1;
-      max-width: 400px;
+      max-width: 320px;
     }
 
     .status-tabs {
       margin: 0;
-      padding: 0 0 16px;
-      border-bottom: 1px solid var(--border-subtle);
+      padding: 0;
       overflow: visible;
     }
 
     .status-tab {
-      padding: 8px 16px;
-      font-size: 0.85rem;
-      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
     }
 
     .status-tab:hover {
-      color: rgba(255, 255, 255, 0.8);
-      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.6);
     }
 
     /* Hide mobile cards, show table */
@@ -509,8 +716,32 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       display: none;
     }
 
-    .players-table-card {
-      display: block;
+    .players-table {
+      display: table;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .players-table th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.35);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .players-table td {
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .players-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
     }
 
     /* Table Styling */
@@ -559,9 +790,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       color: #e57373;
     }
 
-    .stats-footer {
-      text-align: left;
-      font-size: 0.85rem;
+    .action-btn--team:hover {
+      background: rgba(33, 150, 243, 0.15);
+      border-color: rgba(33, 150, 243, 0.4);
+      color: #64b5f6;
     }
 
     /* Modal - centered on desktop */
@@ -607,6 +839,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   let currentFilter = 'all';
   let searchQuery = '';
   let editingPlayerId = null;
+  let assigningPlayerId = null;
 
   window.addEventListener('adminReady', async ({ detail: { supabase } }) => {
     await loadData(supabase);
@@ -627,7 +860,31 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   function renderPlayers() {
     const tbody = document.getElementById('playersBody');
     const cardsEl = document.getElementById('playersCards');
-    const statsEl = document.getElementById('playerStats');
+    const countEl = document.getElementById('playerCount');
+    const contextEl = document.getElementById('playerContext');
+
+    // Update hero stat
+    countEl.textContent = players.length;
+    const statusCounts = {
+      all: players.length,
+      confirmed: players.filter(p => p.status === 'confirmed').length,
+      registered: players.filter(p => p.status === 'registered').length,
+      waitlist: players.filter(p => p.status === 'waitlist').length,
+      cancelled: players.filter(p => p.status === 'cancelled').length
+    };
+    const parts = [];
+    if (statusCounts.confirmed > 0) parts.push(`${statusCounts.confirmed} confirmed`);
+    if (statusCounts.registered > 0) parts.push(`${statusCounts.registered} registered`);
+    if (statusCounts.waitlist > 0) parts.push(`${statusCounts.waitlist} waitlist`);
+    contextEl.textContent = parts.length > 0 ? parts.join(' · ') : 'no registrations yet';
+
+    // Update filter tab counts
+    document.querySelectorAll('.status-tab').forEach(tab => {
+      const status = tab.dataset.status;
+      const count = statusCounts[status] || 0;
+      const label = status.charAt(0).toUpperCase() + status.slice(1);
+      tab.textContent = `${label} (${count})`;
+    });
 
     // Filter players
     let filtered = players;
@@ -643,9 +900,8 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     }
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" class="empty-cell">No players found</td></tr>`;
-      cardsEl.innerHTML = `<div class="empty-state">No players found</div>`;
-      statsEl.textContent = '0 players';
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-cell"></td></tr>`;
+      cardsEl.innerHTML = `<div class="empty-state"><svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>`;
       return;
     }
 
@@ -669,6 +925,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
             }
           </div>
           <div class="player-card__actions">
+            <button class="action-btn action-btn--team team-assign-btn" data-id="${player.id}">→ Team</button>
             <button class="action-btn edit-btn" data-id="${player.id}">Edit</button>
             <button class="action-btn action-btn--delete delete-btn" data-id="${player.id}">Delete</button>
           </div>
@@ -703,6 +960,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
           <td>${dateStr}</td>
           <td>
             <div class="action-btns">
+              <button class="action-btn action-btn--team team-assign-btn" data-id="${player.id}">→ Team</button>
               <button class="action-btn edit-btn" data-id="${player.id}">Edit</button>
               <button class="action-btn action-btn--delete delete-btn" data-id="${player.id}">Delete</button>
             </div>
@@ -711,13 +969,6 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       `;
     }).join('');
 
-    // Update stats
-    const statusCounts = {
-      registered: players.filter(p => p.status === 'registered').length,
-      confirmed: players.filter(p => p.status === 'confirmed').length,
-      waitlist: players.filter(p => p.status === 'waitlist').length
-    };
-    statsEl.textContent = `${players.length} total | ${statusCounts.confirmed} confirmed`;
   }
 
   function setupEventListeners(supabase) {
@@ -780,8 +1031,24 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         const player = players.find(p => p.id === id);
         if (player) {
           document.getElementById('deletePlayerName').textContent = player.name;
+          // Show team assignment info in delete warning
+          const team = teams.find(t => t.id === player.team_id);
+          const detailsEl = document.getElementById('deleteDetails');
+          if (team) {
+            detailsEl.textContent = `This player is assigned to ${team.name}.`;
+          } else {
+            detailsEl.textContent = '';
+          }
           document.getElementById('confirmDelete').dataset.id = id;
           deleteModal.classList.add('open');
+        }
+      }
+
+      if (e.target.classList.contains('team-assign-btn')) {
+        const id = e.target.dataset.id;
+        const player = players.find(p => p.id === id);
+        if (player) {
+          openTeamAssignModal(player);
         }
       }
     }
@@ -789,6 +1056,108 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     // Listen on both mobile cards and desktop table
     document.getElementById('playersBody').addEventListener('click', handlePlayerAction);
     document.getElementById('playersCards').addEventListener('click', handlePlayerAction);
+
+    // Team Assign Modal
+    const teamAssignModal = document.getElementById('teamAssignModal');
+    const closeTeamAssign = document.getElementById('closeTeamAssign');
+
+    function openTeamAssignModal(player) {
+      assigningPlayerId = player.id;
+      document.getElementById('assignPlayerAvatar').textContent = player.name[0].toUpperCase();
+      document.getElementById('assignPlayerName').textContent = player.name;
+
+      // Build team options
+      const optionsContainer = document.getElementById('teamOptions');
+
+      // Find teams with available slots
+      const teamsWithSlots = teams.map(team => {
+        const hasPlayer1 = team.player1_id !== null;
+        const hasPlayer2 = team.player2_id !== null;
+        const isFull = hasPlayer1 && hasPlayer2;
+        const isCurrentPlayerInTeam = team.player1_id === player.id || team.player2_id === player.id;
+        const slotsUsed = (hasPlayer1 ? 1 : 0) + (hasPlayer2 ? 1 : 0);
+        return { ...team, isFull, isCurrentPlayerInTeam, slotsUsed };
+      });
+
+      if (teamsWithSlots.length === 0) {
+        optionsContainer.innerHTML = `
+          <div class="team-assign-empty">
+            <p>No teams created yet</p>
+            <a href="/admin/teams" class="btn btn--primary" style="margin-top: 12px;">Create Teams</a>
+          </div>
+        `;
+      } else {
+        optionsContainer.innerHTML = teamsWithSlots.map(team => `
+          <div class="team-option ${team.isFull && !team.isCurrentPlayerInTeam ? 'team-option--full' : ''}"
+               data-team-id="${team.id}"
+               data-is-full="${team.isFull && !team.isCurrentPlayerInTeam}">
+            <div class="team-option__info">
+              <span class="team-option__name">${team.name}</span>
+              <span class="team-option__slots ${!team.isFull || team.isCurrentPlayerInTeam ? 'team-option__slots--available' : ''}">
+                ${team.isCurrentPlayerInTeam ? 'Currently assigned' : `${team.slotsUsed}/2 players`}
+              </span>
+            </div>
+            ${team.seed ? `<span class="team-option__seed">#${team.seed}</span>` : ''}
+          </div>
+        `).join('') + `
+          <a href="/admin/teams" class="team-option team-option--create">
+            <span class="team-option__name">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Create New Team
+            </span>
+          </a>
+        `;
+      }
+
+      teamAssignModal.classList.add('open');
+    }
+
+    closeTeamAssign.addEventListener('click', () => teamAssignModal.classList.remove('open'));
+    teamAssignModal.addEventListener('click', (e) => {
+      if (e.target === teamAssignModal) teamAssignModal.classList.remove('open');
+    });
+
+    // Handle team selection
+    document.getElementById('teamOptions').addEventListener('click', async (e) => {
+      const teamOption = e.target.closest('.team-option');
+      if (!teamOption || teamOption.classList.contains('team-option--create')) return;
+      if (teamOption.dataset.isFull === 'true') return;
+
+      const teamId = teamOption.dataset.teamId;
+      const team = teams.find(t => t.id === teamId);
+      if (!team || !assigningPlayerId) return;
+
+      try {
+        // First, remove player from any existing team assignment
+        const currentPlayer = players.find(p => p.id === assigningPlayerId);
+        if (currentPlayer?.team_id) {
+          const oldTeam = teams.find(t => t.id === currentPlayer.team_id);
+          if (oldTeam) {
+            if (oldTeam.player1_id === assigningPlayerId) {
+              await supabase.from('teams').update({ player1_id: null }).eq('id', oldTeam.id);
+            } else if (oldTeam.player2_id === assigningPlayerId) {
+              await supabase.from('teams').update({ player2_id: null }).eq('id', oldTeam.id);
+            }
+          }
+        }
+
+        // Assign to new team (fill first available slot)
+        const slot = team.player1_id === null ? 'player1_id' : 'player2_id';
+        await supabase.from('teams').update({ [slot]: assigningPlayerId }).eq('id', teamId);
+
+        // Update player's team_id reference
+        await supabase.from('players').update({ team_id: teamId }).eq('id', assigningPlayerId);
+
+        teamAssignModal.classList.remove('open');
+        await loadData(supabase);
+      } catch (err) {
+        console.error('Team assign error:', err);
+        alert('Failed to assign player to team');
+      }
+    });
 
     // Form submit
     form.addEventListener('submit', async (e) => {

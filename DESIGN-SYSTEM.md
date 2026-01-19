@@ -515,6 +515,83 @@ When you need to HIT—headlines, scores, championship moments—channel ESPN UF
 
 ---
 
+## Responsive & Mobile-First
+
+### Philosophy
+
+**99% of CDL users are on mobile.** Every design decision starts with the phone in hand, then adapts up to tablet and desktop.
+
+> "Mobile-first isn't a constraint—it's clarity. The small screen forces you to prioritize what matters."
+
+### Core Principles
+
+| Principle | What It Means |
+|-----------|---------------|
+| **Mobile-first, responsive always** | Design for 375px first, enhance for larger screens |
+| **Touch-friendly targets** | Minimum 44×44px tap targets, 48×48px preferred |
+| **Thumb zones matter** | Primary actions in bottom 2/3 of screen |
+| **Content over chrome** | Minimize persistent UI on small screens |
+| **Performance is UX** | Mobile networks demand lean assets |
+
+### Breakpoints
+
+```css
+/* Mobile-first: base styles are mobile */
+
+/* Tablet */
+@media (min-width: 768px) { }
+
+/* Desktop */
+@media (min-width: 1024px) { }
+
+/* Large desktop */
+@media (min-width: 1280px) { }
+```
+
+### Touch Targets
+
+```css
+/* Minimum touch target */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 12px; /* Visual can be smaller, tap area must not */
+}
+
+/* Preferred for primary actions */
+.touch-target-lg {
+  min-width: 48px;
+  min-height: 48px;
+}
+```
+
+### Mobile-Specific Patterns
+
+**Hide non-essential elements:**
+- Progress trackers / breadcrumbs → hide on mobile
+- Secondary navigation → collapse or remove
+- Decorative elements → reduce or simplify
+
+**Adapt layouts:**
+- Multi-column → single column
+- Side-by-side → stacked
+- Horizontal scroll → vertical scroll (usually)
+
+**Consider thumb reach:**
+- Bottom navigation > top navigation
+- FABs in bottom-right (right-handed majority)
+- Avoid top corners for frequent actions
+
+### What NOT To Do on Mobile
+
+- **Don't shrink desktop designs** — redesign for the constraint
+- **Don't rely on hover states** — touch has no hover
+- **Don't use tiny tap targets** — frustration guaranteed
+- **Don't hide critical actions** — if it matters, it's visible
+- **Don't assume fast connections** — optimize everything
+
+---
+
 ## Animation Guidelines
 
 ### Philosophy
@@ -624,6 +701,11 @@ When building new UI, verify:
 
 | Date | Change |
 |------|--------|
+| Jan 16, 2026 | **Mobile-First Philosophy** |
+| | - Added "Responsive & Mobile-First" section |
+| | - Documented 99% mobile user base |
+| | - Added breakpoints, touch targets, thumb zones |
+| | - Mobile-specific patterns and anti-patterns |
 | Jan 16, 2026 | **Button Gradient Strategy & Admin Atmosphere** |
 | | - Documented semantic button gradient hierarchy (action vs. ceremony) |
 | | - Public CTAs use copper→dark diagonal (ESPN punch) |

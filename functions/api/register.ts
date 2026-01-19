@@ -66,7 +66,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     phone: clean(body.phone),
     notes: clean(body.notes),
     ruleConfirm: clean(body.ruleConfirm),
-    venueUrl: env.VENUE_URL || "https://mrgarciacigars.com/",
+    venueUrl: env.VENUE_URL || "https://share.google/Bd3ZofPsvccfdT7EC",
   };
 
   let upstreamResponse: Response;

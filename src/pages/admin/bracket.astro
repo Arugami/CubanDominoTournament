@@ -3,7 +3,7 @@
 import AdminLayout from '../../components/admin/AdminLayout.astro';
 ---
 
-<AdminLayout title="Bracket Editor" activeNav="bracket">
+<AdminLayout title="Bracket" activeNav="bracket">
   <div class="bracket-page">
     <!-- Header Actions -->
     <div class="page-actions">
@@ -339,8 +339,8 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   .match {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    padding: 14px;
+    border-radius: 12px;
+    padding: 16px;
     width: 100%;
     -webkit-tap-highlight-color: transparent;
   }
@@ -365,6 +365,60 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     color: var(--copper);
   }
 
+  /* Visual-only status indicator (dot) with tooltip */
+  .match-status {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    font-size: 0;
+    padding: 0;
+    border: none;
+    cursor: help;
+  }
+
+  .match-status::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    padding: 6px 10px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #fff;
+    background: rgba(28, 19, 15, 0.95);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: all 0.2s ease;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .match-status:hover::after,
+  .match-status:active::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .match-status.badge--pending {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .match-status.badge--in_progress {
+    background: var(--brass);
+    box-shadow: 0 0 8px rgba(212, 165, 116, 0.4);
+  }
+
+  .match-status.badge--completed {
+    background: #81c784;
+    box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
+  }
+
   .match-teams {
     display: flex;
     flex-direction: column;
@@ -384,6 +438,43 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   .match-team.winner {
     background: rgba(76, 175, 80, 0.1);
     border: 1px solid rgba(76, 175, 80, 0.2);
+  }
+
+  /* Winner advancement pulse animation */
+  .match-team.winner-advancing {
+    animation: winnerPulse 0.6s ease-out;
+  }
+
+  @keyframes winnerPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(129, 199, 132, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 0 10px rgba(129, 199, 132, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(129, 199, 132, 0);
+    }
+  }
+
+  /* Champion reveal animation */
+  .champion-name.revealing {
+    animation: championReveal 0.8s ease-out;
+  }
+
+  @keyframes championReveal {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   .team-seed {
@@ -414,7 +505,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     color: #fff;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border-subtle);
-    border-radius: 6px;
+    border-radius: 12px;
     outline: none;
     -webkit-tap-highlight-color: transparent;
   }
@@ -439,7 +530,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   .save-match-btn {
     width: 100%;
-    padding: 12px 14px;
+    padding: 12px 16px;
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -447,7 +538,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     color: var(--brass);
     background: rgba(212, 165, 116, 0.1);
     border: 1px solid var(--border-accent);
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
@@ -857,10 +948,15 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         }
       }
 
-      // Update status badge
+      // Update status badge with tooltip
       const statusBadge = matchEl.querySelector('[data-status-badge]');
       statusBadge.className = `match-status badge badge--${match.status}`;
-      statusBadge.textContent = match.status.charAt(0).toUpperCase() + match.status.slice(1);
+      const statusLabels = {
+        'pending': 'Pending',
+        'in_progress': 'In Progress',
+        'completed': 'Completed'
+      };
+      statusBadge.setAttribute('data-tooltip', statusLabels[match.status] || match.status);
     });
 
     // Update champion display
@@ -962,9 +1058,38 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
           // If completed, advance winner to next round
           if (winnerId && round < 3) {
             await advanceWinner(supabase, round, matchNumber, winnerId);
+
+            // Show winner toast and pulse animation
+            const winnerTeam = teams.find(t => t.id === winnerId);
+            if (winnerTeam && window.showToast) {
+              const roundNames = { 1: 'Semifinals', 2: 'Finals' };
+              window.showToast(`${winnerTeam.name} advances to ${roundNames[round + 1]}`, 'success');
+
+              // Add pulse animation to winner
+              const winnerEl = matchEl.querySelector(
+                match.team1_id === winnerId ? '.match-team[data-position="1"]' : '.match-team[data-position="2"]'
+              );
+              if (winnerEl) {
+                winnerEl.classList.add('winner-advancing');
+                setTimeout(() => winnerEl.classList.remove('winner-advancing'), 600);
+              }
+            }
+          } else if (winnerId && round === 3) {
+            // Championship won - reveal animation
+            const winnerTeam = teams.find(t => t.id === winnerId);
+            if (winnerTeam && window.showToast) {
+              window.showToast(`${winnerTeam.name} wins the championship!`, 'success', 5000);
+            }
           }
 
           await loadData(supabase);
+
+          // Champion reveal animation
+          if (winnerId && round === 3) {
+            const championNameEl = document.getElementById('championName');
+            championNameEl.classList.add('revealing');
+            setTimeout(() => championNameEl.classList.remove('revealing'), 800);
+          }
         } catch (err) {
           console.error('Save scores error:', err);
           alert('Failed to save scores');
