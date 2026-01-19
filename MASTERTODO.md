@@ -284,6 +284,7 @@
 - [x] **CDL Logo System: Wordmark with Signature Line** — Final logo treatment with brass typography
 - [x] **Panels 2-4: Complete narrative arc** — Typography hierarchy refined for storytelling flow
 - [x] **Back-to-top pip cinematic animations** — Matching loading screen visual language (scale 0.9→1, elastic pop easing, glow bloom)
+- [x] **Admin dashboard ticker preview fix** — Used `100dvh` for iOS, corrected height offset to 200px, reduced hero padding
 
 ---
 
@@ -337,7 +338,7 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 17, 2026 (Back-to-Top Pip Cinematic Animations)
+**Last Updated:** January 19, 2026 (Admin Dashboard Ticker Preview Fix)
 
 *"La mesa te espera."*
 
