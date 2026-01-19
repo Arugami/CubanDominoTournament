@@ -330,23 +330,27 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     gap: 12px;
   }
 
-  /* Filter Tabs - Subtle text links */
+  /* Filter Tabs - Clear active state */
   .filter-tabs {
     display: flex;
     gap: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 12px;
+    margin-bottom: 4px;
   }
 
   .filter-tab {
-    padding: 6px 12px;
-    font-size: 0.75rem;
+    padding: 8px 14px;
+    font-size: 0.8rem;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.4);
     background: transparent;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    transition: all 0.2s ease;
     -webkit-tap-highlight-color: transparent;
-    white-space: nowrap;
+    position: relative;
   }
 
   .filter-tab:active {
@@ -354,15 +358,28 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   }
 
   .filter-tab.active {
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.05);
+    color: var(--brass);
+    background: rgba(212, 165, 116, 0.1);
+  }
+
+  /* Brass underline for active tab */
+  .filter-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 2px;
+    background: var(--brass);
+    border-radius: 1px;
   }
 
   /* Announcements List */
   .announcements-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
 
   .announcement-card {
@@ -370,14 +387,16 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     flex-direction: column;
     gap: 12px;
     padding: 16px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--border-subtle);
+    background: rgba(20, 16, 14, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.2s ease;
   }
 
   .announcement-card--inactive {
-    opacity: 0.5;
+    opacity: 0.45;
+    background: rgba(10, 8, 6, 0.4);
   }
 
   .announcement-card__status {
@@ -392,97 +411,145 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   .announcement-card__header {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
   }
 
-  /* Type badges - subtle, not loud */
+  .announcement-card__badges {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Type badges - Color-coded for instant recognition */
   .announcement-card__type {
-    font-size: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+  }
+
+  /* Info - Cool cyan/teal */
+  .announcement-card__type--info {
+    background: rgba(56, 189, 248, 0.12);
+    color: #7dd3fc;
+    border-color: rgba(56, 189, 248, 0.25);
+  }
+
+  /* Alert - Warning red */
+  .announcement-card__type--alert {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+
+  /* Hype - Electric purple */
+  .announcement-card__type--hype {
+    background: rgba(168, 85, 247, 0.12);
+    color: #c4b5fd;
+    border-color: rgba(168, 85, 247, 0.3);
+  }
+
+  /* Winner - Gold celebration */
+  .announcement-card__type--winner {
+    background: rgba(212, 165, 116, 0.15);
+    color: var(--brass);
+    border-color: rgba(212, 165, 116, 0.35);
+  }
+
+  /* Priority - Visual urgency */
+  .announcement-card__priority {
+    font-size: 0.65rem;
     font-weight: 500;
-    text-transform: lowercase;
     letter-spacing: 0.02em;
     padding: 3px 8px;
     border-radius: 3px;
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.45);
   }
 
-  .announcement-card__type--alert {
-    background: rgba(255, 152, 0, 0.08);
-    color: rgba(255, 183, 77, 0.7);
+  /* Normal - Barely there */
+  .announcement-card__priority--normal {
+    color: rgba(255, 255, 255, 0.35);
   }
 
-  .announcement-card__type--winner {
-    background: rgba(255, 215, 0, 0.08);
-    color: rgba(255, 215, 0, 0.7);
-  }
-
-  .announcement-card__type--hype {
-    background: rgba(156, 39, 176, 0.08);
-    color: rgba(186, 104, 200, 0.7);
-  }
-
-  /* Priority - even more subtle */
-  .announcement-card__priority {
-    font-size: 0.6rem;
-    color: rgba(255, 255, 255, 0.25);
-  }
-
+  /* High - Warm orange glow */
   .announcement-card__priority--high {
-    color: rgba(255, 183, 77, 0.5);
+    color: #fb923c;
+    background: rgba(251, 146, 60, 0.1);
+    text-shadow: 0 0 12px rgba(251, 146, 60, 0.4);
   }
 
+  /* Urgent - Red pulse */
   .announcement-card__priority--urgent {
-    color: rgba(229, 115, 115, 0.6);
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.12);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    animation: urgentPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes urgentPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
   }
 
   .announcement-card__text {
-    font-size: 0.9rem;
-    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.95);
     line-height: 1.5;
-    margin-bottom: 8px;
+    margin: 10px 0;
   }
 
   .announcement-card__meta {
     font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.02em;
   }
 
   .announcement-card__actions {
     display: flex;
-    gap: 8px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border-subtle);
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .action-btn {
     flex: 1;
-    padding: 12px 16px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    color: rgba(255, 255, 255, 0.7);
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.6);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s ease;
   }
 
   .action-btn:active {
-    transform: scale(0.98);
-    background: rgba(255, 255, 255, 0.1);
+    transform: scale(0.97);
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
   }
 
   .action-btn--delete {
-    color: #e57373;
-    border-color: rgba(244, 67, 54, 0.3);
-    background: rgba(244, 67, 54, 0.05);
+    color: #ef5350;
+    border-color: rgba(239, 83, 80, 0.25);
+    background: rgba(239, 83, 80, 0.08);
   }
 
   .action-btn--delete:active {
-    background: rgba(244, 67, 54, 0.15);
+    background: rgba(239, 83, 80, 0.2);
+    border-color: rgba(239, 83, 80, 0.4);
   }
 
   .loading-placeholder {
@@ -1123,16 +1190,22 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         : '';
 
       const priorityLabels = ['Normal', 'High', 'Urgent'];
-      const priorityClasses = ['', 'announcement-card__priority--high', 'announcement-card__priority--urgent'];
+      const priorityClasses = [
+        'announcement-card__priority--normal',
+        'announcement-card__priority--high',
+        'announcement-card__priority--urgent'
+      ];
 
       return `
         <div class="announcement-card ${!a.is_active ? 'announcement-card--inactive' : ''}" data-id="${a.id}">
           <div class="announcement-card__status ${!a.is_active ? 'announcement-card__status--inactive' : ''}"></div>
           <div class="announcement-card__content">
             <div class="announcement-card__header">
-              <span class="announcement-card__type announcement-card__type--${a.type}">${a.type}</span>
+              <div class="announcement-card__badges">
+                <span class="announcement-card__type announcement-card__type--${a.type}">${a.type}</span>
+              </div>
               <span class="announcement-card__priority ${priorityClasses[a.priority || 0]}">
-                ${priorityLabels[a.priority || 0]} priority
+                ${priorityLabels[a.priority || 0]}
               </span>
             </div>
             <p class="announcement-card__text">${a.content}</p>

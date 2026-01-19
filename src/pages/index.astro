@@ -9206,15 +9206,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           };
 
           // Story trigger: pip click initiates the narrative journey
-          // First click → Begin story at Panel 2
-          // Subsequent clicks → Return to hero (back to top)
+          // First click FROM HERO → Begin story at Panel 2
+          // All other clicks → Return to hero (back to top)
           let storyStarted = false;
 
           backToTop.addEventListener('click', (e) => {
             unlockScroll();
 
-            if (!storyStarted) {
-              // First click: Begin the story journey
+            // Only start story if user is at hero panel AND story hasn't started
+            const heroRect = heroPanel?.getBoundingClientRect();
+            const storyRect = storyEl?.getBoundingClientRect();
+            const isAtHero = heroRect && storyRect && Math.abs(heroRect.top - storyRect.top) < 50;
+
+            if (!storyStarted && isAtHero) {
+              // First click from hero: Begin the story journey
               storyStarted = true;
               const whisperPanel = document.getElementById('panelWhisper');
               if (whisperPanel) {
@@ -9223,7 +9228,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               return;
             }
 
-            // Subsequent clicks: Back to top (hero)
+            // All other cases: Back to hero
+            storyStarted = true; // Mark story as started since user has explored
             snapToPanelTop(heroPanel);
           });
 
@@ -9409,9 +9415,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       function lockScroll(duration, afterUnlock) {
-        // Mobile: Use SHORTER lock duration (1.5s max) for responsiveness
-        // This lets animations breathe without trapping users
-        const effectiveDuration = isMobile ? Math.min(duration, 1500) : duration;
+        // Allow full lock duration on mobile - animations need time to land
+        // Escape hatch (fast swipe) still works for impatient users
+        const effectiveDuration = duration;
 
         scrollLocked = true;
         scrollBlockTarget.addEventListener('wheel', preventScroll, { passive: false });
