@@ -1,1129 +1,221 @@
 ---
-// Admin Dashboard - La Oficina Command Center
+// Admin Dashboard - The Tobias Way: Let the content be the interface
 import AdminLayout from '../../components/admin/AdminLayout.astro';
 ---
 
 <AdminLayout title="Dashboard" activeNav="dashboard">
-  <div class="command-center">
-    <!-- Hero Stat - The Main Event -->
-    <div class="hero-stat">
-      <div class="hero-stat__glow"></div>
-      <div class="hero-stat__content">
-        <div class="hero-stat__label">Tournament Status</div>
-        <div class="hero-stat__primary">
-          <span class="hero-stat__number" id="playerCount">--</span>
-          <span class="hero-stat__unit">players</span>
-        </div>
-        <div class="hero-stat__secondary">
-          <span id="teamCount">--</span> teams formed
-          <span class="hero-stat__divider">|</span>
-          <span id="matchesPlayed">--</span> matches played
-        </div>
-      </div>
-      <div class="cdl-wordmark cdl-wordmark--small">
-        <span class="cdl-wordmark__text">CDL</span>
-        <span class="cdl-wordmark__line"></span>
+  <div class="dashboard">
+    <!-- Hero Stat - No Card, Just the Number -->
+    <div class="dashboard-hero">
+      <span class="hero-number" id="playerCount">0</span>
+      <span class="hero-label">players</span>
+      <div class="hero-context">
+        <span id="teamCount">0</span> teams • <span id="matchCount">0</span>/7 matches
       </div>
     </div>
 
-    <!-- Quick Actions - The Commissioner's Tools -->
-    <div class="tools-section">
-      <h2 class="section-title">
-        <span class="section-title__text">Quick Actions</span>
-        <span class="section-title__line"></span>
-      </h2>
-      <div class="tools-grid">
-        <a href="/admin/registrations" class="tool-card tool-card--primary">
-          <div class="tool-card__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 20v-1a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1" />
-              <line x1="12" y1="14" x2="12" y2="18" stroke-width="2" />
-              <line x1="10" y1="16" x2="14" y2="16" stroke-width="2" />
-            </svg>
-          </div>
-          <div class="tool-card__info">
-            <span class="tool-card__name">Add Player</span>
-            <span class="tool-card__hint">Register new competitor</span>
-          </div>
-        </a>
-
-        <a href="/admin/teams" class="tool-card">
-          <div class="tool-card__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="9" cy="7" r="3" />
-              <circle cx="15" cy="7" r="3" />
-              <path d="M3 19v-1a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v1" />
-              <path d="M15 15h3a3 3 0 0 1 3 3v1" />
-            </svg>
-          </div>
-          <div class="tool-card__info">
-            <span class="tool-card__name">Form Teams</span>
-            <span class="tool-card__hint">Pair players together</span>
-          </div>
-        </a>
-
-        <a href="/admin/bracket" class="tool-card">
-          <div class="tool-card__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M4 6h4v4H4zM16 6h4v4h-4zM4 14h4v4H4zM16 14h4v4h-4z" />
-              <path d="M8 8h2v8H8M14 8h2v8h-2" />
-              <path d="M10 12h4" />
-            </svg>
-          </div>
-          <div class="tool-card__info">
-            <span class="tool-card__name">Update Bracket</span>
-            <span class="tool-card__hint">Record match results</span>
-          </div>
-        </a>
-
-        <a href="/admin/announcements" class="tool-card">
-          <div class="tool-card__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M3 11l18-5v12L3 13v-2z" />
-              <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
-            </svg>
-          </div>
-          <div class="tool-card__info">
-            <span class="tool-card__name">Ticker</span>
-            <span class="tool-card__hint">Broadcast announcements</span>
-          </div>
-        </a>
+    <!-- Actions - Flow, Not Grid -->
+    <div class="dashboard-actions">
+      <a href="/admin/registrations" class="action-primary" id="primaryAction">
+        + Add Your First Player
+      </a>
+      <div class="action-links">
+        <a href="/admin/teams">Teams</a>
+        <a href="/admin/bracket">Bracket</a>
+        <a href="/admin/announcements">Ticker</a>
       </div>
     </div>
 
-    <!-- Two Column Layout: Activity + Bracket -->
-    <div class="intel-section">
-      <!-- Recent Activity -->
-      <div class="intel-card">
-        <div class="intel-card__header">
-          <h3 class="intel-card__title">Recent Players</h3>
-          <a href="/admin/registrations" class="intel-card__link">View All</a>
-        </div>
-        <div class="intel-card__content" id="recentPlayers">
-          <div class="loading-state">
-            <div class="loading-dot"></div>
-            <span>Loading...</span>
-          </div>
-        </div>
+    <!-- Ticker Preview - Minimal -->
+    <div class="ticker-preview" id="tickerPreview">
+      <div class="ticker-line"></div>
+      <div class="ticker-messages" id="tickerMessages">
+        <span class="ticker-empty">No announcements</span>
       </div>
-
-      <!-- Bracket Progress -->
-      <div class="intel-card">
-        <div class="intel-card__header">
-          <h3 class="intel-card__title">Bracket Status</h3>
-          <a href="/admin/bracket" class="intel-card__link">Edit</a>
-        </div>
-        <div class="intel-card__content" id="bracketStatus">
-          <div class="loading-state">
-            <div class="loading-dot"></div>
-            <span>Loading...</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ticker Messages -->
-    <div class="ticker-section">
-      <div class="ticker-header">
-        <h3 class="ticker-title">Live Ticker</h3>
-        <span class="ticker-count" id="announcementCount">--</span>
-        <a href="/admin/announcements" class="ticker-manage">Manage</a>
-      </div>
-      <div class="ticker-content" id="activeMessages">
-        <div class="loading-state">
-          <div class="loading-dot"></div>
-          <span>Loading...</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Onboarding Welcome Modal -->
-  <div class="onboarding-overlay" id="onboardingOverlay">
-    <div class="onboarding-modal">
-      <div class="cdl-wordmark cdl-wordmark--medium">
-        <span class="cdl-wordmark__text">CDL</span>
-        <span class="cdl-wordmark__line"></span>
-      </div>
-      <h2 class="onboarding-title">Welcome to La Oficina</h2>
-      <p class="onboarding-subtitle">Your command center for managing the Cuban Domino League tournament.</p>
-
-      <div class="onboarding-steps">
-        <div class="onboarding-step">
-          <span class="onboarding-step__num">1</span>
-          <span class="onboarding-step__text">Register players as they sign up</span>
-        </div>
-        <div class="onboarding-step">
-          <span class="onboarding-step__num">2</span>
-          <span class="onboarding-step__text">Form teams by pairing players together</span>
-        </div>
-        <div class="onboarding-step">
-          <span class="onboarding-step__num">3</span>
-          <span class="onboarding-step__text">Update the bracket as matches complete</span>
-        </div>
-        <div class="onboarding-step">
-          <span class="onboarding-step__num">4</span>
-          <span class="onboarding-step__text">Broadcast updates via the ticker</span>
-        </div>
-      </div>
-
-      <button class="onboarding-btn" id="startTourBtn">Enter La Oficina</button>
-      <button class="onboarding-skip" id="skipTourBtn">I know my way around</button>
     </div>
   </div>
 </AdminLayout>
 
 <style>
-  /* ===== COMMAND CENTER - Cigar Lounge Dashboard ===== */
-  .command-center {
+  /* ===== DASHBOARD - Tobias Minimal ===== */
+  .dashboard {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px 0;
+    min-height: calc(100dvh - 200px); /* header + nav + padding */
+  }
+
+  /* ===== HERO STAT - No Card, Just the Number ===== */
+  .dashboard-hero {
+    text-align: center;
+    padding: 32px 20px 28px;
+  }
+
+  .hero-number {
+    font-family: "Bodoni Moda", serif;
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--brass);
+    line-height: 1;
+    display: block;
+    /* Subtle glow - the artifact speaks */
+    text-shadow: 0 0 60px rgba(212, 165, 116, 0.2);
+  }
+
+  .hero-label {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: lowercase;
+    letter-spacing: 0.15em;
+    display: block;
+    margin-top: 4px;
+  }
+
+  .hero-context {
+    margin-top: 20px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.25);
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== ACTIONS - Flow, Not Grid ===== */
+  .dashboard-actions {
+    padding: 0 20px;
+    margin-top: 8px;
+  }
+
+  .action-primary {
+    display: block;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto 28px;
+    padding: 16px 24px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--brass), var(--copper));
+    color: var(--ink);
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 20px rgba(183, 106, 59, 0.3);
+  }
+
+  .action-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(183, 106, 59, 0.4);
+  }
+
+  .action-primary:active {
+    transform: scale(0.98);
+  }
+
+  .action-links {
+    display: flex;
+    justify-content: center;
     gap: 24px;
   }
 
-  /* ===== HERO STAT - The Main Event ===== */
-  .hero-stat {
-    position: relative;
-    background:
-      linear-gradient(135deg, rgba(28, 19, 15, 0.95) 0%, rgba(15, 10, 7, 0.98) 100%);
-    border: 1px solid rgba(212, 165, 116, 0.2);
-    border-radius: 16px;
-    padding: 32px 28px;
-    overflow: hidden;
-    /* Depth shadow */
-    box-shadow:
-      inset 0 1px 0 rgba(212, 165, 116, 0.1),
-      inset 0 0 40px rgba(0, 0, 0, 0.3),
-      0 8px 32px rgba(0, 0, 0, 0.4);
-  }
-
-  .hero-stat__glow {
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 60%;
-    height: 200%;
-    background: radial-gradient(ellipse, rgba(212, 165, 116, 0.08) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .hero-stat__content {
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero-stat__label {
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--copper);
-    margin-bottom: 12px;
-  }
-
-  .hero-stat__primary {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .hero-stat__number {
-    font-family: "Bodoni Moda", serif;
-    font-size: 4rem;
-    font-weight: 900;
-    line-height: 1;
-    color: var(--cream);
-    /* ESPN broadcast glow */
-    text-shadow: 0 0 40px rgba(212, 165, 116, 0.3);
-  }
-
-  .hero-stat__unit {
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--brass);
-    opacity: 0.8;
-  }
-
-  .hero-stat__secondary {
+  .action-links a {
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
     font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease;
   }
 
-  .hero-stat__secondary span:not(.hero-stat__divider) {
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 500;
+  .action-links a:hover {
+    color: var(--brass);
   }
 
-  .hero-stat__divider {
-    margin: 0 12px;
-    opacity: 0.3;
+  /* ===== TICKER PREVIEW - Subtle ===== */
+  .ticker-preview {
+    padding: 16px 20px;
   }
 
-  /* ===== CDL WORDMARK - Iconic mark with signature line ===== */
-  .cdl-wordmark {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    position: absolute;
-    top: 16px;
-    right: 16px;
-  }
-
-  .cdl-wordmark__text {
-    font-family: "Bodoni Moda", "Didot", serif;
-    font-weight: 900;
-    font-style: italic;
-    letter-spacing: 0.08em;
-    background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .cdl-wordmark__line {
+  .ticker-line {
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--brass), transparent);
+    background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.2), transparent);
+    margin-bottom: 16px;
   }
 
-  /* Small variant - for hero stat corner */
-  .cdl-wordmark--small {
-    top: 12px;
-    right: 12px;
-    gap: 4px;
-  }
-  .cdl-wordmark--small .cdl-wordmark__text {
-    font-size: 1.3rem;
-  }
-  .cdl-wordmark--small .cdl-wordmark__line {
-    width: 28px;
-  }
-
-  /* Medium variant - for onboarding modal */
-  .cdl-wordmark--medium {
-    position: relative;
-    top: auto;
-    right: auto;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  .cdl-wordmark--medium .cdl-wordmark__text {
-    font-size: 2.4rem;
-  }
-  .cdl-wordmark--medium .cdl-wordmark__line {
-    width: 60px;
-  }
-
-  /* ===== TOOLS SECTION ===== */
-  .tools-section {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .section-title {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .section-title__text {
-    font-family: "Bodoni Moda", serif;
-    font-size: 1rem;
-    font-weight: 700;
-    font-style: italic;
-    color: var(--brass);
-    white-space: nowrap;
-  }
-
-  .section-title__line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(212, 165, 116, 0.3), transparent);
-  }
-
-  .tools-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .tool-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 18px 16px;
-    background:
-      linear-gradient(135deg, rgba(28, 19, 15, 0.9) 0%, rgba(20, 14, 10, 0.95) 100%);
-    border: 1px solid rgba(212, 165, 116, 0.12);
-    border-radius: 12px;
-    text-decoration: none;
-    transition: all 0.25s ease;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.03),
-      0 2px 8px rgba(0, 0, 0, 0.2);
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .tool-card:active {
-    transform: scale(0.98);
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
-  }
-
-  .tool-card--primary {
-    border-color: rgba(212, 165, 116, 0.25);
-    background:
-      linear-gradient(135deg, rgba(35, 24, 18, 0.95) 0%, rgba(25, 17, 12, 0.98) 100%);
-  }
-
-  .tool-card--primary .tool-card__icon {
-    background: linear-gradient(135deg, var(--brass), var(--copper));
-    color: var(--ink);
-  }
-
-  .tool-card__icon {
-    width: 44px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(212, 165, 116, 0.1);
-    border-radius: 10px;
-    color: var(--brass);
-    flex-shrink: 0;
-  }
-
-  .tool-card__icon svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .tool-card__info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  .tool-card__name {
+  .ticker-messages {
+    text-align: center;
     font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--cream);
-  }
-
-  .tool-card__hint {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  /* ===== INTEL SECTION - Two Column ===== */
-  .intel-section {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .intel-card {
-    background:
-      linear-gradient(180deg, rgba(28, 19, 15, 0.95) 0%, rgba(20, 14, 10, 0.98) 100%);
-    border: 1px solid rgba(212, 165, 116, 0.12);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow:
-      inset 0 1px 0 rgba(212, 165, 116, 0.05),
-      0 4px 16px rgba(0, 0, 0, 0.25);
-  }
-
-  .intel-card__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 18px;
-    border-bottom: 1px solid rgba(212, 165, 116, 0.1);
-    background: rgba(0, 0, 0, 0.2);
-  }
-
-  .intel-card__title {
-    font-family: "Bodoni Moda", serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--brass);
-  }
-
-  .intel-card__link {
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.4);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .intel-card__link:hover {
-    color: var(--brass);
-  }
-
-  .intel-card__content {
-    padding: 12px 18px 18px;
-    min-height: 120px;
-  }
-
-  /* ===== TICKER SECTION ===== */
-  .ticker-section {
-    background:
-      linear-gradient(180deg, rgba(28, 19, 15, 0.95) 0%, rgba(20, 14, 10, 0.98) 100%);
-    border: 1px solid rgba(212, 165, 116, 0.12);
-    border-left: 3px solid var(--copper);
-    border-radius: 0 12px 12px 0;
-    overflow: hidden;
-    box-shadow:
-      inset 0 1px 0 rgba(212, 165, 116, 0.05),
-      0 4px 16px rgba(0, 0, 0, 0.25);
-  }
-
-  .ticker-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    border-bottom: 1px solid rgba(212, 165, 116, 0.1);
-    background: rgba(0, 0, 0, 0.2);
-  }
-
-  .ticker-title {
-    font-family: "Bodoni Moda", serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--brass);
-  }
-
-  .ticker-count {
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 3px 8px;
-    background: rgba(212, 165, 116, 0.15);
-    border-radius: 4px;
-    color: var(--brass);
-  }
-
-  .ticker-manage {
-    margin-left: auto;
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.4);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .ticker-manage:hover {
-    color: var(--brass);
-  }
-
-  .ticker-content {
-    padding: 12px 18px 18px;
-    min-height: 80px;
-  }
-
-  /* ===== LOADING STATE ===== */
-  .loading-state {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 24px;
+    font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.3);
-    font-size: 0.85rem;
+    min-height: 24px;
   }
 
-  .loading-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--brass);
-    border-radius: 50%;
-    animation: pulse 1.5s ease-in-out infinite;
+  .ticker-empty {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.2);
   }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 0.3; transform: scale(0.8); }
-    50% { opacity: 1; transform: scale(1); }
+  .ticker-message {
+    display: inline-block;
+    padding: 0 12px;
   }
 
-  /* ===== PLAYER LIST ITEMS ===== */
-  .player-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(212, 165, 116, 0.08);
-  }
-
-  .player-item:last-child {
-    border-bottom: none;
-  }
-
-  .player-avatar {
-    width: 36px;
-    height: 36px;
-    background: linear-gradient(135deg, var(--brass), var(--copper));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: "Bodoni Moda", serif;
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--ink);
-    flex-shrink: 0;
-  }
-
-  .player-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .player-name {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--cream);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .player-meta {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  .player-status {
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 4px 8px;
-    border-radius: 4px;
-    background: rgba(76, 175, 80, 0.15);
-    color: #81c784;
-  }
-
-  .player-status--pending {
-    background: rgba(255, 193, 7, 0.15);
-    color: #ffc107;
-  }
-
-  /* ===== ROUND ITEMS ===== */
-  .round-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 14px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-
-  .round-item:last-child {
-    margin-bottom: 0;
-  }
-
-  .round-label {
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+  .ticker-message::before {
+    content: "•";
+    margin-right: 12px;
     color: var(--copper);
-    min-width: 80px;
+    opacity: 0.5;
   }
 
-  .round-progress {
-    flex: 1;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-    overflow: hidden;
+  .ticker-message:first-child::before {
+    display: none;
   }
 
-  .round-progress__bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--brass), var(--copper));
-    border-radius: 2px;
-    transition: width 0.5s ease;
-  }
-
-  .round-status {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.5);
-    min-width: 60px;
-    text-align: right;
-  }
-
-  /* ===== ANNOUNCEMENT ITEMS ===== */
-  .message-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(212, 165, 116, 0.08);
-  }
-
-  .message-item:last-child {
-    border-bottom: none;
-  }
-
-  .message-type {
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 0.6rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 4px 8px;
-    border-radius: 4px;
-    background: rgba(212, 165, 116, 0.15);
-    color: var(--brass);
-    flex-shrink: 0;
-  }
-
-  .message-content {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.4;
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 24px;
-    color: rgba(255, 255, 255, 0.3);
-    font-size: 0.85rem;
-    font-style: italic;
-  }
-
-  /* ===== ENHANCED EMPTY STATES ===== */
-  .empty-state-rich {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 32px 20px;
-    text-align: center;
-  }
-
-  .empty-state__icon {
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
-    max-width: 48px;
-    min-height: 48px;
-    max-height: 48px;
-    flex-shrink: 0;
-    margin-bottom: 16px;
-    color: var(--brass);
-    opacity: 0.4;
-  }
-
-  .empty-state__title {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 8px;
-  }
-
-  .empty-state__hint {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.35);
-    margin-bottom: 16px;
-  }
-
-  .empty-state__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 18px;
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink);
-    background: linear-gradient(135deg, var(--brass), var(--copper));
-    border-radius: 8px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-
-  .empty-state__cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(183, 106, 59, 0.4);
-  }
-
-  /* ===== ONBOARDING OVERLAY ===== */
-  .onboarding-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.4s ease;
-  }
-
-  .onboarding-overlay.active {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .onboarding-modal {
-    width: 90%;
-    max-width: 420px;
-    background:
-      linear-gradient(180deg, rgba(28, 19, 15, 0.98) 0%, rgba(15, 10, 7, 0.99) 100%);
-    border: 1px solid rgba(212, 165, 116, 0.25);
-    border-radius: 20px;
-    padding: 40px 32px;
-    text-align: center;
-    box-shadow:
-      inset 0 1px 0 rgba(212, 165, 116, 0.1),
-      0 24px 60px rgba(0, 0, 0, 0.6),
-      0 0 80px rgba(212, 165, 116, 0.1);
-    transform: translateY(20px) scale(0.95);
-    transition: transform 0.4s ease;
-  }
-
-  .onboarding-overlay.active .onboarding-modal {
-    transform: translateY(0) scale(1);
-  }
-
-  .onboarding-title {
-    font-family: "Bodoni Moda", serif;
-    font-size: 1.6rem;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--cream);
-    margin-bottom: 8px;
-    line-height: 1.2;
-  }
-
-  .onboarding-subtitle {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-bottom: 32px;
-    line-height: 1.5;
-  }
-
-  .onboarding-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 32px;
-    text-align: left;
-  }
-
-  .onboarding-step {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    border: 1px solid rgba(212, 165, 116, 0.1);
-  }
-
-  .onboarding-step__num {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* Brass→copper gradient for warmth */
-    background: linear-gradient(135deg, #d4a574, #b76a3b);
-    border-radius: 50%;
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #1c130f;
-    flex-shrink: 0;
-  }
-
-  .onboarding-step__text {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  .onboarding-btn {
-    width: 100%;
-    padding: 18px 24px;
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: #fff;
-    /* Copper gradient - matching main site "Claim Your Seat" */
-    background: linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%);
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.15) inset,
-      0 -1px 0 rgba(0, 0, 0, 0.2) inset,
-      0 10px 30px rgba(0, 0, 0, 0.4);
-  }
-
-  .onboarding-btn:hover {
-    transform: translateY(-3px);
-    background: linear-gradient(180deg, #d08555 0%, #c4784a 50%, #a86238 100%);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.2) inset,
-      0 -1px 0 rgba(0, 0, 0, 0.15) inset,
-      0 15px 40px rgba(183, 106, 59, 0.35);
-  }
-
-  .onboarding-btn:active {
-    transform: scale(0.95);
-    filter: brightness(1.1);
-  }
-
-  .onboarding-skip {
-    display: block;
-    width: 100%;
-    margin-top: 16px;
-    padding: 12px;
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.4);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: color 0.2s ease;
-  }
-
-  .onboarding-skip:hover {
-    color: rgba(255, 255, 255, 0.6);
-  }
-
-  /* ===== TOOLTIP HIGHLIGHTS ===== */
-  .tooltip-highlight {
-    position: relative;
-  }
-
-  .tooltip-highlight::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border: 2px solid var(--brass);
-    border-radius: 16px;
-    animation: tooltipPulse 2s ease-in-out infinite;
-    pointer-events: none;
-    opacity: 0;
-    z-index: 100;
-  }
-
-  .tooltip-highlight.active::before {
-    opacity: 1;
-  }
-
-  .tooltip-highlight .tooltip-content {
-    position: absolute;
-    bottom: calc(100% + 12px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: max-content;
-    max-width: 240px;
-    padding: 12px 16px;
-    background: rgba(28, 19, 15, 0.98);
-    border: 1px solid rgba(212, 165, 116, 0.3);
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 101;
-  }
-
-  .tooltip-highlight.active .tooltip-content {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .tooltip-content::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 8px solid transparent;
-    border-top-color: rgba(28, 19, 15, 0.98);
-  }
-
-  .tooltip-content__text {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 0.8rem;
-    color: var(--cream);
-    line-height: 1.4;
-  }
-
-  .tooltip-content__action {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-  }
-
-  .tooltip-next-btn {
-    padding: 6px 14px;
-    font-family: "IBM Plex Sans Condensed", sans-serif;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink);
-    background: var(--brass);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .tooltip-next-btn:hover {
-    background: var(--copper);
-  }
-
-  @keyframes tooltipPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(212, 165, 116, 0.4); }
-    50% { box-shadow: 0 0 0 8px rgba(212, 165, 116, 0); }
-  }
-
-  /* ===== DESKTOP OVERRIDES ===== */
+  /* ===== DESKTOP REFINEMENTS ===== */
   @media (min-width: 769px) {
-    .command-center {
-      gap: 32px;
+    .dashboard {
+      padding: 40px 0;
     }
 
-    .hero-stat {
-      padding: 40px 36px;
-      border-radius: 20px;
+    .dashboard-hero {
+      padding: 60px 20px 48px;
     }
 
-    .hero-stat__number {
-      font-size: 5.5rem;
+    .hero-number {
+      font-size: 8rem;
     }
 
-    .hero-stat__unit {
-      font-size: 1.3rem;
-    }
-
-    .hero-stat__secondary {
+    .hero-label {
       font-size: 1rem;
     }
 
-    .tools-grid {
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
+    .hero-context {
+      font-size: 0.85rem;
     }
 
-    .tool-card {
-      padding: 22px 20px;
-      gap: 16px;
-    }
-
-    .tool-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(212, 165, 116, 0.25);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-        0 8px 24px rgba(0, 0, 0, 0.3),
-        0 0 30px rgba(212, 165, 116, 0.1);
-    }
-
-    .tool-card__icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 12px;
-    }
-
-    .tool-card__icon svg {
-      width: 26px;
-      height: 26px;
-    }
-
-    .tool-card__name {
+    .action-primary {
+      max-width: 320px;
+      padding: 18px 28px;
       font-size: 0.95rem;
     }
 
-    .tool-card__hint {
-      font-size: 0.75rem;
+    .action-links {
+      gap: 40px;
     }
 
-    .intel-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
-
-    .intel-card__content {
-      min-height: 180px;
+    .action-links a {
+      font-size: 0.9rem;
     }
   }
 </style>
 
 <script>
-  // ===== ONBOARDING SYSTEM =====
-  const ONBOARDING_KEY = 'cdl_admin_onboarded';
-
-  function checkOnboarding() {
-    const hasOnboarded = localStorage.getItem(ONBOARDING_KEY);
-    if (!hasOnboarded) {
-      // Show onboarding modal after a brief delay
-      setTimeout(() => {
-        const overlay = document.getElementById('onboardingOverlay');
-        if (overlay) overlay.classList.add('active');
-      }, 800);
-    }
-  }
-
-  function completeOnboarding() {
-    localStorage.setItem(ONBOARDING_KEY, 'true');
-    const overlay = document.getElementById('onboardingOverlay');
-    if (overlay) overlay.classList.remove('active');
-  }
-
-  // Bind onboarding buttons
-  document.getElementById('startTourBtn')?.addEventListener('click', completeOnboarding);
-  document.getElementById('skipTourBtn')?.addEventListener('click', completeOnboarding);
-
   // Wait for admin ready event from layout
   window.addEventListener('adminReady', async ({ detail: { supabase } }) => {
     await loadDashboardData(supabase);
-    checkOnboarding();
   });
 
   async function loadDashboardData(supabase) {
@@ -1133,131 +225,39 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         { count: playerCount },
         { count: teamCount },
         { data: matches },
-        { data: announcements },
-        { data: recentPlayers }
+        { data: announcements }
       ] = await Promise.all([
         supabase.from('players').select('*', { count: 'exact', head: true }),
         supabase.from('teams').select('*', { count: 'exact', head: true }),
         supabase.from('matches').select('*'),
-        supabase.from('announcements').select('*').eq('is_active', true),
-        supabase.from('players').select('*').order('created_at', { ascending: false }).limit(5)
+        supabase.from('announcements').select('*').eq('is_active', true).limit(3)
       ]);
 
-      // Update hero stat
-      document.getElementById('playerCount').textContent = playerCount || 0;
+      // Update hero stats
+      const count = playerCount || 0;
+      document.getElementById('playerCount').textContent = count;
       document.getElementById('teamCount').textContent = teamCount || 0;
 
       const completedMatches = matches?.filter(m => m.status === 'completed').length || 0;
       const totalMatches = matches?.length || 7;
-      document.getElementById('matchesPlayed').textContent = `${completedMatches}/${totalMatches}`;
+      document.getElementById('matchCount').textContent = completedMatches;
 
-      // Update announcement count
-      document.getElementById('announcementCount').textContent = announcements?.length || 0;
-
-      // Update recent players with enhanced empty state
-      const recentPlayersEl = document.getElementById('recentPlayers');
-      if (recentPlayers && recentPlayers.length > 0) {
-        recentPlayersEl.innerHTML = recentPlayers.map(player => `
-          <div class="player-item">
-            <div class="player-avatar">${player.name[0].toUpperCase()}</div>
-            <div class="player-info">
-              <div class="player-name">${player.name}</div>
-              <div class="player-meta">${player.email}</div>
-            </div>
-            <span class="player-status ${player.status === 'pending' ? 'player-status--pending' : ''}">${player.status}</span>
-          </div>
-        `).join('');
-      } else {
-        recentPlayersEl.innerHTML = `
-          <div class="empty-state-rich">
-            <svg class="empty-state__icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="8" r="4" />
-              <path d="M4 20v-1a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1" />
-            </svg>
-            <div class="empty-state__title">No players yet</div>
-            <div class="empty-state__hint">Start building your tournament roster</div>
-            <a href="/admin/registrations" class="empty-state__cta">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              Add First Player
-            </a>
-          </div>
-        `;
+      // Update primary CTA based on state
+      const primaryAction = document.getElementById('primaryAction');
+      if (count > 0 && (teamCount || 0) === 0) {
+        primaryAction.textContent = '+ Form Your First Team';
+        primaryAction.href = '/admin/teams';
+      } else if (count > 0) {
+        primaryAction.textContent = '+ Add Player';
+        primaryAction.href = '/admin/registrations';
       }
 
-      // Update bracket status
-      const bracketStatusEl = document.getElementById('bracketStatus');
-      if (matches && matches.length > 0) {
-        const roundNames = ['Quarterfinals', 'Semifinals', 'Finals'];
-        const roundTotals = [4, 2, 1]; // Expected matches per round
-
-        bracketStatusEl.innerHTML = [1, 2, 3].map((round, i) => {
-          const roundMatches = matches.filter(m => m.round === round);
-          const completed = roundMatches.filter(m => m.status === 'completed').length;
-          const total = roundTotals[i];
-          const percent = total > 0 ? (completed / total) * 100 : 0;
-
-          return `
-            <div class="round-item">
-              <span class="round-label">${roundNames[i]}</span>
-              <div class="round-progress">
-                <div class="round-progress__bar" style="width: ${percent}%"></div>
-              </div>
-              <span class="round-status">${completed}/${total}</span>
-            </div>
-          `;
-        }).join('');
-      } else {
-        bracketStatusEl.innerHTML = `
-          <div class="empty-state-rich">
-            <svg class="empty-state__icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M4 6h4v4H4zM16 6h4v4h-4zM4 14h4v4H4zM16 14h4v4h-4z" />
-              <path d="M8 8h2v8H8M14 8h2v8h-2" />
-              <path d="M10 12h4" />
-            </svg>
-            <div class="empty-state__title">Bracket not started</div>
-            <div class="empty-state__hint">Form teams first, then set up matches</div>
-            <a href="/admin/teams" class="empty-state__cta">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M20 8v6M23 11h-6" />
-              </svg>
-              Form Teams
-            </a>
-          </div>
-        `;
-      }
-
-      // Update announcements with enhanced empty state
-      const messagesEl = document.getElementById('activeMessages');
+      // Update ticker preview
+      const tickerMessages = document.getElementById('tickerMessages');
       if (announcements && announcements.length > 0) {
-        messagesEl.innerHTML = announcements.slice(0, 3).map(a => `
-          <div class="message-item">
-            <span class="message-type">${a.type}</span>
-            <span class="message-content">${a.content}</span>
-          </div>
-        `).join('');
-      } else {
-        messagesEl.innerHTML = `
-          <div class="empty-state-rich">
-            <svg class="empty-state__icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M3 11l18-5v12L3 13v-2z" />
-              <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
-            </svg>
-            <div class="empty-state__title">No announcements</div>
-            <div class="empty-state__hint">Broadcast updates to players</div>
-            <a href="/admin/announcements" class="empty-state__cta">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              Create Announcement
-            </a>
-          </div>
-        `;
+        tickerMessages.innerHTML = announcements.map(a =>
+          `<span class="ticker-message">${a.content}</span>`
+        ).join('');
       }
 
     } catch (err) {
