@@ -32,12 +32,12 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
             Loading announcements...
           </div>
         </div>
-        <div class="mesa-ticker-preview__domino">
+        <button class="mesa-ticker-preview__domino" id="previewDominoBtn" type="button" aria-label="New announcement">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
             <rect x="6" y="2" width="12" height="20" rx="2" ry="2"/>
             <line x1="6" y1="12" x2="18" y2="12"/>
           </svg>
-        </div>
+        </button>
       </div>
     </div>
 
@@ -274,6 +274,12 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     justify-content: center;
     flex-shrink: 0;
     color: #0a0604;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mesa-ticker-preview__domino:active {
+    transform: scale(0.98);
   }
 
   /* Ticker items - simple text styling */
@@ -1201,6 +1207,16 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     const contentInput = document.getElementById('announcementContent');
     const charCount = document.getElementById('charCount');
 
+    function openCreateModal() {
+      editingAnnouncementId = null;
+      document.getElementById('saveBtnText').textContent = 'Post to Ticker';
+      form.reset();
+      document.getElementById('announcementActive').checked = true;
+      document.getElementById('advancedOptions').removeAttribute('open');
+      charCount.textContent = '0';
+      modal.classList.add('open');
+    }
+
     // Character counter
     contentInput.addEventListener('input', () => {
       charCount.textContent = contentInput.value.length;
@@ -1218,14 +1234,11 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
     // Create announcement
     document.getElementById('createAnnouncementBtn').addEventListener('click', () => {
-      editingAnnouncementId = null;
-      document.getElementById('saveBtnText').textContent = 'Post to Ticker';
-      form.reset();
-      document.getElementById('announcementActive').checked = true;
-      document.getElementById('advancedOptions').removeAttribute('open');
-      charCount.textContent = '0';
-      modal.classList.add('open');
+      openCreateModal();
     });
+
+    // Domino button in ticker preview opens "New Announcement"
+    document.getElementById('previewDominoBtn')?.addEventListener('click', openCreateModal);
 
     // Close modal
     document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('open'));

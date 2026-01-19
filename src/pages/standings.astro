@@ -1,0 +1,691 @@
+---
+// Public Standings Page - "Wall of Honor"
+// Displays live round robin standings with tournament aesthetic
+
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Standings | Cuban Domino League</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #1c130f;
+        --muted: #594a3f;
+        --copper: #b76a3b;
+        --cream: #f8efe6;
+        --bone: #fff7ef;
+        --brass: #d4a574;
+        --gold: #ffd700;
+        --bg-dark: #0a0705;
+        --border-subtle: rgba(212, 165, 116, 0.15);
+        --border-accent: rgba(212, 165, 116, 0.3);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        height: 100%;
+      }
+
+      body {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background: var(--bg-dark);
+        color: #fff;
+        line-height: 1.5;
+      }
+
+      /* Atmospheric Background */
+      .atmosphere {
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(183, 106, 59, 0.15) 0%, transparent 50%),
+          radial-gradient(ellipse at 85% 85%, rgba(212, 165, 116, 0.08) 0%, transparent 40%),
+          radial-gradient(ellipse at center, #1a120d 0%, #0d0906 50%, #0a0705 100%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .grain {
+        position: fixed;
+        inset: -50%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.04;
+        pointer-events: none;
+        z-index: 1;
+        mix-blend-mode: overlay;
+      }
+
+      .vignette {
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 50% 20%, rgba(212, 165, 116, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at center, transparent 30%, rgba(10, 7, 5, 0.6) 100%);
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* Main Layout */
+      .page {
+        position: relative;
+        z-index: 10;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header */
+      .header {
+        padding: 20px;
+        text-align: center;
+        border-bottom: 1px solid var(--border-subtle);
+        background: rgba(10, 7, 5, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .header__brand {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+      }
+
+      .header__logo {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.8rem;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: 0.1em;
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .header__line {
+        width: 40px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--brass), transparent);
+      }
+
+      /* Nav */
+      .nav {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        padding: 12px 20px;
+        background: rgba(10, 7, 5, 0.6);
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .nav__link {
+        padding: 8px 16px;
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+        border-radius: 20px;
+        transition: all 0.2s ease;
+      }
+
+      .nav__link:hover {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .nav__link.active {
+        color: var(--brass);
+        background: rgba(212, 165, 116, 0.15);
+      }
+
+      /* Main Content */
+      .main {
+        flex: 1;
+        padding: 24px 16px;
+        max-width: 600px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      /* Wall of Honor Title */
+      .page-title {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      .page-title__main {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--brass);
+        letter-spacing: 0.05em;
+      }
+
+      .page-title__sub {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--copper);
+        margin-top: 8px;
+      }
+
+      /* Live Indicator */
+      .live-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        background: rgba(212, 165, 116, 0.1);
+        border: 1px solid var(--border-accent);
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--brass);
+        margin-top: 12px;
+      }
+
+      .live-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--brass);
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(212, 165, 116, 0.5); }
+        50% { opacity: 0.6; box-shadow: 0 0 8px rgba(212, 165, 116, 0.3); }
+      }
+
+      /* Standings Wall */
+      .standings-wall {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow:
+          inset 0 1px 0 rgba(212, 165, 116, 0.05),
+          0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Standings Header */
+      .standings-header {
+        display: grid;
+        grid-template-columns: 50px 1fr 70px 70px;
+        padding: 14px 16px;
+        background: rgba(0, 0, 0, 0.4);
+        border-bottom: 1px solid var(--border-subtle);
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--copper);
+      }
+
+      .standings-header span:nth-child(3),
+      .standings-header span:nth-child(4) {
+        text-align: center;
+      }
+
+      /* Team Row - The Engraved Plaque */
+      .team-plaque {
+        display: grid;
+        grid-template-columns: 50px 1fr 70px 70px;
+        align-items: center;
+        padding: 16px;
+        border-bottom: 1px solid var(--border-subtle);
+        transition: background 0.2s ease;
+      }
+
+      .team-plaque:last-child {
+        border-bottom: none;
+      }
+
+      .team-plaque:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      /* Playoff Qualifier */
+      .team-plaque--playoff {
+        background: rgba(212, 165, 116, 0.04);
+      }
+
+      .team-plaque--playoff:hover {
+        background: rgba(212, 165, 116, 0.08);
+      }
+
+      .team-plaque--playoff::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--gold), var(--brass));
+      }
+
+      .team-plaque {
+        position: relative;
+      }
+
+      /* Rank - Engraved Number */
+      .rank {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.3);
+        text-align: center;
+      }
+
+      .rank--top4 {
+        color: var(--gold);
+        text-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+      }
+
+      /* Team Info */
+      .team-info {
+        padding-left: 8px;
+      }
+
+      .team-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .team-plaque--playoff .team-name {
+        color: var(--brass);
+      }
+
+      .team-games {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.35);
+        margin-top: 2px;
+      }
+
+      /* Record - W-L */
+      .record {
+        text-align: center;
+      }
+
+      .record__main {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .team-plaque--playoff .record__main {
+        color: var(--brass);
+      }
+
+      /* Point Differential */
+      .diff {
+        text-align: center;
+      }
+
+      .diff__value {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      .diff__value--positive {
+        color: #81c784;
+      }
+
+      .diff__value--negative {
+        color: #e57373;
+      }
+
+      .diff__value--neutral {
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      /* Playoff Divider */
+      .playoff-divider {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 0 16px;
+        background: rgba(212, 165, 116, 0.08);
+      }
+
+      .playoff-divider__line {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--brass), transparent);
+      }
+
+      .playoff-divider__text {
+        font-size: 0.6rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--brass);
+        white-space: nowrap;
+      }
+
+      /* Loading State */
+      .loading-state {
+        padding: 60px 20px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .loading-spinner {
+        width: 32px;
+        height: 32px;
+        border: 2px solid var(--border-subtle);
+        border-top-color: var(--brass);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 16px;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      /* Empty State */
+      .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+      }
+
+      .empty-state__icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 16px;
+        color: var(--copper);
+        opacity: 0.5;
+      }
+
+      .empty-state__text {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+      }
+
+      /* Footer */
+      .footer {
+        padding: 24px 16px;
+        text-align: center;
+        border-top: 1px solid var(--border-subtle);
+        margin-top: auto;
+      }
+
+      .footer__link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--brass);
+        text-decoration: none;
+        background: rgba(212, 165, 116, 0.1);
+        border: 1px solid var(--border-accent);
+        border-radius: 12px;
+        transition: all 0.2s ease;
+      }
+
+      .footer__link:hover {
+        background: rgba(212, 165, 116, 0.2);
+      }
+
+      /* Desktop */
+      @media (min-width: 769px) {
+        .main {
+          padding: 40px 20px;
+          max-width: 700px;
+        }
+
+        .page-title__main {
+          font-size: 2rem;
+        }
+
+        .standings-header {
+          padding: 16px 24px;
+          font-size: 0.7rem;
+        }
+
+        .team-plaque {
+          padding: 18px 24px;
+        }
+
+        .rank {
+          font-size: 1.5rem;
+        }
+
+        .team-name {
+          font-size: 1.1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="atmosphere"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
+    <div class="page">
+      <header class="header">
+        <a href="/" class="header__brand">
+          <span class="header__logo">CDL</span>
+          <span class="header__line"></span>
+        </a>
+      </header>
+
+      <nav class="nav">
+        <a href="/standings" class="nav__link active">Standings</a>
+        <a href="/bracket" class="nav__link">Bracket</a>
+      </nav>
+
+      <main class="main">
+        <div class="page-title">
+          <h1 class="page-title__main">Round Robin</h1>
+          <p class="page-title__sub">Tournament Standings</p>
+          <div class="live-indicator" id="liveIndicator" style="display: none;">
+            <span class="live-dot"></span>
+            <span id="matchesStatus">Live</span>
+          </div>
+        </div>
+
+        <div class="standings-wall" id="standingsWall">
+          <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Loading standings...</p>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <a href="/bracket" class="footer__link">
+          View Finals Bracket
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      </footer>
+    </div>
+
+    <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
+      let teams = [];
+      let standings = [];
+      let matches = [];
+
+      async function init() {
+        try {
+          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+          const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+          await loadData(supabase);
+          setupRealtimeSubscription(supabase);
+        } catch (err) {
+          console.error('Init error:', err);
+          showError();
+        }
+      }
+
+      async function loadData(supabase) {
+        const [teamsRes, standingsRes, matchesRes] = await Promise.all([
+          supabase.from('teams').select('*').order('seed'),
+          supabase.from('standings').select('*'),
+          supabase.from('matches').select('*').eq('phase', 'round_robin')
+        ]);
+
+        teams = teamsRes.data || [];
+        standings = standingsRes.data || [];
+        matches = matchesRes.data || [];
+
+        renderStandings();
+        updateLiveIndicator();
+      }
+
+      function renderStandings() {
+        const wall = document.getElementById('standingsWall');
+
+        if (standings.length === 0) {
+          wall.innerHTML = `
+            <div class="empty-state">
+              <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+              <p class="empty-state__text">Round robin matches haven't started yet.</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Sort standings
+        const sorted = [...standings].sort((a, b) => {
+          if (b.wins !== a.wins) return b.wins - a.wins;
+          return b.point_diff - a.point_diff;
+        });
+
+        // Attach team data
+        const withTeams = sorted.map(s => ({
+          ...s,
+          team: teams.find(t => t.id === s.team_id)
+        })).filter(s => s.team);
+
+        // Render
+        let html = `
+          <div class="standings-header">
+            <span>#</span>
+            <span>Team</span>
+            <span>W-L</span>
+            <span>+/-</span>
+          </div>
+        `;
+
+        withTeams.forEach((s, idx) => {
+          const rank = idx + 1;
+          const isPlayoff = rank <= 4;
+          const diffClass = s.point_diff > 0 ? 'diff__value--positive' :
+                            s.point_diff < 0 ? 'diff__value--negative' : 'diff__value--neutral';
+          const diffPrefix = s.point_diff > 0 ? '+' : '';
+
+          // Add playoff divider after rank 4
+          if (rank === 5) {
+            html += `
+              <div class="playoff-divider">
+                <span class="playoff-divider__line"></span>
+                <span class="playoff-divider__text">Playoff cutoff</span>
+                <span class="playoff-divider__line"></span>
+              </div>
+            `;
+          }
+
+          html += `
+            <div class="team-plaque ${isPlayoff ? 'team-plaque--playoff' : ''}">
+              <span class="rank ${isPlayoff ? 'rank--top4' : ''}">${rank}</span>
+              <div class="team-info">
+                <div class="team-name">${s.team?.name || 'Unknown'}</div>
+                <div class="team-games">${s.games_played} games played</div>
+              </div>
+              <div class="record">
+                <span class="record__main">${s.wins}-${s.losses}</span>
+              </div>
+              <div class="diff">
+                <span class="diff__value ${diffClass}">${diffPrefix}${s.point_diff}</span>
+              </div>
+            </div>
+          `;
+        });
+
+        wall.innerHTML = html;
+      }
+
+      function updateLiveIndicator() {
+        const indicator = document.getElementById('liveIndicator');
+        const statusEl = document.getElementById('matchesStatus');
+
+        const inProgress = matches.filter(m => m.status === 'in_progress').length;
+        const completed = matches.filter(m => m.status === 'completed').length;
+
+        if (inProgress > 0) {
+          indicator.style.display = 'inline-flex';
+          statusEl.textContent = `${inProgress} match${inProgress > 1 ? 'es' : ''} in progress`;
+        } else if (completed > 0 && completed < 28) {
+          indicator.style.display = 'inline-flex';
+          statusEl.textContent = `${completed}/28 complete`;
+        } else if (completed === 28) {
+          indicator.style.display = 'inline-flex';
+          statusEl.textContent = 'Round robin complete';
+        } else {
+          indicator.style.display = 'none';
+        }
+      }
+
+      function showError() {
+        document.getElementById('standingsWall').innerHTML = `
+          <div class="empty-state">
+            <p class="empty-state__text">Failed to load standings. Please refresh.</p>
+          </div>
+        `;
+      }
+
+      function setupRealtimeSubscription(supabase) {
+        supabase
+          .channel('public-standings')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, () => {
+            loadData(supabase);
+          })
+          .subscribe();
+      }
+
+      init();
+    </script>
+  </body>
+</html>

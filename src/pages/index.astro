@@ -3484,19 +3484,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: none !important;
       }
 
-      .chat-widget {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 10001; /* Must be higher than chat-backdrop (10000) */
-        font-family: "IBM Plex Sans", sans-serif;
-        background: transparent;
-        pointer-events: none; /* Allow interaction with content behind ticker */
-      }
-      .chat-widget > * {
-        pointer-events: auto; /* Re-enable for children */
-      }
+	      .chat-widget {
+	        position: fixed;
+	        bottom: 0;
+	        left: 0;
+	        right: 0;
+	        z-index: 10001; /* Must be higher than chat-backdrop (10000) */
+	        font-family: "IBM Plex Sans", sans-serif;
+	        background: transparent;
+	        pointer-events: auto; /* Allow ticker/chat interaction */
+	      }
 
       /* ===========================================
          THE BONE LANGUAGE - Domino Tile Button
@@ -4211,8 +4208,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 -4px 24px rgba(0,0,0,0.6),
           inset 0 2px 8px rgba(0, 0, 0, 0.9),
           inset 0 -1px 3px rgba(212, 165, 116, 0.03); /* Tobias: Deeper recess */
-        transition: background 0.3s ease;
-      }
+	        transition: background 0.3s ease;
+	        pointer-events: auto;
+	      }
 
       /* Ticker dimming when chat is open - controlled via JS class */
       .mesa-ticker.ticker-dimmed {
@@ -4325,8 +4323,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         touch-action: manipulation;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
-        outline: none;
-      }
+	        outline: none;
+	        pointer-events: auto;
+	      }
 
       /* Hide chat button until registration */
       .mesa-ticker__chat-btn--hidden {
@@ -5817,15 +5816,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Mobile adjustments */
       @media (max-width: 768px) {
-        /* Exit panel: NATURAL FLOW on mobile (follows form without snap) */
+        /* Exit panel: Cinematic sign-off - its own beat (Tobias: "a second swipe") */
         .panel--exit {
-          min-height: auto;
+          min-height: 100dvh;           /* Full viewport for immersive feel */
           height: auto;
           padding: 48px 20px;
           padding-bottom: 100px;
           justify-content: center;
-          scroll-snap-align: none;
-          scroll-snap-stop: normal;
+          scroll-snap-align: start;     /* Snap to this panel */
+          scroll-snap-stop: always;     /* Firm stop for cinematic beat */
         }
 
         .exit-content {
@@ -7668,41 +7667,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           gap: 16px;
         }
 
-        /* Mobile: Disable mandatory scroll-snap to allow natural flow.
-           With mandatory snap + scroll-lock, users get trapped on panels.
-           Proximity snap lets users scroll freely while still having gentle snap points. */
+        /* Mobile: Mandatory scroll-snap for immersive "guided cinema" experience.
+           Combined with shorter scroll locks (1.5s vs 3s) and escape hatch for aggressive swipes. */
         .story {
-          scroll-snap-type: y proximity;
+          scroll-snap-type: y mandatory;
         }
 
-        /* All panels: Natural flow on mobile - no hard snap stops */
-        .panel--hero,
-        .panel--whisper,
-        .panel--build,
-        .panel--slam {
-          scroll-snap-stop: normal;
-        }
+        /* All panels: Keep scroll-snap-stop: always (from desktop styles) for firm stops */
+        /* No overrides needed - inherit desktop snap behavior */
 
-        /* Rules panel: NATURAL FLOW on mobile (allows scroll to form)
-           - Without this, scroll-snap-stop: always traps users on Rules
-           - Form panel below has height: auto, breaking snap alignment */
+        /* Rules panel: Snap to top on mobile for firm stops */
         .panel--rules {
-          scroll-snap-align: none;
-          scroll-snap-stop: normal;
+          scroll-snap-align: start;
+          scroll-snap-stop: always;
         }
 
-        /* Form panel: NATURAL FLOW on mobile (no scroll-snap)
-           - Content dictates height, not viewport
-           - Footer follows naturally below
-           - More app-like scrolling behavior */
+        /* Form panel: Snap to TOP, then allow natural scroll within
+           - Content can exceed viewport height (form + footer)
+           - Snaps when entering, but user can scroll within to see all content
+           - overflow-y: visible allows content to extend beyond panel bounds */
         .panel--form {
-          min-height: auto;
-          height: auto;
+          min-height: 100dvh;
+          height: auto; /* Allow growth beyond viewport */
           padding-top: max(60px, 10vh);
           padding-bottom: 60px; /* Ticker clearance */
           justify-content: flex-start;
-          scroll-snap-align: none; /* NO SNAP - natural flow */
-          scroll-snap-stop: normal; /* Allow scroll-through */
+          scroll-snap-align: start; /* Snap to TOP of form panel */
+          scroll-snap-stop: always; /* Stop here */
+          overflow-y: visible; /* Content can overflow */
         }
 
         .form-shell {
@@ -8999,7 +8991,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       <div class="mesa-help__badge">ACCESS</div>
       <div class="mesa-help__content">
         <div class="mesa-help__title">UNLOCK <span class="mesa-help__highlight">LA MESA</span></div>
-        <p class="mesa-help__text">The table is for registered players only.</p>
+        <p class="mesa-help__text">Sign up below. Then tap the domino to enter.</p>
       </div>
       <button class="mesa-help__dismiss" id="mesaHelpDismiss" type="button">DISMISS</button>
     </div>
@@ -9235,13 +9227,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             snapToPanelTop(heroPanel);
           });
 
-          // Tooltip now wired to chat button below
+          // Wire tooltip to chat button hover (desktop) and first touch (mobile)
+          const tickerChatBtn = document.getElementById('tickerChatBtn');
+          tickerChatBtn?.addEventListener('mouseenter', showChatTooltip);
+          tickerChatBtn?.addEventListener('touchstart', showChatTooltip, { passive: true, once: true });
         }
       }
-
-      // Show tooltip on chat button hover (desktop) and first touch (mobile)
-      tickerChatBtn?.addEventListener('mouseenter', showChatTooltip);
-      tickerChatBtn?.addEventListener('touchstart', showChatTooltip, { passive: true, once: true });
 
       // Scroll-lock system for cinematic panels
       // Prevents scrolling until animations complete
@@ -9283,7 +9274,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         const storyRect = storyEl.getBoundingClientRect();
         const panelRect = panelEl.getBoundingClientRect();
         const delta = panelRect.top - storyRect.top;
-        if (Math.abs(delta) <= 24) return; // close enough; avoid iOS flicker/jump
+        if (Math.abs(delta) <= 2) return; // only skip if truly at destination
 
         // iOS Safari fix: disable scroll-snap during programmatic scroll
         // Without this, iOS snaps to the last valid snap-point (Build panel)
@@ -9292,7 +9283,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         storyEl.style.scrollSnapType = 'none';
 
         const targetTop = storyEl.scrollTop + delta;
-        storyEl.scrollTo({ top: targetTop, behavior: 'auto' });
+        storyEl.scrollTo({ top: targetTop, behavior: 'instant' });
 
         // Check if target panel has a snap anchor
         // If scroll-snap-align is "none", DON'T re-enable scroll-snap
@@ -9305,27 +9296,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           return;
         }
 
-        // Re-enable scroll-snap after scroll STABILIZES (not just 2 frames)
-        // iOS Safari momentum continues 40-60ms after scrollTo
-        let lastScrollTop = storyEl.scrollTop;
-        let stableFrames = 0;
-        const waitForStable = () => {
-          const currentTop = storyEl.scrollTop;
-          if (Math.abs(currentTop - lastScrollTop) < 1) {
-            stableFrames++;
-          } else {
-            stableFrames = 0;
-          }
-          lastScrollTop = currentTop;
-
-          // Wait for 3 stable frames (~50ms) before re-enabling snap
-          if (stableFrames >= 3) {
-            storyEl.style.scrollSnapType = originalSnapType || '';
-            return;
-          }
-          requestAnimationFrame(waitForStable);
-        };
-        requestAnimationFrame(waitForStable);
+        // Re-enable scroll-snap after a small delay to let iOS settle
+        // The RAF loop caused conflicts with iOS momentum scrolling
+        setTimeout(() => {
+          storyEl.style.scrollSnapType = originalSnapType || 'y mandatory';
+        }, 80);
       }
 
       // Re-enable scroll-snap when user scrolls away from form panel
@@ -9378,23 +9353,53 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         requestAnimationFrame(step);
       }
 
+      // Track touch velocity for escape hatch
+      let touchVelocity = 0;
+      let lastTouchTime = 0;
+
       function preventScroll(e) {
         if (scrollLocked) {
+          // Escape hatch threshold - aggressive scroll breaks the lock
+          const escapeThreshold = 150;
+
           // Allow scrolling BACK (up) while locked; only block skipping forward (down).
           if (e.type === 'wheel') {
             if (e.deltaY < 0) return;
+            // Escape hatch: Hard scroll (delta > threshold) breaks the lock
+            if (Math.abs(e.deltaY) > escapeThreshold) {
+              unlockScroll();
+              return; // Allow the scroll through
+            }
           } else if (e.type === 'touchmove') {
             const currentY = e.touches?.[0]?.clientY;
+            const currentTime = Date.now();
             if (typeof currentY === 'number') {
               // First touchmove of gesture - record position, don't block
               if (lastTouchY == null) {
                 lastTouchY = currentY;
+                lastTouchTime = currentTime;
+                touchVelocity = 0;
                 return;
               }
               const delta = currentY - lastTouchY;
+              const timeDelta = currentTime - lastTouchTime;
+
+              // Calculate velocity (pixels per 16ms frame)
+              if (timeDelta > 0) {
+                touchVelocity = Math.abs(delta) / (timeDelta / 16);
+              }
+
               lastTouchY = currentY;
+              lastTouchTime = currentTime;
+
               // Finger moving DOWN => content scrolls UP (allow).
               if (delta > 0) return;
+
+              // Escape hatch: Fast swipe (high velocity) breaks the lock
+              if (touchVelocity > 10) { // ~10px per frame = fast swipe
+                unlockScroll();
+                return; // Allow the scroll through
+              }
             }
           }
 
@@ -9404,13 +9409,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       function lockScroll(duration, afterUnlock) {
-        // Skip scroll lock on mobile - let CSS proximity snap handle it
-        if (isMobile) {
-          if (typeof afterUnlock === 'function') {
-            setTimeout(afterUnlock, duration);
-          }
-          return;
-        }
+        // Mobile: Use SHORTER lock duration (1.5s max) for responsiveness
+        // This lets animations breathe without trapping users
+        const effectiveDuration = isMobile ? Math.min(duration, 1500) : duration;
 
         scrollLocked = true;
         scrollBlockTarget.addEventListener('wheel', preventScroll, { passive: false });
@@ -9420,7 +9421,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         scrollLockTimer = setTimeout(() => {
           unlockScroll();
           if (typeof afterUnlock === 'function') afterUnlock();
-        }, duration);
+        }, effectiveDuration);
       }
 
       function unlockScroll() {
@@ -10156,17 +10157,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         return getPanelVisibilityRatio(registrationPanel) >= 0.7;
       }
 
-      function showMesaHelp() {
-        if (!mesaHelp) return;
-        // Only show this bubble while the registration panel is actually on screen.
-        if (!isRegistrationPanelActive()) return;
-        if (mesaHelpTimeout) clearTimeout(mesaHelpTimeout);
-        mesaHelp.classList.add('is-visible');
-        mesaHelpTimeout = setTimeout(() => {
-          mesaHelp.classList.remove('is-visible');
-          mesaHelpTimeout = null;
-        }, 6500);
-      }
+	      function showMesaHelp({ force = false } = {}) {
+	        if (!mesaHelp) return;
+	        // Only show this bubble while the registration panel is actually on screen.
+	        if (!force && !isRegistrationPanelActive()) return;
+	        if (mesaHelpTimeout) clearTimeout(mesaHelpTimeout);
+	        mesaHelp.classList.add('is-visible');
+	        mesaHelpTimeout = setTimeout(() => {
+	          mesaHelp.classList.remove('is-visible');
+	          mesaHelpTimeout = null;
+	        }, 6500);
+	      }
 
 	      function hideMesaHelp() {
 	        if (!mesaHelp) return;
@@ -10264,9 +10265,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      function routeUnregisteredToRegistration() {
-        // Ensure nothing can "fight" the teleport.
-        unlockScroll();
+	      function routeUnregisteredToRegistration() {
+	        // Ensure nothing can "fight" the teleport.
+	        unlockScroll();
         whisperHasPlayed = true;
         buildHasPlayed = true;
         slamHasPlayed = true;
@@ -10276,27 +10277,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         slamPanel?.classList.add('has-played');
         rulesPanel?.classList.add('has-played');
 
-        // Teleport to the registration panel (smooth scroll + scroll-snap is unreliable on iOS Safari).
-        if (registrationPanel) snapToPanelTop(registrationPanel);
+	        // Teleport to the registration panel - instant, no delay
+	        if (registrationPanel) {
+	          if (typeof snapToPanelTop === 'function') snapToPanelTop(registrationPanel);
+	          else registrationPanel.scrollIntoView({ behavior: 'instant', block: 'start' });
+	        }
 
-        // Show the bubble only once we're actually on the form panel.
-        let tries = 0;
-        const tryShow = () => {
-          tries += 1;
-          if (isRegistrationPanelActive()) {
-            showMesaHelp();
-            if (submitBtn) {
-              submitBtn.classList.remove('is-unlock-hinted');
-              void submitBtn.offsetWidth;
-              submitBtn.classList.add('is-unlock-hinted');
-              setTimeout(() => submitBtn.classList.remove('is-unlock-hinted'), 1300);
-            }
-            return;
-          }
-          if (tries < 20) requestAnimationFrame(tryShow);
-        };
-        requestAnimationFrame(tryShow);
-      }
+	        // Show the prompt after teleport completes
+	        requestAnimationFrame(() => {
+	          showMesaHelp({ force: true });
+	        });
+
+	        // Reinforce once we're actually on the form panel.
+	        let tries = 0;
+	        const tryShow = () => {
+	          tries += 1;
+	          if (isRegistrationPanelActive()) {
+	            showMesaHelp({ force: true });
+	            if (submitBtn) {
+	              submitBtn.classList.remove('is-unlock-hinted');
+	              void submitBtn.offsetWidth;
+	              submitBtn.classList.add('is-unlock-hinted');
+	              setTimeout(() => submitBtn.classList.remove('is-unlock-hinted'), 1300);
+	            }
+	            return;
+	          }
+	          if (tries < 20) requestAnimationFrame(tryShow);
+	        };
+	        requestAnimationFrame(tryShow);
+	      }
 
       function handleTickerActivate() {
         const now = Date.now();

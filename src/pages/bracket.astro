@@ -1,0 +1,517 @@
+---
+/**
+ * Public Bracket - Live Tournament View
+ * Read-only bracket with realtime updates for spectators
+ */
+import Bracket from '../components/Bracket.astro';
+
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>Tournament Bracket | Cuban Domino League</title>
+    <meta
+      name="description"
+      content="Live tournament bracket for the Cuban Domino League. Watch the action unfold in real-time."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400;1,6..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Atmospheric Background -->
+    <div class="atmosphere"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
+    <div class="page-wrapper">
+      <!-- Header -->
+      <header class="page-header">
+        <a href="/" class="back-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>Back</span>
+        </a>
+        <div class="header-brand">
+          <span class="header-logo">CDL</span>
+          <span class="header-divider"></span>
+        </div>
+        <div class="live-indicator" id="liveIndicator">
+          <span class="live-dot"></span>
+          <span class="live-text">Live</span>
+        </div>
+      </header>
+
+      <!-- Navigation -->
+      <nav class="page-nav">
+        <a href="/standings" class="nav-link">Standings</a>
+        <a href="/bracket" class="nav-link active">Finals Bracket</a>
+      </nav>
+
+      <!-- Page Title -->
+      <div class="page-title">
+        <h1 class="title-main">Finals Bracket</h1>
+        <p class="title-sub" id="bracketStatus">Loading bracket...</p>
+      </div>
+
+      <!-- Bracket Component (Read-only) -->
+      <main class="bracket-container">
+        <Bracket isAdmin={false} />
+      </main>
+    </div>
+
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #1c130f;
+        --muted: #594a3f;
+        --copper: #b76a3b;
+        --cream: #f8efe6;
+        --bone: #fff7ef;
+        --brass: #d4a574;
+        --gold: #ffd700;
+        --bg-dark: #0a0705;
+        --bg-card: rgba(28, 19, 15, 0.9);
+        --border-subtle: rgba(212, 165, 116, 0.15);
+        --border-accent: rgba(212, 165, 116, 0.3);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        height: 100%;
+        overflow-x: hidden;
+      }
+
+      body {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background: var(--bg-dark);
+        color: #fff;
+        line-height: 1.5;
+      }
+
+      /* Atmospheric Background */
+      .atmosphere {
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(183, 106, 59, 0.12) 0%, transparent 50%),
+          radial-gradient(ellipse at 85% 85%, rgba(212, 165, 116, 0.06) 0%, transparent 40%),
+          radial-gradient(ellipse at 10% 60%, rgba(212, 165, 116, 0.04) 0%, transparent 35%),
+          radial-gradient(ellipse at center, #1a120d 0%, #0d0906 50%, #0a0705 100%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .grain {
+        position: fixed;
+        inset: -50%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.035;
+        pointer-events: none;
+        z-index: 1;
+        mix-blend-mode: overlay;
+      }
+
+      .vignette {
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 50% 20%, rgba(212, 165, 116, 0.03) 0%, transparent 50%),
+          radial-gradient(ellipse at center, transparent 30%, rgba(10, 7, 5, 0.5) 100%);
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* Page Layout */
+      .page-wrapper {
+        position: relative;
+        z-index: 3;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header */
+      .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: linear-gradient(180deg, rgba(28, 19, 15, 0.98) 0%, rgba(20, 14, 10, 0.95) 100%);
+        border-bottom: 1px solid var(--border-subtle);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .back-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        transition: color 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .back-link:hover, .back-link:active {
+        color: var(--brass);
+      }
+
+      .back-link svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .header-brand {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .header-logo {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.5rem;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: 0.08em;
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+      }
+
+      .header-divider {
+        width: 28px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--brass), transparent);
+      }
+
+      .live-indicator {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: rgba(76, 175, 80, 0.1);
+        border: 1px solid rgba(76, 175, 80, 0.3);
+        border-radius: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .live-indicator.active {
+        opacity: 1;
+      }
+
+      .live-dot {
+        width: 8px;
+        height: 8px;
+        background: #81c784;
+        border-radius: 50%;
+        animation: livePulse 2s ease-in-out infinite;
+      }
+
+      @keyframes livePulse {
+        0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(129, 199, 132, 0.6); }
+        50% { opacity: 0.6; box-shadow: 0 0 2px rgba(129, 199, 132, 0.3); }
+      }
+
+      .live-text {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #81c784;
+      }
+
+      /* Navigation */
+      .page-nav {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        padding: 12px 20px;
+        background: rgba(10, 7, 5, 0.6);
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .nav-link {
+        padding: 8px 16px;
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+        border-radius: 20px;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .nav-link:hover {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .nav-link.active {
+        color: var(--brass);
+        background: rgba(212, 165, 116, 0.15);
+      }
+
+      /* Page Title */
+      .page-title {
+        padding: 20px 20px 12px;
+        text-align: center;
+      }
+
+      .title-main {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--brass);
+        margin-bottom: 4px;
+      }
+
+      .title-sub {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      /* Bracket Container */
+      .bracket-container {
+        flex: 1;
+        padding: 0 0 24px;
+      }
+
+      /* Desktop Adjustments */
+      @media (min-width: 769px) {
+        .page-header {
+          padding: 20px 32px;
+        }
+
+        .back-link {
+          font-size: 0.9rem;
+        }
+
+        .header-logo {
+          font-size: 1.8rem;
+        }
+
+        .page-title {
+          padding: 32px 32px 16px;
+        }
+
+        .title-main {
+          font-size: 2rem;
+        }
+
+        .title-sub {
+          font-size: 0.9rem;
+        }
+
+        .bracket-container {
+          padding: 0 16px 32px;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+      }
+    </style>
+
+    <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
+      // Public Finals Bracket - 4-team bracket (2 Semis + 1 Final)
+      let teams = [];
+      let matches = [];
+      let supabase = null;
+
+      async function init() {
+        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+          document.getElementById('bracketStatus').textContent = 'Bracket not available';
+          return;
+        }
+
+        try {
+          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+          supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+          await loadData();
+          setupRealtimeSubscription();
+
+          // Show live indicator
+          document.getElementById('liveIndicator').classList.add('active');
+        } catch (err) {
+          console.error('Bracket init error:', err);
+          document.getElementById('bracketStatus').textContent = 'Failed to load bracket';
+        }
+      }
+
+      async function loadData() {
+        const [teamsRes, matchesRes] = await Promise.all([
+          supabase.from('teams').select('*').order('seed'),
+          // Only load finals matches (phase = 'finals')
+          supabase.from('matches').select('*').eq('phase', 'finals').order('round').order('match_number')
+        ]);
+
+        teams = teamsRes.data || [];
+        matches = matchesRes.data || [];
+        renderBracket();
+        updateStatus();
+      }
+
+      function renderBracket() {
+        // Update all match cards (both mobile and desktop)
+        // Finals: Round 1 = Semis, Round 2 = Championship
+        matches.forEach(match => {
+          const matchEls = document.querySelectorAll(`[data-round="${match.round}"][data-match="${match.match_number}"]`);
+
+          matchEls.forEach(matchEl => {
+            const team1 = teams.find(t => t.id === match.team1_id);
+            const team2 = teams.find(t => t.id === match.team2_id);
+            const winner = match.winner_id ? teams.find(t => t.id === match.winner_id) : null;
+
+            // Update team names
+            const team1NameEl = matchEl.querySelector('[data-team1-name]');
+            const team2NameEl = matchEl.querySelector('[data-team2-name]');
+
+            if (team1) {
+              team1NameEl.textContent = team1.name;
+            } else if (match.round === 1) {
+              // Semifinals - show seed position
+              team1NameEl.textContent = match.match_number === 1 ? 'Seed #1' : 'Seed #2';
+            } else {
+              // Championship
+              team1NameEl.textContent = 'Winner Semi 1';
+            }
+
+            if (team2) {
+              team2NameEl.textContent = team2.name;
+            } else if (match.round === 1) {
+              // Semifinals - show seed position
+              team2NameEl.textContent = match.match_number === 1 ? 'Seed #4' : 'Seed #3';
+            } else {
+              // Championship
+              team2NameEl.textContent = 'Winner Semi 2';
+            }
+
+            // Update scores (read-only display)
+            const score1El = matchEl.querySelector('[data-team1-score-display]');
+            const score2El = matchEl.querySelector('[data-team2-score-display]');
+
+            if (score1El) {
+              score1El.textContent = match.team1_score ?? '-';
+            }
+            if (score2El) {
+              score2El.textContent = match.team2_score ?? '-';
+            }
+
+            // Highlight winner
+            const teamRows = matchEl.querySelectorAll('[data-team-row]');
+            teamRows.forEach(row => row.classList.remove('winner'));
+
+            if (winner) {
+              if (match.team1_id === winner.id) {
+                teamRows[0]?.classList.add('winner');
+              } else {
+                teamRows[1]?.classList.add('winner');
+              }
+            }
+
+            // Update status indicator
+            const statusEl = matchEl.querySelector('[data-status-indicator]');
+            if (statusEl) {
+              statusEl.setAttribute('data-status', match.status);
+              const statusLabels = {
+                'pending': 'Pending',
+                'in_progress': 'In Progress',
+                'completed': 'Completed'
+              };
+              statusEl.setAttribute('data-tooltip', statusLabels[match.status] || match.status);
+            }
+          });
+        });
+
+        // Update champion display (Championship is Round 2)
+        const finalMatch = matches.find(m => m.round === 2 && m.match_number === 1);
+        const championEls = document.querySelectorAll('[data-champion-name], [data-desktop-champion-name]');
+
+        championEls.forEach(el => {
+          const prevText = el.textContent;
+
+          if (finalMatch && finalMatch.winner_id) {
+            const champion = teams.find(t => t.id === finalMatch.winner_id);
+            const newText = champion ? champion.name : 'TBD';
+            el.textContent = newText;
+            el.classList.add('has-champion');
+
+            // Trigger reveal animation if champion just won
+            if (prevText !== newText && newText !== 'TBD') {
+              el.classList.add('revealing');
+              setTimeout(() => el.classList.remove('revealing'), 800);
+            }
+          } else {
+            el.textContent = 'TBD';
+            el.classList.remove('has-champion');
+          }
+        });
+      }
+
+      function updateStatus() {
+        const statusEl = document.getElementById('bracketStatus');
+        const completed = matches.filter(m => m.status === 'completed').length;
+        const inProgress = matches.filter(m => m.status === 'in_progress').length;
+        const teamsInBracket = new Set([
+          ...matches.map(m => m.team1_id).filter(Boolean),
+          ...matches.map(m => m.team2_id).filter(Boolean)
+        ]).size;
+
+        if (completed === 3) {
+          statusEl.textContent = 'Tournament Complete!';
+        } else if (inProgress > 0) {
+          statusEl.textContent = `${inProgress} match${inProgress > 1 ? 'es' : ''} in progress`;
+        } else if (teamsInBracket >= 4) {
+          statusEl.textContent = `${completed}/3 finals matches completed`;
+        } else if (teamsInBracket > 0) {
+          statusEl.textContent = `${teamsInBracket}/4 teams seeded`;
+        } else {
+          statusEl.textContent = 'Waiting for Round Robin to complete';
+        }
+      }
+
+      function setupRealtimeSubscription() {
+        supabase
+          .channel('public-bracket-updates')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, () => {
+            loadData();
+          })
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, () => {
+            loadData();
+          })
+          .subscribe();
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    </script>
+  </body>
+</html>

@@ -1,6 +1,8 @@
 ---
 // Admin Bracket - Tournament Bracket Editor
+// Uses shared Bracket component with admin editing enabled
 import AdminLayout from '../../components/admin/AdminLayout.astro';
+import Bracket from '../../components/Bracket.astro';
 ---
 
 <AdminLayout title="Bracket" activeNav="bracket">
@@ -11,213 +13,26 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         <span id="bracketStatus">Loading...</span>
       </div>
       <div class="action-buttons">
-        <button class="btn btn--secondary" id="assignTeamsBtn">
+        <button class="btn btn--secondary btn-slam" id="assignTeamsBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
             <circle cx="8.5" cy="7" r="4" />
             <polyline points="17 11 19 13 23 9" />
           </svg>
-          Auto-Assign by Seed
+          Auto-Assign
         </button>
-        <button class="btn btn--secondary" id="resetBracketBtn">
+        <button class="btn btn--secondary btn-slam" id="resetBracketBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
             <path d="M3 3v5h5" />
           </svg>
-          Reset Bracket
+          Reset
         </button>
       </div>
     </div>
 
-    <!-- Visual Bracket -->
-    <div class="bracket-container">
-      <div class="bracket">
-        <!-- Quarterfinals (Round 1) -->
-        <div class="bracket-round" data-round="1">
-          <div class="round-header">
-            <span class="round-title">Quarterfinals</span>
-            <span class="round-count">4 matches</span>
-          </div>
-          <div class="round-matches">
-            <div class="match" data-match="1" data-round="1">
-              <div class="match-header">
-                <span class="match-number">Match 1</span>
-                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
-              </div>
-              <div class="match-teams">
-                <div class="match-team" data-position="1">
-                  <span class="team-seed">#1</span>
-                  <span class="team-name" data-team1-name>TBD</span>
-                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
-                </div>
-                <div class="match-team" data-position="2">
-                  <span class="team-seed">#8</span>
-                  <span class="team-name" data-team2-name>TBD</span>
-                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
-                </div>
-              </div>
-              <button class="save-match-btn" data-save-btn>Save Scores</button>
-            </div>
-
-            <div class="match" data-match="2" data-round="1">
-              <div class="match-header">
-                <span class="match-number">Match 2</span>
-                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
-              </div>
-              <div class="match-teams">
-                <div class="match-team" data-position="1">
-                  <span class="team-seed">#4</span>
-                  <span class="team-name" data-team1-name>TBD</span>
-                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
-                </div>
-                <div class="match-team" data-position="2">
-                  <span class="team-seed">#5</span>
-                  <span class="team-name" data-team2-name>TBD</span>
-                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
-                </div>
-              </div>
-              <button class="save-match-btn" data-save-btn>Save Scores</button>
-            </div>
-
-            <div class="match" data-match="3" data-round="1">
-              <div class="match-header">
-                <span class="match-number">Match 3</span>
-                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
-              </div>
-              <div class="match-teams">
-                <div class="match-team" data-position="1">
-                  <span class="team-seed">#3</span>
-                  <span class="team-name" data-team1-name>TBD</span>
-                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
-                </div>
-                <div class="match-team" data-position="2">
-                  <span class="team-seed">#6</span>
-                  <span class="team-name" data-team2-name>TBD</span>
-                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
-                </div>
-              </div>
-              <button class="save-match-btn" data-save-btn>Save Scores</button>
-            </div>
-
-            <div class="match" data-match="4" data-round="1">
-              <div class="match-header">
-                <span class="match-number">Match 4</span>
-                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
-              </div>
-              <div class="match-teams">
-                <div class="match-team" data-position="1">
-                  <span class="team-seed">#2</span>
-                  <span class="team-name" data-team1-name>TBD</span>
-                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
-                </div>
-                <div class="match-team" data-position="2">
-                  <span class="team-seed">#7</span>
-                  <span class="team-name" data-team2-name>TBD</span>
-                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
-                </div>
-              </div>
-              <button class="save-match-btn" data-save-btn>Save Scores</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Connector lines -->
-        <div class="bracket-connectors">
-          <svg class="connector-svg" viewBox="0 0 60 400" preserveAspectRatio="none">
-            <path d="M0 50 H30 V150 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
-            <path d="M0 150 H30 V150 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
-            <path d="M0 250 H30 V350 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
-            <path d="M0 350 H30 V350 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
-          </svg>
-        </div>
-
-        <!-- Semifinals (Round 2) -->
-        <div class="bracket-round" data-round="2">
-          <div class="round-header">
-            <span class="round-title">Semifinals</span>
-            <span class="round-count">2 matches</span>
-          </div>
-          <div class="round-matches round-matches--semifinal">
-            <div class="match" data-match="1" data-round="2">
-              <div class="match-header">
-                <span class="match-number">Semi 1</span>
-                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
-              </div>
-              <div class="match-teams">
-                <div class="match-team" data-position="1">
-                  <span class="team-name" data-team1-name>Winner M1</span>
-                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
-                </div>
-                <div class="match-team" data-position="2">
-                  <span class="team-name" data-team2-name>Winner M2</span>
-                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
-                </div>
-              </div>
-              <button class="save-match-btn" data-save-btn>Save Scores</button>
-            </div>
-
-            <div class="match" data-match="2" data-round="2">
-              <div class="match-header">
-                <span class="match-number">Semi 2</span>
-                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
-              </div>
-              <div class="match-teams">
-                <div class="match-team" data-position="1">
-                  <span class="team-name" data-team1-name>Winner M3</span>
-                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
-                </div>
-                <div class="match-team" data-position="2">
-                  <span class="team-name" data-team2-name>Winner M4</span>
-                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
-                </div>
-              </div>
-              <button class="save-match-btn" data-save-btn>Save Scores</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Connector to Finals -->
-        <div class="bracket-connectors">
-          <svg class="connector-svg connector-svg--final" viewBox="0 0 60 200" preserveAspectRatio="none">
-            <path d="M0 50 H30 V100 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
-            <path d="M0 150 H30 V100 H60" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2" />
-          </svg>
-        </div>
-
-        <!-- Finals (Round 3) -->
-        <div class="bracket-round" data-round="3">
-          <div class="round-header">
-            <span class="round-title">Finals</span>
-            <span class="round-count">Championship</span>
-          </div>
-          <div class="round-matches round-matches--final">
-            <div class="match match--final" data-match="1" data-round="3">
-              <div class="match-header">
-                <span class="match-number">Championship</span>
-                <span class="match-status badge badge--pending" data-status-badge>Pending</span>
-              </div>
-              <div class="match-teams">
-                <div class="match-team" data-position="1">
-                  <span class="team-name" data-team1-name>Winner Semi 1</span>
-                  <input type="number" class="score-input" data-team1-score min="0" max="200" placeholder="-" />
-                </div>
-                <div class="match-team" data-position="2">
-                  <span class="team-name" data-team2-name>Winner Semi 2</span>
-                  <input type="number" class="score-input" data-team2-score min="0" max="200" placeholder="-" />
-                </div>
-              </div>
-              <button class="save-match-btn" data-save-btn>Save Scores</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Champion Display -->
-        <div class="champion-display" id="championDisplay">
-          <div class="champion-label">Champion</div>
-          <div class="champion-name" id="championName">TBD</div>
-        </div>
-      </div>
-    </div>
+    <!-- Bracket Component (Admin Mode) -->
+    <Bracket isAdmin={true} />
   </div>
 
   <!-- Reset Confirmation Modal -->
@@ -239,11 +54,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 </AdminLayout>
 
 <style>
-  /* MOBILE-FIRST STYLES */
   .bracket-page {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
   }
 
   .page-actions {
@@ -260,341 +74,24 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   .action-buttons {
     display: flex;
-    flex-direction: column;
     gap: 8px;
+    justify-content: center;
   }
 
   .action-buttons .btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  /* MOBILE: Vertical bracket layout */
-  .bracket-container {
-    background: transparent;
-    border: none;
-    padding: 0;
-  }
-
-  .bracket {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    min-width: 0;
-    padding: 0;
-  }
-
-  /* Hide connectors on mobile */
-  .bracket-connectors {
-    display: none;
-  }
-
-  /* Round Styling - Mobile */
-  .bracket-round {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 16px;
-  }
-
-  .round-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0;
-    margin-bottom: 4px;
-  }
-
-  .round-title {
-    font-family: "Bodoni Moda", serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--brass);
-  }
-
-  .round-count {
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.4);
-    padding: 4px 10px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-  }
-
-  .round-matches {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .round-matches--semifinal,
-  .round-matches--final {
-    padding-top: 0;
-    gap: 12px;
-  }
-
-  /* Match Card - Mobile */
-  .match {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 16px;
-    width: 100%;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .match--final {
-    background: rgba(212, 165, 116, 0.05);
-    border-color: var(--border-accent);
-  }
-
-  .match-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-
-  .match-number {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--copper);
-  }
-
-  /* Visual-only status indicator (dot) with tooltip */
-  .match-status {
-    position: relative;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    font-size: 0;
-    padding: 0;
-    border: none;
-    cursor: help;
-  }
-
-  .match-status::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: calc(100% + 8px);
-    right: 0;
-    padding: 6px 10px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: #fff;
-    background: rgba(28, 19, 15, 0.95);
-    border: 1px solid var(--border-subtle);
-    border-radius: 6px;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(4px);
-    transition: all 0.2s ease;
-    z-index: 10;
-    pointer-events: none;
-  }
-
-  .match-status:hover::after,
-  .match-status:active::after {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-
-  .match-status.badge--pending {
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  .match-status.badge--in_progress {
-    background: var(--brass);
-    box-shadow: 0 0 8px rgba(212, 165, 116, 0.4);
-  }
-
-  .match-status.badge--completed {
-    background: #81c784;
-    box-shadow: 0 0 8px rgba(129, 199, 132, 0.3);
-  }
-
-  .match-teams {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .match-team {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 8px;
-  }
-
-  .match-team.winner {
-    background: rgba(76, 175, 80, 0.1);
-    border: 1px solid rgba(76, 175, 80, 0.2);
-  }
-
-  /* Winner advancement pulse animation */
-  .match-team.winner-advancing {
-    animation: winnerPulse 0.6s ease-out;
-  }
-
-  @keyframes winnerPulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(129, 199, 132, 0.5);
-    }
-    50% {
-      box-shadow: 0 0 0 10px rgba(129, 199, 132, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(129, 199, 132, 0);
-    }
-  }
-
-  /* Champion reveal animation */
-  .champion-name.revealing {
-    animation: championReveal 0.8s ease-out;
-  }
-
-  @keyframes championReveal {
-    0% {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.05);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  .team-seed {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--copper);
-    opacity: 0.6;
-    min-width: 26px;
-  }
-
-  .team-name {
     flex: 1;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .score-input {
-    width: 56px;
-    padding: 10px 8px;
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .score-input:focus {
-    border-color: var(--brass);
-  }
-
-  .score-input::placeholder {
-    color: rgba(255, 255, 255, 0.2);
-  }
-
-  /* Hide spin buttons */
-  .score-input::-webkit-outer-spin-button,
-  .score-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  .score-input[type=number] {
-    -moz-appearance: textfield;
-  }
-
-  .save-match-btn {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--brass);
-    background: rgba(212, 165, 116, 0.1);
-    border: 1px solid var(--border-accent);
-    border-radius: 12px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .save-match-btn:active {
-    background: rgba(212, 165, 116, 0.25);
-    transform: scale(0.98);
-  }
-
-  .save-match-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  /* Champion Display - Mobile */
-  .champion-display {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    max-width: 160px;
     justify-content: center;
-    padding: 20px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    margin: 0;
+    padding: 10px 16px;
+    font-size: 0.75rem;
   }
 
-  .champion-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--copper);
-    margin-bottom: 10px;
+  .action-buttons .btn svg {
+    width: 16px;
+    height: 16px;
   }
 
-  .champion-name {
-    font-family: "Bodoni Moda", serif;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--brass);
-    padding: 14px 20px;
-    background: linear-gradient(135deg, rgba(212, 165, 116, 0.1), rgba(183, 106, 59, 0.1));
-    border: 2px solid var(--brass);
-    border-radius: 10px;
-    text-align: center;
-    min-width: 140px;
-  }
-
-  .champion-name.has-champion {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(212, 165, 116, 0.1));
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-
-  /* Modal Styles - Mobile */
+  /* Modal Styles */
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -671,7 +168,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     margin-top: 8px;
   }
 
-  /* ===== DESKTOP OVERRIDES (769px+) ===== */
+  /* Desktop overrides */
   @media (min-width: 769px) {
     .bracket-page {
       gap: 24px;
@@ -689,122 +186,13 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     }
 
     .action-buttons {
-      flex-direction: row;
       gap: 12px;
+      justify-content: flex-end;
     }
 
     .action-buttons .btn {
-      width: auto;
-    }
-
-    /* DESKTOP: Horizontal bracket */
-    .bracket-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 32px;
-      overflow-x: auto;
-    }
-
-    .bracket {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 0;
-      min-width: 1000px;
-      padding: 20px 0;
-    }
-
-    .bracket-connectors {
-      display: flex;
-      width: 60px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .connector-svg {
-      width: 60px;
-      height: 400px;
-    }
-
-    .connector-svg--final {
-      height: 200px;
-    }
-
-    .bracket-round {
-      background: transparent;
-      border: none;
-      padding: 0;
-      gap: 16px;
-    }
-
-    .round-header {
-      flex-direction: column;
-      gap: 4px;
-      padding: 0 8px;
-      margin-bottom: 8px;
-    }
-
-    .round-count {
-      background: transparent;
-      padding: 0;
-      border-radius: 0;
-    }
-
-    .round-matches--semifinal {
-      padding-top: 48px;
-      gap: 100px;
-    }
-
-    .round-matches--final {
-      padding-top: 96px;
-    }
-
-    .match {
-      width: 240px;
-      padding: 12px;
-    }
-
-    .match:hover {
-      border-color: var(--border-accent);
-    }
-
-    .match-team {
-      padding: 8px 10px;
-      gap: 8px;
-    }
-
-    .team-name {
-      font-size: 0.85rem;
-    }
-
-    .score-input {
-      width: 48px;
-      padding: 6px 8px;
-      font-size: 0.9rem;
-    }
-
-    .save-match-btn {
-      padding: 8px 12px;
-      font-size: 0.75rem;
-    }
-
-    .save-match-btn:hover {
-      background: rgba(212, 165, 116, 0.2);
-    }
-
-    .champion-display {
-      padding: 24px;
-      margin-left: 20px;
-      margin-top: 96px;
-      background: transparent;
-      border: none;
-    }
-
-    .champion-name {
-      font-size: 1.4rem;
-      padding: 16px 24px;
-      min-width: 160px;
+      flex: none;
+      max-width: none;
     }
 
     /* Modal - centered on desktop */
@@ -823,14 +211,6 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       max-height: 90vh;
     }
 
-    .modal__header {
-      padding: 20px 24px;
-    }
-
-    .modal__body {
-      padding: 24px;
-    }
-
     .modal__actions {
       flex-direction: row;
       justify-content: flex-end;
@@ -842,39 +222,25 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       font-size: 0.85rem;
     }
   }
-
-  @media (min-width: 769px) and (max-width: 1200px) {
-    .bracket {
-      min-width: 900px;
-    }
-
-    .match {
-      width: 200px;
-    }
-  }
 </style>
 
 <script>
+  // Admin Bracket Controller - 4-Team Finals
+  // Finals bracket: 2 Semifinals (Round 1) + 1 Championship (Round 2)
   let teams = [];
   let matches = [];
-
-  // Seeding bracket: 1v8, 4v5, 3v6, 2v7 (standard bracket seeding)
-  const SEED_MATCHUPS = [
-    [1, 8], // Match 1
-    [4, 5], // Match 2
-    [3, 6], // Match 3
-    [2, 7]  // Match 4
-  ];
 
   window.addEventListener('adminReady', async ({ detail: { supabase } }) => {
     await loadData(supabase);
     setupEventListeners(supabase);
+    setupRealtimeSubscription(supabase);
   });
 
   async function loadData(supabase) {
     const [teamsRes, matchesRes] = await Promise.all([
       supabase.from('teams').select('*').order('seed'),
-      supabase.from('matches').select('*').order('round').order('match_number')
+      // Only load finals matches (phase = 'finals')
+      supabase.from('matches').select('*').eq('phase', 'finals').order('round').order('match_number')
     ]);
 
     teams = teamsRes.data || [];
@@ -884,152 +250,174 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   }
 
   function renderBracket() {
-    // Render each match
+    // Update all match cards (both mobile and desktop)
+    // Finals: Round 1 = Semis, Round 2 = Championship
     matches.forEach(match => {
-      const matchEl = document.querySelector(`[data-round="${match.round}"][data-match="${match.match_number}"]`);
-      if (!matchEl) return;
+      // Find all match elements for this round/match (mobile + desktop)
+      const matchEls = document.querySelectorAll(`[data-round="${match.round}"][data-match="${match.match_number}"]`);
 
-      const team1 = teams.find(t => t.id === match.team1_id);
-      const team2 = teams.find(t => t.id === match.team2_id);
-      const winner = match.winner_id ? teams.find(t => t.id === match.winner_id) : null;
+      matchEls.forEach(matchEl => {
+        const team1 = teams.find(t => t.id === match.team1_id);
+        const team2 = teams.find(t => t.id === match.team2_id);
+        const winner = match.winner_id ? teams.find(t => t.id === match.winner_id) : null;
 
-      // Update team names
-      const team1NameEl = matchEl.querySelector('[data-team1-name]');
-      const team2NameEl = matchEl.querySelector('[data-team2-name]');
+        // Update team names
+        const team1NameEl = matchEl.querySelector('[data-team1-name]');
+        const team2NameEl = matchEl.querySelector('[data-team2-name]');
 
-      if (team1) {
-        team1NameEl.textContent = team1.name;
-      } else if (match.round === 1) {
-        team1NameEl.textContent = 'TBD';
-      } else {
-        // Show which match winner goes here
-        const prevMatchNum = match.round === 2
-          ? (match.match_number === 1 ? 'M1' : 'M3')
-          : 'Semi 1';
-        team1NameEl.textContent = `Winner ${prevMatchNum}`;
-      }
-
-      if (team2) {
-        team2NameEl.textContent = team2.name;
-      } else if (match.round === 1) {
-        team2NameEl.textContent = 'TBD';
-      } else {
-        const prevMatchNum = match.round === 2
-          ? (match.match_number === 1 ? 'M2' : 'M4')
-          : 'Semi 2';
-        team2NameEl.textContent = `Winner ${prevMatchNum}`;
-      }
-
-      // Update scores
-      const score1Input = matchEl.querySelector('[data-team1-score]');
-      const score2Input = matchEl.querySelector('[data-team2-score]');
-
-      if (match.team1_score !== null && match.team1_score !== undefined) {
-        score1Input.value = match.team1_score;
-      } else {
-        score1Input.value = '';
-      }
-
-      if (match.team2_score !== null && match.team2_score !== undefined) {
-        score2Input.value = match.team2_score;
-      } else {
-        score2Input.value = '';
-      }
-
-      // Highlight winner
-      const teamEls = matchEl.querySelectorAll('.match-team');
-      teamEls.forEach(el => el.classList.remove('winner'));
-
-      if (winner) {
-        if (match.team1_id === winner.id) {
-          teamEls[0].classList.add('winner');
+        if (team1) {
+          team1NameEl.textContent = team1.name;
+        } else if (match.round === 1) {
+          // Semifinals - show seed position
+          team1NameEl.textContent = match.match_number === 1 ? 'Seed #1' : 'Seed #2';
         } else {
-          teamEls[1].classList.add('winner');
+          // Championship
+          team1NameEl.textContent = 'Winner Semi 1';
         }
-      }
 
-      // Update status badge with tooltip
-      const statusBadge = matchEl.querySelector('[data-status-badge]');
-      statusBadge.className = `match-status badge badge--${match.status}`;
-      const statusLabels = {
-        'pending': 'Pending',
-        'in_progress': 'In Progress',
-        'completed': 'Completed'
-      };
-      statusBadge.setAttribute('data-tooltip', statusLabels[match.status] || match.status);
+        if (team2) {
+          team2NameEl.textContent = team2.name;
+        } else if (match.round === 1) {
+          // Semifinals - show seed position
+          team2NameEl.textContent = match.match_number === 1 ? 'Seed #4' : 'Seed #3';
+        } else {
+          // Championship
+          team2NameEl.textContent = 'Winner Semi 2';
+        }
+
+        // Update scores (inputs for admin)
+        const score1El = matchEl.querySelector('[data-team1-score]');
+        const score2El = matchEl.querySelector('[data-team2-score]');
+
+        if (score1El) {
+          if (score1El.tagName === 'INPUT') {
+            score1El.value = match.team1_score ?? '';
+          } else {
+            score1El.textContent = match.team1_score ?? '-';
+          }
+        }
+
+        if (score2El) {
+          if (score2El.tagName === 'INPUT') {
+            score2El.value = match.team2_score ?? '';
+          } else {
+            score2El.textContent = match.team2_score ?? '-';
+          }
+        }
+
+        // Highlight winner
+        const teamRows = matchEl.querySelectorAll('[data-team-row]');
+        teamRows.forEach(row => row.classList.remove('winner'));
+
+        if (winner) {
+          if (match.team1_id === winner.id) {
+            teamRows[0]?.classList.add('winner');
+          } else {
+            teamRows[1]?.classList.add('winner');
+          }
+        }
+
+        // Update status indicator
+        const statusEl = matchEl.querySelector('[data-status-indicator]');
+        if (statusEl) {
+          statusEl.setAttribute('data-status', match.status);
+          const statusLabels = {
+            'pending': 'Pending',
+            'in_progress': 'In Progress',
+            'completed': 'Completed'
+          };
+          statusEl.setAttribute('data-tooltip', statusLabels[match.status] || match.status);
+        }
+      });
     });
 
-    // Update champion display
-    const finalMatch = matches.find(m => m.round === 3 && m.match_number === 1);
-    const championNameEl = document.getElementById('championName');
+    // Update champion display (both mobile and desktop)
+    // Championship is now Round 2 (not Round 3)
+    const finalMatch = matches.find(m => m.round === 2 && m.match_number === 1);
+    const championEls = document.querySelectorAll('[data-champion-name], [data-desktop-champion-name]');
 
-    if (finalMatch && finalMatch.winner_id) {
-      const champion = teams.find(t => t.id === finalMatch.winner_id);
-      championNameEl.textContent = champion ? champion.name : 'TBD';
-      championNameEl.classList.add('has-champion');
-    } else {
-      championNameEl.textContent = 'TBD';
-      championNameEl.classList.remove('has-champion');
-    }
+    championEls.forEach(el => {
+      if (finalMatch && finalMatch.winner_id) {
+        const champion = teams.find(t => t.id === finalMatch.winner_id);
+        el.textContent = champion ? champion.name : 'TBD';
+        el.classList.add('has-champion');
+      } else {
+        el.textContent = 'TBD';
+        el.classList.remove('has-champion');
+      }
+    });
   }
 
   function updateStatus() {
     const statusEl = document.getElementById('bracketStatus');
     const completed = matches.filter(m => m.status === 'completed').length;
-    const teamsWithSeed = teams.filter(t => t.seed).length;
+    const teamsInBracket = new Set([
+      ...matches.map(m => m.team1_id).filter(Boolean),
+      ...matches.map(m => m.team2_id).filter(Boolean)
+    ]).size;
 
-    if (teamsWithSeed < 8) {
-      statusEl.textContent = `${teamsWithSeed}/8 teams seeded | ${completed}/7 matches completed`;
+    if (teamsInBracket < 4) {
+      statusEl.textContent = `${teamsInBracket}/4 teams seeded | ${completed}/3 matches`;
     } else {
-      statusEl.textContent = `All teams seeded | ${completed}/7 matches completed`;
+      statusEl.textContent = `Finals ready | ${completed}/3 matches`;
     }
   }
 
   function setupEventListeners(supabase) {
-    // Auto-assign teams by seed
+    // Auto-assign redirects to Round Robin for seeding
     document.getElementById('assignTeamsBtn').addEventListener('click', async () => {
-      const seededTeams = teams.filter(t => t.seed).sort((a, b) => a.seed - b.seed);
-
-      if (seededTeams.length < 8) {
-        alert(`Need 8 seeded teams to auto-assign. Currently have ${seededTeams.length}.`);
-        return;
-      }
-
+      // Check if round robin has at least 4 teams with standings
       try {
-        // Assign teams to quarterfinal matches based on seeding
-        for (let i = 0; i < 4; i++) {
-          const [seed1, seed2] = SEED_MATCHUPS[i];
-          const team1 = seededTeams.find(t => t.seed === seed1);
-          const team2 = seededTeams.find(t => t.seed === seed2);
+        const { data: standings } = await supabase.from('standings').select('*');
 
-          const match = matches.find(m => m.round === 1 && m.match_number === i + 1);
-          if (match) {
-            await supabase.from('matches').update({
-              team1_id: team1?.id || null,
-              team2_id: team2?.id || null
-            }).eq('id', match.id);
+        if (!standings || standings.length < 4) {
+          if (window.showToast) {
+            window.showToast('Complete Round Robin first to seed finals', 'default');
           }
+          // Redirect to round robin
+          setTimeout(() => {
+            window.location.href = '/admin/round-robin';
+          }, 1500);
+          return;
         }
 
+        // Call seed finals function
+        const { error } = await supabase.rpc('seed_finals_from_standings');
+
+        if (error) throw error;
+
         await loadData(supabase);
+        if (window.showToast) {
+          window.showToast('Top 4 teams seeded into Finals!', 'success');
+        }
       } catch (err) {
-        console.error('Auto-assign error:', err);
-        alert('Failed to auto-assign teams');
+        console.error('Seed finals error:', err);
+        if (window.showToast) {
+          window.showToast(err.message || 'Failed to seed finals', 'default');
+        }
       }
     });
 
-    // Save match scores
+    // Save match scores - works for all save buttons (mobile + desktop)
     document.querySelectorAll('[data-save-btn]').forEach(btn => {
       btn.addEventListener('click', async (e) => {
-        const matchEl = e.target.closest('.match');
+        const matchEl = e.target.closest('[data-match]');
         const round = parseInt(matchEl.dataset.round);
         const matchNumber = parseInt(matchEl.dataset.match);
 
-        const score1 = parseInt(matchEl.querySelector('[data-team1-score]').value) || 0;
-        const score2 = parseInt(matchEl.querySelector('[data-team2-score]').value) || 0;
+        const score1Input = matchEl.querySelector('[data-team1-score]');
+        const score2Input = matchEl.querySelector('[data-team2-score]');
+
+        const score1 = parseInt(score1Input?.value) || 0;
+        const score2 = parseInt(score2Input?.value) || 0;
 
         const match = matches.find(m => m.round === round && m.match_number === matchNumber);
         if (!match) return;
+
+        // Add saving state for The Slam animation
+        const card = matchEl.closest('.match-card') || matchEl;
+        card.classList.add('saving');
+        btn.classList.add('saving');
 
         // Determine winner (higher score wins, must have both teams)
         let winnerId = null;
@@ -1055,27 +443,26 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
             completed_at: status === 'completed' ? new Date().toISOString() : null
           }).eq('id', match.id);
 
-          // If completed, advance winner to next round
-          if (winnerId && round < 3) {
+          // If completed, advance winner to next round (Semi -> Final)
+          if (winnerId && round === 1) {
             await advanceWinner(supabase, round, matchNumber, winnerId);
 
-            // Show winner toast and pulse animation
+            // Show winner toast and advance animation
             const winnerTeam = teams.find(t => t.id === winnerId);
             if (winnerTeam && window.showToast) {
-              const roundNames = { 1: 'Semifinals', 2: 'Finals' };
-              window.showToast(`${winnerTeam.name} advances to ${roundNames[round + 1]}`, 'success');
-
-              // Add pulse animation to winner
-              const winnerEl = matchEl.querySelector(
-                match.team1_id === winnerId ? '.match-team[data-position="1"]' : '.match-team[data-position="2"]'
-              );
-              if (winnerEl) {
-                winnerEl.classList.add('winner-advancing');
-                setTimeout(() => winnerEl.classList.remove('winner-advancing'), 600);
-              }
+              window.showToast(`${winnerTeam.name} advances to the Championship!`, 'success');
             }
-          } else if (winnerId && round === 3) {
-            // Championship won - reveal animation
+
+            // Add advance animation
+            const winnerRow = matchEl.querySelector(
+              match.team1_id === winnerId ? '[data-team-row="1"]' : '[data-team-row="2"]'
+            );
+            if (winnerRow) {
+              winnerRow.classList.add('advancing');
+              setTimeout(() => winnerRow.classList.remove('advancing'), 600);
+            }
+          } else if (winnerId && round === 2) {
+            // Championship won!
             const winnerTeam = teams.find(t => t.id === winnerId);
             if (winnerTeam && window.showToast) {
               window.showToast(`${winnerTeam.name} wins the championship!`, 'success', 5000);
@@ -1085,40 +472,40 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
           await loadData(supabase);
 
           // Champion reveal animation
-          if (winnerId && round === 3) {
-            const championNameEl = document.getElementById('championName');
-            championNameEl.classList.add('revealing');
-            setTimeout(() => championNameEl.classList.remove('revealing'), 800);
+          if (winnerId && round === 2) {
+            const championEls = document.querySelectorAll('[data-champion-name], [data-desktop-champion-name]');
+            championEls.forEach(el => {
+              el.classList.add('revealing');
+              setTimeout(() => el.classList.remove('revealing'), 800);
+            });
           }
         } catch (err) {
           console.error('Save scores error:', err);
-          alert('Failed to save scores');
+          if (window.showToast) {
+            window.showToast('Failed to save scores', 'default');
+          }
+        } finally {
+          // Remove saving state
+          setTimeout(() => {
+            card.classList.remove('saving');
+            btn.classList.remove('saving');
+          }, 150);
         }
       });
     });
 
-    // Advance winner to next round
+    // Advance winner to Championship (Semi -> Final)
     async function advanceWinner(supabase, currentRound, currentMatchNumber, winnerId) {
-      const nextRound = currentRound + 1;
-      let nextMatchNumber, position;
+      // Semi 1 winner -> Final team1, Semi 2 winner -> Final team2
+      const position = currentMatchNumber === 1 ? 'team1_id' : 'team2_id';
+      const finalMatch = matches.find(m => m.round === 2 && m.match_number === 1);
 
-      if (currentRound === 1) {
-        // QF -> SF: M1/M2 -> Semi1, M3/M4 -> Semi2
-        nextMatchNumber = currentMatchNumber <= 2 ? 1 : 2;
-        position = currentMatchNumber % 2 === 1 ? 'team1_id' : 'team2_id';
-      } else if (currentRound === 2) {
-        // SF -> Final
-        nextMatchNumber = 1;
-        position = currentMatchNumber === 1 ? 'team1_id' : 'team2_id';
-      }
-
-      const nextMatch = matches.find(m => m.round === nextRound && m.match_number === nextMatchNumber);
-      if (nextMatch) {
-        await supabase.from('matches').update({ [position]: winnerId }).eq('id', nextMatch.id);
+      if (finalMatch) {
+        await supabase.from('matches').update({ [position]: winnerId }).eq('id', finalMatch.id);
       }
     }
 
-    // Reset bracket
+    // Reset bracket modal
     const resetModal = document.getElementById('resetModal');
     document.getElementById('resetBracketBtn').addEventListener('click', () => {
       resetModal.classList.add('open');
@@ -1149,10 +536,28 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
         resetModal.classList.remove('open');
         await loadData(supabase);
+        if (window.showToast) {
+          window.showToast('Bracket has been reset', 'success');
+        }
       } catch (err) {
         console.error('Reset error:', err);
-        alert('Failed to reset bracket');
+        if (window.showToast) {
+          window.showToast('Failed to reset bracket', 'default');
+        }
       }
     });
+  }
+
+  // Realtime subscription for live updates
+  function setupRealtimeSubscription(supabase) {
+    supabase
+      .channel('admin-bracket-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, () => {
+        loadData(supabase);
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, () => {
+        loadData(supabase);
+      })
+      .subscribe();
   }
 </script>

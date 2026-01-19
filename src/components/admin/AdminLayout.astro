@@ -2,9 +2,23 @@
 // AdminLayout - Shared layout for all admin pages
 // Includes navigation, auth check, and consistent styling
 
+interface NavChild {
+  id: string;
+  label: string;
+  href: string;
+}
+
+interface NavItem {
+  id: string;
+  label: string;
+  icon: string;
+  href?: string;
+  children?: NavChild[];
+}
+
 interface Props {
   title: string;
-  activeNav?: 'dashboard' | 'registrations' | 'teams' | 'bracket' | 'announcements';
+  activeNav?: 'dashboard' | 'registrations' | 'teams' | 'round-robin' | 'bracket' | 'announcements';
 }
 
 const { title, activeNav = 'dashboard' } = Astro.props;
@@ -12,13 +26,39 @@ const { title, activeNav = 'dashboard' } = Astro.props;
 const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
-const navItems = [
+const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', href: '/admin', icon: 'grid' },
-  { id: 'registrations', label: 'Players', href: '/admin/registrations', icon: 'users' },
-  { id: 'teams', label: 'Teams', href: '/admin/teams', icon: 'team' },
-  { id: 'bracket', label: 'Bracket', href: '/admin/bracket', icon: 'bracket' },
+  {
+    id: 'roster',
+    label: 'Roster',
+    icon: 'users',
+    children: [
+      { id: 'registrations', label: 'Players', href: '/admin/registrations' },
+      { id: 'teams', label: 'Teams', href: '/admin/teams' },
+    ]
+  },
+  {
+    id: 'tournament',
+    label: 'Tournament',
+    icon: 'bracket',
+    children: [
+      { id: 'round-robin', label: 'Round Robin', href: '/admin/round-robin' },
+      { id: 'bracket', label: 'Finals', href: '/admin/bracket' },
+    ]
+  },
   { id: 'announcements', label: 'Ticker', href: '/admin/announcements', icon: 'megaphone' },
 ];
+
+// Helper to check if a nav item (or its children) is active
+const isNavActive = (item: NavItem): boolean => {
+  if (item.href) {
+    return activeNav === item.id;
+  }
+  if (item.children) {
+    return item.children.some(child => child.id === activeNav);
+  }
+  return false;
+};
 ---
 
 <!doctype html>
@@ -568,6 +608,14 @@ const navItems = [
         transform: scale(0.95);
       }
 
+      /* Button reset for mobile nav items with children */
+      button.mobile-nav__item {
+        background: none;
+        border: none;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
       .mobile-nav__icon {
         width: 24px;
         height: 24px;
@@ -737,6 +785,87 @@ const navItems = [
         to { transform: rotate(360deg); }
       }
 
+      /* ===== NAV POPUP (Mobile) ===== */
+      .nav-popup-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 150;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.25s ease;
+      }
+
+      .nav-popup-backdrop.open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .nav-popup {
+        position: fixed;
+        left: 50%;
+        bottom: 80px; /* Above bottom nav */
+        bottom: calc(80px + env(safe-area-inset-bottom));
+        transform: translateX(-50%) translateY(20px);
+        background: linear-gradient(180deg, rgba(28, 19, 15, 0.98) 0%, rgba(20, 14, 10, 0.98) 100%);
+        border: 1px solid var(--border-accent);
+        border-radius: 16px;
+        padding: 8px;
+        min-width: 180px;
+        z-index: 160;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.25s ease;
+        box-shadow:
+          inset 0 1px 0 rgba(212, 165, 116, 0.1),
+          0 8px 32px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(212, 165, 116, 0.05);
+      }
+
+      .nav-popup-backdrop.open .nav-popup {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .nav-popup__item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        min-height: 48px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        border-radius: 10px;
+        transition: all 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .nav-popup__item:hover,
+      .nav-popup__item:active {
+        background: rgba(212, 165, 116, 0.1);
+        color: #fff;
+      }
+
+      .nav-popup__item.active {
+        background: rgba(212, 165, 116, 0.15);
+        color: var(--brass);
+      }
+
+      .nav-popup__item.active::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        background: var(--brass);
+        border-radius: 50%;
+        box-shadow: 0 0 8px rgba(212, 165, 116, 0.6);
+        margin-right: 4px;
+      }
+
       /* ===== DESKTOP OVERRIDES (768px+) ===== */
       @media (min-width: 769px) {
         .admin-layout {
@@ -851,6 +980,16 @@ const navItems = [
           color: var(--brass);
         }
 
+        /* Button reset for nav items with children */
+        button.nav-item {
+          width: 100%;
+          background: none;
+          border: none;
+          font-family: inherit;
+          cursor: pointer;
+          text-align: left;
+        }
+
         .nav-item__icon {
           width: 20px;
           height: 20px;
@@ -859,6 +998,84 @@ const navItems = [
 
         .nav-item.active .nav-item__icon {
           opacity: 1;
+        }
+
+        /* Nav item with children - desktop */
+        .nav-item--has-children {
+          position: relative;
+          cursor: pointer;
+        }
+
+        .nav-item--has-children::after {
+          content: '';
+          width: 0;
+          height: 0;
+          border-left: 4px solid transparent;
+          border-right: 4px solid transparent;
+          border-top: 4px solid currentColor;
+          opacity: 0.5;
+          margin-left: auto;
+          transition: transform 0.2s ease;
+        }
+
+        .nav-item--has-children.expanded::after {
+          transform: rotate(180deg);
+        }
+
+        /* Desktop submenu (inline expand) */
+        .nav-submenu {
+          overflow: hidden;
+          max-height: 0;
+          opacity: 0;
+          transition: all 0.25s ease;
+          margin-left: 16px;
+          border-left: 1px solid var(--border-subtle);
+          padding-left: 12px;
+        }
+
+        .nav-item--has-children.expanded + .nav-submenu {
+          max-height: 200px;
+          opacity: 1;
+          margin-top: 4px;
+          margin-bottom: 4px;
+        }
+
+        .nav-submenu__item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 10px 14px;
+          font-size: 0.85rem;
+          font-weight: 500;
+          color: rgba(255, 255, 255, 0.5);
+          text-decoration: none;
+          border-radius: 6px;
+          margin-bottom: 2px;
+          transition: all 0.2s ease;
+        }
+
+        .nav-submenu__item:hover {
+          background: rgba(255, 255, 255, 0.05);
+          color: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-submenu__item.active {
+          background: rgba(212, 165, 116, 0.1);
+          color: var(--brass);
+        }
+
+        .nav-submenu__item.active::before {
+          content: '';
+          width: 5px;
+          height: 5px;
+          background: var(--brass);
+          border-radius: 50%;
+          box-shadow: 0 0 6px rgba(212, 165, 116, 0.5);
+        }
+
+        /* Hide mobile popup on desktop */
+        .nav-popup-backdrop {
+          display: none;
         }
 
         .sidebar-footer {
@@ -1044,42 +1261,57 @@ const navItems = [
 
         <nav class="sidebar-nav">
           {navItems.map((item) => (
-            <a
-              href={item.href}
-              class={`nav-item ${activeNav === item.id ? 'active' : ''}`}
-            >
-              <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                {item.icon === 'grid' && (
-                  <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
-                )}
-                {item.icon === 'users' && (
-                  <>
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                  </>
-                )}
-                {item.icon === 'team' && (
-                  <>
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M20 8v6M23 11h-6" />
-                  </>
-                )}
-                {item.icon === 'bracket' && (
-                  <>
-                    <path d="M2 6h6M2 18h6M8 6v4a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4V6M8 18v-4a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v4M16 6h6M16 18h6" />
-                  </>
-                )}
-                {item.icon === 'megaphone' && (
-                  <>
-                    <path d="m3 11 18-5v12L3 13v-2z" />
-                    <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
-                  </>
-                )}
-              </svg>
-              <span>{item.label}</span>
-            </a>
+            item.children ? (
+              <>
+                <button
+                  type="button"
+                  class={`nav-item nav-item--has-children ${isNavActive(item) ? 'active expanded' : ''}`}
+                  data-nav-toggle={item.id}
+                >
+                  <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    {item.icon === 'users' && (
+                      <>
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                      </>
+                    )}
+                    {item.icon === 'bracket' && (
+                      <path d="M2 6h6M2 18h6M8 6v4a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4V6M8 18v-4a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v4M16 6h6M16 18h6" />
+                    )}
+                  </svg>
+                  <span>{item.label}</span>
+                </button>
+                <div class="nav-submenu">
+                  {item.children.map((child) => (
+                    <a
+                      href={child.href}
+                      class={`nav-submenu__item ${activeNav === child.id ? 'active' : ''}`}
+                    >
+                      {child.label}
+                    </a>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <a
+                href={item.href}
+                class={`nav-item ${activeNav === item.id ? 'active' : ''}`}
+              >
+                <svg class="nav-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  {item.icon === 'grid' && (
+                    <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+                  )}
+                  {item.icon === 'megaphone' && (
+                    <>
+                      <path d="m3 11 18-5v12L3 13v-2z" />
+                      <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+                    </>
+                  )}
+                </svg>
+                <span>{item.label}</span>
+              </a>
+            )
           ))}
         </nav>
 
@@ -1109,44 +1341,63 @@ const navItems = [
       <!-- Mobile Bottom Navigation -->
       <nav class="mobile-nav">
         {navItems.map((item) => (
-          <a
-            href={item.href}
-            class={`mobile-nav__item ${activeNav === item.id ? 'active' : ''}`}
-          >
-            <svg class="mobile-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              {item.icon === 'grid' && (
-                <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
-              )}
-              {item.icon === 'users' && (
-                <>
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                </>
-              )}
-              {item.icon === 'team' && (
-                <>
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M20 8v6M23 11h-6" />
-                </>
-              )}
-              {item.icon === 'bracket' && (
-                <>
+          item.children ? (
+            <button
+              type="button"
+              class={`mobile-nav__item mobile-nav__item--has-children ${isNavActive(item) ? 'active' : ''}`}
+              data-mobile-popup={item.id}
+            >
+              <svg class="mobile-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                {item.icon === 'users' && (
+                  <>
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                  </>
+                )}
+                {item.icon === 'bracket' && (
                   <path d="M2 6h6M2 18h6M8 6v4a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4V6M8 18v-4a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v4M16 6h6M16 18h6" />
-                </>
-              )}
-              {item.icon === 'megaphone' && (
-                <>
-                  <path d="m3 11 18-5v12L3 13v-2z" />
-                  <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
-                </>
-              )}
-            </svg>
-            <span class="mobile-nav__label">{item.label}</span>
-          </a>
+                )}
+              </svg>
+              <span class="mobile-nav__label">{item.label}</span>
+            </button>
+          ) : (
+            <a
+              href={item.href}
+              class={`mobile-nav__item ${activeNav === item.id ? 'active' : ''}`}
+            >
+              <svg class="mobile-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                {item.icon === 'grid' && (
+                  <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+                )}
+                {item.icon === 'megaphone' && (
+                  <>
+                    <path d="m3 11 18-5v12L3 13v-2z" />
+                    <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6" />
+                  </>
+                )}
+              </svg>
+              <span class="mobile-nav__label">{item.label}</span>
+            </a>
+          )
         ))}
       </nav>
+
+      <!-- Mobile Nav Popups -->
+      {navItems.filter(item => item.children).map((item) => (
+        <div class="nav-popup-backdrop" data-popup-for={item.id}>
+          <div class="nav-popup">
+            {item.children!.map((child) => (
+              <a
+                href={child.href}
+                class={`nav-popup__item ${activeNav === child.id ? 'active' : ''}`}
+              >
+                {child.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
 
     <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
@@ -1257,6 +1508,41 @@ const navItems = [
 
           document.getElementById('logoutBtn').addEventListener('click', handleLogout);
           document.getElementById('mobileLogoutBtn').addEventListener('click', handleLogout);
+
+          // ===== Mobile Nav Popup Handlers =====
+          const mobilePopupBtns = document.querySelectorAll('[data-mobile-popup]');
+          const popupBackdrops = document.querySelectorAll('.nav-popup-backdrop');
+
+          mobilePopupBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              e.preventDefault();
+              const popupId = btn.getAttribute('data-mobile-popup');
+              const backdrop = document.querySelector(`[data-popup-for="${popupId}"]`);
+              if (backdrop) {
+                // Close any open popups first
+                popupBackdrops.forEach(p => p.classList.remove('open'));
+                backdrop.classList.add('open');
+              }
+            });
+          });
+
+          // Close popup when clicking backdrop
+          popupBackdrops.forEach(backdrop => {
+            backdrop.addEventListener('click', (e) => {
+              if (e.target === backdrop) {
+                backdrop.classList.remove('open');
+              }
+            });
+          });
+
+          // ===== Desktop Sidebar Submenu Handlers =====
+          const navToggleBtns = document.querySelectorAll('[data-nav-toggle]');
+
+          navToggleBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+              btn.classList.toggle('expanded');
+            });
+          });
 
           // Dispatch ready event for child pages
           window.dispatchEvent(new CustomEvent('adminReady', { detail: { supabase, adminUser } }));

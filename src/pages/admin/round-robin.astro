@@ -1,0 +1,1066 @@
+---
+// Admin Round Robin - Round Robin Tournament Management
+// Manages 28 round robin matches across 7 rounds
+import AdminLayout from '../../components/admin/AdminLayout.astro';
+---
+
+<AdminLayout title="Round Robin" activeNav="round-robin">
+  <div class="rr-page">
+    <!-- Header Actions -->
+    <div class="page-actions">
+      <div class="rr-status">
+        <span id="rrStatus">Loading...</span>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn--secondary btn-slam" id="assignTeamsBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="8.5" cy="7" r="4" />
+            <polyline points="17 11 19 13 23 9" />
+          </svg>
+          Assign Teams
+        </button>
+        <button class="btn btn--primary btn-slam" id="seedFinalsBtn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+            <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z" />
+          </svg>
+          Seed Finals
+        </button>
+      </div>
+    </div>
+
+    <!-- Standings Card -->
+    <div class="card standings-card">
+      <div class="card__header">
+        <h2 class="card__title">Standings</h2>
+        <span class="standings-subtitle" id="standingsSubtitle">Round Robin Results</span>
+      </div>
+      <div class="standings-table-wrapper">
+        <table class="standings-table" id="standingsTable">
+          <thead>
+            <tr>
+              <th class="col-rank">#</th>
+              <th class="col-team">Team</th>
+              <th class="col-record">W-L</th>
+              <th class="col-diff">+/-</th>
+            </tr>
+          </thead>
+          <tbody id="standingsBody">
+            <tr class="loading-row">
+              <td colspan="4">Loading standings...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Round Selector Pills -->
+    <div class="round-pills">
+      <button class="round-pill active" data-round="all">All</button>
+      <button class="round-pill" data-round="1">R1</button>
+      <button class="round-pill" data-round="2">R2</button>
+      <button class="round-pill" data-round="3">R3</button>
+      <button class="round-pill" data-round="4">R4</button>
+      <button class="round-pill" data-round="5">R5</button>
+      <button class="round-pill" data-round="6">R6</button>
+      <button class="round-pill" data-round="7">R7</button>
+    </div>
+
+    <!-- Matches Container -->
+    <div class="matches-container" id="matchesContainer">
+      <div class="loading-matches">Loading matches...</div>
+    </div>
+  </div>
+
+  <!-- Seed Finals Confirmation Modal -->
+  <div class="modal-backdrop" id="seedFinalsModal">
+    <div class="modal modal--sm">
+      <div class="modal__header">
+        <h2 class="modal__title">Seed Finals Bracket</h2>
+      </div>
+      <div class="modal__body">
+        <p>This will assign the top 4 teams to the Finals bracket:</p>
+        <div class="seeding-preview" id="seedingPreview">
+          <div class="seeding-match">
+            <span class="seeding-label">Semi 1:</span>
+            <span class="seeding-teams">#1 <span id="seed1Name">-</span> vs #4 <span id="seed4Name">-</span></span>
+          </div>
+          <div class="seeding-match">
+            <span class="seeding-label">Semi 2:</span>
+            <span class="seeding-teams">#2 <span id="seed2Name">-</span> vs #3 <span id="seed3Name">-</span></span>
+          </div>
+        </div>
+        <p class="warning-text">Make sure all round robin matches are complete.</p>
+      </div>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--secondary" id="cancelSeed">Cancel</button>
+        <button type="button" class="btn btn--primary" id="confirmSeed">Seed Finals</button>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  .rr-page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .page-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .rr-status {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .action-buttons .btn {
+    flex: 1;
+    max-width: 160px;
+    justify-content: center;
+    padding: 10px 16px;
+    font-size: 0.75rem;
+  }
+
+  .action-buttons .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Standings Card */
+  .standings-card {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .standings-card .card__header {
+    padding: 16px;
+    margin-bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .standings-subtitle {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .standings-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .standings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .standings-table th {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--copper);
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .standings-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .standings-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .col-rank {
+    width: 40px;
+    text-align: center !important;
+  }
+
+  .col-team {
+    min-width: 120px;
+  }
+
+  .col-record {
+    width: 60px;
+    text-align: center !important;
+  }
+
+  .col-diff {
+    width: 60px;
+    text-align: right !important;
+  }
+
+  /* Standings Row Styles */
+  .standings-row {
+    transition: background 0.2s ease;
+  }
+
+  .standings-row:hover {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .standings-row--playoff {
+    background: rgba(212, 165, 116, 0.05);
+  }
+
+  .standings-row--playoff:hover {
+    background: rgba(212, 165, 116, 0.08);
+  }
+
+  .rank-cell {
+    font-family: "Bodoni Moda", serif;
+    font-weight: 700;
+    color: var(--brass);
+    text-align: center;
+  }
+
+  .rank-cell--top4 {
+    color: var(--gold);
+  }
+
+  .team-cell {
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .record-cell {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+  }
+
+  .diff-cell {
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .diff-cell--positive {
+    color: #81c784;
+  }
+
+  .diff-cell--negative {
+    color: #e57373;
+  }
+
+  .diff-cell--neutral {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .loading-row td {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    padding: 24px;
+  }
+
+  /* Round Pills */
+  .round-pills {
+    display: flex;
+    gap: 6px;
+    padding: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .round-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .round-pill {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.4);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid transparent;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .round-pill.active {
+    color: var(--brass);
+    background: rgba(212, 165, 116, 0.15);
+    border-color: var(--border-accent);
+  }
+
+  .round-pill:active {
+    transform: scale(0.95);
+  }
+
+  /* Matches Container */
+  .matches-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .loading-matches {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    padding: 40px 20px;
+  }
+
+  /* Round Group */
+  .round-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .round-group__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 4px;
+  }
+
+  .round-group__title {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--brass);
+  }
+
+  .round-group__progress {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    padding: 4px 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+  }
+
+  /* Match Card - Domino Tile Feel */
+  .match-card {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 14px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .match-card.saving {
+    transform: scale(0.98);
+    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.3);
+  }
+
+  .match-card--completed {
+    border-color: rgba(129, 199, 132, 0.3);
+  }
+
+  .match-card--in-progress {
+    border-color: var(--border-accent);
+    background: rgba(212, 165, 116, 0.03);
+  }
+
+  .match-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .match-card__label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--copper);
+  }
+
+  .match-card__status {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .match-card__status--in_progress {
+    background: var(--brass);
+    box-shadow: 0 0 8px rgba(212, 165, 116, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .match-card__status--completed {
+    background: #81c784;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .match-card__teams {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .team-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .team-row.winner {
+    background: linear-gradient(90deg, rgba(212, 165, 116, 0.12), rgba(212, 165, 116, 0.03));
+    border-color: var(--brass);
+  }
+
+  .team-row.winner .team-name {
+    color: var(--brass);
+  }
+
+  .team-name {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .score-input {
+    width: 52px;
+    padding: 8px 6px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .score-input:focus {
+    border-color: var(--brass);
+  }
+
+  .score-input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+  }
+
+  .score-input::-webkit-outer-spin-button,
+  .score-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .save-btn {
+    width: 100%;
+    padding: 12px 16px;
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brass);
+    background: rgba(212, 165, 116, 0.1);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+  }
+
+  .save-btn:active {
+    background: rgba(212, 165, 116, 0.25);
+    transform: scale(0.98);
+  }
+
+  .save-btn.saving {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  /* Modal Styles */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .modal-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .modal-backdrop.open .modal {
+    transform: translateY(0);
+  }
+
+  .modal--sm {
+    max-height: 60vh;
+  }
+
+  .modal__header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .modal__title {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--brass);
+  }
+
+  .modal__body {
+    padding: 20px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
+  .modal__body p {
+    margin-bottom: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+  }
+
+  .seeding-preview {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+  }
+
+  .seeding-match {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .seeding-match:last-child {
+    border-bottom: none;
+  }
+
+  .seeding-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--copper);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .seeding-teams {
+    font-size: 0.85rem;
+    color: #fff;
+  }
+
+  .seeding-teams span {
+    color: var(--brass);
+    font-weight: 600;
+  }
+
+  .warning-text {
+    color: #e57373;
+    font-size: 0.85rem;
+  }
+
+  .modal__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
+    margin-top: 8px;
+  }
+
+  .modal__actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+
+  /* Desktop overrides */
+  @media (min-width: 769px) {
+    .rr-page {
+      gap: 24px;
+    }
+
+    .page-actions {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .action-buttons {
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .action-buttons .btn {
+      flex: none;
+      max-width: none;
+    }
+
+    .standings-card .card__header {
+      padding: 20px 24px;
+    }
+
+    .standings-table th,
+    .standings-table td {
+      padding: 14px 16px;
+    }
+
+    .standings-table {
+      font-size: 0.9rem;
+    }
+
+    .round-pills {
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .round-pill {
+      padding: 10px 18px;
+      font-size: 0.75rem;
+    }
+
+    /* Match cards in grid */
+    .round-group {
+      gap: 16px;
+    }
+
+    .matches-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .match-card {
+      padding: 16px;
+    }
+
+    /* Modal - centered on desktop */
+    .modal-backdrop {
+      align-items: center;
+    }
+
+    .modal {
+      border-radius: 16px;
+      max-width: 420px;
+      transform: translateY(20px);
+    }
+
+    .modal__actions {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+
+    .modal__actions .btn {
+      width: auto;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+<script>
+  // Admin Round Robin Controller
+  let teams = [];
+  let matches = [];
+  let standings = [];
+  let selectedRound = 'all';
+
+  window.addEventListener('adminReady', async ({ detail: { supabase } }) => {
+    await loadData(supabase);
+    setupEventListeners(supabase);
+    setupRealtimeSubscription(supabase);
+  });
+
+  async function loadData(supabase) {
+    const [teamsRes, matchesRes, standingsRes] = await Promise.all([
+      supabase.from('teams').select('*').order('seed'),
+      supabase.from('matches').select('*').eq('phase', 'round_robin').order('round_robin_round').order('match_number'),
+      supabase.from('standings').select('*')
+    ]);
+
+    teams = teamsRes.data || [];
+    matches = matchesRes.data || [];
+    standings = standingsRes.data || [];
+
+    renderStandings();
+    renderMatches();
+    updateStatus();
+  }
+
+  function renderStandings() {
+    const tbody = document.getElementById('standingsBody');
+    const subtitle = document.getElementById('standingsSubtitle');
+
+    if (standings.length === 0) {
+      tbody.innerHTML = '<tr class="loading-row"><td colspan="4">No matches completed yet</td></tr>';
+      subtitle.textContent = 'Round Robin Results';
+      return;
+    }
+
+    // Sort standings: wins DESC, point_diff DESC
+    const sorted = [...standings].sort((a, b) => {
+      if (b.wins !== a.wins) return b.wins - a.wins;
+      return b.point_diff - a.point_diff;
+    });
+
+    // Attach team data
+    const withTeams = sorted.map(s => ({
+      ...s,
+      team: teams.find(t => t.id === s.team_id)
+    })).filter(s => s.team);
+
+    // Update subtitle with games played
+    const totalCompleted = matches.filter(m => m.status === 'completed').length;
+    subtitle.textContent = `${totalCompleted}/28 matches • ${withTeams[0]?.games_played || 0} games per team`;
+
+    // Render rows
+    tbody.innerHTML = withTeams.map((s, idx) => {
+      const rank = idx + 1;
+      const isPlayoff = rank <= 4;
+      const diffClass = s.point_diff > 0 ? 'diff-cell--positive' :
+                        s.point_diff < 0 ? 'diff-cell--negative' : 'diff-cell--neutral';
+      const diffPrefix = s.point_diff > 0 ? '+' : '';
+
+      return `
+        <tr class="standings-row ${isPlayoff ? 'standings-row--playoff' : ''}">
+          <td class="rank-cell ${isPlayoff ? 'rank-cell--top4' : ''}">${rank}</td>
+          <td class="team-cell">${s.team?.name || 'Unknown'}</td>
+          <td class="record-cell">${s.wins}-${s.losses}</td>
+          <td class="diff-cell ${diffClass}">${diffPrefix}${s.point_diff}</td>
+        </tr>
+      `;
+    }).join('');
+
+    // Update Seed Finals button state
+    const seedFinalsBtn = document.getElementById('seedFinalsBtn');
+    seedFinalsBtn.disabled = withTeams.length < 4;
+
+    // Update seeding preview
+    if (withTeams.length >= 4) {
+      document.getElementById('seed1Name').textContent = withTeams[0].team?.name || '-';
+      document.getElementById('seed2Name').textContent = withTeams[1].team?.name || '-';
+      document.getElementById('seed3Name').textContent = withTeams[2].team?.name || '-';
+      document.getElementById('seed4Name').textContent = withTeams[3].team?.name || '-';
+    }
+  }
+
+  function renderMatches() {
+    const container = document.getElementById('matchesContainer');
+
+    if (matches.length === 0) {
+      container.innerHTML = '<div class="loading-matches">No round robin matches found. Run the database migration first.</div>';
+      return;
+    }
+
+    // Group matches by round
+    const roundGroups = {};
+    for (let r = 1; r <= 7; r++) {
+      roundGroups[r] = matches.filter(m => m.round_robin_round === r);
+    }
+
+    // Filter by selected round
+    const roundsToShow = selectedRound === 'all'
+      ? [1, 2, 3, 4, 5, 6, 7]
+      : [parseInt(selectedRound)];
+
+    container.innerHTML = roundsToShow.map(round => {
+      const roundMatches = roundGroups[round] || [];
+      const completed = roundMatches.filter(m => m.status === 'completed').length;
+
+      return `
+        <div class="round-group" data-round-group="${round}">
+          <div class="round-group__header">
+            <span class="round-group__title">Round ${round}</span>
+            <span class="round-group__progress">${completed}/${roundMatches.length} complete</span>
+          </div>
+          <div class="matches-grid">
+            ${roundMatches.map(match => renderMatchCard(match)).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Attach save handlers
+    container.querySelectorAll('[data-save-match]').forEach(btn => {
+      btn.addEventListener('click', handleSaveMatch);
+    });
+  }
+
+  function renderMatchCard(match) {
+    const team1 = teams.find(t => t.id === match.team1_id);
+    const team2 = teams.find(t => t.id === match.team2_id);
+    const isWinner1 = match.winner_id && match.winner_id === match.team1_id;
+    const isWinner2 = match.winner_id && match.winner_id === match.team2_id;
+
+    const statusClass = match.status === 'completed' ? 'match-card--completed' :
+                        match.status === 'in_progress' ? 'match-card--in-progress' : '';
+
+    return `
+      <div class="match-card ${statusClass}" data-match-id="${match.id}">
+        <div class="match-card__header">
+          <span class="match-card__label">Match ${match.match_number}</span>
+          <span class="match-card__status match-card__status--${match.status}"></span>
+        </div>
+        <div class="match-card__teams">
+          <div class="team-row ${isWinner1 ? 'winner' : ''}">
+            <span class="team-name">${team1?.name || 'TBD'}</span>
+            <input
+              type="number"
+              class="score-input"
+              data-score="1"
+              value="${match.team1_score || ''}"
+              min="0"
+              max="200"
+              placeholder="-"
+              inputmode="numeric"
+              ${!team1 ? 'disabled' : ''}
+            />
+          </div>
+          <div class="team-row ${isWinner2 ? 'winner' : ''}">
+            <span class="team-name">${team2?.name || 'TBD'}</span>
+            <input
+              type="number"
+              class="score-input"
+              data-score="2"
+              value="${match.team2_score || ''}"
+              min="0"
+              max="200"
+              placeholder="-"
+              inputmode="numeric"
+              ${!team2 ? 'disabled' : ''}
+            />
+          </div>
+        </div>
+        <button class="save-btn" data-save-match="${match.id}" ${!team1 || !team2 ? 'disabled' : ''}>
+          Save Scores
+        </button>
+      </div>
+    `;
+  }
+
+  function updateStatus() {
+    const statusEl = document.getElementById('rrStatus');
+    const completed = matches.filter(m => m.status === 'completed').length;
+    const teamsAssigned = matches.filter(m => m.team1_id && m.team2_id).length;
+
+    if (teamsAssigned === 0) {
+      statusEl.textContent = 'Teams not assigned yet';
+    } else if (teamsAssigned < 28) {
+      statusEl.textContent = `${teamsAssigned}/28 matches have teams`;
+    } else {
+      statusEl.textContent = `${completed}/28 matches complete`;
+    }
+  }
+
+  async function handleSaveMatch(e) {
+    const matchId = e.target.dataset.saveMatch;
+    const card = document.querySelector(`[data-match-id="${matchId}"]`);
+    const btn = e.target;
+
+    const score1Input = card.querySelector('[data-score="1"]');
+    const score2Input = card.querySelector('[data-score="2"]');
+
+    const score1 = parseInt(score1Input?.value) || 0;
+    const score2 = parseInt(score2Input?.value) || 0;
+
+    const match = matches.find(m => m.id === matchId);
+    if (!match) return;
+
+    // Add saving state
+    card.classList.add('saving');
+    btn.classList.add('saving');
+    btn.textContent = 'Saving...';
+
+    // Determine winner
+    let winnerId = null;
+    let status = 'pending';
+
+    if (match.team1_id && match.team2_id) {
+      if (score1 > 0 || score2 > 0) {
+        status = 'in_progress';
+      }
+      if (score1 > 0 && score2 > 0 && score1 !== score2) {
+        winnerId = score1 > score2 ? match.team1_id : match.team2_id;
+        status = 'completed';
+      }
+    }
+
+    try {
+      await window.supabase.from('matches').update({
+        team1_score: score1,
+        team2_score: score2,
+        winner_id: winnerId,
+        status,
+        completed_at: status === 'completed' ? new Date().toISOString() : null
+      }).eq('id', matchId);
+
+      await loadData(window.supabase);
+
+      if (window.showToast) {
+        if (status === 'completed') {
+          const winner = teams.find(t => t.id === winnerId);
+          window.showToast(`${winner?.name || 'Team'} wins!`, 'success');
+        } else {
+          window.showToast('Scores saved', 'success');
+        }
+      }
+    } catch (err) {
+      console.error('Save error:', err);
+      if (window.showToast) {
+        window.showToast('Failed to save scores', 'default');
+      }
+    } finally {
+      card.classList.remove('saving');
+      btn.classList.remove('saving');
+      btn.textContent = 'Save Scores';
+    }
+  }
+
+  function setupEventListeners(supabase) {
+    // Round filter pills
+    document.querySelectorAll('.round-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.round-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        selectedRound = pill.dataset.round;
+        renderMatches();
+      });
+    });
+
+    // Assign teams button
+    document.getElementById('assignTeamsBtn').addEventListener('click', async () => {
+      const seededTeams = teams.filter(t => t.seed).sort((a, b) => a.seed - b.seed);
+
+      if (seededTeams.length < 8) {
+        if (window.showToast) {
+          window.showToast(`Need 8 seeded teams. Currently have ${seededTeams.length}.`, 'default');
+        }
+        return;
+      }
+
+      try {
+        // Call the database function to assign teams
+        const { error } = await supabase.rpc('assign_teams_to_round_robin');
+
+        if (error) throw error;
+
+        await loadData(supabase);
+        if (window.showToast) {
+          window.showToast('Teams assigned to round robin', 'success');
+        }
+      } catch (err) {
+        console.error('Assign teams error:', err);
+        if (window.showToast) {
+          window.showToast('Failed to assign teams', 'default');
+        }
+      }
+    });
+
+    // Seed Finals modal
+    const modal = document.getElementById('seedFinalsModal');
+
+    document.getElementById('seedFinalsBtn').addEventListener('click', () => {
+      modal.classList.add('open');
+    });
+
+    document.getElementById('cancelSeed').addEventListener('click', () => {
+      modal.classList.remove('open');
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('open');
+    });
+
+    document.getElementById('confirmSeed').addEventListener('click', async () => {
+      try {
+        const { error } = await supabase.rpc('seed_finals_from_standings');
+
+        if (error) throw error;
+
+        modal.classList.remove('open');
+
+        if (window.showToast) {
+          window.showToast('Finals bracket seeded!', 'success');
+        }
+
+        // Redirect to bracket page
+        setTimeout(() => {
+          window.location.href = '/admin/bracket';
+        }, 1000);
+      } catch (err) {
+        console.error('Seed finals error:', err);
+        if (window.showToast) {
+          window.showToast(err.message || 'Failed to seed finals', 'default');
+        }
+      }
+    });
+  }
+
+  function setupRealtimeSubscription(supabase) {
+    supabase
+      .channel('admin-rr-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, () => {
+        loadData(supabase);
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'teams' }, () => {
+        loadData(supabase);
+      })
+      .subscribe();
+  }
+</script>

@@ -1,10 +1,59 @@
 ---
 // Admin Dashboard - The Tobias Way: Let the content be the interface
 import AdminLayout from '../../components/admin/AdminLayout.astro';
+
+// Event details (hardcoded for simplicity)
+const EVENT_DATE = new Date('2026-01-31T14:00:00');
+const EVENT_VENUE = 'La Cabaña';
+const VENUE_URL = import.meta.env.VENUE_URL || '#';
 ---
 
 <AdminLayout title="Dashboard" activeNav="dashboard">
   <div class="dashboard">
+    <!-- Event Banner - The Announcement Plaque -->
+    <div class="event-banner">
+      <!-- CDL 1 Badge - Official Seal -->
+      <div class="event-badge">
+        <span class="event-badge__top">CDL</span>
+        <div class="event-badge__divider"></div>
+        <span class="event-badge__bottom">1</span>
+      </div>
+
+      <!-- Event Details -->
+      <div class="event-details">
+        <time class="event-date" datetime="2026-01-31">
+          <span class="event-date__day">31</span>
+          <span class="event-date__month">JAN</span>
+          <span class="event-date__year">2026</span>
+        </time>
+
+        <div class="event-divider"></div>
+
+        <a href={VENUE_URL} class="event-venue" target="_blank" rel="noopener">
+          <span class="event-venue__name">La Cabaña</span>
+          <span class="event-venue__label">venue</span>
+        </a>
+      </div>
+
+      <!-- Countdown Timer -->
+      <div class="event-countdown" id="eventCountdown">
+        <div class="countdown-unit">
+          <span class="countdown-value" id="countDays">--</span>
+          <span class="countdown-label">days</span>
+        </div>
+        <div class="countdown-separator">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-value" id="countHours">--</span>
+          <span class="countdown-label">hrs</span>
+        </div>
+        <div class="countdown-separator">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-value" id="countMins">--</span>
+          <span class="countdown-label">min</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Hero Stat - No Card, Just the Number -->
     <div class="dashboard-hero">
       <span class="hero-number" id="playerCount">0</span>
@@ -26,17 +75,284 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       </div>
     </div>
 
-    <!-- Ticker Preview - Minimal -->
-    <div class="ticker-preview" id="tickerPreview">
+    <!-- Ticker Preview - Minimal (tap to manage) -->
+    <a class="ticker-preview ticker-preview--link" id="tickerPreview" href="/admin/announcements" aria-label="Open ticker messages">
       <div class="ticker-line"></div>
       <div class="ticker-messages" id="tickerMessages">
         <span class="ticker-empty">No announcements</span>
       </div>
-    </div>
+    </a>
   </div>
 </AdminLayout>
 
 <style>
+  /* ===== EVENT BANNER - The Announcement Plaque ===== */
+  /* Feels carved/inlaid, not floating UI */
+  .event-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 20px 24px;
+    margin: 0 auto 8px;
+    max-width: 400px;
+
+    /* The plaque - machined brass feel */
+    background:
+      linear-gradient(180deg, rgba(28, 19, 15, 0.95) 0%, rgba(20, 14, 10, 0.98) 100%);
+    border: 1px solid rgba(212, 165, 116, 0.2);
+    border-radius: 8px;
+
+    /* Inner bevel - engraved edge */
+    box-shadow:
+      inset 0 1px 0 rgba(212, 165, 116, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+      0 4px 20px rgba(0, 0, 0, 0.4);
+
+    /* Micro-interactions */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: default;
+  }
+
+  /* The Lift - rises on hover like it can be picked up */
+  .event-banner:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(212, 165, 116, 0.15),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+      0 8px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ===== CDL 1 Badge - Matches Homepage hero-badge exactly ===== */
+  .event-badge {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 72px;
+    background: linear-gradient(
+      145deg,
+      rgba(20, 14, 10, 0.9) 0%,
+      rgba(12, 8, 5, 0.95) 100%
+    );
+    border: 2px solid var(--brass);
+    border-radius: 10px;
+    position: relative;
+    box-shadow:
+      0 0 20px rgba(212, 165, 116, 0.25),
+      0 0 40px rgba(212, 165, 116, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 6px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  .event-badge::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+    pointer-events: none;
+  }
+
+  .event-badge__top,
+  .event-badge__bottom {
+    font-family: "Bodoni Moda", serif;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.08em;
+    background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .event-badge__top {
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+
+  .event-badge__divider {
+    width: 36px;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--brass) 20%,
+      var(--brass) 80%,
+      transparent 100%
+    );
+    margin: 5px 0;
+    opacity: 0.6;
+  }
+
+  .event-badge__bottom {
+    font-size: 1.4rem;
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+
+  /* ===== Event Details ===== */
+  .event-details {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .event-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+
+  .event-date__day {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--brass);
+    letter-spacing: -0.02em;
+  }
+
+  .event-date__month {
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 2px;
+  }
+
+  .event-date__year {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.25);
+    letter-spacing: 0.05em;
+  }
+
+  .event-divider {
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(180deg, transparent, rgba(212, 165, 116, 0.3), transparent);
+  }
+
+  .event-venue {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .event-venue__name {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1rem;
+    font-weight: 600;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.85);
+    transition: color 0.2s ease;
+  }
+
+  .event-venue__label {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.6rem;
+    text-transform: lowercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .event-venue:hover .event-venue__name {
+    color: var(--brass);
+  }
+
+  /* ===== Countdown Timer ===== */
+  .event-countdown {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 16px;
+    border-left: 1px solid rgba(212, 165, 116, 0.15);
+  }
+
+  .countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 28px;
+  }
+
+  .countdown-value {
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--brass);
+    line-height: 1;
+    /* Tabular numbers for countdown stability */
+    font-variant-numeric: tabular-nums;
+  }
+
+  .countdown-label {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.5rem;
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 2px;
+  }
+
+  .countdown-separator {
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 1rem;
+    color: rgba(212, 165, 116, 0.3);
+    margin-top: -8px;
+  }
+
+  /* ===== Event Banner Mobile Refinements ===== */
+  @media (max-width: 480px) {
+    .event-banner {
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 16px 20px;
+      max-width: 320px;
+    }
+
+    .event-badge {
+      width: 46px;
+      height: 64px;
+    }
+
+    .event-badge__top {
+      font-size: 0.75rem;
+      margin-top: 7px;
+    }
+
+    .event-badge__divider {
+      width: 30px;
+      margin: 4px 0;
+    }
+
+    .event-badge__bottom {
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .event-countdown {
+      width: 100%;
+      justify-content: center;
+      padding-left: 0;
+      padding-top: 12px;
+      border-left: none;
+      border-top: 1px solid rgba(212, 165, 116, 0.1);
+    }
+  }
+
   /* ===== DASHBOARD - Tobias Minimal ===== */
   .dashboard {
     display: flex;
@@ -139,6 +455,26 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     padding: 16px 20px;
   }
 
+  .ticker-preview--link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 12px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ticker-preview--link:focus-visible {
+    outline: 2px solid rgba(212, 165, 116, 0.45);
+    outline-offset: 2px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .ticker-preview--link:hover .ticker-line {
+      background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.35), transparent);
+    }
+    .ticker-preview--link:hover .ticker-messages {
+      color: rgba(255, 255, 255, 0.45);
+    }
+  }
+
   .ticker-line {
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.2), transparent);
@@ -176,6 +512,15 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   /* ===== DESKTOP REFINEMENTS ===== */
   @media (min-width: 769px) {
+    .event-banner {
+      max-width: 500px;
+      padding: 24px 32px;
+      gap: 28px;
+    }
+
+    .event-date__day { font-size: 2.2rem; }
+    .countdown-value { font-size: 1.3rem; }
+
     .dashboard {
       padding: 40px 0;
     }
@@ -213,6 +558,32 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 </style>
 
 <script>
+  // Countdown Timer
+  function updateCountdown() {
+    const eventDate = new Date('2026-01-31T14:00:00');
+    const now = new Date();
+    const diff = eventDate - now;
+
+    if (diff <= 0) {
+      document.getElementById('countDays').textContent = '0';
+      document.getElementById('countHours').textContent = '0';
+      document.getElementById('countMins').textContent = '0';
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    document.getElementById('countDays').textContent = days;
+    document.getElementById('countHours').textContent = hours.toString().padStart(2, '0');
+    document.getElementById('countMins').textContent = mins.toString().padStart(2, '0');
+  }
+
+  // Initial update + interval
+  updateCountdown();
+  setInterval(updateCountdown, 60000); // Update every minute
+
   // Wait for admin ready event from layout
   window.addEventListener('adminReady', async ({ detail: { supabase } }) => {
     await loadDashboardData(supabase);
