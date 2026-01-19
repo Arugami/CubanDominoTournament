@@ -1,0 +1,1141 @@
+---
+/**
+ * Bracket Component - Swipeable Tournament Bracket
+ *
+ * Mobile: Full-screen swipeable cards for each round
+ * Desktop: Horizontal bracket with connectors
+ *
+ * @prop isAdmin - If true, shows editable score inputs; if false, read-only display
+ */
+
+interface Props {
+  isAdmin?: boolean;
+}
+
+const { isAdmin = false } = Astro.props;
+---
+
+<div class="bracket-wrapper" data-bracket-wrapper>
+  <!-- Round Indicator Pills (Mobile) -->
+  <div class="round-pills">
+    <button class="round-pill active" data-round-pill="0">QF</button>
+    <button class="round-pill" data-round-pill="1">SF</button>
+    <button class="round-pill" data-round-pill="2">Final</button>
+    <button class="round-pill" data-round-pill="3">Champ</button>
+  </div>
+
+  <!-- Swipeable Bracket Container -->
+  <div class="bracket-swiper" data-bracket-swiper>
+    <!-- Quarterfinals (Round 1) -->
+    <div class="bracket-round" data-round-panel="0">
+      <div class="round-content">
+        <div class="round-header-mobile">
+          <span class="round-title-mobile">Quarterfinals</span>
+          <span class="round-count-mobile">4 matches</span>
+        </div>
+        <div class="round-matches-mobile">
+          {[1, 2, 3, 4].map((matchNum) => (
+            <div class="match-card" data-match-card data-round="1" data-match={matchNum}>
+              <div class="match-card__header">
+                <span class="match-card__number">Match {matchNum}</span>
+                <span class="match-card__status" data-status-indicator data-tooltip="Pending"></span>
+              </div>
+              <div class="match-card__teams">
+                <div class="team-row" data-team-row="1">
+                  <span class="team-seed" data-team1-seed>#{matchNum === 1 ? '1' : matchNum === 2 ? '4' : matchNum === 3 ? '3' : '2'}</span>
+                  <span class="team-name" data-team1-name>TBD</span>
+                  {isAdmin ? (
+                    <input
+                      type="number"
+                      class="score-input"
+                      data-team1-score
+                      min="0"
+                      max="200"
+                      placeholder="-"
+                      inputmode="numeric"
+                    />
+                  ) : (
+                    <span class="score-display" data-team1-score-display>-</span>
+                  )}
+                </div>
+                <div class="team-row" data-team-row="2">
+                  <span class="team-seed" data-team2-seed>#{matchNum === 1 ? '8' : matchNum === 2 ? '5' : matchNum === 3 ? '6' : '7'}</span>
+                  <span class="team-name" data-team2-name>TBD</span>
+                  {isAdmin ? (
+                    <input
+                      type="number"
+                      class="score-input"
+                      data-team2-score
+                      min="0"
+                      max="200"
+                      placeholder="-"
+                      inputmode="numeric"
+                    />
+                  ) : (
+                    <span class="score-display" data-team2-score-display>-</span>
+                  )}
+                </div>
+              </div>
+              {isAdmin && (
+                <button class="save-btn" data-save-btn>
+                  <span class="save-btn__text">Save Scores</span>
+                  <span class="save-btn__saving">Saving...</span>
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Semifinals (Round 2) -->
+    <div class="bracket-round" data-round-panel="1">
+      <div class="round-content">
+        <div class="round-header-mobile">
+          <span class="round-title-mobile">Semifinals</span>
+          <span class="round-count-mobile">2 matches</span>
+        </div>
+        <div class="round-matches-mobile">
+          {[1, 2].map((matchNum) => (
+            <div class="match-card match-card--semifinal" data-match-card data-round="2" data-match={matchNum}>
+              <div class="match-card__header">
+                <span class="match-card__number">Semi {matchNum}</span>
+                <span class="match-card__status" data-status-indicator data-tooltip="Pending"></span>
+              </div>
+              <div class="match-card__teams">
+                <div class="team-row" data-team-row="1">
+                  <span class="team-name" data-team1-name>Winner M{matchNum === 1 ? '1' : '3'}</span>
+                  {isAdmin ? (
+                    <input
+                      type="number"
+                      class="score-input"
+                      data-team1-score
+                      min="0"
+                      max="200"
+                      placeholder="-"
+                      inputmode="numeric"
+                    />
+                  ) : (
+                    <span class="score-display" data-team1-score-display>-</span>
+                  )}
+                </div>
+                <div class="team-row" data-team-row="2">
+                  <span class="team-name" data-team2-name>Winner M{matchNum === 1 ? '2' : '4'}</span>
+                  {isAdmin ? (
+                    <input
+                      type="number"
+                      class="score-input"
+                      data-team2-score
+                      min="0"
+                      max="200"
+                      placeholder="-"
+                      inputmode="numeric"
+                    />
+                  ) : (
+                    <span class="score-display" data-team2-score-display>-</span>
+                  )}
+                </div>
+              </div>
+              {isAdmin && (
+                <button class="save-btn" data-save-btn>
+                  <span class="save-btn__text">Save Scores</span>
+                  <span class="save-btn__saving">Saving...</span>
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Finals (Round 3) -->
+    <div class="bracket-round" data-round-panel="2">
+      <div class="round-content">
+        <div class="round-header-mobile">
+          <span class="round-title-mobile">Finals</span>
+          <span class="round-count-mobile">Championship</span>
+        </div>
+        <div class="round-matches-mobile">
+          <div class="match-card match-card--final" data-match-card data-round="3" data-match="1">
+            <div class="match-card__header">
+              <span class="match-card__number">Championship</span>
+              <span class="match-card__status" data-status-indicator data-tooltip="Pending"></span>
+            </div>
+            <div class="match-card__teams">
+              <div class="team-row" data-team-row="1">
+                <span class="team-name" data-team1-name>Winner Semi 1</span>
+                {isAdmin ? (
+                  <input
+                    type="number"
+                    class="score-input"
+                    data-team1-score
+                    min="0"
+                    max="200"
+                    placeholder="-"
+                    inputmode="numeric"
+                  />
+                ) : (
+                  <span class="score-display" data-team1-score-display>-</span>
+                )}
+              </div>
+              <div class="team-row" data-team-row="2">
+                <span class="team-name" data-team2-name>Winner Semi 2</span>
+                {isAdmin ? (
+                  <input
+                    type="number"
+                    class="score-input"
+                    data-team2-score
+                    min="0"
+                    max="200"
+                    placeholder="-"
+                    inputmode="numeric"
+                  />
+                ) : (
+                  <span class="score-display" data-team2-score-display>-</span>
+                )}
+              </div>
+            </div>
+            {isAdmin && (
+              <button class="save-btn" data-save-btn>
+                <span class="save-btn__text">Save Scores</span>
+                <span class="save-btn__saving">Saving...</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Champion Display (Round 4 Panel) -->
+    <div class="bracket-round bracket-round--champion" data-round-panel="3">
+      <div class="round-content round-content--champion">
+        <div class="champion-trophy">
+          <svg viewBox="0 0 64 64" class="trophy-icon">
+            <path d="M20 8h24v4H20z" fill="currentColor" opacity="0.3"/>
+            <path d="M16 12h32v8c0 2-1 4-2 4h-4c0 8-4 14-10 16v6h8v4H24v-4h8v-6c-6-2-10-8-10-16h-4c-1 0-2-2-2-4v-8z" fill="currentColor"/>
+            <path d="M8 12h8v6c0 1-1 2-2 2H10c-1 0-2-1-2-2v-6zM48 12h8v6c0 1-1 2-2 2h-4c-1 0-2-1-2-2v-6z" fill="currentColor" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="champion-label">Champion</div>
+        <div class="champion-name" data-champion-name>TBD</div>
+        <div class="champion-glow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Bracket View (hidden on mobile, shown on desktop) -->
+  <div class="bracket-desktop" data-bracket-desktop>
+    <!-- Round 1: Quarterfinals -->
+    <div class="bracket-column">
+      <div class="column-header">
+        <span class="column-title">Quarterfinals</span>
+      </div>
+      <div class="column-matches">
+        {[1, 2, 3, 4].map((matchNum) => (
+          <div class="desktop-match" data-desktop-match data-round="1" data-match={matchNum}>
+            <div class="desktop-match__header">
+              <span class="desktop-match__number">M{matchNum}</span>
+              <span class="desktop-match__status" data-status-indicator></span>
+            </div>
+            <div class="desktop-match__team" data-team-row="1">
+              <span class="desktop-team__seed" data-team1-seed>#{matchNum === 1 ? '1' : matchNum === 2 ? '4' : matchNum === 3 ? '3' : '2'}</span>
+              <span class="desktop-team__name" data-team1-name>TBD</span>
+              {isAdmin ? (
+                <input type="number" class="desktop-score-input" data-team1-score min="0" max="200" placeholder="-" />
+              ) : (
+                <span class="desktop-score-display" data-team1-score-display>-</span>
+              )}
+            </div>
+            <div class="desktop-match__team" data-team-row="2">
+              <span class="desktop-team__seed" data-team2-seed>#{matchNum === 1 ? '8' : matchNum === 2 ? '5' : matchNum === 3 ? '6' : '7'}</span>
+              <span class="desktop-team__name" data-team2-name>TBD</span>
+              {isAdmin ? (
+                <input type="number" class="desktop-score-input" data-team2-score min="0" max="200" placeholder="-" />
+              ) : (
+                <span class="desktop-score-display" data-team2-score-display>-</span>
+              )}
+            </div>
+            {isAdmin && (
+              <button class="desktop-save-btn" data-save-btn>Save</button>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Connectors: QF to SF -->
+    <div class="bracket-connectors">
+      <svg viewBox="0 0 40 320" preserveAspectRatio="none">
+        <path d="M0 40 H20 V120 H40" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2"/>
+        <path d="M0 120 H20 V120 H40" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2"/>
+        <path d="M0 200 H20 V280 H40" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2"/>
+        <path d="M0 280 H20 V280 H40" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <!-- Round 2: Semifinals -->
+    <div class="bracket-column bracket-column--sf">
+      <div class="column-header">
+        <span class="column-title">Semifinals</span>
+      </div>
+      <div class="column-matches column-matches--sf">
+        {[1, 2].map((matchNum) => (
+          <div class="desktop-match desktop-match--sf" data-desktop-match data-round="2" data-match={matchNum}>
+            <div class="desktop-match__header">
+              <span class="desktop-match__number">SF{matchNum}</span>
+              <span class="desktop-match__status" data-status-indicator></span>
+            </div>
+            <div class="desktop-match__team" data-team-row="1">
+              <span class="desktop-team__name" data-team1-name>Winner M{matchNum === 1 ? '1' : '3'}</span>
+              {isAdmin ? (
+                <input type="number" class="desktop-score-input" data-team1-score min="0" max="200" placeholder="-" />
+              ) : (
+                <span class="desktop-score-display" data-team1-score-display>-</span>
+              )}
+            </div>
+            <div class="desktop-match__team" data-team-row="2">
+              <span class="desktop-team__name" data-team2-name>Winner M{matchNum === 1 ? '2' : '4'}</span>
+              {isAdmin ? (
+                <input type="number" class="desktop-score-input" data-team2-score min="0" max="200" placeholder="-" />
+              ) : (
+                <span class="desktop-score-display" data-team2-score-display>-</span>
+              )}
+            </div>
+            {isAdmin && (
+              <button class="desktop-save-btn" data-save-btn>Save</button>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Connectors: SF to Final -->
+    <div class="bracket-connectors bracket-connectors--final">
+      <svg viewBox="0 0 40 160" preserveAspectRatio="none">
+        <path d="M0 40 H20 V80 H40" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2"/>
+        <path d="M0 120 H20 V80 H40" stroke="rgba(212,165,116,0.3)" fill="none" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <!-- Round 3: Finals -->
+    <div class="bracket-column bracket-column--final">
+      <div class="column-header">
+        <span class="column-title">Finals</span>
+      </div>
+      <div class="column-matches column-matches--final">
+        <div class="desktop-match desktop-match--final" data-desktop-match data-round="3" data-match="1">
+          <div class="desktop-match__header">
+            <span class="desktop-match__number">Final</span>
+            <span class="desktop-match__status" data-status-indicator></span>
+          </div>
+          <div class="desktop-match__team" data-team-row="1">
+            <span class="desktop-team__name" data-team1-name>Winner SF1</span>
+            {isAdmin ? (
+              <input type="number" class="desktop-score-input" data-team1-score min="0" max="200" placeholder="-" />
+            ) : (
+              <span class="desktop-score-display" data-team1-score-display>-</span>
+            )}
+          </div>
+          <div class="desktop-match__team" data-team-row="2">
+            <span class="desktop-team__name" data-team2-name>Winner SF2</span>
+            {isAdmin ? (
+              <input type="number" class="desktop-score-input" data-team2-score min="0" max="200" placeholder="-" />
+            ) : (
+              <span class="desktop-score-display" data-team2-score-display>-</span>
+            )}
+          </div>
+          {isAdmin && (
+            <button class="desktop-save-btn" data-save-btn>Save</button>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <!-- Champion Display -->
+    <div class="bracket-column bracket-column--champion">
+      <div class="desktop-champion">
+        <div class="desktop-champion__label">Champion</div>
+        <div class="desktop-champion__name" data-desktop-champion-name>TBD</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ========================================
+     MOBILE-FIRST: Swipeable Bracket
+     ======================================== */
+
+  .bracket-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  /* Round Indicator Pills */
+  .round-pills {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+  }
+
+  .round-pill {
+    padding: 8px 16px;
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.4);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid transparent;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .round-pill.active {
+    color: var(--brass);
+    background: rgba(212, 165, 116, 0.15);
+    border-color: var(--border-accent);
+  }
+
+  .round-pill:active {
+    transform: scale(0.95);
+  }
+
+  /* Swipeable Container */
+  .bracket-swiper {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+
+  .bracket-swiper::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Each Round Panel */
+  .bracket-round {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    padding: 0 16px 24px;
+    min-height: calc(100dvh - 200px);
+  }
+
+  .round-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .round-header-mobile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 4px;
+  }
+
+  .round-title-mobile {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--brass);
+  }
+
+  .round-count-mobile {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    padding: 4px 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+  }
+
+  .round-matches-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ========================================
+     Match Card (Mobile) - The Artifact
+     ======================================== */
+
+  .match-card {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 16px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* The Lift - card rises on touch */
+  .match-card:active {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  /* The Slam - on save */
+  .match-card.saving {
+    transform: scale(0.97);
+    box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2);
+  }
+
+  .match-card--semifinal {
+    background: rgba(212, 165, 116, 0.03);
+    border-color: rgba(212, 165, 116, 0.2);
+  }
+
+  .match-card--final {
+    background: linear-gradient(135deg, rgba(212, 165, 116, 0.08), rgba(183, 106, 59, 0.05));
+    border-color: var(--border-accent);
+    border-width: 2px;
+  }
+
+  .match-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .match-card__number {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--copper);
+  }
+
+  .match-card__status {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    position: relative;
+    cursor: help;
+  }
+
+  .match-card__status[data-status="in_progress"] {
+    background: var(--brass);
+    box-shadow: 0 0 10px rgba(212, 165, 116, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .match-card__status[data-status="completed"] {
+    background: #81c784;
+    box-shadow: 0 0 8px rgba(129, 199, 132, 0.4);
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  /* Status tooltip */
+  .match-card__status::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    padding: 6px 10px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #fff;
+    background: rgba(28, 19, 15, 0.95);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: all 0.2s ease;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .match-card__status:hover::after,
+  .match-card__status:active::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .match-card__teams {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  /* Team Row */
+  .team-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  /* Winner highlight - The Thread */
+  .team-row.winner {
+    background: linear-gradient(90deg, rgba(212, 165, 116, 0.15), rgba(212, 165, 116, 0.05));
+    border-color: var(--brass);
+    border-left-width: 3px;
+  }
+
+  .team-row.winner .team-name {
+    color: var(--brass);
+  }
+
+  /* Winner advancement animation */
+  .team-row.advancing {
+    animation: advancePulse 0.6s ease-out;
+  }
+
+  @keyframes advancePulse {
+    0% { box-shadow: 0 0 0 0 rgba(212, 165, 116, 0.5); }
+    50% { box-shadow: 0 0 0 12px rgba(212, 165, 116, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(212, 165, 116, 0); }
+  }
+
+  .team-seed {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--copper);
+    opacity: 0.6;
+    min-width: 28px;
+  }
+
+  .team-name {
+    flex: 1;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Score Input (Admin) */
+  .score-input {
+    width: 56px;
+    padding: 10px 8px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .score-input:focus {
+    border-color: var(--brass);
+    box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.15);
+  }
+
+  .score-input::placeholder {
+    color: rgba(255, 255, 255, 0.2);
+  }
+
+  .score-input::-webkit-outer-spin-button,
+  .score-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .score-input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  /* Score Display (Public) */
+  .score-display {
+    min-width: 44px;
+    padding: 10px 12px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--brass);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+
+  /* Save Button */
+  .save-btn {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brass);
+    background: rgba(212, 165, 116, 0.1);
+    border: 1px solid var(--border-accent);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    min-height: 48px;
+  }
+
+  .save-btn:active {
+    background: rgba(212, 165, 116, 0.25);
+    transform: scale(0.98);
+  }
+
+  .save-btn__saving {
+    display: none;
+  }
+
+  .save-btn.saving .save-btn__text {
+    display: none;
+  }
+
+  .save-btn.saving .save-btn__saving {
+    display: inline;
+  }
+
+  /* ========================================
+     Champion Panel (Mobile)
+     ======================================== */
+
+  .bracket-round--champion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .round-content--champion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    position: relative;
+  }
+
+  .champion-trophy {
+    margin-bottom: 20px;
+  }
+
+  .trophy-icon {
+    width: 80px;
+    height: 80px;
+    color: var(--brass);
+    opacity: 0.8;
+  }
+
+  .champion-label {
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--copper);
+    margin-bottom: 16px;
+  }
+
+  .champion-name {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--brass);
+    padding: 20px 32px;
+    background: linear-gradient(135deg, rgba(212, 165, 116, 0.1), rgba(183, 106, 59, 0.08));
+    border: 2px solid var(--brass);
+    border-radius: 16px;
+    min-width: 200px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .champion-name.has-champion {
+    color: var(--gold);
+    border-color: var(--gold);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(212, 165, 116, 0.08));
+  }
+
+  /* Champion Reveal Animation */
+  .champion-name.revealing {
+    animation: championReveal 0.8s ease-out;
+  }
+
+  @keyframes championReveal {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: none;
+    }
+  }
+
+  /* Gold pulse behind champion */
+  .champion-name.has-champion::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: linear-gradient(135deg, var(--gold), var(--brass));
+    border-radius: 18px;
+    z-index: -1;
+    opacity: 0.15;
+    animation: goldGlow 3s ease-in-out infinite;
+  }
+
+  @keyframes goldGlow {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.25; }
+  }
+
+  .champion-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(212, 165, 116, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ========================================
+     DESKTOP: Hide mobile, show horizontal bracket
+     ======================================== */
+
+  .bracket-desktop {
+    display: none;
+  }
+
+  @media (min-width: 769px) {
+    .round-pills {
+      display: none;
+    }
+
+    .bracket-swiper {
+      display: none;
+    }
+
+    .bracket-desktop {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      padding: 24px;
+      overflow-x: auto;
+    }
+
+    .bracket-column {
+      flex: 0 0 200px;
+    }
+
+    .bracket-column--sf {
+      padding-top: 40px;
+    }
+
+    .bracket-column--final {
+      padding-top: 80px;
+    }
+
+    .bracket-column--champion {
+      padding-top: 80px;
+      flex: 0 0 160px;
+    }
+
+    .column-header {
+      padding: 0 8px 12px;
+    }
+
+    .column-title {
+      font-family: "Bodoni Moda", serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--brass);
+    }
+
+    .column-matches {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .column-matches--sf {
+      gap: 80px;
+    }
+
+    /* Desktop Match Card */
+    .desktop-match {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 10px;
+      transition: border-color 0.2s ease;
+    }
+
+    .desktop-match:hover {
+      border-color: var(--border-accent);
+    }
+
+    .desktop-match--final {
+      background: rgba(212, 165, 116, 0.05);
+      border-color: var(--border-accent);
+    }
+
+    .desktop-match__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .desktop-match__number {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--copper);
+    }
+
+    .desktop-match__status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .desktop-match__status[data-status="in_progress"] {
+      background: var(--brass);
+      box-shadow: 0 0 6px rgba(212, 165, 116, 0.5);
+    }
+
+    .desktop-match__status[data-status="completed"] {
+      background: #81c784;
+    }
+
+    .desktop-match__team {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 6px;
+      margin-bottom: 4px;
+      border: 1px solid transparent;
+    }
+
+    .desktop-match__team.winner {
+      background: rgba(212, 165, 116, 0.1);
+      border-color: var(--brass);
+    }
+
+    .desktop-team__seed {
+      font-size: 0.6rem;
+      color: var(--copper);
+      opacity: 0.6;
+      min-width: 20px;
+    }
+
+    .desktop-team__name {
+      flex: 1;
+      font-size: 0.8rem;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .desktop-score-input {
+      width: 40px;
+      padding: 4px 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: center;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      outline: none;
+    }
+
+    .desktop-score-input:focus {
+      border-color: var(--brass);
+    }
+
+    .desktop-score-input::-webkit-outer-spin-button,
+    .desktop-score-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    .desktop-score-display {
+      min-width: 32px;
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--brass);
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+    }
+
+    .desktop-save-btn {
+      width: 100%;
+      padding: 6px 10px;
+      margin-top: 8px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--brass);
+      background: rgba(212, 165, 116, 0.1);
+      border: 1px solid var(--border-accent);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .desktop-save-btn:hover {
+      background: rgba(212, 165, 116, 0.2);
+    }
+
+    /* Connectors */
+    .bracket-connectors {
+      width: 40px;
+      height: 320px;
+      flex-shrink: 0;
+    }
+
+    .bracket-connectors svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .bracket-connectors--final {
+      height: 160px;
+      margin-top: 40px;
+    }
+
+    /* Desktop Champion */
+    .desktop-champion {
+      text-align: center;
+      padding: 16px;
+    }
+
+    .desktop-champion__label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--copper);
+      margin-bottom: 12px;
+    }
+
+    .desktop-champion__name {
+      font-family: "Bodoni Moda", serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--brass);
+      padding: 12px 16px;
+      background: linear-gradient(135deg, rgba(212, 165, 116, 0.1), rgba(183, 106, 59, 0.08));
+      border: 2px solid var(--brass);
+      border-radius: 10px;
+    }
+
+    .desktop-champion__name.has-champion {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+  }
+</style>
+
+<script>
+  // Bracket Component Controller
+  class BracketController {
+    constructor(wrapper) {
+      this.wrapper = wrapper;
+      this.swiper = wrapper.querySelector('[data-bracket-swiper]');
+      this.pills = wrapper.querySelectorAll('[data-round-pill]');
+      this.currentRound = 0;
+
+      this.init();
+    }
+
+    init() {
+      // Pill navigation
+      this.pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          const round = parseInt(pill.dataset.roundPill);
+          this.scrollToRound(round);
+        });
+      });
+
+      // Sync pills on scroll
+      if (this.swiper) {
+        this.swiper.addEventListener('scroll', () => this.handleScroll());
+      }
+    }
+
+    scrollToRound(index) {
+      const panels = this.wrapper.querySelectorAll('[data-round-panel]');
+      if (panels[index]) {
+        panels[index].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      }
+    }
+
+    handleScroll() {
+      if (!this.swiper) return;
+
+      const scrollLeft = this.swiper.scrollLeft;
+      const panelWidth = this.swiper.offsetWidth;
+      const newRound = Math.round(scrollLeft / panelWidth);
+
+      if (newRound !== this.currentRound) {
+        this.currentRound = newRound;
+        this.updatePills();
+      }
+    }
+
+    updatePills() {
+      this.pills.forEach((pill, index) => {
+        pill.classList.toggle('active', index === this.currentRound);
+      });
+    }
+  }
+
+  // Initialize when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    const wrapper = document.querySelector('[data-bracket-wrapper]');
+    if (wrapper) {
+      new BracketController(wrapper);
+    }
+  });
+
+  // Also initialize if Astro navigates
+  document.addEventListener('astro:page-load', () => {
+    const wrapper = document.querySelector('[data-bracket-wrapper]');
+    if (wrapper) {
+      new BracketController(wrapper);
+    }
+  });
+</script>

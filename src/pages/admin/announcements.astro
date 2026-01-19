@@ -479,8 +479,15 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     background: rgba(244, 67, 54, 0.15);
   }
 
-  .loading-placeholder,
-  .empty-state {
+  .loading-placeholder {
+    padding: 24px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+  }
+
+  /* :global() needed because empty-state is JS-generated */
+  :global(.empty-state) {
     padding: 24px;
     text-align: center;
     color: rgba(255, 255, 255, 0.4);
