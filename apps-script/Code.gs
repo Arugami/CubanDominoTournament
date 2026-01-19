@@ -450,3 +450,51 @@ function checkResendConfig() {
     Logger.log("✅ RESEND_API_KEY is configured");
   }
 }
+
+// ============================================
+// MIGRATION: Run this ONCE to convert team headers to solo player format
+// ============================================
+function migrateHeadersToSoloPlayer() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheetName = getSheetName();
+  const sh = ss.getSheetByName(sheetName);
+
+  if (!sh) {
+    Logger.log("❌ Sheet '" + sheetName + "' not found!");
+    return;
+  }
+
+  const headers = getExistingHeaders(sh);
+  Logger.log("Current headers: " + JSON.stringify(headers));
+
+  // Map old team headers to new solo player headers
+  const headerMap = {
+    "teamName": "playerName",
+    "p1Name": "email",
+    "p1Email": "phone"
+  };
+
+  // Columns to delete (0-indexed): p1Phone, p2Name, p2Email, p2Phone
+  const columnsToDelete = ["p1Phone", "p2Name", "p2Email", "p2Phone"];
+
+  // First, rename the headers we're keeping
+  headers.forEach((header, idx) => {
+    if (headerMap[header]) {
+      sh.getRange(1, idx + 1).setValue(headerMap[header]);
+      Logger.log("Renamed column " + (idx + 1) + ": " + header + " → " + headerMap[header]);
+    }
+  });
+
+  // Delete columns from right to left (so indices don't shift)
+  const deleteIndices = columnsToDelete
+    .map(col => headers.indexOf(col))
+    .filter(idx => idx !== -1)
+    .sort((a, b) => b - a); // Sort descending
+
+  deleteIndices.forEach(idx => {
+    sh.deleteColumn(idx + 1);
+    Logger.log("Deleted column " + (idx + 1) + ": " + headers[idx]);
+  });
+
+  Logger.log("✅ Migration complete! New headers: " + JSON.stringify(getExistingHeaders(sh)));
+}
