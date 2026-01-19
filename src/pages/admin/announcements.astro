@@ -1225,7 +1225,11 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   function renderTickerPreview() {
     const ticker = document.getElementById('previewTicker');
     const container = document.getElementById('tickerContent');
-    const active = announcements.filter(a => a.is_active);
+    const now = new Date().toISOString();
+    // Filter active AND not expired (expires_at is null or in the future)
+    const active = announcements.filter(a =>
+      a.is_active && (!a.expires_at || a.expires_at > now)
+    );
 
     // Clear empty state indicator
     ticker.classList.remove('ticker-empty-state');
@@ -1258,7 +1262,11 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   function updateStats() {
     const statsEl = document.getElementById('announcementStats');
-    const activeCount = announcements.filter(a => a.is_active).length;
+    const now = new Date().toISOString();
+    // Count active AND not expired announcements
+    const activeCount = announcements.filter(a =>
+      a.is_active && (!a.expires_at || a.expires_at > now)
+    ).length;
     // Softer, more ambient stat display
     statsEl.textContent = activeCount > 0 ? `${activeCount} in ticker` : 'ticker empty';
   }

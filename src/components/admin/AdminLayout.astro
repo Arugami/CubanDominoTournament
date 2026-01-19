@@ -18,7 +18,7 @@ interface NavItem {
 
 interface Props {
   title: string;
-  activeNav?: 'dashboard' | 'registrations' | 'teams' | 'round-robin' | 'bracket' | 'announcements';
+  activeNav?: 'dashboard' | 'registrations' | 'teams' | 'round-robin' | 'bracket' | 'announcements' | 'settings';
 }
 
 const { title, activeNav = 'dashboard' } = Astro.props;
@@ -727,6 +727,21 @@ const isNavActive = (item: NavItem): boolean => {
         gap: 12px;
       }
 
+      /* Super admin only elements - hidden by default */
+      .super-admin-only {
+        display: none !important;
+      }
+
+      .admin-layout.is-super-admin .super-admin-only {
+        display: flex !important;
+      }
+
+      .user-menu__btn--settings {
+        background: rgba(212, 165, 116, 0.1);
+        color: var(--brass);
+        border: 1px solid rgba(212, 165, 116, 0.3);
+      }
+
       .user-menu__btn {
         width: 100%;
         padding: 16px 20px;
@@ -1166,6 +1181,34 @@ const isNavActive = (item: NavItem): boolean => {
           border-color: var(--border-accent);
         }
 
+        .settings-btn {
+          display: none;
+          width: 100%;
+          padding: 10px 16px;
+          margin-bottom: 8px;
+          background: transparent;
+          border: 1px solid var(--border-subtle);
+          border-radius: 8px;
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: var(--brass);
+          text-decoration: none;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: all 0.2s ease;
+        }
+
+        .settings-btn:hover {
+          background: rgba(212, 165, 116, 0.1);
+          border-color: var(--border-accent);
+        }
+
+        /* Super admin only elements - shown via JS */
+        .admin-layout.is-super-admin .super-admin-only {
+          display: flex;
+        }
+
         /* Main Content Area */
         .admin-main {
           flex: 1;
@@ -1241,6 +1284,13 @@ const isNavActive = (item: NavItem): boolean => {
             <button class="user-menu__close" id="closeUserMenu">&times;</button>
           </div>
           <div class="user-menu__actions">
+            <a href="/admin/settings" class="user-menu__btn user-menu__btn--settings super-admin-only" id="mobileSettingsBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+              Settings
+            </a>
             <a href="/" class="user-menu__btn user-menu__btn--back">Back to Site</a>
             <button class="user-menu__btn user-menu__btn--logout" id="mobileLogoutBtn">Sign Out</button>
           </div>
@@ -1323,6 +1373,13 @@ const isNavActive = (item: NavItem): boolean => {
               <div class="user-role" id="userRole">Admin</div>
             </div>
           </div>
+          <a href="/admin/settings" class="settings-btn super-admin-only" id="desktopSettingsBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+            Settings
+          </a>
           <button class="logout-btn" id="logoutBtn">Sign Out</button>
         </div>
       </aside>
@@ -1459,6 +1516,11 @@ const isNavActive = (item: NavItem): boolean => {
 
           // Store admin info
           window.currentAdmin = adminUser;
+
+          // Set super_admin class for role-based UI visibility
+          if (adminUser.role === 'super_admin') {
+            adminApp.classList.add('is-super-admin');
+          }
 
           // Update UI with user info (both mobile and desktop)
           const displayName = adminUser.name || session.user.email.split('@')[0];

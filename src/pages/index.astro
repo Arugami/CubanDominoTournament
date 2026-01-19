@@ -743,16 +743,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Film grain overlay - "Like photos from 1978" — Wes Anderson
-         2-3% noise - not visible, but felt. Memory texture. */
+         2-3% noise - not visible, but felt. Memory texture.
+         NOTE: feColorMatrix saturate=0 converts turbulence to grayscale.
+         Without this, feTurbulence generates RGB colored noise causing green tint. */
       .panel-bg::after {
         content: '';
         position: absolute;
         inset: 0;
-        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.03'/%3E%3C/svg%3E");
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.03'/%3E%3C/svg%3E");
         pointer-events: none;
         z-index: 1;
-        mix-blend-mode: overlay;
-        opacity: 0.4;
+        mix-blend-mode: normal;
+        opacity: 0.2;
       }
 
       /* Tobias: Chromatic Aberration - Edge Distortion
@@ -807,7 +809,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         inset: -10%;
         width: 120%;
         height: 120%;
-        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005' numOctaves='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
         pointer-events: none;
         z-index: 3;
         opacity: 0;
@@ -2414,7 +2416,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Lin-Manuel: "Names give you FACES. Life cycle gives you TIME. Together, WEIGHT." */
       /* Lin-Manuel's Principle: "Silence isn't empty. It's where the feeling lives." */
 
-      /* LET THE ANCESTORS LAND - EXPANDED TIMELINE:
+      /* LET THE ANCESTORS LAND - TIGHTENED TIMELINE (7.5s total):
          0.3s: "Your abuelo sat here." descends (2.2s + glow pulse)
          2.5s: Animation complete
          ← 0.5s SILENCE (ancestor lands)
@@ -2423,12 +2425,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          ← 0.8s SILENCE (generations settle)
          4.8s: "Every Sunday. Every celebration. Every goodbye." fades in (1.5s)
          6.3s: Animation complete
-         ← 1.2s SILENCE (life cycle absorbs — THE BREATH)
-         7.5s: "Te toca." rises (2.0s, from below with weight)
-         9.5s: Animation complete
-         ← 0.5s SILENCE (torch reverberates)
-         10.0s: Scroll hint fades in
-         10.5s: Scroll lock releases
+         ← 0.4s TIGHTENED SILENCE (users getting impatient)
+         6.7s: "Te toca." rises - moved earlier for faster pacing
+         7.2s: Scroll hint fades in
+         7.5s: Scroll lock releases
       */
 
       .panel--build.in-view:not(.has-played) .build-setup {
@@ -2459,9 +2459,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* "Te toca." - THE CLIMAX - RISES from below */
-      /* THE BREATH: 1.2s SILENCE after life cycle absorbs — where the feeling lives */
+      /* TIGHTENED: Starts at 5.8s (tighter after life cycle starts), 1.4s duration, lands at 7.2s */
       .panel--build.in-view:not(.has-played) .build-word--torch {
-        animation: torchRise 2.0s cubic-bezier(0.16, 1, 0.3, 1) 7.5s forwards;
+        animation: torchRise 1.4s cubic-bezier(0.16, 1, 0.3, 1) 5.8s forwards;
       }
 
       /* Legacy: keep inherited animation */
@@ -2470,7 +2470,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--build.in-view:not(.has-played) .build-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 10.0s forwards;  /* Appears at 10s (after torch reverberates) */
+        animation: scrollHintReveal 1s ease-out 7.2s forwards;  /* Appears at 7.2s (300ms before lock releases at 7.5s) */
       }
 
       /* ANCESTOR DESCENDS - SMOOTH drop from above (no bounce) */
@@ -3369,7 +3369,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .build-family__line {
-          font-size: clamp(1rem, 4vw, 1.5rem);
+          font-size: clamp(1.15rem, 4.5vw, 1.65rem);
+        }
+
+        .build-lifecycle__line {
+          font-size: clamp(1.1rem, 4.5vw, 1.7rem);
         }
 
         /* Panel 4 mobile - cinematic frame */
@@ -4791,96 +4795,86 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* "Unlock La Mesa" — ESPN credential / press pass aesthetic */
+      /* "Unlock La Mesa" — Compact speech bubble above domino button */
       .mesa-help {
         position: fixed;
+        /* Position above the ticker chat button (60px wide, at right edge) */
         right: calc(14px + env(safe-area-inset-right));
-        left: auto;
-        bottom: calc(46px + 14px + env(safe-area-inset-bottom));
+        bottom: calc(46px + 60px + 12px + env(safe-area-inset-bottom)); /* ticker height + button height + gap */
         z-index: 15000;
-        width: min(280px, calc(100vw - 28px));
+        width: max-content;
+        max-width: 200px;
         margin: 0;
-        /* Darker, richer background — like a laminated badge */
+        /* Rich dark background — brass plaque feel */
         background: linear-gradient(135deg, rgba(10, 7, 5, 0.98) 0%, rgba(6, 4, 3, 0.98) 100%);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        /* Sharp brass edge — credential strip */
+        /* Warm brass border */
         border: 1px solid rgba(183, 106, 59, 0.4);
-        border-left: 4px solid var(--brass);
-        border-radius: 2px;
+        border-radius: 6px;
         padding: 0;
-        overflow: hidden;
+        overflow: visible;
         box-shadow:
-          0 20px 60px rgba(0, 0, 0, 0.7),
-          0 4px 16px rgba(0, 0, 0, 0.5),
-          inset 0 1px 0 rgba(212, 165, 116, 0.08);
+          0 12px 40px rgba(0, 0, 0, 0.6),
+          0 4px 12px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(212, 165, 116, 0.1);
         opacity: 0;
-        transform: translateX(20px);
+        transform: translateY(8px);
         pointer-events: none;
-        transition: opacity 180ms ease, transform 180ms ease;
+        transition: opacity 200ms ease, transform 200ms ease;
       }
 
       .mesa-help.is-visible {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateY(0);
         pointer-events: auto;
+      }
+
+      /* Downward-pointing arrow */
+      .mesa-help__arrow {
+        position: absolute;
+        bottom: -8px;
+        right: 20px; /* Align with domino button center */
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid rgba(10, 7, 5, 0.98);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+      }
+
+      /* Small brass accent on arrow tip */
+      .mesa-help__arrow::before {
+        content: '';
+        position: absolute;
+        top: -9px;
+        left: -8px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid rgba(183, 106, 59, 0.4);
       }
 
       @media (max-width: 768px) {
         .mesa-help {
-          right: 0;
-          left: 0;
-          width: 100%;
-          border-radius: 0;
-          border-left: none;
-          border-right: none;
-          border-bottom: none;
-          /* Sit directly on top of ticker */
-          bottom: calc(46px + env(safe-area-inset-bottom));
-          transform: translateY(100%);
+          right: 8px;
+          bottom: calc(46px + 52px + 10px + env(safe-area-inset-bottom)); /* Adjusted for mobile ticker */
+          max-width: 180px;
         }
-        .mesa-help.is-visible {
-          transform: translateY(0);
+        .mesa-help__arrow {
+          right: 18px;
         }
         .mesa-help__content {
-          padding: 10px 16px 8px;
-        }
-        .mesa-help__title {
-          font-size: 0.85rem;
-          margin-bottom: 4px;
+          padding: 10px 14px;
         }
         .mesa-help__text {
           font-size: 0.75rem;
         }
-        .mesa-help__dismiss {
-          padding: 8px 16px;
-        }
-      }
-
-      /* ACCESS badge — subtle, doesn't compete with CTA */
-      .mesa-help__badge {
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.5);
-        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
-        font-weight: 600;
-        font-size: 0.6rem;
-        letter-spacing: 0.12em;
-        padding: 5px 14px;
-        text-transform: uppercase;
       }
 
       .mesa-help__content {
-        padding: 14px 16px 12px;
-      }
-
-      .mesa-help__title {
-        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
-        font-weight: 700;
-        color: #fff;
-        font-size: 0.95rem;
-        margin-bottom: 6px;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
+        padding: 12px 16px;
       }
 
       .mesa-help__highlight {
@@ -4888,41 +4882,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        font-weight: 800;
+        font-weight: 700;
+        white-space: nowrap;
       }
 
       .mesa-help__text {
         font-family: "IBM Plex Sans", system-ui, sans-serif;
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 0.8rem;
-        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.82rem;
+        line-height: 1.45;
         margin: 0;
-      }
-
-      .mesa-help__dismiss {
-        appearance: none;
-        width: 100%;
-        border: none;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
-        background: transparent;
-        color: rgba(255, 255, 255, 0.4);
-        padding: 11px 16px;
-        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
-        font-weight: 600;
-        font-size: 0.75rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: background 150ms ease, color 150ms ease;
-      }
-
-      .mesa-help__dismiss:hover {
-        background: rgba(255, 255, 255, 0.04);
-        color: rgba(255, 255, 255, 0.6);
-      }
-
-      .mesa-help__dismiss:active {
-        background: rgba(255, 255, 255, 0.02);
+        text-align: center;
       }
 
       @keyframes tickerScroll {
@@ -9508,14 +9478,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       </div>
     </div>
 
-    <!-- "Unlock La Mesa" — ESPN credential, not app notification -->
+    <!-- "Unlock La Mesa" — Speech bubble above domino button, not bottom sheet -->
     <div class="mesa-help" id="mesaHelp" role="status" aria-live="polite" aria-atomic="true">
-      <div class="mesa-help__badge">ACCESS</div>
       <div class="mesa-help__content">
-        <div class="mesa-help__title">UNLOCK <span class="mesa-help__highlight">LA MESA</span></div>
-        <p class="mesa-help__text">Sign up below. Then tap the domino to enter.</p>
+        <p class="mesa-help__text">Claim your seat above to unlock <span class="mesa-help__highlight">La Mesa</span></p>
       </div>
-      <button class="mesa-help__dismiss" id="mesaHelpDismiss" type="button">DISMISS</button>
+      <span class="mesa-help__arrow"></span>
     </div>
 
     <!-- Background Dimming Overlay -->
@@ -9682,7 +9650,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               const formRect = signupForm.getBoundingClientRect();
               // Hide when form's top edge is within 80px of viewport top
               // (pip is at 20px + its height ~50px + breathing room)
-              formFieldsInWay = formRect.top < 80;
+              // BUT only if form is actually visible (bottom > 0 means form is on screen)
+              formFieldsInWay = formRect.top < 80 && formRect.bottom > 0;
             }
 
             if (!formFieldsInWay) {
@@ -9960,6 +9929,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           scrollBlockTarget.removeEventListener('wheel', preventScroll);
           scrollBlockTarget.removeEventListener('touchmove', preventScroll);
 
+          // Opacity dip during snap correction - creates "camera cut" feel
+          // Masks any positional micro-jerk when scroll-snap kicks in
+          if (storyEl) {
+            storyEl.style.opacity = '0.95';
+            storyEl.style.transition = 'opacity 50ms ease';
+            setTimeout(() => {
+              if (storyEl) {
+                storyEl.style.opacity = '1';
+                // Clear transition after settling
+                setTimeout(() => {
+                  if (storyEl) storyEl.style.transition = '';
+                }, 50);
+              }
+            }, 50);
+          }
+
           // Enable smooth scroll temporarily so any snap correction feels cinematic
           // This prevents the "browser nudged the page" feeling
           if (storyEl) {
@@ -9995,7 +9980,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !buildHasPlayed) {
             buildHasPlayed = true;
             alignPanelAfterSettle(buildPanel);
-            lockScroll(10500, () => buildPanel?.classList.add('has-played'));  // 10.5s - Let the ancestors land
+            lockScroll(7500, () => buildPanel?.classList.add('has-played'));  // 7.5s - Users getting impatient, tightened timing
           }
         });
       }, { threshold: 0.6 });
@@ -10887,7 +10872,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       // (pointerup doesn't fire if finger moves even slightly during tap)
       tickerChatBtn?.addEventListener('touchstart', (e) => {
         tickerChatBtn.classList.add('is-pressed');
-        vibrate([10, 30, 10]); // Tobias: click-thunk-settle haptic pattern
+        vibrate([8, 20, 12, 8, 4]); // Tobias: tap-pause-land-settle-rest (domino lands and settles)
       }, { passive: true });
 
       tickerChatBtn?.addEventListener('touchend', (e) => {

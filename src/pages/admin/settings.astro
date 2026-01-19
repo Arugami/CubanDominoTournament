@@ -1,0 +1,1133 @@
+---
+// Admin Settings - Admin User Management (super_admin only)
+import AdminLayout from '../../components/admin/AdminLayout.astro';
+---
+
+<AdminLayout title="Settings" activeNav="settings">
+  <div class="settings-page" id="settingsPage" style="display: none;">
+    <!-- Hero Stat -->
+    <div class="page-hero">
+      <span class="hero-number" id="adminCount">0</span>
+      <span class="hero-label">admins</span>
+      <div class="hero-context" id="adminContext">loading...</div>
+    </div>
+
+    <!-- Admin Users Section -->
+    <div class="section">
+      <div class="section__header">
+        <h2 class="section__title">Admin Users</h2>
+        <button class="btn btn--primary" id="inviteAdminBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Invite Admin
+        </button>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all">All <span class="filter-count" id="countAll">0</span></button>
+        <button class="filter-tab" data-filter="super_admin">Super Admins <span class="filter-count" id="countSuper">0</span></button>
+        <button class="filter-tab" data-filter="admin">Admins <span class="filter-count" id="countAdmin">0</span></button>
+      </div>
+
+      <!-- Admin List -->
+      <div class="admin-list" id="adminList">
+        <div class="loading-placeholder">Loading admins...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Access Denied State -->
+  <div class="access-denied" id="accessDenied" style="display: none;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 64px; height: 64px; opacity: 0.3;">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+    <h2>Access Restricted</h2>
+    <p>Only super admins can access settings.</p>
+    <a href="/admin" class="btn btn--secondary">Back to Dashboard</a>
+  </div>
+
+  <!-- Invite Admin Modal -->
+  <div class="modal-backdrop" id="inviteModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">Invite Admin</h2>
+        <button class="modal__close" id="closeInviteModal">&times;</button>
+      </div>
+      <form class="modal__body" id="inviteForm">
+        <div class="form-group">
+          <label class="form-label" for="adminEmail">Email *</label>
+          <input type="email" id="adminEmail" class="input" required placeholder="admin@example.com" />
+          <p class="form-hint">They'll need to sign in with this email via magic link.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="adminName">Name</label>
+          <input type="text" id="adminName" class="input" placeholder="Optional display name" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="adminRole">Role</label>
+          <select id="adminRole" class="input">
+            <option value="admin">Admin</option>
+            <option value="super_admin">Super Admin</option>
+          </select>
+          <p class="form-hint">Super admins can manage other admins.</p>
+        </div>
+
+        <div class="modal__actions modal__actions--sticky">
+          <button type="button" class="btn btn--secondary" id="cancelInvite">Cancel</button>
+          <button type="submit" class="btn btn--primary btn-slam" id="saveInviteBtn">Add Admin</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" id="deleteModal">
+    <div class="modal modal--sm">
+      <div class="modal__header">
+        <h2 class="modal__title">Remove Admin</h2>
+      </div>
+      <div class="modal__body">
+        <p>Are you sure you want to remove <strong id="deleteAdminName"></strong> from admin access?</p>
+        <p class="warning-text">They will no longer be able to access the admin panel.</p>
+      </div>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--secondary" id="cancelDelete">Cancel</button>
+        <button type="button" class="btn btn--danger" id="confirmDelete">Remove Admin</button>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  /* MOBILE-FIRST STYLES */
+  .settings-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Hero Stat - Quiet reference point, not a statement piece */
+  .page-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px 16px;
+    background: rgba(18, 12, 9, 0.95);
+    border: 1px solid rgba(212, 165, 116, 0.08);
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Lamplight removed - too decorative */
+  .page-hero::before {
+    display: none;
+  }
+
+  .hero-number {
+    font-family: "Bodoni Moda", serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--brass);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .hero-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+    text-transform: lowercase;
+  }
+
+  .hero-context {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.35);
+    margin-top: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  /* Section - "The Ledger" */
+  .section {
+    position: relative;
+    background: linear-gradient(180deg, rgba(20, 14, 10, 0.98) 0%, rgba(15, 10, 8, 0.99) 100%);
+    border: 1px solid rgba(212, 165, 116, 0.12);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.2),
+      0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Vignette overlay for depth */
+  .section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.12) 100%);
+    pointer-events: none;
+  }
+
+  .section__header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    border-bottom: 1px solid rgba(212, 165, 116, 0.1);
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .section__title {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--brass);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Filter Tabs - "Ledger Tabs" */
+  .filter-tabs {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 8px;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(212, 165, 116, 0.08);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filter-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.35);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .filter-tab:active {
+    transform: scale(0.97);
+  }
+
+  .filter-tab.active {
+    color: var(--brass);
+    background: transparent;
+    border-bottom-color: var(--brass);
+  }
+
+  /* Etched line effect for active tab */
+  .filter-tab.active::before {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: rgba(212, 165, 116, 0.3);
+    box-shadow: 0 0 8px rgba(212, 165, 116, 0.4);
+  }
+
+  .filter-count {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    transition: all 0.25s ease;
+  }
+
+  .filter-tab.active .filter-count {
+    background: rgba(212, 165, 116, 0.15);
+    color: var(--brass);
+  }
+
+  /* Admin List - "Registry Entries" */
+  .admin-list {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .admin-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(212, 165, 116, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    animation: entryFadeIn 0.4s ease-out backwards;
+  }
+
+  /* Staggered entrance animation */
+  .admin-item:nth-child(1) { animation-delay: 0.05s; }
+  .admin-item:nth-child(2) { animation-delay: 0.1s; }
+  .admin-item:nth-child(3) { animation-delay: 0.15s; }
+  .admin-item:nth-child(4) { animation-delay: 0.2s; }
+  .admin-item:nth-child(5) { animation-delay: 0.25s; }
+  .admin-item:nth-child(6) { animation-delay: 0.3s; }
+
+  @keyframes entryFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  /* Left border accent (brass indicator) */
+  .admin-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%;
+    bottom: 20%;
+    width: 3px;
+    background: var(--brass);
+    border-radius: 0 2px 2px 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .admin-item:last-child {
+    border-bottom: none;
+  }
+
+  .admin-item__main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Status indicator dot */
+  .admin-item__status {
+    display: none; /* Hide on mobile, show on desktop */
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .admin-item__status--active {
+    background: #81c784;
+    box-shadow: 0 0 8px rgba(129, 199, 132, 0.5);
+  }
+
+  .admin-item__status--inactive {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Avatar - "Wax Seal / Emblem" */
+  .admin-avatar {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--brass), var(--copper));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Bodoni Moda", serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--ink);
+    flex-shrink: 0;
+    position: relative;
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.25),
+      0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+  }
+
+  .admin-avatar--super {
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.2),
+      0 0 0 2px var(--bg-dark),
+      0 0 0 4px var(--gold),
+      0 0 20px rgba(255, 215, 0, 0.25);
+    animation: sealGlow 4s ease-in-out infinite;
+  }
+
+  @keyframes sealGlow {
+    0%, 100% {
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.2),
+        0 0 0 2px var(--bg-dark),
+        0 0 0 4px var(--gold),
+        0 0 20px rgba(255, 215, 0, 0.2);
+    }
+    50% {
+      box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.2),
+        0 0 0 2px var(--bg-dark),
+        0 0 0 4px var(--gold),
+        0 0 30px rgba(255, 215, 0, 0.35);
+    }
+  }
+
+  .admin-item__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-item__name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .admin-item__email {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .admin-item__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+  }
+
+  .role-badge--admin {
+    background: rgba(33, 150, 243, 0.15);
+    color: #64b5f6;
+    border: 1px solid rgba(33, 150, 243, 0.25);
+  }
+
+  .role-badge--super_admin {
+    background: rgba(255, 215, 0, 0.15);
+    color: var(--gold);
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+  }
+
+  /* Last Login Badges */
+  .last-login-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 500;
+  }
+
+  .last-login-badge__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .last-login-badge--active {
+    background: rgba(129, 199, 132, 0.1);
+    color: #81c784;
+  }
+
+  .last-login-badge--active .last-login-badge__dot {
+    background: #81c784;
+  }
+
+  .last-login-badge--recent {
+    background: rgba(129, 199, 132, 0.08);
+    color: rgba(129, 199, 132, 0.8);
+  }
+
+  .last-login-badge--recent .last-login-badge__dot {
+    background: rgba(129, 199, 132, 0.6);
+  }
+
+  .last-login-badge--inactive {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+  }
+
+  .last-login-badge--inactive .last-login-badge__dot {
+    background: #ffc107;
+  }
+
+  .last-login-badge--never {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .last-login-badge--never .last-login-badge__dot {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .admin-item__actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  /* Action Buttons - Micro-Interactions */
+  .action-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.65);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .action-btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: none;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .action-btn--delete {
+    color: #e57373;
+    border-color: rgba(244, 67, 54, 0.25);
+    background: rgba(244, 67, 54, 0.04);
+    transition: all 0.2s ease, box-shadow 0.3s ease;
+  }
+
+  .action-btn--delete:active {
+    background: rgba(244, 67, 54, 0.12);
+    box-shadow: 0 0 12px rgba(244, 67, 54, 0.3);
+  }
+
+  .action-btn--delete svg {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+
+  .action-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+
+  .action-btn:disabled:active {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* You badge */
+  .you-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    background: rgba(129, 199, 132, 0.15);
+    color: #81c784;
+    border-radius: 3px;
+  }
+
+  /* Loading state */
+  .loading-placeholder {
+    text-align: center;
+    padding: 48px 16px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+  }
+
+  /* Empty state */
+  :global(.empty-state) {
+    text-align: center;
+    padding: 48px 16px;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  /* Access Denied State */
+  .access-denied {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 64px 24px;
+    gap: 16px;
+  }
+
+  .access-denied h2 {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--brass);
+  }
+
+  .access-denied p {
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 8px;
+  }
+
+  /* Modal Styles */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .modal-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .modal-backdrop.open .modal {
+    transform: translateY(0);
+  }
+
+  .modal--sm {
+    max-height: 50vh;
+  }
+
+  .modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+    z-index: 1;
+  }
+
+  .modal__title {
+    font-family: "Bodoni Moda", serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--brass);
+  }
+
+  .modal__close {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    border-radius: 50%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .modal__body {
+    padding: 20px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--brass);
+    margin-bottom: 8px;
+  }
+
+  .form-hint {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 6px;
+  }
+
+  .modal__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
+    margin-top: 8px;
+  }
+
+  .modal__actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+
+  .warning-text {
+    color: #e57373;
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+
+  /* Primary Button (Invite Admin) - Lift/Slam Micro-Interactions */
+  .btn--primary {
+    transition: all 0.2s ease;
+  }
+
+  .btn--primary:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 8px rgba(212, 165, 116, 0.2);
+  }
+
+  /* ===== MOBILE PERFORMANCE SAFEGUARDS ===== */
+  @media (max-width: 768px) {
+    /* Disable glow animations on mobile for performance */
+    .admin-avatar--super {
+      animation: none;
+    }
+
+    /* Reduce shadow complexity on mobile */
+    .section::after {
+      display: none;
+    }
+  }
+
+  /* ===== DESKTOP OVERRIDES (769px+) ===== */
+  @media (min-width: 769px) {
+    .settings-page {
+      gap: 32px;
+      max-width: 800px;
+    }
+
+    .page-hero {
+      padding: 28px 24px;
+    }
+
+    .hero-number {
+      font-size: 4rem;
+    }
+
+    .section__header {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+    }
+
+    .filter-tabs {
+      padding: 14px 24px;
+    }
+
+    /* Primary button hover - lift */
+    .btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 165, 116, 0.3);
+    }
+
+    /* Ledger tab hover - subtle reveal */
+    .filter-tab:hover {
+      color: rgba(255, 255, 255, 0.7);
+      background: transparent;
+    }
+
+    .filter-tab:hover:not(.active) {
+      border-bottom-color: rgba(212, 165, 116, 0.3);
+    }
+
+    /* Admin item hover - lift effect */
+    .admin-item:hover {
+      transform: translateY(-2px);
+      background: rgba(212, 165, 116, 0.02);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .admin-item:hover::before {
+      opacity: 1;
+    }
+
+    .admin-item:hover .admin-avatar {
+      transform: scale(1.02);
+    }
+
+    .admin-item {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+    }
+
+    .admin-item__status {
+      display: block;
+      margin-right: 4px;
+    }
+
+    .admin-item__main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .admin-item__meta {
+      margin-top: 4px;
+    }
+
+    .admin-item__actions {
+      border-top: none;
+      padding-top: 0;
+      flex-shrink: 0;
+    }
+
+    .action-btn {
+      flex: none;
+      padding: 8px 14px;
+      font-size: 0.8rem;
+    }
+
+    /* Action button hover - lift */
+    .action-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      color: #fff;
+    }
+
+    /* Delete button hover - red glow intensifies */
+    .action-btn--delete:hover {
+      transform: translateY(-1px);
+      background: rgba(244, 67, 54, 0.08);
+      border-color: rgba(244, 67, 54, 0.4);
+      color: #ef5350;
+      box-shadow: 0 4px 16px rgba(244, 67, 54, 0.2);
+    }
+
+    .action-btn--delete:hover svg {
+      opacity: 1;
+    }
+
+    /* Modal - centered on desktop */
+    .modal-backdrop {
+      align-items: center;
+    }
+
+    .modal {
+      border-radius: 16px;
+      max-width: 440px;
+      transform: translateY(20px);
+    }
+
+    .modal--sm {
+      max-width: 380px;
+      max-height: 90vh;
+    }
+
+    .modal__header {
+      padding: 20px 24px;
+    }
+
+    .modal__body {
+      padding: 24px;
+    }
+
+    .modal__actions {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+
+    .modal__actions .btn {
+      width: auto;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+<script>
+  let admins = [];
+  let currentUserEmail = '';
+  let deletingAdminId = null;
+  let currentFilter = 'all';
+
+  window.addEventListener('adminReady', async ({ detail: { supabase, adminUser } }) => {
+    // Check if user is super_admin
+    if (adminUser.role !== 'super_admin') {
+      document.getElementById('accessDenied').style.display = 'flex';
+      return;
+    }
+
+    // Get current user email for "You" badge
+    const { data: { session } } = await supabase.auth.getSession();
+    currentUserEmail = session?.user?.email || '';
+
+    // Show settings page
+    document.getElementById('settingsPage').style.display = 'flex';
+
+    await loadAdmins(supabase);
+    setupEventListeners(supabase);
+  });
+
+  async function loadAdmins(supabase) {
+    const { data, error } = await supabase
+      .from('admin_users')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      console.error('Failed to load admins:', error);
+      document.getElementById('adminList').innerHTML = '<div class="loading-placeholder">Failed to load admins</div>';
+      return;
+    }
+
+    admins = data || [];
+    updateHeroStat();
+    updateFilterCounts();
+    renderAdmins();
+  }
+
+  function updateHeroStat() {
+    const total = admins.length;
+    const superCount = admins.filter(a => a.role === 'super_admin').length;
+    const adminCount = admins.filter(a => a.role === 'admin').length;
+
+    document.getElementById('adminCount').textContent = total;
+
+    const contextParts = [];
+    if (superCount > 0) contextParts.push(`${superCount} super admin${superCount > 1 ? 's' : ''}`);
+    if (adminCount > 0) contextParts.push(`${adminCount} admin${adminCount > 1 ? 's' : ''}`);
+
+    document.getElementById('adminContext').textContent = contextParts.join(' · ') || 'no admins yet';
+  }
+
+  function updateFilterCounts() {
+    document.getElementById('countAll').textContent = admins.length;
+    document.getElementById('countSuper').textContent = admins.filter(a => a.role === 'super_admin').length;
+    document.getElementById('countAdmin').textContent = admins.filter(a => a.role === 'admin').length;
+  }
+
+  function getLoginStatus(lastLogin) {
+    if (!lastLogin) {
+      return { class: 'never', label: 'Never logged in', isActive: false };
+    }
+
+    const loginDate = new Date(lastLogin);
+    const now = new Date();
+    const diffDays = Math.floor((now - loginDate) / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return { class: 'active', label: 'Active today', isActive: true };
+    } else if (diffDays <= 7) {
+      return { class: 'recent', label: 'Active this week', isActive: true };
+    } else {
+      return { class: 'inactive', label: `Inactive ${diffDays}+ days`, isActive: false };
+    }
+  }
+
+  function renderAdmins() {
+    const container = document.getElementById('adminList');
+
+    // Apply filter
+    let filtered = admins;
+    if (currentFilter === 'super_admin') {
+      filtered = admins.filter(a => a.role === 'super_admin');
+    } else if (currentFilter === 'admin') {
+      filtered = admins.filter(a => a.role === 'admin');
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="empty-state">No admins found</div>';
+      return;
+    }
+
+    container.innerHTML = filtered.map(admin => {
+      const isCurrentUser = admin.email === currentUserEmail;
+      const displayName = admin.name || admin.email.split('@')[0];
+      const initial = displayName[0].toUpperCase();
+      const roleLabel = admin.role === 'super_admin' ? 'Super Admin' : 'Admin';
+      const loginStatus = getLoginStatus(admin.last_login);
+
+      return `
+        <div class="admin-item" data-id="${admin.id}">
+          <div class="admin-item__main">
+            <div class="admin-item__status admin-item__status--${loginStatus.isActive ? 'active' : 'inactive'}"></div>
+            <div class="admin-avatar ${admin.role === 'super_admin' ? 'admin-avatar--super' : ''}">${initial}</div>
+            <div class="admin-item__info">
+              <div class="admin-item__name">
+                ${displayName}
+                ${isCurrentUser ? '<span class="you-badge">You</span>' : ''}
+              </div>
+              <div class="admin-item__email">${admin.email}</div>
+              <div class="admin-item__meta">
+                <span class="role-badge role-badge--${admin.role}">${roleLabel}</span>
+                <span class="last-login-badge last-login-badge--${loginStatus.class}">
+                  <span class="last-login-badge__dot"></span>
+                  ${loginStatus.label}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="admin-item__actions">
+            <button class="action-btn action-btn--delete delete-btn" data-id="${admin.id}" ${isCurrentUser ? 'disabled title="Cannot remove yourself"' : ''}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              Remove
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function setupEventListeners(supabase) {
+    const inviteModal = document.getElementById('inviteModal');
+    const deleteModal = document.getElementById('deleteModal');
+    const inviteForm = document.getElementById('inviteForm');
+
+    // Filter tabs
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentFilter = tab.dataset.filter;
+        renderAdmins();
+      });
+    });
+
+    // Open invite modal
+    document.getElementById('inviteAdminBtn').addEventListener('click', () => {
+      inviteForm.reset();
+      inviteModal.classList.add('open');
+    });
+
+    // Close invite modal
+    document.getElementById('closeInviteModal').addEventListener('click', () => inviteModal.classList.remove('open'));
+    document.getElementById('cancelInvite').addEventListener('click', () => inviteModal.classList.remove('open'));
+    inviteModal.addEventListener('click', (e) => {
+      if (e.target === inviteModal) inviteModal.classList.remove('open');
+    });
+
+    // Submit invite form
+    inviteForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+      const name = document.getElementById('adminName').value.trim() || null;
+      const role = document.getElementById('adminRole').value;
+
+      // Check if email already exists
+      if (admins.some(a => a.email === email)) {
+        alert('This email is already an admin.');
+        return;
+      }
+
+      try {
+        const { error } = await supabase.from('admin_users').insert({
+          email,
+          name,
+          role
+        });
+
+        if (error) throw error;
+
+        inviteModal.classList.remove('open');
+        window.showToast?.(`${name || email} added as admin`, 'success');
+        await loadAdmins(supabase);
+      } catch (err) {
+        console.error('Failed to add admin:', err);
+        alert('Failed to add admin. Please try again.');
+      }
+    });
+
+    // Delete admin
+    document.getElementById('adminList').addEventListener('click', (e) => {
+      if (e.target.classList.contains('delete-btn') && !e.target.disabled) {
+        const id = e.target.dataset.id;
+        const admin = admins.find(a => a.id === id);
+        if (admin) {
+          deletingAdminId = id;
+          document.getElementById('deleteAdminName').textContent = admin.name || admin.email;
+          deleteModal.classList.add('open');
+        }
+      }
+    });
+
+    // Close delete modal
+    document.getElementById('cancelDelete').addEventListener('click', () => deleteModal.classList.remove('open'));
+    deleteModal.addEventListener('click', (e) => {
+      if (e.target === deleteModal) deleteModal.classList.remove('open');
+    });
+
+    // Confirm delete
+    document.getElementById('confirmDelete').addEventListener('click', async () => {
+      if (!deletingAdminId) return;
+
+      try {
+        const { error } = await supabase.from('admin_users').delete().eq('id', deletingAdminId);
+
+        if (error) throw error;
+
+        deleteModal.classList.remove('open');
+        window.showToast?.('Admin removed', 'success');
+        await loadAdmins(supabase);
+      } catch (err) {
+        console.error('Failed to remove admin:', err);
+        alert('Failed to remove admin. Please try again.');
+      }
+
+      deletingAdminId = null;
+    });
+  }
+</script>
