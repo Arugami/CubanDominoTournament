@@ -3164,19 +3164,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Badge reveal - simple scale entrance */
-      @keyframes badgeReveal {
-        0% {
-          opacity: 0;
-          transform: scale(0.8) translateY(10px);
-          filter: blur(4px);
-        }
-        60% {
-          transform: scale(1.02) translateY(0);
-        }
-        100% {
-          opacity: 1;
-          transform: scale(1) translateY(0);
-          filter: blur(0);
+	      @keyframes badgeReveal {
+	        0% {
+	          opacity: 0;
+	          transform: scale(0.86) translateY(8px);
+	          filter: blur(3px);
+	        }
+	        60% {
+	          transform: scale(1.015) translateY(0);
+	        }
+	        100% {
+	          opacity: 1;
+	          transform: scale(1) translateY(0);
+	          filter: blur(0);
         }
       }
 
@@ -3249,10 +3249,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: seatImpactRing 0.6s cubic-bezier(0.16, 1, 0.3, 1) 2.35s forwards;
       }
 
-      @keyframes seatImpactRing {
-        0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
-        100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
-      }
+	      @keyframes seatImpactRing {
+	        0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.6; }
+	        100% { transform: translate(-50%, -50%) scale(2.3); opacity: 0; }
+	      }
 
       .panel--slam.has-played .slam-word--all::before {
         display: none;
@@ -3403,54 +3403,54 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      @keyframes slamWord {
-        0% {
-          opacity: 0;
-          transform: translateY(-20px) scale(1.1);
-          filter: blur(4px);
-        }
-        100% {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-          filter: blur(0);
-        }
-      }
+	      @keyframes slamWord {
+	        0% {
+	          opacity: 0;
+	          transform: translateY(-14px) scale(1.06);
+	          filter: blur(3px);
+	        }
+	        100% {
+	          opacity: 1;
+	          transform: translateY(0) scale(1);
+	          filter: blur(0);
+	        }
+	      }
 
-      @keyframes slamFinal {
-        0% {
-          opacity: 0;
-          transform: translateY(-60px) scale(1.4);
-          filter: blur(12px);
-          text-shadow:
-            0 0 30px rgba(255, 255, 255, 0),
-            0 0 60px rgba(212, 165, 116, 0),
-            0 4px 30px rgba(0, 0, 0, 0.8);
-        }
-        /* THE IMPACT - the "thwack" moment */
-        45% {
-          opacity: 1;
-          transform: translateY(12px) scale(0.92);
-          filter: blur(0) brightness(1.15);
-          text-shadow:
-            0 0 40px rgba(255, 255, 255, 0.5),
-            0 0 80px rgba(212, 165, 116, 0.8),
-            0 0 120px rgba(212, 165, 116, 0.6),
-            0 6px 40px rgba(0, 0, 0, 0.9);
-        }
-        /* First rebound */
-        60% {
-          transform: translateY(-6px) scale(1.02);
-          filter: blur(0) brightness(1.08);
-        }
-        /* Micro-settle */
-        75% {
-          transform: translateY(2px) scale(0.995);
-          filter: blur(0) brightness(1.03);
-        }
-        /* Final rest */
-        100% {
-          opacity: 1;
-          transform: translateY(0) scale(1);
+	      @keyframes slamFinal {
+	        0% {
+	          opacity: 0;
+	          transform: translateY(-48px) scale(1.28);
+	          filter: blur(10px);
+	          text-shadow:
+	            0 0 30px rgba(255, 255, 255, 0),
+	            0 0 60px rgba(212, 165, 116, 0),
+	            0 4px 30px rgba(0, 0, 0, 0.8);
+	        }
+	        /* THE IMPACT - the "thwack" moment */
+	        45% {
+	          opacity: 1;
+	          transform: translateY(10px) scale(0.96);
+	          filter: blur(0) brightness(1.1);
+	          text-shadow:
+	            0 0 34px rgba(255, 255, 255, 0.45),
+	            0 0 70px rgba(212, 165, 116, 0.75),
+	            0 0 110px rgba(212, 165, 116, 0.55),
+	            0 6px 40px rgba(0, 0, 0, 0.9);
+	        }
+	        /* First rebound */
+	        60% {
+	          transform: translateY(-4px) scale(1.01);
+	          filter: blur(0) brightness(1.06);
+	        }
+	        /* Micro-settle */
+	        75% {
+	          transform: translateY(1px) scale(0.998);
+	          filter: blur(0) brightness(1.02);
+	        }
+	        /* Final rest */
+	        100% {
+	          opacity: 1;
+	          transform: translateY(0) scale(1);
           filter: blur(0) brightness(1);
           text-shadow:
             0 0 30px rgba(255, 255, 255, 0.3),
@@ -3461,21 +3461,40 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Slogan landing - the signature moment, elegant arrival */
-      @keyframes sloganLanding {
-        0% {
-          opacity: 0;
-          transform: translateY(15px);
-          filter: blur(6px);
-        }
-        100% {
-          opacity: 1;
-          transform: translateY(0);
-          filter: blur(0);
-        }
-      }
+	      @keyframes sloganLanding {
+	        0% {
+	          opacity: 0;
+	          transform: translateY(12px);
+	          filter: blur(5px);
+	        }
+	        100% {
+	          opacity: 1;
+	          transform: translateY(0);
+	          filter: blur(0);
+	        }
+	      }
 
-      /* Panel 4 uses the original slamFinal and sloganLanding animations.
-         "One moment, one effect" - the domino SLAMS once. */
+	      /* Panel 4 uses the original slamFinal and sloganLanding animations.
+	         "One moment, one effect" - the domino SLAMS once. */
+
+	      @media (prefers-reduced-motion: reduce) {
+	        .slam-context,
+	        .slam-badge,
+	        .slam-word,
+	        .slam-slogan,
+	        .slam-scroll-hint {
+	          animation: none !important;
+	          opacity: 1 !important;
+	          transform: none !important;
+	          filter: none !important;
+	        }
+	        .slam-context {
+	          opacity: 0.75 !important;
+	        }
+	        .slam-word--all::before {
+	          display: none !important;
+	        }
+	      }
 
       /* Mobile adjustments for cinematic panels */
       @media (max-width: 768px) {
@@ -4115,12 +4134,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .chat-header__title {
-        font-family: "Bodoni Moda", serif;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
         font-weight: 700;
         font-size: 1.1rem;
         color: var(--brass);
         text-transform: uppercase;
-        letter-spacing: 0.15em; /* Wes: precisely 0.15em */
+        letter-spacing: 0.12em;
         text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         position: relative;
         padding-bottom: 8px;
@@ -4422,8 +4441,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transition: transform 0.15s ease;
       }
 
-      .avatar-option:hover .avatar-flag-pixel {
-        transform: scale(1.15);
+      @media (hover: hover) and (pointer: fine) {
+        .avatar-option:hover .avatar-flag-pixel {
+          transform: scale(1.15);
+        }
       }
 
       .avatar-option.selected .avatar-flag-pixel {
@@ -5017,10 +5038,112 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transition: opacity 200ms ease, transform 200ms ease;
       }
 
+      .mesa-help__kicker {
+        display: none;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: rgba(212, 165, 116, 0.75);
+        margin: 0 0 6px 0;
+        text-align: center;
+      }
+
       .mesa-help.is-visible {
         opacity: 1;
         transform: translateY(0);
         pointer-events: auto;
+      }
+
+      /* Variant previews: set via `?mesaTip=plaque|broadcast|whisper` */
+      :root[data-mesa-tooltip="plaque"] .mesa-help__kicker {
+        display: none;
+      }
+
+      :root[data-mesa-tooltip="broadcast"] .mesa-help {
+        background: linear-gradient(135deg, rgba(8, 6, 5, 0.98) 0%, rgba(5, 4, 3, 0.98) 100%);
+        border-color: rgba(212, 165, 116, 0.28);
+        border-radius: 4px;
+        box-shadow:
+          0 14px 44px rgba(0, 0, 0, 0.72),
+          0 0 40px rgba(212, 165, 116, 0.06),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      }
+
+      :root[data-mesa-tooltip="broadcast"] .mesa-help::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 10px;
+        background: linear-gradient(180deg, #d40000 0%, #8a0000 100%);
+        clip-path: polygon(0 0, 100% 0, 70% 100%, 0 100%);
+        opacity: 0.9;
+      }
+
+      :root[data-mesa-tooltip="broadcast"] .mesa-help__content {
+        padding-left: 18px;
+      }
+
+      :root[data-mesa-tooltip="broadcast"] .mesa-help__kicker {
+        display: block;
+        color: rgba(255, 255, 255, 0.75);
+        letter-spacing: 0.18em;
+      }
+
+      :root[data-mesa-tooltip="broadcast"] .mesa-help__text {
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        line-height: 1.25;
+      }
+
+      :root[data-mesa-tooltip="broadcast"] .mesa-help__highlight {
+        -webkit-text-fill-color: unset;
+        color: #ffffff;
+        background: none;
+        text-shadow: 0 0 18px rgba(212, 165, 116, 0.22);
+      }
+
+      :root[data-mesa-tooltip="broadcast"] .mesa-help__arrow {
+        border-top-color: rgba(8, 6, 5, 0.98);
+      }
+
+      :root[data-mesa-tooltip="broadcast"] .mesa-help__arrow::before {
+        border-top-color: rgba(212, 165, 116, 0.28);
+      }
+
+      :root[data-mesa-tooltip="whisper"] .mesa-help {
+        background: rgba(28, 19, 15, 0.72);
+        border-color: rgba(212, 165, 116, 0.18);
+        border-radius: 14px;
+        box-shadow:
+          0 10px 32px rgba(0, 0, 0, 0.45),
+          0 0 50px rgba(212, 165, 116, 0.05),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+
+      :root[data-mesa-tooltip="whisper"] .mesa-help__kicker {
+        display: block;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        opacity: 0.85;
+      }
+
+      :root[data-mesa-tooltip="whisper"] .mesa-help__text {
+        color: rgba(255, 255, 255, 0.82);
+      }
+
+      :root[data-mesa-tooltip="whisper"] .mesa-help__arrow {
+        border-top-color: rgba(28, 19, 15, 0.72);
+      }
+
+      :root[data-mesa-tooltip="whisper"] .mesa-help__arrow::before {
+        border-top-color: rgba(212, 165, 116, 0.18);
       }
 
       /* Downward-pointing arrow */
@@ -6204,7 +6327,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .chat-identity__title { animation-delay: 0ms; }
       .chat-identity__subtitle { animation-delay: 100ms; }
       .mesa-live-indicator { animation-delay: 200ms; }
-      .avatar-selector { animation-delay: 340ms; }
+      .avatar-selector-frame { animation-delay: 340ms; }
       .chat-identity__select { animation-delay: 480ms; }
       .chat-identity__input { animation-delay: 480ms; }
       .chat-identity__register-hint { animation-delay: 600ms; }
@@ -6305,19 +6428,65 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-weight: 600;
       }
 
-      /* Flag selector - Scrollable, starts with Cuba */
+      /* Flag selector - Scrollable, starts with Cuba
+         Tobias: "Micro-moments" — it should feel like a tray that settles. */
+      .avatar-selector-frame {
+        width: 100%;
+        max-width: 500px; /* Reasonable constraint */
+        margin: 14px auto;
+        position: relative;
+        z-index: 1;
+        isolation: isolate;
+      }
+
+      /* Edge fades - hint continuation without UI chrome */
+      .avatar-selector-frame::before,
+      .avatar-selector-frame::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 64px;
+        pointer-events: none;
+        z-index: 3;
+      }
+      .avatar-selector-frame::before {
+        left: 0;
+        background: linear-gradient(90deg, rgba(10, 7, 5, 0.88), rgba(10, 7, 5, 0));
+      }
+      .avatar-selector-frame::after {
+        right: 0;
+        background: linear-gradient(270deg, rgba(10, 7, 5, 0.88), rgba(10, 7, 5, 0));
+      }
+
+      /* Center seat cue - a faint offering circle */
+      .avatar-selector__center-cue {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 54px;
+        height: 54px;
+        transform: translate(-50%, -50%);
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(212, 165, 116, 0.09) 0%, transparent 62%);
+        box-shadow:
+          0 0 0 1px rgba(212, 165, 116, 0.12),
+          0 0 28px rgba(212, 165, 116, 0.12);
+        opacity: 0.7;
+        pointer-events: none;
+        z-index: 0;
+      }
+
       .avatar-selector {
         display: flex;
         flex-wrap: nowrap;
         justify-content: flex-start; /* Start from left so Cuba shows first */
         align-items: center;
         gap: 12px;
-        margin: 14px auto;
         /* Give the glow room so it never clips on pulse/slam */
         padding: 30px 32px;
         overflow-x: auto;
         overflow-y: visible;
-        max-width: 500px; /* Reasonable constraint */
         width: 100%;
         box-sizing: border-box;
         position: relative;
@@ -6359,18 +6528,28 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         user-select: none;
         touch-action: manipulation;
         scroll-snap-align: center;
+        scroll-snap-stop: always;
         z-index: 1;
       }
 
-      /* Hover: smooth lift */
-      .avatar-option:hover {
-        transform: translateY(-4px) scale(1.08);
-        z-index: 10;
+      @media (hover: hover) and (pointer: fine) {
+        /* Hover: smooth lift */
+        .avatar-option:hover {
+          transform: translateY(-4px) scale(1.08);
+          z-index: 10;
+        }
+
+        .avatar-option:active {
+          transform: scale(0.96);
+          transition: transform 0.1s ease;
+        }
       }
 
-      .avatar-option:active {
-        transform: scale(0.96);
-        transition: transform 0.1s ease;
+      @media (hover: none) and (pointer: coarse) {
+        /* iOS Safari: avoid transform-fighting between :active + slam animation */
+        .avatar-option:active {
+          filter: brightness(1.15) saturate(1.08);
+        }
       }
 
       /* PLANT YOUR FLAG - selected state */
@@ -6436,6 +6615,28 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: translateY(-3px) scale(1.02);
         filter: grayscale(0);
         transition: all 0.2s ease-out;
+      }
+      @media (hover: none) and (pointer: coarse) {
+        .avatar-selector:has(.selected) .avatar-option:not(.selected):hover {
+          opacity: 0.4;
+          transform: scale(0.85);
+          filter: grayscale(0.35);
+        }
+      }
+
+      /* While scrolling: the closest flag "breathes" toward center (not a selection) */
+      .avatar-option.is-centered:not(.selected) {
+        opacity: 0.9;
+        transform: translateY(-2px) scale(1.02);
+        filter: grayscale(0.08) contrast(1.2) saturate(1.25);
+      }
+      .avatar-selector:has(.selected) .avatar-option.is-centered:not(.selected) {
+        opacity: 0.85;
+        transform: translateY(-2px) scale(0.98);
+        filter: grayscale(0.08) contrast(1.2) saturate(1.25);
+      }
+      .avatar-option.is-centered:not(.selected) .avatar-flag-pixel {
+        transform: scale(1.06);
       }
 
       .avatar-option .check-mark { display: none; }
@@ -6937,8 +7138,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           transform: none;
         }
 
-        .avatar-selector {
+        .avatar-selector-frame {
           margin: 12px 0 16px 0;
+        }
+
+        .avatar-selector {
           gap: 10px;
           /* Mobile needs extra headroom for glow + slam */
           padding: 26px 20px;
@@ -6982,6 +7186,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         align-items: center;
         justify-content: flex-start; /* Start from top so button isn't cut off */
         box-sizing: border-box;
+        position: relative;
+        isolation: isolate;
         /* Base `.panel` uses `overflow: hidden`; allow the form scene to scroll when content exceeds the viewport. */
         overflow-x: hidden;
         overflow-y: auto;
@@ -7001,10 +7207,27 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           linear-gradient(180deg, #0a0705 0%, #1a120d 35%, #120c08 70%, #0d0906 100%);
       }
 
+      /* Bridge into the footer panel — a soft dissolve, not a hard cut */
+      .panel--form::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: clamp(120px, 22dvh, 240px);
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(183, 106, 59, 0.08) 0%, transparent 55%),
+          linear-gradient(to bottom, rgba(10, 7, 5, 0) 0%, rgba(10, 7, 5, 0.92) 55%, rgba(10, 7, 5, 1) 100%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
       /* Form panel content - cinematic entrance as its own scene */
       .panel--form .panel-content {
         opacity: 0;
         transform: translateY(8px);
+        position: relative;
+        z-index: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -7053,6 +7276,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         align-items: center;
         justify-content: center;
         position: relative;
+        background: #0a0705; /* Dark base so the lounge reveal feels intentional */
+        isolation: isolate;
       }
 
       /* Background image layer */
@@ -7062,9 +7287,36 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background-size: cover;
         background-position: center 40%;
         z-index: 0;
+        opacity: 0;
+        filter: blur(2px) brightness(0.55) saturate(0.9);
+        transform: scale(1.08);
+        transition: opacity 0.8s ease-out, filter 0.9s ease-out, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      /* Overlay - vignette for depth, lets lounge show through */
+      /* Footer reveal — the lounge fades in as you arrive (prevents harsh snap cut) */
+      .panel--exit.in-view .panel-bg--exit {
+        opacity: 1;
+        filter: blur(0) brightness(0.65) saturate(1);
+        transform: scale(1.05);
+      }
+
+      /* Top dissolve — matches the form panel’s bottom vignette */
+      .panel--exit::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(10, 7, 5, 1) 0%,
+          rgba(10, 7, 5, 0.92) 18%,
+          rgba(10, 7, 5, 0.55) 42%,
+          rgba(10, 7, 5, 0) 70%
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Overlay - deeper darkness for legibility, still cinematic */
       .panel-overlay--exit {
         position: absolute;
         inset: 0;
@@ -7072,15 +7324,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background:
           /* Vignette for depth */
           radial-gradient(ellipse 80% 70% at 50% 50%,
-            rgba(10, 7, 5, 0.3) 0%,
-            rgba(10, 7, 5, 0.6) 60%,
-            rgba(10, 7, 5, 0.8) 100%
+            rgba(10, 7, 5, 0.55) 0%,
+            rgba(10, 7, 5, 0.78) 55%,
+            rgba(10, 7, 5, 0.94) 100%
           ),
           /* Subtle overall dim */
           linear-gradient(180deg,
-            rgba(10, 7, 5, 0.5) 0%,
-            rgba(10, 7, 5, 0.4) 50%,
-            rgba(10, 7, 5, 0.6) 100%
+            rgba(10, 7, 5, 0.72) 0%,
+            rgba(10, 7, 5, 0.62) 50%,
+            rgba(10, 7, 5, 0.82) 100%
           );
       }
 
@@ -7093,6 +7345,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-direction: column;
         align-items: center;
         gap: 32px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.65s ease-out, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .panel--exit.in-view .exit-content {
+        opacity: 1;
+        transform: translateY(0);
       }
 
       /* Subtle warmth at center - ember memory */
@@ -7164,13 +7424,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         width: 100%;
         padding: 32px 5vw;
         /* Floating plaque effect */
-        background: linear-gradient(
-          145deg,
-          rgba(18, 12, 8, 0.92) 0%,
-          rgba(10, 7, 5, 0.95) 100%
-        );
-        border: 1px solid rgba(212, 165, 116, 0.2);
-        border-radius: 12px;
+        background:
+          radial-gradient(ellipse at 50% 18%, rgba(212, 165, 116, 0.055) 0%, transparent 55%),
+          linear-gradient(145deg, rgba(18, 12, 8, 0.92) 0%, rgba(10, 7, 5, 0.95) 100%);
+        border: 1px solid rgba(212, 165, 116, 0.18);
+        border-radius: 10px; /* Less "UI card", more machined plaque */
         /* Depth - floating in the room */
         box-shadow:
           0 0 60px rgba(0, 0, 0, 0.8),
@@ -7180,6 +7438,39 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         /* Subtle backdrop blur for depth */
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
+      }
+
+      /* Engraved inner border - "carved/inlaid", not a big UI frame */
+      .rules-plaque::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(212, 165, 116, 0.12);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.04),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.45);
+        pointer-events: none;
+        opacity: 0.9;
+      }
+
+      /* Subtle brushed grain - felt, not seen */
+      .rules-plaque::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+        background: linear-gradient(
+          115deg,
+          rgba(255, 255, 255, 0.02) 0%,
+          rgba(255, 255, 255, 0) 22%,
+          rgba(255, 255, 255, 0.02) 45%,
+          rgba(0, 0, 0, 0) 70%,
+          rgba(255, 255, 255, 0.015) 100%
+        );
+        pointer-events: none;
+        opacity: 0.35;
+        mix-blend-mode: soft-light;
       }
 
 	      /* Header section - tightly coupled */
@@ -7279,13 +7570,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Primary rules - subtle left accent, slightly more presence */
       .rule-card--primary {
-        border-left: 2px solid rgba(212, 165, 116, 0.4);
+        grid-column: 1 / -1; /* Break the perfect grid: two "primary" rules feel primary */
+        border: 1px solid rgba(212, 165, 116, 0.16);
+        border-bottom-color: rgba(212, 165, 116, 0.28);
         background:
           linear-gradient(145deg, rgba(35, 25, 18, 0.85) 0%, rgba(18, 12, 8, 0.95) 100%);
         box-shadow:
           0 1px 0 rgba(255, 255, 255, 0.03) inset,
           0 -1px 0 rgba(0, 0, 0, 0.3) inset,
           0 8px 24px rgba(0, 0, 0, 0.4);
+        padding: 16px 16px;
       }
 
       .rule-card--primary .rule-card__title {
@@ -7306,7 +7600,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .rule-card__desc {
         font-family: "IBM Plex Sans", sans-serif;
         font-size: 0.65rem;
-        color: rgba(255, 255, 255, 0.4);
+        color: rgba(255, 255, 255, 0.48);
         letter-spacing: 0.02em;
         line-height: 1.3;
         margin: 0;
@@ -7322,7 +7616,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .rule-card--primary:hover {
-        border-left-color: rgba(212, 165, 116, 0.5);
+        border-color: rgba(212, 165, 116, 0.26);
+        border-bottom-color: rgba(212, 165, 116, 0.35);
       }
 
       /* Footer section - tightly coupled */
@@ -7928,7 +8223,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 20px rgba(212, 165, 116, 0.15);
       }
 
-      /* Inline Scarcity - Retro NBA Jam Arcade Scoreboard */
+      /* Inline Scarcity - Broadcast plaque (CDL-native) */
       .form-scarcity {
         display: flex;
         align-items: center;
@@ -7943,84 +8238,175 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: center;
         min-width: 56px;
         padding: 8px 14px;
-        /* Arcade cabinet bezel */
-        background:
-          linear-gradient(180deg,
-            #1a0f08 0%,
-            #0d0704 20%,
-            #0a0503 50%,
-            #0d0704 80%,
-            #1a0f08 100%);
-        border: 3px solid #2a1a10;
-        border-radius: 6px;
-        /* Deep arcade screen inset */
+        border-radius: 10px;
+        background: linear-gradient(180deg, rgba(28, 19, 15, 0.95) 0%, rgba(14, 9, 6, 0.98) 100%);
+        border: 1px solid rgba(212, 165, 116, 0.22);
         box-shadow:
-          inset 0 3px 12px rgba(0, 0, 0, 0.9),
-          inset 0 -2px 6px rgba(183, 106, 59, 0.15),
-          0 0 0 1px rgba(0, 0, 0, 0.8),
-          0 4px 12px rgba(0, 0, 0, 0.6),
-          0 0 20px rgba(183, 106, 59, 0.1);
+          inset 0 1px 0 rgba(212, 165, 116, 0.08),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+          0 14px 40px rgba(0, 0, 0, 0.45),
+          0 0 40px rgba(212, 165, 116, 0.06);
+        overflow: hidden;
       }
 
-      /* CRT scan-line effect */
       .form-scarcity__display::before {
-        content: '';
+        content: "";
+        position: absolute;
+        inset: 2px;
+        border-radius: 8px;
+        border: 1px solid rgba(212, 165, 116, 0.12);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        pointer-events: none;
+      }
+
+      .form-scarcity__display::after {
+        content: "";
         position: absolute;
         inset: 0;
-        background: repeating-linear-gradient(
-          0deg,
-          transparent,
-          transparent 2px,
-          rgba(0, 0, 0, 0.15) 2px,
-          rgba(0, 0, 0, 0.15) 4px
-        );
-        border-radius: 4px;
+        border-radius: 10px;
+        background:
+          radial-gradient(ellipse at 30% 10%, rgba(212, 0, 0, 0.08) 0%, transparent 60%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
         pointer-events: none;
       }
 
       .form-scarcity__number {
-        font-family: "Bodoni Moda", serif;
-        font-size: 1.75rem;
-        font-weight: 900;
-        font-style: italic;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
         line-height: 1;
-        /* Hot arcade LED glow */
-        color: #e8c87a;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.02em;
+        color: rgba(212, 165, 116, 0.95);
         text-shadow:
-          0 0 8px rgba(232, 200, 122, 0.9),
-          0 0 16px rgba(232, 200, 122, 0.6),
-          0 0 32px rgba(212, 165, 116, 0.4),
-          0 0 48px rgba(183, 106, 59, 0.3);
-        animation: arcadeGlow 1.5s ease-in-out infinite;
+          0 0 18px rgba(212, 165, 116, 0.18),
+          0 2px 10px rgba(0, 0, 0, 0.65);
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        transition:
+          transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 240ms cubic-bezier(0.16, 1, 0.3, 1),
+          filter 240ms cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      @keyframes arcadeGlow {
-        0%, 100% {
-          color: #e8c87a;
-          text-shadow:
-            0 0 8px rgba(232, 200, 122, 0.9),
-            0 0 16px rgba(232, 200, 122, 0.6),
-            0 0 32px rgba(212, 165, 116, 0.4),
-            0 0 48px rgba(183, 106, 59, 0.3);
-        }
-        50% {
-          color: #f5d88a;
-          text-shadow:
-            0 0 12px rgba(245, 216, 138, 1),
-            0 0 24px rgba(232, 200, 122, 0.8),
-            0 0 48px rgba(212, 165, 116, 0.5),
-            0 0 64px rgba(183, 106, 59, 0.4);
-        }
+      .form-scarcity__number--next {
+        opacity: 0;
+        filter: blur(1px);
+        transform: translate(-50%, -70%);
+        pointer-events: none;
+      }
+
+      .form-scarcity__display.is-tick .form-scarcity__number {
+        transform: translate(-50%, -30%);
+        opacity: 0;
+        filter: blur(1px);
+      }
+
+      .form-scarcity__display.is-tick .form-scarcity__number--next {
+        opacity: 1;
+        filter: blur(0);
+        transform: translate(-50%, -50%);
       }
 
       .form-scarcity__label {
         font-family: "IBM Plex Sans Condensed", sans-serif;
         font-size: 0.7rem;
         font-weight: 700;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: rgba(212, 165, 116, 0.5);
-        text-shadow: 0 0 8px rgba(183, 106, 59, 0.2);
+        color: rgba(255, 255, 255, 0.62);
+        text-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+        position: relative;
+        padding-left: 14px;
+      }
+
+      .form-scarcity__label::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: linear-gradient(180deg, rgba(212, 0, 0, 0.9) 0%, rgba(138, 0, 0, 0.9) 100%);
+        box-shadow: 0 0 10px rgba(212, 0, 0, 0.18);
+      }
+
+      /* Micro-moment: pop when updated */
+      .form-scarcity.is-pop .form-scarcity__display {
+        animation: scarcityPop 260ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      @keyframes scarcityPop {
+        0% { transform: translateY(0) scale(1); }
+        45% { transform: translateY(-1px) scale(1.03); }
+        100% { transform: translateY(0) scale(1); }
+      }
+
+      /* Heat mode (few seats left) — more broadcast urgency, still CDL */
+      .form-scarcity.is-hot .form-scarcity__display {
+        border-color: rgba(212, 0, 0, 0.42);
+        box-shadow:
+          inset 0 1px 0 rgba(212, 165, 116, 0.08),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+          0 14px 40px rgba(0, 0, 0, 0.45),
+          0 0 42px rgba(212, 0, 0, 0.06),
+          0 0 40px rgba(212, 165, 116, 0.07);
+      }
+
+      .form-scarcity.is-hot .form-scarcity__label::before {
+        animation: liveDotPulse 1.2s ease-in-out infinite;
+      }
+
+      @keyframes liveDotPulse {
+        0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.95; }
+        50% { transform: translateY(-50%) scale(0.72); opacity: 0.55; }
+      }
+
+      .form-scarcity.is-hot .form-scarcity__label {
+        color: rgba(255, 255, 255, 0.78);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .form-scarcity.is-pop .form-scarcity__display {
+          animation: none;
+        }
+        .form-scarcity.is-hot .form-scarcity__label::before {
+          animation: none;
+        }
+        .form-scarcity__number {
+          transition: none;
+        }
+      }
+
+      /* Subtle connection: when a seat ticks down, the form responds */
+      .form-shell.is-seat-shift {
+        border-color: rgba(212, 165, 116, 0.32);
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.04) inset,
+          0 20px 50px rgba(0, 0, 0, 0.5),
+          0 0 100px rgba(0, 0, 0, 0.3),
+          0 0 80px rgba(183, 106, 59, 0.08),
+          0 0 120px rgba(212, 165, 116, 0.07),
+          0 0 70px rgba(212, 0, 0, 0.03);
+      }
+
+      .form-shell.is-seat-shift::before {
+        border-color: rgba(212, 0, 0, 0.12);
+      }
+
+      .form-shell.is-seat-shift .form-section--primary {
+        border-bottom-color: rgba(212, 0, 0, 0.16);
+      }
+
+      .form-shell.is-seat-shift .form-section--primary .input-wrapper::after {
+        background: rgba(212, 0, 0, 0.35);
+        height: 2px;
+        transform: skewX(0);
+        box-shadow: 0 2px 12px rgba(212, 0, 0, 0.12);
       }
 
       /* Form Header - Scarcity + Tagline */
@@ -8328,6 +8714,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--brass);
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
       }
 
       .footer-contact__link {
@@ -8337,6 +8724,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-decoration: none;
         transition: color 0.2s ease;
         position: relative;
+        text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9);
       }
 
       .footer-contact__link::after {
@@ -8440,9 +8828,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: radial-gradient(ellipse at center top, rgba(30, 20, 15, 0.98) 0%, rgba(10, 7, 5, 0.99) 100%);
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: center; /* Tobias: "The room feels full, not empty" */
         text-align: center;
-        padding: max(20px, 4dvh) 24px max(16px, 3dvh); /* Compact mobile padding */
+        /* Keep content comfortably above fixed ticker + safe areas */
+        padding:
+          calc(env(safe-area-inset-top) + max(20px, 4dvh))
+          24px
+          calc(env(safe-area-inset-bottom) + 60px + max(16px, 3dvh));
         overflow-y: auto;
       }
 
@@ -8495,7 +8887,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Domino Hero */
       .domino-container {
         position: relative;
-        margin-bottom: 16px; /* Compact: was 40px → 24px → 16px */
+        margin-bottom: clamp(16px, 4dvh, 44px);
         perspective: 1000px;
       }
 
@@ -8613,7 +9005,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-weight: 700;
         color: var(--cream);
         letter-spacing: 0.02em;
-        margin-bottom: 8px; /* Compact: was 12px */
+        margin-bottom: clamp(8px, 1.6dvh, 14px);
         animation: fadeUp 0.6s ease-out 0.4s both;
         line-height: 1.1;
       }
@@ -8660,7 +9052,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .success-subheadline {
         font-size: 0.95rem; /* Compact: was 1.1rem → 1rem → 0.95rem */
         color: rgba(255, 255, 255, 0.5);
-        margin-bottom: 16px; /* Compact: was 36px → 24px → 16px */
+        margin-bottom: clamp(16px, 3.5dvh, 32px);
         animation: fadeUp 0.6s ease-out 0.5s both;
         letter-spacing: 0.03em;
       }
@@ -8671,7 +9063,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border: 1px solid rgba(212, 165, 116, 0.35);
         border-radius: 8px; /* Sharper, machined feel */
         padding: 12px 20px; /* Compact: was 28px 40px → 16px 28px → 12px 20px */
-        margin-bottom: 10px; /* Compact: was 32px → 16px → 10px */
+        margin-bottom: clamp(10px, 3dvh, 26px);
         position: relative;
         overflow: hidden;
         flex-shrink: 0; /* Prevent shrinking - content must stay visible */
@@ -8795,7 +9187,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border: none;
         border-radius: 8px; /* Compact: was 12px → 10px → 8px */
         padding: 12px 24px; /* Compact: was 16px 32px → 14px 28px → 12px 24px */
-        margin-top: 12px; /* Compact: was 32px → 20px → 12px */
+        margin-top: clamp(12px, 4dvh, 40px);
         cursor: pointer;
         letter-spacing: 0.05em;
         box-shadow:
@@ -8835,10 +9227,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Email reminder */
       .email-reminder {
-        margin-top: 16px; /* Compact: was 40px → 24px → 16px */
+        margin-top: clamp(16px, 5dvh, 52px);
         font-size: 0.8rem; /* Compact: was 0.95rem → 0.85rem → 0.8rem */
         color: rgba(255, 255, 255, 0.45);
         animation: fadeUp 0.5s ease-out 2.2s both;
+      }
+
+      /* Taller phones: restore a touch of ritual to avoid "empty black" */
+      @media (max-width: 1023px) and (min-height: 740px) {
+        .success-divider {
+          display: flex;
+        }
+        .success-tagline {
+          display: block;
+        }
       }
 
       .email-reminder a {
@@ -9334,12 +9736,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .mesa-tutorial__title {
-        font-family: "Bodoni Moda", serif;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
         font-size: 1.3rem;
         font-weight: 700;
         color: var(--brass);
         margin: 0;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
       }
 
       .mesa-tutorial__desc {
@@ -10381,7 +10784,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <div class="progress-tracker">
             <div class="progress-header">
               <span class="progress-count"><span class="number" id="playerCount">0</span> Seats Taken</span>
-              <span class="progress-spots" id="spotsLeft">{PLAYERS_GOAL - PLAYERS_REGISTERED} spots left</span>
+              <span class="progress-spots" id="spotsLeft">{PLAYERS_GOAL - PLAYERS_REGISTERED} seats left</span>
             </div>
             <div class="progress-bar">
               <div class="progress-fill" id="progressFill" style="width: 0%"></div>
@@ -10394,6 +10797,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <div class="form-scarcity" id="formScarcity">
               <div class="form-scarcity__display">
                 <span class="form-scarcity__number" id="spotsLeftInline">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span>
+                <span class="form-scarcity__number form-scarcity__number--next" id="spotsLeftInlineNext" aria-hidden="true"></span>
               </div>
               <span class="form-scarcity__label">SEATS LEFT</span>
             </div>
@@ -10452,7 +10856,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
                   <input type="checkbox" name="termsAccepted" required />
                   <span class="terms-checkbox__box"></span>
                   <span class="terms-checkbox__text">
-                    I accept that <em>hablar mierda</em> (trash talk) is sacred at La Mesa.
+                    I accept that <em>hablando mierda</em> (talking trash) is sacred at La Mesa.
                     I can dish it and I can take it.
                   </span>
                 </label>
@@ -10691,82 +11095,85 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <span class="mesa-live-text"><span id="mesaPlayerCount">0</span> at the table</span>
           </div>
 
-          <div class="avatar-selector">
-            <!-- Priority: Cuba, USA, then Caribbean & Latin America -->
-            <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
-              <span class="avatar-flag-pixel">🇨🇺</span>
-            </div>
-            <div class="avatar-option" data-avatar="usa" title="USA">
-              <span class="avatar-flag-pixel">🇺🇸</span>
-            </div>
-            <!-- Caribbean -->
-            <div class="avatar-option" data-avatar="pr" title="Puerto Rico">
-              <span class="avatar-flag-pixel">🇵🇷</span>
-            </div>
-            <div class="avatar-option" data-avatar="dr" title="Dominican Republic">
-              <span class="avatar-flag-pixel">🇩🇴</span>
-            </div>
-            <div class="avatar-option" data-avatar="jamaica" title="Jamaica">
-              <span class="avatar-flag-pixel">🇯🇲</span>
-            </div>
-            <div class="avatar-option" data-avatar="haiti" title="Haiti">
-              <span class="avatar-flag-pixel">🇭🇹</span>
-            </div>
-            <!-- Central & South America -->
-            <div class="avatar-option" data-avatar="mexico" title="Mexico">
-              <span class="avatar-flag-pixel">🇲🇽</span>
-            </div>
-            <div class="avatar-option" data-avatar="venezuela" title="Venezuela">
-              <span class="avatar-flag-pixel">🇻🇪</span>
-            </div>
-            <div class="avatar-option" data-avatar="colombia" title="Colombia">
-              <span class="avatar-flag-pixel">🇨🇴</span>
-            </div>
-            <div class="avatar-option" data-avatar="panama" title="Panama">
-              <span class="avatar-flag-pixel">🇵🇦</span>
-            </div>
-            <div class="avatar-option" data-avatar="nicaragua" title="Nicaragua">
-              <span class="avatar-flag-pixel">🇳🇮</span>
-            </div>
-            <div class="avatar-option" data-avatar="honduras" title="Honduras">
-              <span class="avatar-flag-pixel">🇭🇳</span>
-            </div>
-            <div class="avatar-option" data-avatar="brazil" title="Brazil">
-              <span class="avatar-flag-pixel">🇧🇷</span>
-            </div>
-            <div class="avatar-option" data-avatar="argentina" title="Argentina">
-              <span class="avatar-flag-pixel">🇦🇷</span>
-            </div>
-            <div class="avatar-option" data-avatar="peru" title="Peru">
-              <span class="avatar-flag-pixel">🇵🇪</span>
-            </div>
-            <div class="avatar-option" data-avatar="ecuador" title="Ecuador">
-              <span class="avatar-flag-pixel">🇪🇨</span>
-            </div>
-            <div class="avatar-option" data-avatar="chile" title="Chile">
-              <span class="avatar-flag-pixel">🇨🇱</span>
-            </div>
-            <!-- North America & Europe -->
-            <div class="avatar-option" data-avatar="canada" title="Canada">
-              <span class="avatar-flag-pixel">🇨🇦</span>
-            </div>
-            <div class="avatar-option" data-avatar="spain" title="Spain">
-              <span class="avatar-flag-pixel">🇪🇸</span>
-            </div>
-            <div class="avatar-option" data-avatar="italy" title="Italy">
-              <span class="avatar-flag-pixel">🇮🇹</span>
-            </div>
-            <div class="avatar-option" data-avatar="france" title="France">
-              <span class="avatar-flag-pixel">🇫🇷</span>
-            </div>
-            <div class="avatar-option" data-avatar="germany" title="Germany">
-              <span class="avatar-flag-pixel">🇩🇪</span>
-            </div>
-            <div class="avatar-option" data-avatar="uk" title="United Kingdom">
-              <span class="avatar-flag-pixel">🇬🇧</span>
-            </div>
-            <div class="avatar-option" data-avatar="portugal" title="Portugal">
-              <span class="avatar-flag-pixel">🇵🇹</span>
+          <div class="avatar-selector-frame">
+            <span class="avatar-selector__center-cue" aria-hidden="true"></span>
+            <div class="avatar-selector">
+              <!-- Priority: Cuba, USA, then Caribbean & Latin America -->
+              <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
+                <span class="avatar-flag-pixel">🇨🇺</span>
+              </div>
+              <div class="avatar-option" data-avatar="usa" title="USA">
+                <span class="avatar-flag-pixel">🇺🇸</span>
+              </div>
+              <!-- Caribbean -->
+              <div class="avatar-option" data-avatar="pr" title="Puerto Rico">
+                <span class="avatar-flag-pixel">🇵🇷</span>
+              </div>
+              <div class="avatar-option" data-avatar="dr" title="Dominican Republic">
+                <span class="avatar-flag-pixel">🇩🇴</span>
+              </div>
+              <div class="avatar-option" data-avatar="jamaica" title="Jamaica">
+                <span class="avatar-flag-pixel">🇯🇲</span>
+              </div>
+              <div class="avatar-option" data-avatar="haiti" title="Haiti">
+                <span class="avatar-flag-pixel">🇭🇹</span>
+              </div>
+              <!-- Central & South America -->
+              <div class="avatar-option" data-avatar="mexico" title="Mexico">
+                <span class="avatar-flag-pixel">🇲🇽</span>
+              </div>
+              <div class="avatar-option" data-avatar="venezuela" title="Venezuela">
+                <span class="avatar-flag-pixel">🇻🇪</span>
+              </div>
+              <div class="avatar-option" data-avatar="colombia" title="Colombia">
+                <span class="avatar-flag-pixel">🇨🇴</span>
+              </div>
+              <div class="avatar-option" data-avatar="panama" title="Panama">
+                <span class="avatar-flag-pixel">🇵🇦</span>
+              </div>
+              <div class="avatar-option" data-avatar="nicaragua" title="Nicaragua">
+                <span class="avatar-flag-pixel">🇳🇮</span>
+              </div>
+              <div class="avatar-option" data-avatar="honduras" title="Honduras">
+                <span class="avatar-flag-pixel">🇭🇳</span>
+              </div>
+              <div class="avatar-option" data-avatar="brazil" title="Brazil">
+                <span class="avatar-flag-pixel">🇧🇷</span>
+              </div>
+              <div class="avatar-option" data-avatar="argentina" title="Argentina">
+                <span class="avatar-flag-pixel">🇦🇷</span>
+              </div>
+              <div class="avatar-option" data-avatar="peru" title="Peru">
+                <span class="avatar-flag-pixel">🇵🇪</span>
+              </div>
+              <div class="avatar-option" data-avatar="ecuador" title="Ecuador">
+                <span class="avatar-flag-pixel">🇪🇨</span>
+              </div>
+              <div class="avatar-option" data-avatar="chile" title="Chile">
+                <span class="avatar-flag-pixel">🇨🇱</span>
+              </div>
+              <!-- North America & Europe -->
+              <div class="avatar-option" data-avatar="canada" title="Canada">
+                <span class="avatar-flag-pixel">🇨🇦</span>
+              </div>
+              <div class="avatar-option" data-avatar="spain" title="Spain">
+                <span class="avatar-flag-pixel">🇪🇸</span>
+              </div>
+              <div class="avatar-option" data-avatar="italy" title="Italy">
+                <span class="avatar-flag-pixel">🇮🇹</span>
+              </div>
+              <div class="avatar-option" data-avatar="france" title="France">
+                <span class="avatar-flag-pixel">🇫🇷</span>
+              </div>
+              <div class="avatar-option" data-avatar="germany" title="Germany">
+                <span class="avatar-flag-pixel">🇩🇪</span>
+              </div>
+              <div class="avatar-option" data-avatar="uk" title="United Kingdom">
+                <span class="avatar-flag-pixel">🇬🇧</span>
+              </div>
+              <div class="avatar-option" data-avatar="portugal" title="Portugal">
+                <span class="avatar-flag-pixel">🇵🇹</span>
+              </div>
             </div>
           </div>
           <p class="avatar-hint">Scroll to find your flag</p>
@@ -10934,6 +11341,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <!-- "Unlock La Mesa" — Speech bubble above domino button, not bottom sheet -->
     <div class="mesa-help" id="mesaHelp" role="status" aria-live="polite" aria-atomic="true">
       <div class="mesa-help__content">
+        <p class="mesa-help__kicker">Table Access</p>
         <p class="mesa-help__text">Claim your seat above to unlock <span class="mesa-help__highlight">La Mesa</span></p>
       </div>
       <span class="mesa-help__arrow"></span>
@@ -11021,6 +11429,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const storyEl = document.querySelector('.story');
       const heroScrollHint = document.getElementById('heroScrollHint');
       let heroHintTimer = null;
+      const jumpTarget = new URLSearchParams(window.location.search).get('jump');
+
+      if (jumpTarget === 'form') {
+        const doJump = () => {
+          document.querySelector('.panel--form')?.scrollIntoView({ behavior: 'auto', block: 'start' });
+        };
+        if (document.body.classList.contains('is-ready')) doJump();
+        else window.addEventListener('cdl:ready', doJump, { once: true });
+      }
 
       const inViewRatioThreshold = 0.4;
       const enterThreshold = 0.45;
@@ -11499,7 +11916,93 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const playerCountEl = document.getElementById("playerCount");
       const spotsLeftEl = document.getElementById("spotsLeft");
       const spotsLeftButtonEl = document.getElementById("spotsLeftButton");
+      const spotsLeftInlineEl = document.getElementById("spotsLeftInline");
+      const spotsLeftInlineNextEl = document.getElementById("spotsLeftInlineNext");
       const progressFillEl = document.getElementById("progressFill");
+      const formScarcityEl = document.getElementById("formScarcity");
+      const spotsLeftLabelEl = formScarcityEl?.querySelector(".form-scarcity__label");
+      let seatsRemainingActual = PLAYERS_GOAL - PLAYERS_REGISTERED;
+      let seatsMomentumDelta = 0;
+      let didTriggerSeatMomentum = false;
+      let seatMomentumLabelTimeout = null;
+
+      function animateInlineSeatTick(nextValue) {
+        if (!spotsLeftInlineEl || !spotsLeftInlineNextEl) return;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) return;
+
+        const display = spotsLeftInlineEl.closest('.form-scarcity__display');
+        if (!display) return;
+
+        spotsLeftInlineNextEl.textContent = String(nextValue);
+        display.classList.remove('is-tick');
+        requestAnimationFrame(() => {
+          display.classList.add('is-tick');
+        });
+
+        window.setTimeout(() => {
+          spotsLeftInlineEl.textContent = String(nextValue);
+          spotsLeftInlineNextEl.textContent = '';
+          display.classList.remove('is-tick');
+        }, 260);
+      }
+
+      function updateSpotsRemaining(actualRemaining, { animate = false, tick = false } = {}) {
+        seatsRemainingActual = actualRemaining;
+        const remaining = Math.max(actualRemaining - seatsMomentumDelta, 0);
+
+        if (spotsLeftEl) spotsLeftEl.textContent = remaining + " seats left";
+        if (spotsLeftButtonEl) spotsLeftButtonEl.textContent = remaining;
+        if (spotsLeftInlineEl) {
+          if (tick) animateInlineSeatTick(remaining);
+          else spotsLeftInlineEl.textContent = remaining;
+        }
+
+        if (formScarcityEl) {
+          formScarcityEl.classList.toggle("is-hot", remaining <= 4);
+          formScarcityEl.classList.toggle("is-held", seatsMomentumDelta > 0);
+          if (animate) {
+            formScarcityEl.classList.remove("is-pop");
+            requestAnimationFrame(() => {
+              formScarcityEl.classList.add("is-pop");
+            });
+            window.setTimeout(() => {
+              formScarcityEl.classList.remove("is-pop");
+            }, 360);
+          }
+        }
+      }
+
+      function pulseSeatConnection() {
+        if (!formShell) return;
+        formShell.classList.add('is-seat-shift');
+        window.setTimeout(() => {
+          formShell.classList.remove('is-seat-shift');
+        }, 520);
+      }
+
+      function showSeatMomentumLabel() {
+        if (!spotsLeftLabelEl) return;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        spotsLeftLabelEl.textContent = reduceMotion ? 'SEATS UPDATING' : 'SEAT CLAIMED';
+        if (seatMomentumLabelTimeout) window.clearTimeout(seatMomentumLabelTimeout);
+        seatMomentumLabelTimeout = window.setTimeout(() => {
+          if (spotsLeftLabelEl) spotsLeftLabelEl.textContent = 'SEATS LEFT';
+        }, 2200);
+      }
+
+      function triggerSeatMomentum() {
+        if (didTriggerSeatMomentum) return;
+        didTriggerSeatMomentum = true;
+
+        if (seatsRemainingActual <= 0) return;
+        if (seatsMomentumDelta > 0) return;
+
+        seatsMomentumDelta = 1;
+        showSeatMomentumLabel();
+        updateSpotsRemaining(seatsRemainingActual, { animate: true, tick: true });
+        pulseSeatConnection();
+      }
 
       function animateCounter(target, duration = 1000) {
         let start = 0;
@@ -11542,8 +12045,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             }, 100);
 
             // Update spots left (desktop and mobile button)
-            spotsLeftEl.textContent = (PLAYERS_GOAL - PLAYERS_REGISTERED) + " spots left";
-            if (spotsLeftButtonEl) spotsLeftButtonEl.textContent = (PLAYERS_GOAL - PLAYERS_REGISTERED);
+            updateSpotsRemaining(PLAYERS_GOAL - PLAYERS_REGISTERED, { animate: true });
 
             // Mark as played for re-entry animation consistency
             formPanel?.classList.add('has-played');
@@ -11560,6 +12062,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const submitBtn = document.getElementById("submitBtn");
       const waitingEl = document.getElementById("registrationWaiting");
       const formShell = document.getElementById("formShell");
+      const playerNameInput = form?.querySelector('input[name="playerName"]');
+
+      // Momentum micro-moment: once the player starts filling the form,
+      // tick the seats counter down by one (felt urgency, connected to the ledger).
+      playerNameInput?.addEventListener(
+        'input',
+        () => {
+          if (didTriggerSeatMomentum) return;
+          if ((playerNameInput.value || '').trim().length < 2) return;
+          // Small delay so it reads as "the room moved" in response to your action.
+          window.setTimeout(triggerSeatMomentum, 450);
+        },
+        { passive: true }
+      );
 
       // Helper: Show waiting state with premium feel
       const showWaitingState = () => {
@@ -11773,8 +12289,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           const spotsLeftButton = document.getElementById('spotsLeftButton');
           const progressFill = document.getElementById('progressFill');
           if (playerCount) playerCount.textContent = registeredPlayers.length;
-          if (spotsLeft) spotsLeft.textContent = `${16 - registeredPlayers.length} spots left`;
-          if (spotsLeftButton) spotsLeftButton.textContent = 16 - registeredPlayers.length;
+          updateSpotsRemaining(PLAYERS_GOAL - registeredPlayers.length);
           if (progressFill) progressFill.style.width = `${(registeredPlayers.length / 16) * 100}%`;
 
           // Populate chat player selector
@@ -12208,6 +12723,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       let mesaHelpTimeout = null;
       const registrationPanel = document.querySelector('.panel--form');
       let lastTickerActivateAt = 0;
+      const mesaTipParams = new URLSearchParams(window.location.search);
+      const mesaTipVariant = mesaTipParams.get('mesaTip');
+      const mesaTipPreview = mesaTipParams.has('mesaTipPreview');
+
+      // Default to the chosen direction: "Broadcast" (guide + hype), overridable for concept previews.
+      const DEFAULT_MESA_TOOLTIP = 'broadcast';
+      const resolvedMesaTipVariant =
+        mesaTipVariant && ['plaque', 'broadcast', 'whisper'].includes(mesaTipVariant)
+          ? mesaTipVariant
+          : DEFAULT_MESA_TOOLTIP;
+      document.documentElement.dataset.mesaTooltip = resolvedMesaTipVariant;
 
       function getPanelVisibilityRatio(panelEl) {
         if (!storyEl || !panelEl) return 0;
@@ -12241,6 +12767,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        mesaHelpTimeout = null;
 	        mesaHelp.classList.remove('is-visible');
 	      }
+
+        if (mesaTipPreview) {
+          setTimeout(() => showMesaHelp({ force: true }), 650);
+        }
 
 	      // Make the bubble feel like a toast, not a modal: tapping it dismisses immediately.
 	      mesaHelp?.addEventListener('click', hideMesaHelp);
@@ -12552,26 +13082,139 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Avatar selection - Tobias: "Does picking your seat feel like pulling up a chair?"
       const avatarOptions = document.querySelectorAll('.avatar-option');
+      const avatarSelector = document.querySelector('.avatar-selector');
+
+      // Scroll polish: subtle "magnetic" settle + centered focus (minimal, no UI chrome)
+      let avatarScrollEndTimer = null;
+      let avatarScrollRaf = null;
+      let avatarPointerDown = false;
+      let centeredAvatar = null;
+      let suppressSettleHapticUntil = 0;
+
       avatarOptions.forEach(opt => {
         opt.addEventListener('click', () => {
-          // Remove selected and slam from all
+          if (opt.dataset.avatar === selectedAvatar && opt.classList.contains('selected')) return;
+
+          // Remove selected from others (keep the chosen one stable)
           avatarOptions.forEach(o => {
-            o.classList.remove('selected');
+            if (o !== opt) o.classList.remove('selected');
             o.classList.remove('is-slamming');
           });
 
-          // Add slam animation then selected state
+          // Restart slam cleanly in the same frame as selection to avoid "double flicker" on iOS
+          opt.classList.remove('is-slamming');
+          // Force reflow so the animation reliably restarts
+          void opt.offsetWidth;
+          opt.classList.add('selected');
           opt.classList.add('is-slamming');
           vibrate([8, 20, 8]); // Tobias: Flag selection haptic burst
 
-          // Add selected after animation starts
-          setTimeout(() => {
-            opt.classList.add('selected');
-          }, 50);
-
           selectedAvatar = opt.dataset.avatar;
+
+          // Keep selection centered like placing a chip on the felt
+          try {
+            opt.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          } catch {}
+
+          suppressSettleHapticUntil = Date.now() + 400;
         });
       });
+
+      function getClosestAvatarOptionToCenter() {
+        if (!avatarSelector || !avatarOptions.length) return null;
+        const containerRect = avatarSelector.getBoundingClientRect();
+        const containerCenterX = containerRect.left + (containerRect.width / 2);
+        let closest = null;
+        let closestDistance = Infinity;
+        avatarOptions.forEach((opt) => {
+          const rect = opt.getBoundingClientRect();
+          const centerX = rect.left + (rect.width / 2);
+          const distance = Math.abs(centerX - containerCenterX);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closest = opt;
+          }
+        });
+        return closest;
+      }
+
+      function setCenteredAvatarOption(opt) {
+        if (!opt) return;
+        avatarOptions.forEach((o) => o.classList.toggle('is-centered', o === opt));
+        centeredAvatar = opt.dataset.avatar || null;
+      }
+
+      function updateAvatarCenteredState() {
+        const closest = getClosestAvatarOptionToCenter();
+        if (!closest) return;
+        setCenteredAvatarOption(closest);
+      }
+
+      function settleAvatarScroll() {
+        if (!avatarSelector) return;
+        if (avatarPointerDown) return;
+        const closest = getClosestAvatarOptionToCenter();
+        if (!closest) return;
+
+        const nextCentered = closest.dataset.avatar || null;
+        const shouldHaptic =
+          Date.now() > suppressSettleHapticUntil
+          && centeredAvatar
+          && nextCentered
+          && nextCentered !== centeredAvatar;
+        setCenteredAvatarOption(closest);
+
+        // The settle beat: one smooth nudge into place.
+        try {
+          closest.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        } catch {}
+
+        if (shouldHaptic) vibrate(6);
+      }
+
+      if (avatarSelector) {
+        const scheduleScrollEnd = () => {
+          if (avatarScrollEndTimer) clearTimeout(avatarScrollEndTimer);
+          avatarScrollEndTimer = setTimeout(settleAvatarScroll, 120);
+        };
+
+        avatarSelector.addEventListener('scroll', () => {
+          if (avatarScrollRaf) cancelAnimationFrame(avatarScrollRaf);
+          avatarScrollRaf = requestAnimationFrame(updateAvatarCenteredState);
+          scheduleScrollEnd();
+        }, { passive: true });
+
+        avatarSelector.addEventListener('touchstart', () => {
+          avatarPointerDown = true;
+          if (avatarScrollEndTimer) clearTimeout(avatarScrollEndTimer);
+        }, { passive: true });
+        avatarSelector.addEventListener('touchend', () => {
+          avatarPointerDown = false;
+          scheduleScrollEnd();
+        }, { passive: true });
+        avatarSelector.addEventListener('touchcancel', () => {
+          avatarPointerDown = false;
+          scheduleScrollEnd();
+        }, { passive: true });
+
+        avatarSelector.addEventListener('pointerdown', (e) => {
+          if (e.pointerType === 'mouse') return;
+          avatarPointerDown = true;
+          if (avatarScrollEndTimer) clearTimeout(avatarScrollEndTimer);
+        }, { passive: true });
+        avatarSelector.addEventListener('pointerup', (e) => {
+          if (e.pointerType === 'mouse') return;
+          avatarPointerDown = false;
+          scheduleScrollEnd();
+        }, { passive: true });
+        avatarSelector.addEventListener('pointercancel', () => {
+          avatarPointerDown = false;
+          scheduleScrollEnd();
+        }, { passive: true });
+
+        // Initial centered state once the layout is ready.
+        requestAnimationFrame(updateAvatarCenteredState);
+      }
 
       // Player selection handler (individual sign-ups, no teams until draft)
       const chatPlayerSelect = document.getElementById('chatPlayerSelect');
@@ -12871,31 +13514,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       console.log('[Ticker] About to call initTickerMock, tickerTrack exists:', !!tickerTrack);
       initTickerMock();
 
-      // Mobile: Pause ticker on touch (touchend may not fire on the same element if user drags)
-      let tickerPauseTimeout = null;
-      function pauseTickerOnTouch() {
-        if (!tickerTrack) return;
-        tickerTrack.style.animationPlayState = 'paused';
-
-        // Clear any pending resume
-        if (tickerPauseTimeout) {
-          clearTimeout(tickerPauseTimeout);
-          tickerPauseTimeout = null;
-        }
-
-        const resume = () => {
-          // Resume after a longer delay so user can read (1500ms prevents "stuck" feel)
-          tickerPauseTimeout = setTimeout(() => {
-            if (tickerTrack) tickerTrack.style.animationPlayState = 'running';
-            tickerPauseTimeout = null;
-          }, 1500);
-        };
-
-        window.addEventListener('touchend', resume, { passive: true, once: true });
-        window.addEventListener('touchcancel', resume, { passive: true, once: true });
-      }
-
-      tickerTrack.addEventListener('touchstart', pauseTickerOnTouch, { passive: true });
+      // Note: ticker should never pause/stop on touch; keep it continuously scrolling.
 
       function joinMesaPresence() {
         if (!supabase || !chatIdentity) return;
@@ -12970,7 +13589,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         // Spots remaining
         const spotsRemaining = PLAYERS_GOAL - PLAYERS_REGISTERED;
-        items.push(`<span class="ticker-item ticker-spots">${spotsRemaining} spots left</span>`);
+        items.push(`<span class="ticker-item ticker-spots">${spotsRemaining} seats left</span>`);
 
         // Tournament updates (copper, important)
         tickerEvents

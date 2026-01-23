@@ -1,0 +1,331 @@
+---
+// Concepts Gallery — internal design review page (tooltips, treatments, experiments)
+const TOOLTIP_VARIANTS = [
+  {
+    key: 'plaque',
+    name: 'Plaque (Default)',
+    summary: 'Warm brass plaque — calm guidance, artifact-first.',
+  },
+  {
+    key: 'broadcast',
+    name: 'Broadcast (Hype)',
+    summary: 'ESPN energy — bolder, urgent, “room is live”.',
+  },
+  {
+    key: 'whisper',
+    name: 'Whisper (Soft)',
+    summary: 'Low-pressure — subtle invitation, felt not coached.',
+  },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Concepts | Cuban Domino League</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;0,6..96,900;1,6..96,400;1,6..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="atmosphere"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+
+    <main class="page">
+      <header class="header">
+        <a class="back" href="/" aria-label="Back to home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          <span>Back</span>
+        </a>
+        <div class="header__titles">
+          <h1 class="title">Concepts</h1>
+          <p class="subtitle">La Mesa tooltip variants (guide + hype)</p>
+        </div>
+      </header>
+
+      <section class="grid" aria-label="Tooltip variant previews">
+        {
+          TOOLTIP_VARIANTS.map((variant) => (
+            <article class="card">
+              <div class="card__top">
+                <div>
+                  <h2 class="card__title">{variant.name}</h2>
+                  <p class="card__summary">{variant.summary}</p>
+                </div>
+                <a
+                  class="card__link"
+                  href={`/?mesaTip=${variant.key}&mesaTipPreview=1`}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  Open
+                </a>
+              </div>
+
+              <div class="phone">
+                <iframe
+                  class="phone__frame"
+                  title={`Tooltip preview: ${variant.name}`}
+                  src={`/?mesaTip=${variant.key}&mesaTipPreview=1`}
+                  loading={variant.key === 'plaque' ? 'eager' : 'lazy'}
+                />
+              </div>
+            </article>
+          ))
+        }
+      </section>
+
+      <section class="section">
+        <div class="section__head">
+          <h2 class="section__title">Seats Left</h2>
+          <p class="section__sub">Jumped directly to the form panel (broadcast plaque treatment).</p>
+        </div>
+        <div class="grid grid--single" aria-label="Seats left preview">
+          <article class="card">
+            <div class="card__top">
+              <div>
+                <h2 class="card__title">Form Scarcity Counter</h2>
+                <p class="card__summary">Brass plaque + depth, subtle Cubita red “live” dot when hot.</p>
+              </div>
+              <a class="card__link" href="/?jump=form" target="_blank" rel="noopener">Open</a>
+            </div>
+            <div class="phone">
+              <iframe class="phone__frame" title="Seats left preview" src="/?jump=form" loading="lazy" />
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #1c130f;
+        --muted: #594a3f;
+        --copper: #b76a3b;
+        --cream: #f8efe6;
+        --brass: #d4a574;
+        --bg-dark: #0a0705;
+        --border-subtle: rgba(212, 165, 116, 0.15);
+        --border-accent: rgba(212, 165, 116, 0.3);
+      }
+
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background: var(--bg-dark);
+        color: #fff;
+      }
+
+      .atmosphere {
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 50% 0%, rgba(183, 106, 59, 0.12) 0%, transparent 50%),
+          radial-gradient(ellipse at 85% 85%, rgba(212, 165, 116, 0.06) 0%, transparent 40%),
+          radial-gradient(ellipse at center, #1a120d 0%, #0d0906 50%, #0a0705 100%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .grain {
+        position: fixed;
+        inset: -50%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.04;
+        pointer-events: none;
+        z-index: 1;
+        mix-blend-mode: overlay;
+      }
+
+      .vignette {
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 50% 20%, rgba(212, 165, 116, 0.04) 0%, transparent 50%),
+          radial-gradient(ellipse at center, transparent 30%, rgba(10, 7, 5, 0.6) 100%);
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .page {
+        position: relative;
+        z-index: 10;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid var(--border-subtle);
+        background: rgba(10, 7, 5, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 16px 18px;
+      }
+
+      .back {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+      .back svg { width: 18px; height: 18px; opacity: 0.9; }
+      .back:hover { color: #fff; }
+
+      .header__titles { text-align: right; }
+      .title {
+        margin: 0;
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.4rem;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: 0.08em;
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .subtitle {
+        margin: 6px 0 0;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+      }
+
+      .grid {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .grid--single {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .card {
+        border: 1px solid var(--border-subtle);
+        background: rgba(28, 19, 15, 0.7);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 14px 44px rgba(0, 0, 0, 0.35);
+      }
+
+      .card__top {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 14px 14px 10px;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.08);
+      }
+
+      .card__title {
+        margin: 0;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(212, 165, 116, 0.92);
+      }
+
+      .card__summary {
+        margin: 8px 0 0;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.62);
+        max-width: 28ch;
+      }
+
+      .card__link {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        padding: 0 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(212, 165, 116, 0.22);
+        background: rgba(10, 7, 5, 0.6);
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .card__link:hover {
+        border-color: rgba(212, 165, 116, 0.35);
+        background: rgba(10, 7, 5, 0.8);
+        color: #fff;
+      }
+
+      .phone {
+        padding: 12px 12px 16px;
+      }
+
+      .phone__frame {
+        width: 100%;
+        aspect-ratio: 9 / 19.5;
+        border: 1px solid rgba(212, 165, 116, 0.18);
+        border-radius: 18px;
+        background: #000;
+        box-shadow:
+          0 18px 60px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(0, 0, 0, 0.6) inset;
+      }
+
+      .section {
+        margin-top: 18px;
+      }
+
+      .section__head {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 14px 4px 6px;
+      }
+
+      .section__title {
+        margin: 0;
+        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(212, 165, 116, 0.92);
+      }
+
+      .section__sub {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 980px) {
+        .grid { grid-template-columns: 1fr; }
+        .header__titles { text-align: left; }
+      }
+    </style>
+  </body>
+</html>

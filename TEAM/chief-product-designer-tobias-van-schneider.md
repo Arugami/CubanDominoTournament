@@ -115,6 +115,9 @@ Design/UX items to sanity-check through a Tobias lens (weight, intention, “roo
 4. **Scroll hints consistency** — The chevron hint should appear on the hero after a few seconds, and also on panels 2/4/5 after their sequences; keep it calm (no bouncy movement).
 5. **Cinematic overlays vs. legibility** — Vignette/lens effects should deepen imagery without dimming key typography (e.g., “Que Bola Asere”).
 6. **iOS Safari integrity** — Fixed ticker should never “mysteriously dim” or pause; confirm it holds under scroll-snap + overlays.
+7. **La Mesa header typography** — Ensure La Mesa header/badges stay modern sans-serif and consistent (tracking, casing, weight) across ticker, tutorial, and chat header.
+8. **La Mesa tooltip tone** — The “unlock La Mesa” tooltip should guide *and* hype (felt, not coached): artifact-level craft, crisp hierarchy, and copy that reads like an invitation into a room.
+9. **“Seats left” counter + momentum** — When a player starts typing, the counter should tick down once (subtle but noticeable) and the form should respond (one beat of red/brass energy) so it feels connected—not a gimmick.
 
 ---
 

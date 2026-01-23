@@ -401,6 +401,7 @@ The floating chat toggle is a **vertical domino tile**, not a pill button.
 - Background: Cream gradient (#f5f0e6 → #e8e0d0)
 - Border-radius: 12px
 - Pips: Copper color at 40% opacity
+- Text: "IBM Plex Sans Condensed" 700, uppercase, letter-spacing 0.12em
 - Badge: Positioned top-right, circular (pip shape)
 
 ### Cards
