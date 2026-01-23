@@ -7692,7 +7692,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Success Celebration State - Full viewport takeover */
+      /* Success Celebration State - Club 33 Earned Elegance */
       .success {
         display: none;
         position: fixed;
@@ -7701,15 +7701,42 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: radial-gradient(ellipse at center top, rgba(30, 20, 15, 0.98) 0%, rgba(10, 7, 5, 0.99) 100%);
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start; /* SAFE: content flows from top, scrollable when needed */
         text-align: center;
         padding: 40px 24px;
         overflow-y: auto;
       }
 
+      /* Film grain overlay - subtle texture */
+      .success::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.025;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Vignette - elegant dark edges */
+      .success::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.5) 100%);
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* Content layer above grain/vignette */
+      .success > * {
+        position: relative;
+        z-index: 3;
+      }
+
       .success.is-visible {
         display: flex;
-        animation: successReveal 0.5s ease-out;
+        animation: successReveal 0.6s ease-out;
       }
 
       @keyframes successReveal {
@@ -7858,7 +7885,26 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-shadow:
           0 0 30px rgba(212, 165, 116, 0.5),
           0 0 60px rgba(183, 106, 59, 0.3);
-        animation: brassShine 3s ease-in-out infinite;
+        /* Club 33 entrance slam - earned elegance */
+        animation: inSlam 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s both, brassShine 3s ease-in-out 1.4s infinite;
+      }
+
+      /* The "In" slam - scale down with glow bloom, settling into place */
+      @keyframes inSlam {
+        0% {
+          transform: scale(1.4);
+          opacity: 0;
+          text-shadow: 0 0 0 transparent;
+        }
+        60% {
+          transform: scale(0.92);
+          text-shadow: 0 0 60px rgba(212, 165, 116, 1), 0 0 100px rgba(183, 106, 59, 0.7);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+          text-shadow: 0 0 30px rgba(212, 165, 116, 0.5), 0 0 60px rgba(183, 106, 59, 0.3);
+        }
       }
 
       @keyframes brassShine {
@@ -7880,18 +7926,36 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.03em;
       }
 
-      /* Event Details Card */
+      /* Event Details Card - Engraved brass plaque feel */
       .event-details {
-        background: linear-gradient(135deg, rgba(183, 106, 59, 0.15) 0%, rgba(183, 106, 59, 0.05) 100%);
-        border: 1px solid rgba(212, 165, 116, 0.3);
-        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(20, 14, 10, 0.95) 0%, rgba(30, 20, 15, 0.9) 100%);
+        border: 1px solid rgba(212, 165, 116, 0.35);
+        border-radius: 8px; /* Sharper, machined feel */
         padding: 28px 40px;
         margin-bottom: 32px;
         position: relative;
         overflow: hidden;
-        animation: fadeUp 0.6s ease-out 0.6s both;
+        flex-shrink: 0; /* Prevent shrinking - content must stay visible */
+        animation: cardReveal 0.6s ease-out 1.2s both;
         width: 100%;
         max-width: 320px;
+        /* Engraved/inset feel */
+        box-shadow:
+          inset 0 2px 4px rgba(0, 0, 0, 0.4),
+          inset 0 -1px 2px rgba(212, 165, 116, 0.08),
+          0 8px 32px rgba(0, 0, 0, 0.5),
+          0 0 1px rgba(212, 165, 116, 0.3);
+      }
+
+      @keyframes cardReveal {
+        from {
+          opacity: 0;
+          transform: translateY(16px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
       }
 
       .event-details::before {
@@ -7901,8 +7965,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         left: -100%;
         width: 50%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.1), transparent);
-        animation: cardShine 4s ease-in-out infinite;
+        background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.06), transparent);
+        animation: cardShine 5s ease-in-out 2s infinite;
       }
 
       @keyframes cardShine {
@@ -7951,7 +8015,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin: 28px 0;
         width: 100%;
         max-width: 240px;
-        animation: fadeUp 0.6s ease-out 0.7s both;
+        animation: fadeUp 0.5s ease-out 1.5s both;
       }
 
       .success-divider::before,
@@ -7977,11 +8041,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-style: italic;
         color: var(--brass);
         opacity: 0.9;
-        animation: fadeUp 0.6s ease-out 0.8s both;
+        animation: fadeUp 0.6s ease-out 1.6s both;
         letter-spacing: 0.02em;
       }
 
-      /* La Mesa CTA - The reward after registration - Bone Language */
+      /* La Mesa CTA - Club 33 artifact feel */
       .success-mesa-cta {
         font-family: "IBM Plex Sans", system-ui, sans-serif;
         font-size: 1rem;
@@ -7996,21 +8060,37 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.05em;
         box-shadow:
           0 4px 20px rgba(143, 60, 34, 0.4),
-          inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        transition: all 0.3s ease;
-        animation: fadeUp 0.6s ease-out 1s both;
+          inset 0 1px 0 rgba(255, 255, 255, 0.12),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+        transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        animation: ctaReveal 0.5s ease-out 1.9s both;
+      }
+
+      @keyframes ctaReveal {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .success-mesa-cta:hover {
-        transform: translateY(-3px) scale(1.02);
+        transform: translateY(-2px);
         box-shadow:
-          0 8px 30px rgba(143, 60, 34, 0.5),
-          0 0 40px rgba(212, 165, 116, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          0 8px 28px rgba(143, 60, 34, 0.5),
+          0 0 30px rgba(212, 165, 116, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.2);
       }
 
       .success-mesa-cta:active {
-        transform: translateY(-1px) scale(1);
+        transform: translateY(0) scale(0.98);
+        box-shadow:
+          0 2px 12px rgba(143, 60, 34, 0.4),
+          inset 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
       /* Email reminder */
@@ -8018,7 +8098,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-top: 40px;
         font-size: 0.95rem;
         color: rgba(255, 255, 255, 0.45);
-        animation: fadeUp 0.6s ease-out 0.9s both;
+        animation: fadeUp 0.5s ease-out 2.2s both;
       }
 
       .email-reminder a {
@@ -8032,6 +8112,206 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .email-reminder a:hover {
         color: var(--brass);
         border-bottom-color: var(--brass);
+      }
+
+      /* ========================================
+         DESKTOP POLISH - Success Screen
+         "The room feels full, not empty" — Tobias
+         ======================================== */
+      @media (min-width: 1024px) {
+        /* Success Screen - More generous padding on desktop */
+        .success {
+          padding: 5vh 48px 8vh;
+        }
+
+        /* More pronounced vignette on desktop */
+        .success::after {
+          background: radial-gradient(ellipse at center, transparent 20%, rgba(0, 0, 0, 0.6) 100%);
+        }
+
+        /* Domino - More presence */
+        .domino-container {
+          margin-bottom: 48px;
+        }
+
+        .domino {
+          width: 120px;
+          height: 240px;
+          border-radius: 18px;
+          box-shadow:
+            0 35px 70px rgba(0, 0, 0, 0.7),
+            0 0 120px rgba(212, 165, 116, 0.35),
+            0 0 180px rgba(255, 215, 0, 0.15),
+            inset 0 2px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .domino::before {
+          height: 3px;
+        }
+
+        .domino::after {
+          inset: -10px;
+          border-radius: 18px;
+          background: radial-gradient(ellipse at center, rgba(212, 165, 116, 0.4) 0%, transparent 70%);
+        }
+
+        /* Scale pips for larger domino (120x240) */
+        .pip {
+          width: 20px;
+          height: 20px;
+        }
+
+        .domino-top .pip:nth-child(1) { top: 18px; left: 22px; }
+        .domino-top .pip:nth-child(2) { top: 18px; right: 22px; }
+        .domino-top .pip:nth-child(3) { top: 50%; left: 22px; transform: translateY(-50%); }
+        .domino-top .pip:nth-child(4) { top: 50%; right: 22px; transform: translateY(-50%); }
+        .domino-top .pip:nth-child(5) { bottom: 22px; left: 22px; }
+        .domino-top .pip:nth-child(6) { bottom: 22px; right: 22px; }
+
+        .domino-bottom .pip:nth-child(1) { top: 18px; left: 22px; }
+        .domino-bottom .pip:nth-child(2) { top: 18px; right: 22px; }
+        .domino-bottom .pip:nth-child(3) { top: 50%; left: 22px; transform: translateY(-50%); }
+        .domino-bottom .pip:nth-child(4) { top: 50%; right: 22px; transform: translateY(-50%); }
+        .domino-bottom .pip:nth-child(5) { bottom: 18px; left: 22px; }
+        .domino-bottom .pip:nth-child(6) { bottom: 18px; right: 22px; }
+
+        /* Headlines - More presence */
+        .success-headline {
+          font-size: 4.5rem;
+          margin-bottom: 12px;
+        }
+
+        .success-subheadline {
+          font-size: 1.15rem;
+          margin-bottom: 32px;
+        }
+
+        /* Event Details Card - Wider, more generous */
+        .event-details {
+          max-width: 380px;
+          padding: 28px 48px;
+          border-radius: 10px;
+          margin-bottom: 28px;
+        }
+
+        .event-date {
+          font-size: 1.9rem;
+          margin-bottom: 10px;
+        }
+
+        .event-venue {
+          font-size: 1.3rem;
+          margin-bottom: 8px;
+        }
+
+        .event-time {
+          font-size: 1.1rem;
+        }
+
+        .event-payment {
+          font-size: 1.2rem;
+          margin-top: 16px;
+          padding-top: 16px;
+        }
+
+        /* Divider - Balanced spacing */
+        .success-divider {
+          margin: 24px 0;
+          max-width: 260px;
+        }
+
+        .divider-pip {
+          width: 10px;
+          height: 10px;
+        }
+
+        /* Tagline */
+        .success-tagline {
+          font-size: 1.5rem;
+        }
+
+        /* CTA - Larger touch target */
+        .success-mesa-cta {
+          padding: 20px 48px;
+          font-size: 1.1rem;
+          border-radius: 14px;
+          margin-top: 40px;
+        }
+
+        .email-reminder {
+          margin-top: 52px;
+          font-size: 1rem;
+        }
+
+        /* Shimmer particles - larger spread */
+        .shimmer {
+          width: 5px;
+          height: 5px;
+        }
+      }
+
+      /* Extra-wide screens - subtle refinement, not aggressive scaling */
+      @media (min-width: 1440px) {
+        .success {
+          padding: 6vh 64px 10vh;
+        }
+
+        .success-headline {
+          font-size: 5rem;
+        }
+
+        .event-details {
+          max-width: 400px;
+          padding: 32px 56px;
+        }
+      }
+
+      /* ========================================
+         DESKTOP POLISH - La Mesa Chat Panel
+         "Centered modal - entering a room"
+         ======================================== */
+      @media (min-width: 1024px) {
+        /* Darker backdrop - near opaque to hide page */
+        .chat-backdrop {
+          background: rgba(10, 7, 5, 0.92);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* Panel becomes centered modal */
+        .chat-panel {
+          width: 520px;
+          height: auto;
+          max-height: 75vh;
+          min-height: 500px;
+          right: auto;
+          left: 50%;
+          bottom: auto;
+          top: 50%;
+          transform: translate(-50%, -50%) scale(0.96);
+          transform-origin: center center;
+          border-radius: 16px;
+          box-shadow:
+            0 32px 80px rgba(0, 0, 0, 0.8),
+            0 0 100px rgba(212, 165, 116, 0.1);
+        }
+
+        .chat-panel.is-open {
+          transform: translate(-50%, -50%) scale(1);
+        }
+
+        .chat-panel.is-closing {
+          transform: translate(-50%, -50%) scale(0.96);
+        }
+
+        /* More generous header spacing */
+        .chat-header {
+          padding: 24px 32px;
+        }
+
+        .chat-header__title {
+          font-size: 1.2rem;
+        }
       }
 
       /* ========================================
@@ -9208,7 +9488,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
                   <span class="terms-checkbox__box"></span>
                   <span class="terms-checkbox__text">
                     I accept that <em>hablar mierda</em> (trash talk) is sacred at La Mesa.
-                    I can dish it and I can take it. <span class="terms-highlight">¡Coge eso!</span>
+                    I can dish it and I can take it.
                   </span>
                 </label>
               </div>
@@ -9308,7 +9588,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       <!-- La Mesa CTA -->
       <button class="success-mesa-cta" id="successMesaCta">
-        Pull up a chair at La Mesa →
+        Enter La Mesa →
       </button>
 
       <!-- Email reminder -->
