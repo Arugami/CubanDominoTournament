@@ -12057,8 +12057,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Fake stormbeat triggers (Rainforest Cafe-style urgency)
       let fakeStormTriggerCount = 0;
-      let hasFakeStormOnName = false;
       let hasFakeStormOnPhone = false;
+      let lastStormScheduledAt = 0; // timestamp when last stormbeat will fire (for cooldown)
 
       function animateInlineSeatTick(nextValue) {
         if (!spotsLeftInlineEl || !spotsLeftInlineNextEl) return;
@@ -12278,23 +12278,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         { passive: true }
       );
 
-      // Fake stormbeat triggers: fire "someone just registered" at key form moments
-      // First trigger: after 2+ characters typed in name field
-      const playerNameInputForStorm = form?.querySelector('input[name="playerName"]');
-      playerNameInputForStorm?.addEventListener(
-        'input',
-        () => {
-          if (hasFakeStormOnName) return;
-          if ((playerNameInputForStorm.value || '').trim().length < 2) return;
-          hasFakeStormOnName = true;
-          // Randomized delay (800-1200ms) so it feels organic, not scripted
-          const delay = 800 + Math.random() * 400;
-          window.setTimeout(triggerFakeStormbeat, delay);
-        },
-        { passive: true, once: true }
-      );
-
-      // Second trigger: after 3+ digits typed in phone field
+      // Fake stormbeat trigger: fire "someone just registered" when typing phone
+      // This creates manufactured urgency (Rainforest Cafe style) - appears to be
+      // other registrations happening while you fill out the form
       const phoneInput = form?.querySelector('input[name="phone"]');
       phoneInput?.addEventListener(
         'input',
@@ -12304,10 +12290,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (digitsOnly.length < 3) return;
           hasFakeStormOnPhone = true;
           // Randomized delay (600-900ms)
-          const delay = 600 + Math.random() * 300;
-          window.setTimeout(triggerFakeStormbeat, delay);
+          const baseDelay = 600 + Math.random() * 300;
+          const now = Date.now();
+          const minGap = 3000; // 3 seconds between stormbeats
+          const actualDelay = Math.max(baseDelay, lastStormScheduledAt - now + minGap);
+          lastStormScheduledAt = now + actualDelay;
+          window.setTimeout(triggerFakeStormbeat, actualDelay);
         },
-        { passive: true, once: true }
+        { passive: true }
       );
 
       // === Form Validation ===
