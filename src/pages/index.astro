@@ -6452,11 +6452,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
       .avatar-selector-frame::before {
         left: 0;
-        background: linear-gradient(90deg, rgba(10, 7, 5, 0.88), rgba(10, 7, 5, 0));
+        width: 80px;
+        background: linear-gradient(90deg,
+          rgba(10, 7, 5, 0.95) 0%,
+          rgba(10, 7, 5, 0.7) 40%,
+          rgba(10, 7, 5, 0) 100%
+        );
       }
       .avatar-selector-frame::after {
         right: 0;
-        background: linear-gradient(270deg, rgba(10, 7, 5, 0.88), rgba(10, 7, 5, 0));
+        width: 80px;
+        background: linear-gradient(270deg,
+          rgba(10, 7, 5, 0.95) 0%,
+          rgba(10, 7, 5, 0.7) 40%,
+          rgba(10, 7, 5, 0) 100%
+        );
       }
 
       /* Center seat cue - a faint offering circle */
@@ -6528,7 +6538,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         user-select: none;
         touch-action: manipulation;
         scroll-snap-align: center;
-        scroll-snap-stop: always;
+        /* scroll-snap-stop: normal (default) - allows momentum to carry past multiple flags */
         z-index: 1;
       }
 
@@ -8270,6 +8280,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Inline Scarcity - Broadcast plaque (CDL-native) */
       .form-scarcity {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -8452,6 +8463,135 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .form-scarcity__number {
           transition: none;
         }
+      }
+
+      /* Stormbeat Glow Pulse - warm radial glow when seat claimed */
+      .form-scarcity__glow {
+        position: absolute;
+        inset: -8px;
+        border-radius: 14px;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse 120% 100% at 50% 50%,
+          rgba(212, 165, 116, 0.35) 0%,
+          rgba(183, 106, 59, 0.18) 30%,
+          transparent 70%
+        );
+        opacity: 0;
+        z-index: -1;
+      }
+
+      .form-scarcity__glow.is-glow {
+        animation: scoreboardGlow 800ms ease-out 1;
+      }
+
+      @keyframes scoreboardGlow {
+        0% { opacity: 0; transform: scale(0.95); }
+        20% { opacity: 1; transform: scale(1.02); }
+        50% { opacity: 0.6; transform: scale(1); }
+        100% { opacity: 0; transform: scale(1); }
+      }
+
+      /* Progressive intensity when seats low */
+      .form-scarcity.is-hot .form-scarcity__glow {
+        background: radial-gradient(
+          ellipse 130% 110% at 50% 50%,
+          rgba(212, 0, 0, 0.25) 0%,
+          rgba(212, 165, 116, 0.3) 25%,
+          rgba(183, 106, 59, 0.15) 50%,
+          transparent 75%
+        );
+      }
+
+      .form-scarcity.is-hot .form-scarcity__glow.is-glow {
+        animation-duration: 1000ms;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .form-scarcity__glow.is-glow { animation: none; }
+      }
+
+      /* Social Proof Toast - "Someone just sat down" */
+      .seat-claim-toast {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%) translateY(-4px);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: linear-gradient(135deg,
+          rgba(28, 19, 15, 0.95) 0%,
+          rgba(14, 9, 6, 0.98) 100%);
+        border: 1px solid rgba(212, 165, 116, 0.25);
+        border-radius: 6px;
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.5),
+          0 0 20px rgba(212, 165, 116, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 280ms cubic-bezier(0.16, 1, 0.3, 1),
+          transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+          visibility 280ms;
+        white-space: nowrap;
+        z-index: 5;
+      }
+
+      .seat-claim-toast.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .seat-claim-toast__initials {
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        font-style: italic;
+        color: var(--brass, #d4a574);
+        letter-spacing: 0.02em;
+      }
+
+      .seat-claim-toast__arrow {
+        font-size: 0.75rem;
+        color: rgba(212, 0, 0, 0.8);
+      }
+
+      .seat-claim-toast__text {
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.55);
+      }
+
+      .seat-claim-toast.is-visible .seat-claim-toast__initials {
+        animation: initialsSlide 300ms cubic-bezier(0.16, 1, 0.3, 1) 1;
+      }
+
+      @keyframes initialsSlide {
+        0% { opacity: 0; transform: translateX(-8px); }
+        100% { opacity: 1; transform: translateX(0); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .seat-claim-toast { transition: opacity 100ms, visibility 100ms; }
+        .seat-claim-toast.is-visible .seat-claim-toast__initials { animation: none; }
+      }
+
+      @media (max-width: 768px) {
+        .seat-claim-toast {
+          top: calc(100% + 6px);
+          padding: 5px 10px;
+          gap: 5px;
+        }
+        .seat-claim-toast__initials { font-size: 0.85rem; }
+        .seat-claim-toast__text { font-size: 0.6rem; }
       }
 
       /* Subtle connection: when a seat ticks down, the form responds */
@@ -10925,10 +11065,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <!-- Scarcity Counter -->
             <div class="form-scarcity" id="formScarcity">
               <div class="form-scarcity__display">
+                <div class="form-scarcity__glow" id="scoreboardGlow" aria-hidden="true"></div>
                 <span class="form-scarcity__number" id="spotsLeftInline">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span>
                 <span class="form-scarcity__number form-scarcity__number--next" id="spotsLeftInlineNext" aria-hidden="true"></span>
               </div>
               <span class="form-scarcity__label">SEATS LEFT</span>
+              <!-- Social Proof Toast -->
+              <div class="seat-claim-toast" id="seatClaimToast" aria-live="polite" aria-atomic="true">
+                <span class="seat-claim-toast__initials" id="seatClaimInitials">M.R.</span>
+                <span class="seat-claim-toast__arrow">→</span>
+                <span class="seat-claim-toast__text">seat claimed</span>
+              </div>
             </div>
 
 <form id="signup" novalidate>
@@ -12060,6 +12207,50 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       let hasFakeStormOnPhone = false;
       let lastStormScheduledAt = 0; // timestamp when last stormbeat will fire (for cooldown)
 
+      // Cuban name pool for social proof
+      const CUBAN_NAME_POOL = [
+        'M.R.', 'J.G.', 'C.M.', 'R.P.', 'A.L.', 'L.F.', 'E.S.', 'O.H.',
+        'F.C.', 'D.V.', 'G.T.', 'P.D.', 'N.A.', 'S.B.', 'H.O.', 'I.N.',
+        'Y.M.', 'B.R.', 'T.G.', 'V.P.', 'J.R.', 'M.G.', 'R.M.', 'A.P.'
+      ];
+      let recentlyUsedNames = [];
+      let seatClaimToastTimeout = null;
+
+      function getRandomCubanInitials() {
+        const available = CUBAN_NAME_POOL.filter(n => !recentlyUsedNames.includes(n));
+        const pool = available.length > 0 ? available : CUBAN_NAME_POOL;
+        const selected = pool[Math.floor(Math.random() * pool.length)];
+        recentlyUsedNames.push(selected);
+        if (recentlyUsedNames.length > 5) recentlyUsedNames.shift();
+        return selected;
+      }
+
+      function triggerScoreboardGlow() {
+        const glow = document.getElementById('scoreboardGlow');
+        if (!glow) return;
+        glow.classList.remove('is-glow');
+        requestAnimationFrame(() => glow.classList.add('is-glow'));
+        window.setTimeout(() => glow.classList.remove('is-glow'), 850);
+      }
+
+      function showSeatClaimToast() {
+        const toast = document.getElementById('seatClaimToast');
+        const initialsEl = document.getElementById('seatClaimInitials');
+        if (!toast || !initialsEl) return;
+
+        initialsEl.textContent = getRandomCubanInitials();
+
+        if (seatClaimToastTimeout) {
+          window.clearTimeout(seatClaimToastTimeout);
+          toast.classList.remove('is-visible');
+        }
+
+        window.setTimeout(() => toast.classList.add('is-visible'), 180);
+        seatClaimToastTimeout = window.setTimeout(() => {
+          toast.classList.remove('is-visible');
+        }, 1800);
+      }
+
       function animateInlineSeatTick(nextValue) {
         if (!spotsLeftInlineEl || !spotsLeftInlineNextEl) return;
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -12160,6 +12351,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           showSeatMomentumLabel('SEAT TAKEN');
           pulseSeatConnection();
           triggerFormStormBeat();
+
+          // Scoreboard glow + social proof toast
+          window.setTimeout(() => triggerScoreboardGlow(), 50);
+          window.setTimeout(() => showSeatClaimToast(), 180);
         }
       }
 
@@ -12203,6 +12398,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           formScarcityEl.classList.add('is-alert');
           window.setTimeout(() => formScarcityEl.classList.remove('is-alert'), 1100);
         }
+
+        // Scoreboard glow + social proof toast
+        window.setTimeout(() => triggerScoreboardGlow(), 50);
+        window.setTimeout(() => showSeatClaimToast(), 180);
       }
 
       function animateCounter(target, duration = 1000) {
@@ -13429,7 +13628,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
           selectedAvatar = opt.dataset.avatar;
 
-          // Keep selection centered like placing a chip on the felt
+          // Center the selected flag - this is a deliberate user action, not scroll-end
+          // The jitter was caused by settleAvatarScroll(), not this click handler
           try {
             opt.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
           } catch {}
@@ -13482,10 +13682,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           && nextCentered !== centeredAvatar;
         setCenteredAvatarOption(closest);
 
-        // The settle beat: one smooth nudge into place.
-        try {
-          closest.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        } catch {}
+        // CSS scroll-snap handles positioning - we only update visual state here
+        // Removing scrollIntoView eliminates the CSS/JS snap conflict that caused jitter
 
         if (shouldHaptic) vibrate(6);
       }
@@ -13493,7 +13691,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       if (avatarSelector) {
         const scheduleScrollEnd = () => {
           if (avatarScrollEndTimer) clearTimeout(avatarScrollEndTimer);
-          avatarScrollEndTimer = setTimeout(settleAvatarScroll, 120);
+          avatarScrollEndTimer = setTimeout(settleAvatarScroll, 250);
         };
 
         avatarSelector.addEventListener('scroll', () => {
@@ -13532,6 +13730,27 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         // Initial centered state once the layout is ready.
         requestAnimationFrame(updateAvatarCenteredState);
+
+        // Runway animation: center Cuba then peek to hint more flags exist
+        function initializeAvatarRunway() {
+          const cubaFlag = avatarSelector.querySelector('[data-avatar="cuba"]');
+          if (!cubaFlag) return;
+
+          // Center Cuba first (instant, no animation)
+          cubaFlag.scrollIntoView({ behavior: 'instant', inline: 'center', block: 'nearest' });
+          setCenteredAvatarOption(cubaFlag);
+
+          // After entrance animation completes, peek right to hint more flags exist
+          setTimeout(() => {
+            avatarSelector.scrollBy({ left: 60, behavior: 'smooth' });
+            setTimeout(() => {
+              cubaFlag.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }, 400);
+          }, 900);
+        }
+
+        // Run runway when identity screen is visible
+        requestAnimationFrame(initializeAvatarRunway);
       }
 
       // Player selection handler (individual sign-ups, no teams until draft)
