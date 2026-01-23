@@ -6312,8 +6312,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: flex-start; /* Start from left so Cuba shows first */
         align-items: center;
         gap: 12px;
-        margin: 24px auto;
-        padding: 16px 32px;
+        margin: 14px auto;
+        /* Give the glow room so it never clips on pulse/slam */
+        padding: 30px 32px;
         overflow-x: auto;
         overflow-y: visible;
         max-width: 500px; /* Reasonable constraint */
@@ -6323,11 +6324,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 1;
         flex-grow: 0;
         scroll-snap-type: x mandatory;
+        scroll-padding-inline: 32px;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        /* Fade edges hint */
-        mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
-        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
       }
       .avatar-selector::-webkit-scrollbar { display: none; }
 
@@ -6378,8 +6377,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .avatar-option.selected {
         transform: translateY(-6px) scale(1.15);
         z-index: 20;
-        box-shadow: 0 0 20px 8px rgba(255, 200, 100, 0.35);
-        animation: glowPulseSelected 2.5s ease-in-out infinite;
+      }
+
+      /* Selected flag with warm breathing glow */
+      .avatar-option.selected::after {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(212, 165, 116, 0.35) 0%, transparent 65%);
+        animation: flagGlowPulse 2.5s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
       }
 
       /* Refined slam - smooth lift into place */
@@ -6403,12 +6412,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Golden glow pulse - Ochún's candlelight */
-      @keyframes glowPulseSelected {
+      @keyframes flagGlowPulse {
         0%, 100% {
-          box-shadow: 0 0 18px 6px rgba(255, 200, 100, 0.25);
+          opacity: 0.5;
+          transform: scale(1);
         }
         50% {
-          box-shadow: 0 0 24px 10px rgba(255, 200, 100, 0.4);
+          opacity: 0.85;
+          transform: scale(1.06);
         }
       }
 
@@ -6695,7 +6706,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-radius: 12px;
         color: #0d0906;
         padding: 18px 44px;
-        font-family: "IBM Plex Sans", sans-serif;
+        font-family: "IBM Plex Sans Condensed", sans-serif;
         font-size: 0.85rem;
         font-weight: 700;
         letter-spacing: 0.2em;
@@ -6927,10 +6938,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .avatar-selector {
-          margin: 16px 0 20px 0;
+          margin: 12px 0 16px 0;
           gap: 10px;
-          padding: 12px 20px;
+          /* Mobile needs extra headroom for glow + slam */
+          padding: 26px 20px;
           flex-grow: 0;
+          scroll-padding-inline: 20px;
         }
 
         .chat-identity__input {
