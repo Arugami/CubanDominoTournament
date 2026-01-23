@@ -15,7 +15,7 @@
 - [ ] Confirm all registered teams 48 hours before
 
 ### Venue & Logistics
-- [ ] Confirm Mr Garcia Cigars booking
+- [ ] Confirm Stefan's Lounge booking
 - [ ] Site visit — measure space, plan layout
 - [ ] Determine table setup (how many games simultaneously?)
 - [ ] Plan bracket/tournament flow
@@ -197,7 +197,7 @@
 - [x] Assemble dream team (10 legends)
 - [x] **cubandominoleague.com LIVE**
 - [x] Registration system working
-- [x] Venue identified (Mr Garcia Cigars)
+- [x] Venue identified (Stefan's Lounge, 333 Bergenline Blvd, Fairview)
 - [x] Date set (January 31, 2025)
 - [x] Visual assets created (4 panels)
 - [x] Team documentation complete
@@ -285,6 +285,9 @@
 - [x] **Panels 2-4: Complete narrative arc** — Typography hierarchy refined for storytelling flow
 - [x] **Back-to-top pip cinematic animations** — Matching loading screen visual language (scale 0.9→1, elastic pop easing, glow bloom)
 - [x] **Admin dashboard ticker preview fix** — Used `100dvh` for iOS, corrected height offset to 200px, reduced hero padding
+- [x] **Venue change: Stefan's Lounge** — Updated from Mr Garcia Cigars to Stefan's Lounge (333 Bergenline Blvd, Fairview)
+- [x] **Registration flow: La Mesa teaming** — Players register solo, team up in La Mesa chat (replaced Commissioner pairing)
+- [x] **Email time updated** — Event time changed from 7PM to 6PM
 
 ---
 
@@ -305,7 +308,7 @@ Every `git push` to `main` automatically deploys to cubandominoleague.com.
 ```
 APP_SCRIPT_URL=https://script.google.com/macros/s/XXXXX/exec
 APP_SCRIPT_SECRET=your-shared-secret
-VENUE_URL=https://share.google/Bd3ZofPsvccfdT7EC
+VENUE_URL=https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ
 ```
 
 ### Deploy Workflow
@@ -338,7 +341,7 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 19, 2026 (Admin Dashboard Ticker Preview Fix)
+**Last Updated:** January 23, 2026 (Venue Change + La Mesa Teaming Flow)
 
 *"La mesa te espera."*
 

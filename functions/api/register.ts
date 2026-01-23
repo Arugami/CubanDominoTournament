@@ -66,7 +66,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     phone: clean(body.phone),
     notes: clean(body.notes),
     ruleConfirm: clean(body.ruleConfirm),
-    venueUrl: env.VENUE_URL || "https://share.google/Bd3ZofPsvccfdT7EC",
+    venueUrl: env.VENUE_URL || "https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ",
   };
 
   let upstreamResponse: Response;

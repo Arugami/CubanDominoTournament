@@ -321,10 +321,10 @@ function buildConfirmationEmailHTML(body) {
 
     <div style="background: rgba(183, 106, 59, 0.1); border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid rgba(183, 106, 59, 0.2);">
       <p style="margin: 0 0 12px 0; font-size: 16px;">
-        <strong style="color: #d4a574;">📅 Date:</strong> Friday, January 31st, 2025 @ 7PM
+        <strong style="color: #d4a574;">📅 Date:</strong> Friday, January 31st, 2025 @ 6PM
       </p>
       <p style="margin: 0 0 12px 0; font-size: 16px;">
-        <strong style="color: #d4a574;">📍 Location:</strong> Mr Garcia Cigars (74th & Broadway)
+        <strong style="color: #d4a574;">📍 Location:</strong> Stefan's Lounge (333 Bergenline Blvd, Fairview)
       </p>
       <p style="margin: 0; font-size: 16px;">
         <strong style="color: #d4a574;">🎯 Entry:</strong> $25 per player (cash on arrival)
@@ -343,8 +343,8 @@ function buildConfirmationEmailHTML(body) {
 
     <div style="background: rgba(212, 165, 116, 0.1); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
       <p style="margin: 0 0 8px 0; font-size: 14px; color: #d4a574;"><strong>How it works:</strong></p>
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">1. Show up solo</p>
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">2. Get drafted into a team (fantasy draft style)</p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">1. Register solo</p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">2. Team up in La Mesa (the group chat)</p>
       <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">3. Play to 150 points</p>
       <p style="margin: 0; font-size: 14px; color: #d4a574;"><strong>🏆 Winning team takes the pot!</strong></p>
     </div>
@@ -353,7 +353,7 @@ function buildConfirmationEmailHTML(body) {
 
     <div style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid #3d2e26;">
       <p style="margin: 0 0 16px 0; color: #888; font-size: 14px;">Questions? Email us at <a href="mailto:Erik@cubandominoleague.com" style="color: #d4a574;">Erik@cubandominoleague.com</a></p>
-      <a href="https://share.google/Bd3ZofPsvccfdT7EC" style="display: inline-block; background: linear-gradient(135deg, #b76a3b 0%, #d4a574 100%); color: #1c130f; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">View Venue</a>
+      <a href="https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ" style="display: inline-block; background: linear-gradient(135deg, #b76a3b 0%, #d4a574 100%); color: #1c130f; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">View Venue</a>
     </div>
 
     <p style="text-align: center; margin-top: 32px; font-size: 20px;">La mesa te espera. 🌴</p>
