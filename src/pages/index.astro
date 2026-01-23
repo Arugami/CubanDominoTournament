@@ -2535,9 +2535,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* "Te toca." - THE CLIMAX - RISES from below */
-      /* TIGHTENED: Starts at 5.8s (tighter after life cycle starts), 1.4s duration, lands at 7.2s */
+      /* RESTORED: Lin-Manuel's timing — THE BREATH (1.2s silence) before torch pass */
+      /* Starts at 7.5s (after lifecycle absorbs), 2.0s duration, lands at 9.5s */
       .panel--build.in-view:not(.has-played) .build-word--torch {
-        animation: torchRise 1.4s cubic-bezier(0.16, 1, 0.3, 1) 5.8s forwards;
+        animation: torchRise 2.0s cubic-bezier(0.16, 1, 0.3, 1) 7.5s forwards;
       }
 
       /* Legacy: keep inherited animation */
@@ -2546,7 +2547,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--build.in-view:not(.has-played) .build-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 7.2s forwards;  /* Appears at 7.2s (300ms before lock releases at 7.5s) */
+        animation: scrollHintReveal 1s ease-out 10.0s forwards;  /* Appears at 10.0s (500ms before lock releases at 10.5s) */
       }
 
       /* ANCESTOR DESCENDS - SMOOTH drop from above (no bounce) */
@@ -10057,7 +10058,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !buildHasPlayed) {
             buildHasPlayed = true;
             alignPanelAfterSettle(buildPanel);
-            lockScroll(7500, () => buildPanel?.classList.add('has-played'));  // 7.5s - Users getting impatient, tightened timing
+            lockScroll(10500, () => buildPanel?.classList.add('has-played'));  // 10.5s - Full restoration of Lin-Manuel's timing: THE BREATH before "Te toca."
           }
         });
       }, { threshold: 0.6 });

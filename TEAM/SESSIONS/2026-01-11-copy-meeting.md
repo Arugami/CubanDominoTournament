@@ -1034,4 +1034,37 @@ This principle was already applied to Panels 2 & 4. Now Panel 3 matches.
 
 *Revision documented: January 19, 2026*
 
+---
+
+# Revision: January 23, 2026
+## Panel 3 Timing Restoration — "Let the Ancestors Land" Fully Honored
+
+**Creative Lead:** Lin-Manuel Miranda (via documented principles)
+**Focus:** Restoring THE BREATH before torch pass
+
+---
+
+### The Problem
+
+Implementation had compressed Panel 3 timing from 10.5s to 7.5s (comment: "users getting impatient"). This sacrificed the emotional climax.
+
+### What Was Fixed
+
+| Element | Before | After |
+|---------|--------|-------|
+| Silence before "Te toca." | 0.5s | **1.2s** (THE BREATH restored) |
+| "Te toca." duration | 1.4s | **2.0s** (weight restored) |
+| Post-torch silence | 0ms | **0.5s** (reverberation) |
+| Scroll lock | 7500ms | **10500ms** |
+
+### Lin-Manuel's Principle Honored
+
+> "Silence isn't empty. It's where the feeling lives."
+
+The torch pass now has room to LAND.
+
+---
+
+*Revision documented: January 23, 2026*
+
 *"La mesa te espera."*
