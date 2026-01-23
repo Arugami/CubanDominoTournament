@@ -50,6 +50,7 @@
 - [ ] Event poster/graphic
 - [ ] Player name tags/cards
 - [ ] Winner trophy/prize presentation
+- [ ] Tobias cohesion pass: La Mesa tooltip + “seats left” urgency
 - [x] Merch concepts brainstormed — **See `TEAM/SESSIONS/2026-01-14-merch-brainstorm.md`**
 
 ---
@@ -122,6 +123,12 @@
 - [ ] Bracket management tool
 - [ ] Player registration database
 - [x] Mobile-friendly improvements — **90% mobile users, optimized chat/ticker/safe areas, iOS zoom fix**
+- [x] La Mesa ticker: disable touch-to-pause (ticker always scrolls)
+- [x] Panel 4 (“TAKE YOUR SEAT”): subtle animation refinement + reduced-motion fallback
+- [x] `/concepts` page for visual QA (tooltips + seats-left)
+- [x] La Mesa tooltip: broadcast default + preview variants
+- [x] “Seats left” counter: broadcast plaque + single tickdown momentum + stormbeat on live registration
+- [ ] Tune stormbeat intensity (urgent, not distracting)
 
 ---
 
@@ -226,6 +233,8 @@
 - [x] **"CDL I" tournament edition marker** — UFC-style event branding
 - [x] **La Mesa post-registration flow** — Chat unlocks after sign-up (reward system)
 - [x] **Identity screen UX redesign** — Custom dropdown, live player count, flag selector
+- [x] **Flag selector polish** — Glow no longer clips; edge fades + center cue + magnetic settle snap
+- [x] **Mobile flag tap fix** — Removed double-flicker (no transform fighting / no delayed selected state)
 - [x] **"The Bone Language" design system** — Unified 12px border-radius, domino tile shape language
 - [x] **La Mesa domino tile button** — Vertical domino with pip pattern replaces generic pill
 - [x] **Hired Tobias van Schneider** — Chief Product Designer (Spotify dark UI, micro-interactions)
@@ -276,6 +285,7 @@
 - [x] **Loading screen timing extended** — 400ms → 1400ms for proper cinematic effect
 - [x] **Form slogan styling** — "La mesa te espera" in Bodoni Moda italic, confident (not precious) per Dana White's UFC edge
 - [x] **La Ley rules panel sports typography** — Rule card titles switched from Bodoni Moda to IBM Plex Sans 600, uppercase, 0.08em tracking
+- [x] **La Ley plaque refinement** — Engraved/inlaid border + reduced radius (less “UI card”, more artifact)
 - [x] **Sitewide typography audit** — Identified all broadcast vs elegant typography moments
 - [x] **Sports broadcast tracking consistency** — Standardized 0.08em tracking across rule cards, rules subtitle, mobile nav labels, ticker preview badge
 - [x] **Loading screen: removed looping animations** — Per Tobias, removed heartbeat/orbital animations that "drew the eye without purpose"
@@ -288,6 +298,8 @@
 - [x] **Venue change: Stefan's Lounge** — Updated from Mr Garcia Cigars to Stefan's Lounge (333 Bergenline Blvd, Fairview)
 - [x] **Registration flow: La Mesa teaming** — Players register solo, team up in La Mesa chat (replaced Commissioner pairing)
 - [x] **Email time updated** — Event time changed from 7PM to 6PM
+- [x] **Success + Footer polish** — Success layout fills screen evenly; form→footer dissolve; footer darkened for readability
+- [x] **Terms copy tweak** — “hablando mierda (talking trash)” phrasing
 
 ---
 
@@ -341,7 +353,7 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 23, 2026 (Venue Change + La Mesa Teaming Flow)
+**Last Updated:** January 23, 2026 (UI Polish: Flag Scroll + Success/Footer + La Ley Plaque)
 
 *"La mesa te espera."*
 

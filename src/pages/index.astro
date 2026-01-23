@@ -7423,6 +7423,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         max-width: 540px;
         width: 100%;
         padding: 32px 5vw;
+        isolation: isolate;
         /* Floating plaque effect */
         background:
           radial-gradient(ellipse at 50% 18%, rgba(212, 165, 116, 0.055) 0%, transparent 55%),
@@ -7440,6 +7441,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         -webkit-backdrop-filter: blur(8px);
       }
 
+      .rules-plaque > * {
+        position: relative;
+        z-index: 2;
+      }
+
       /* Engraved inner border - "carved/inlaid", not a big UI frame */
       .rules-plaque::before {
         content: "";
@@ -7451,7 +7457,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           inset 0 1px 0 rgba(255, 255, 255, 0.04),
           inset 0 -1px 0 rgba(0, 0, 0, 0.45);
         pointer-events: none;
-        opacity: 0.9;
+        opacity: 0.85;
+        z-index: 1;
       }
 
       /* Subtle brushed grain - felt, not seen */
@@ -7469,8 +7476,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           rgba(255, 255, 255, 0.015) 100%
         );
         pointer-events: none;
-        opacity: 0.35;
+        opacity: 0.22;
         mix-blend-mode: soft-light;
+        z-index: 0;
       }
 
 	      /* Header section - tightly coupled */
@@ -7570,7 +7578,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Primary rules - subtle left accent, slightly more presence */
       .rule-card--primary {
-        grid-column: 1 / -1; /* Break the perfect grid: two "primary" rules feel primary */
         border: 1px solid rgba(212, 165, 116, 0.16);
         border-bottom-color: rgba(212, 165, 116, 0.28);
         background:
@@ -7579,7 +7586,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 1px 0 rgba(255, 255, 255, 0.03) inset,
           0 -1px 0 rgba(0, 0, 0, 0.3) inset,
           0 8px 24px rgba(0, 0, 0, 0.4);
-        padding: 16px 16px;
+        padding: 16px 12px;
       }
 
       .rule-card--primary .rule-card__title {
@@ -8019,6 +8026,44 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 4px 12px rgba(0, 0, 0, 0.2);
       }
 
+      /* Validation error states */
+      input.is-invalid,
+      textarea.is-invalid {
+        border-color: rgba(212, 0, 0, 0.6);
+        box-shadow: 0 0 0 1px rgba(212, 0, 0, 0.3);
+      }
+
+      input.is-invalid:focus,
+      textarea.is-invalid:focus {
+        border-color: rgba(212, 0, 0, 0.7);
+        box-shadow:
+          0 0 0 1px rgba(212, 0, 0, 0.4),
+          0 4px 12px rgba(212, 0, 0, 0.15);
+        animation: inputShake 400ms ease-out;
+      }
+
+      .terms-checkbox.is-invalid .terms-checkbox__box {
+        border-color: rgba(212, 0, 0, 0.6);
+        box-shadow: 0 0 0 1px rgba(212, 0, 0, 0.3);
+      }
+
+      @keyframes inputShake {
+        0%, 100% { transform: translateX(0) translateY(-1px); }
+        15% { transform: translateX(-4px) translateY(-1px); }
+        30% { transform: translateX(4px) translateY(-1px); }
+        45% { transform: translateX(-3px) translateY(-1px); }
+        60% { transform: translateX(3px) translateY(-1px); }
+        75% { transform: translateX(-2px) translateY(-1px); }
+        90% { transform: translateX(2px) translateY(-1px); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        input.is-invalid:focus,
+        textarea.is-invalid:focus {
+          animation: none;
+        }
+      }
+
       input::placeholder,
       textarea::placeholder {
         color: rgba(212, 165, 116, 0.2);
@@ -8236,8 +8281,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         align-items: center;
         justify-content: center;
-        min-width: 56px;
-        padding: 8px 14px;
+        min-width: 64px;
+        height: 44px;
+        padding: 0 14px;
         border-radius: 10px;
         background: linear-gradient(180deg, rgba(28, 19, 15, 0.95) 0%, rgba(14, 9, 6, 0.98) 100%);
         border: 1px solid rgba(212, 165, 116, 0.22);
@@ -8271,9 +8317,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .form-scarcity__number {
-        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
-        font-size: 1.6rem;
-        font-weight: 700;
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.65rem;
+        font-weight: 800;
+        font-style: italic;
         line-height: 1;
         font-variant-numeric: tabular-nums;
         letter-spacing: 0.02em;
@@ -8296,6 +8343,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         filter: blur(1px);
         transform: translate(-50%, -70%);
         pointer-events: none;
+      }
+
+      .form-scarcity__display.is-tick {
+        border-color: rgba(212, 0, 0, 0.18);
+        box-shadow:
+          inset 0 1px 0 rgba(212, 165, 116, 0.08),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+          0 14px 40px rgba(0, 0, 0, 0.45),
+          0 0 44px rgba(212, 0, 0, 0.05),
+          0 0 40px rgba(212, 165, 116, 0.06);
       }
 
       .form-scarcity__display.is-tick .form-scarcity__number {
@@ -8370,11 +8427,26 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         color: rgba(255, 255, 255, 0.78);
       }
 
+      .form-scarcity.is-alert .form-scarcity__label::before {
+        animation: alertDot 700ms ease-in-out 2;
+        box-shadow:
+          0 0 10px rgba(212, 0, 0, 0.24),
+          0 0 20px rgba(212, 165, 116, 0.12);
+      }
+
+      @keyframes alertDot {
+        0%, 100% { transform: translateY(-50%) scale(1); opacity: 1; }
+        45% { transform: translateY(-50%) scale(1.5); opacity: 0.85; }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .form-scarcity.is-pop .form-scarcity__display {
           animation: none;
         }
         .form-scarcity.is-hot .form-scarcity__label::before {
+          animation: none;
+        }
+        .form-scarcity.is-alert .form-scarcity__label::before {
           animation: none;
         }
         .form-scarcity__number {
@@ -8407,6 +8479,63 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         height: 2px;
         transform: skewX(0);
         box-shadow: 0 2px 12px rgba(212, 0, 0, 0.12);
+      }
+
+      /* Subtle “stormbeat” — immersive urgency without stealing focus */
+      .panel--form::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        z-index: 2; /* Above content, pointer-events:none keeps inputs usable */
+        background:
+          radial-gradient(ellipse at 50% 35%, rgba(0, 0, 0, 0.55) 0%, transparent 55%),
+          radial-gradient(ellipse at 30% 20%, rgba(212, 0, 0, 0.08) 0%, transparent 60%),
+          linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, transparent 40%);
+      }
+
+      .panel--form.is-storm::before {
+        animation: stormBeat 900ms ease-out 1;
+      }
+
+      @keyframes stormBeat {
+        0% { opacity: 0; }
+        16% { opacity: 0.34; }
+        28% { opacity: 0.08; }
+        46% { opacity: 0.22; }
+        62% { opacity: 0.1; }
+        100% { opacity: 0; }
+      }
+
+      /* Enhanced stormbeat: warm brass glow from below (the "heat" of competition) */
+      .panel--form::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        z-index: 1;
+        background: radial-gradient(ellipse 120% 80% at 50% 100%,
+          rgba(183, 106, 59, 0.12) 0%, transparent 50%);
+      }
+
+      .panel--form.is-storm::after {
+        animation: stormWarmth 900ms ease-out 1;
+      }
+
+      @keyframes stormWarmth {
+        0% { opacity: 0; }
+        20% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 0; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .panel--form.is-storm::before,
+        .panel--form.is-storm::after {
+          animation: none;
+        }
       }
 
       /* Form Header - Scarcity + Tagline */
@@ -8768,13 +8897,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .form-scarcity__display {
-          min-width: 48px;
-          padding: 6px 12px;
-          border-width: 2px;
+          min-width: 58px;
+          height: 40px;
+          padding: 0 12px;
         }
 
         .form-scarcity__number {
-          font-size: 1.4rem;
+          font-size: 1.45rem;
         }
 
         .form-scarcity__label {
@@ -11926,6 +12055,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       let didTriggerSeatMomentum = false;
       let seatMomentumLabelTimeout = null;
 
+      // Fake stormbeat triggers (Rainforest Cafe-style urgency)
+      let fakeStormTriggerCount = 0;
+      let hasFakeStormOnName = false;
+      let hasFakeStormOnPhone = false;
+
       function animateInlineSeatTick(nextValue) {
         if (!spotsLeftInlineEl || !spotsLeftInlineNextEl) return;
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -11954,7 +12088,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (spotsLeftEl) spotsLeftEl.textContent = remaining + " seats left";
         if (spotsLeftButtonEl) spotsLeftButtonEl.textContent = remaining;
         if (spotsLeftInlineEl) {
-          if (tick) animateInlineSeatTick(remaining);
+          const currentInline = Number.parseInt(spotsLeftInlineEl.textContent || '', 10);
+          const shouldTick = tick && !(Number.isFinite(currentInline) && currentInline === remaining);
+          if (shouldTick) animateInlineSeatTick(remaining);
           else spotsLeftInlineEl.textContent = remaining;
         }
 
@@ -11981,14 +12117,50 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }, 520);
       }
 
-      function showSeatMomentumLabel() {
+      function showSeatMomentumLabel(text) {
         if (!spotsLeftLabelEl) return;
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        spotsLeftLabelEl.textContent = reduceMotion ? 'SEATS UPDATING' : 'SEAT CLAIMED';
+        const nextText = text || (reduceMotion ? 'SEATS UPDATING' : 'SEAT CLAIMED');
+        spotsLeftLabelEl.textContent = nextText;
         if (seatMomentumLabelTimeout) window.clearTimeout(seatMomentumLabelTimeout);
         seatMomentumLabelTimeout = window.setTimeout(() => {
           if (spotsLeftLabelEl) spotsLeftLabelEl.textContent = 'SEATS LEFT';
         }, 2200);
+      }
+
+      function triggerFormStormBeat() {
+        const panel = document.querySelector('.panel--form');
+        if (!panel) return;
+        if (!panel.classList.contains('in-view')) return;
+
+        panel.classList.remove('is-storm');
+        requestAnimationFrame(() => {
+          panel.classList.add('is-storm');
+        });
+        window.setTimeout(() => {
+          panel.classList.remove('is-storm');
+        }, 980);
+      }
+
+      function applyRealSeatClaim(count = 1) {
+        const clamped = Math.max(0, Math.floor(count));
+        if (clamped <= 0) return;
+        if (seatsRemainingActual <= 0) return;
+
+        seatsRemainingActual = Math.max(seatsRemainingActual - clamped, 0);
+        seatsMomentumDelta = Math.max(seatsMomentumDelta - clamped, 0);
+
+        updateSpotsRemaining(seatsRemainingActual, { animate: true, tick: true });
+        const formInView = document.querySelector('.panel--form')?.classList.contains('in-view');
+        if (formInView) {
+          if (formScarcityEl) {
+            formScarcityEl.classList.add('is-alert');
+            window.setTimeout(() => formScarcityEl.classList.remove('is-alert'), 1100);
+          }
+          showSeatMomentumLabel('SEAT TAKEN');
+          pulseSeatConnection();
+          triggerFormStormBeat();
+        }
       }
 
       function triggerSeatMomentum() {
@@ -11999,9 +12171,38 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (seatsMomentumDelta > 0) return;
 
         seatsMomentumDelta = 1;
-        showSeatMomentumLabel();
+        showSeatMomentumLabel('SEAT CLAIMED');
         updateSpotsRemaining(seatsRemainingActual, { animate: true, tick: true });
         pulseSeatConnection();
+      }
+
+      // Fake stormbeat: simulates "someone just registered" for urgency
+      // Triggers max 2 times per session - once on name, once on phone
+      function triggerFakeStormbeat() {
+        // Guard: max 2 triggers
+        if (fakeStormTriggerCount >= 2) return;
+        // Guard: respect reduced motion
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) return;
+        // Guard: need seats remaining
+        if (seatsRemainingActual <= 0) return;
+
+        fakeStormTriggerCount++;
+
+        // Decrement actual seats (this is a "fake" registration)
+        seatsRemainingActual = Math.max(seatsRemainingActual - 1, 0);
+
+        // Fire the visual effects
+        updateSpotsRemaining(seatsRemainingActual, { animate: true, tick: true });
+        showSeatMomentumLabel('SEAT TAKEN!');
+        pulseSeatConnection();
+        triggerFormStormBeat();
+
+        // Add alert class for extra emphasis
+        if (formScarcityEl) {
+          formScarcityEl.classList.add('is-alert');
+          window.setTimeout(() => formScarcityEl.classList.remove('is-alert'), 1100);
+        }
       }
 
       function animateCounter(target, duration = 1000) {
@@ -12076,6 +12277,120 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         },
         { passive: true }
       );
+
+      // Fake stormbeat triggers: fire "someone just registered" at key form moments
+      // First trigger: after 2+ characters typed in name field
+      const playerNameInputForStorm = form?.querySelector('input[name="playerName"]');
+      playerNameInputForStorm?.addEventListener(
+        'input',
+        () => {
+          if (hasFakeStormOnName) return;
+          if ((playerNameInputForStorm.value || '').trim().length < 2) return;
+          hasFakeStormOnName = true;
+          // Randomized delay (800-1200ms) so it feels organic, not scripted
+          const delay = 800 + Math.random() * 400;
+          window.setTimeout(triggerFakeStormbeat, delay);
+        },
+        { passive: true, once: true }
+      );
+
+      // Second trigger: after 3+ digits typed in phone field
+      const phoneInput = form?.querySelector('input[name="phone"]');
+      phoneInput?.addEventListener(
+        'input',
+        () => {
+          if (hasFakeStormOnPhone) return;
+          const digitsOnly = (phoneInput.value || '').replace(/\D/g, '');
+          if (digitsOnly.length < 3) return;
+          hasFakeStormOnPhone = true;
+          // Randomized delay (600-900ms)
+          const delay = 600 + Math.random() * 300;
+          window.setTimeout(triggerFakeStormbeat, delay);
+        },
+        { passive: true, once: true }
+      );
+
+      // === Form Validation ===
+      // Email: RFC-compliant pattern
+      function isValidEmail(email) {
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return pattern.test(email);
+      }
+
+      // Phone: US 10-digit format (strips non-digits, allows leading 1)
+      function isValidPhone(phone) {
+        const digitsOnly = phone.replace(/\D/g, '');
+        // Accept 10 digits, or 11 digits if starts with 1
+        if (digitsOnly.length === 10) return true;
+        if (digitsOnly.length === 11 && digitsOnly.startsWith('1')) return true;
+        return false;
+      }
+
+      // Generic field validator
+      function validateField(input, validatorFn, errorMessage) {
+        if (!input) return true;
+        const value = input.value.trim();
+        const isValid = validatorFn(value);
+
+        if (isValid) {
+          input.classList.remove('is-invalid');
+          input.setCustomValidity('');
+        } else {
+          input.classList.add('is-invalid');
+          input.setCustomValidity(errorMessage);
+        }
+        return isValid;
+      }
+
+      // Terms checkbox validator
+      function validateTerms() {
+        const termsInput = form?.querySelector('input[name="termsAccepted"]');
+        const termsLabel = termsInput?.closest('.terms-checkbox');
+        if (!termsInput) return true;
+
+        const isValid = termsInput.checked;
+        if (isValid) {
+          termsLabel?.classList.remove('is-invalid');
+          termsInput.setCustomValidity('');
+        } else {
+          termsLabel?.classList.add('is-invalid');
+          termsInput.setCustomValidity('Please accept the terms');
+        }
+        return isValid;
+      }
+
+      // Full form validation
+      function validateRegistrationForm() {
+        const emailInput = form?.querySelector('input[name="email"]');
+        const phoneInputEl = form?.querySelector('input[name="phone"]');
+
+        const emailValid = validateField(emailInput, isValidEmail, 'Please enter a valid email address');
+        const phoneValid = validateField(phoneInputEl, isValidPhone, 'Please enter a valid 10-digit phone number');
+        const termsValid = validateTerms();
+
+        return emailValid && phoneValid && termsValid;
+      }
+
+      // Real-time validation on blur
+      const emailInputEl = form?.querySelector('input[name="email"]');
+      const phoneInputEl = form?.querySelector('input[name="phone"]');
+      const termsInputEl = form?.querySelector('input[name="termsAccepted"]');
+
+      emailInputEl?.addEventListener('blur', () => {
+        if (emailInputEl.value.trim()) {
+          validateField(emailInputEl, isValidEmail, 'Please enter a valid email address');
+        }
+      }, { passive: true });
+
+      phoneInputEl?.addEventListener('blur', () => {
+        if (phoneInputEl.value.trim()) {
+          validateField(phoneInputEl, isValidPhone, 'Please enter a valid 10-digit phone number');
+        }
+      }, { passive: true });
+
+      termsInputEl?.addEventListener('change', () => {
+        validateTerms();
+      }, { passive: true });
 
       // Helper: Show waiting state with premium feel
       const showWaitingState = () => {
@@ -12156,6 +12471,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
+
+        // Run custom validation first
+        if (!validateRegistrationForm()) {
+          // Focus first invalid field
+          const firstInvalid = form.querySelector('.is-invalid, input:invalid');
+          firstInvalid?.focus();
+          return;
+        }
+
+        // Then check native HTML5 validation
         if (!form.reportValidity()) return;
 
         // Disable button immediately
@@ -12582,7 +12907,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       // Load Supabase and initialize (only if configured)
       if (SUPABASE_URL && SUPABASE_ANON_KEY) {
         loadSupabaseScript().then(() => {
-          if (initSupabase() && chatIdentity) {
+          if (!initSupabase()) return;
+          // Always listen for new registrations so the form + ticker can react in real-time.
+          subscribeToRegistrations();
+          if (chatIdentity) {
             loadMessages();
             subscribeToMessages();
           }
@@ -13260,7 +13588,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (supabase) {
           loadMessages();
           subscribeToMessages();
-          subscribeToRegistrations();
           joinMesaPresence(); // Mesa Mode: Show who's at the table
         }
 
@@ -13477,6 +13804,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           .on('broadcast', { event: 'new-registration' }, (payload) => {
             addTickerEvent('register', payload.payload.playerName);
             updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
+
+            // If the form scene is active, make the room react (subtle “stormbeat” urgency).
+            applyRealSeatClaim(1);
           })
           .subscribe();
       }
