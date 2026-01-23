@@ -6437,34 +6437,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         position: relative;
         z-index: 1;
         isolation: isolate;
+        overflow: visible; /* Allow selector to expand */
       }
 
-      /* Edge fades - hint continuation without UI chrome */
+      /* Edge fades - flags emerge from the void */
       .avatar-selector-frame::before,
       .avatar-selector-frame::after {
         content: '';
         position: absolute;
         top: 0;
         bottom: 0;
-        width: 64px;
+        width: 120px; /* Wider fade zone */
         pointer-events: none;
         z-index: 3;
       }
       .avatar-selector-frame::before {
         left: 0;
-        width: 80px;
         background: linear-gradient(90deg,
-          rgba(10, 7, 5, 0.95) 0%,
-          rgba(10, 7, 5, 0.7) 40%,
+          rgba(10, 7, 5, 1) 0%,        /* Full opacity - complete void */
+          rgba(10, 7, 5, 0.95) 20%,
+          rgba(10, 7, 5, 0.6) 50%,
           rgba(10, 7, 5, 0) 100%
         );
       }
       .avatar-selector-frame::after {
         right: 0;
-        width: 80px;
         background: linear-gradient(270deg,
-          rgba(10, 7, 5, 0.95) 0%,
-          rgba(10, 7, 5, 0.7) 40%,
+          rgba(10, 7, 5, 1) 0%,        /* Full opacity - complete void */
+          rgba(10, 7, 5, 0.95) 20%,
+          rgba(10, 7, 5, 0.6) 50%,
           rgba(10, 7, 5, 0) 100%
         );
       }
@@ -6494,7 +6495,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         align-items: center;
         gap: 12px;
         /* Give the glow room so it never clips on pulse/slam */
-        padding: 30px 32px;
+        padding: 30px 80px; /* Wide padding so fades cover edge flags */
         overflow-x: auto;
         overflow-y: visible;
         width: 100%;
@@ -7125,7 +7126,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           justify-content: center; /* Keep centered on mobile too */
           padding: max(28px, calc(env(safe-area-inset-top) + 16px)) 20px max(32px, calc(env(safe-area-inset-bottom) + 20px));
           overflow-y: auto;
-          overflow-x: hidden;
+          overflow-x: visible; /* Allow flag selector to scroll */
         }
 
         /* CDL watermark - adjusted for mobile */
@@ -7155,7 +7156,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .avatar-selector {
           gap: 10px;
           /* Mobile needs extra headroom for glow + slam */
-          padding: 26px 20px;
+          padding: 26px 60px; /* Proportional mobile padding */
           flex-grow: 0;
           scroll-padding-inline: 20px;
         }
@@ -8357,25 +8358,39 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .form-scarcity__display.is-tick {
-        border-color: rgba(212, 0, 0, 0.18);
+        border-color: rgba(212, 0, 0, 0.35);
         box-shadow:
-          inset 0 1px 0 rgba(212, 165, 116, 0.08),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.35),
-          0 14px 40px rgba(0, 0, 0, 0.45),
-          0 0 44px rgba(212, 0, 0, 0.05),
-          0 0 40px rgba(212, 165, 116, 0.06);
+          inset 0 1px 0 rgba(212, 165, 116, 0.12),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+          0 14px 40px rgba(0, 0, 0, 0.5),
+          0 0 60px rgba(212, 0, 0, 0.15),
+          0 0 80px rgba(212, 165, 116, 0.12);
+        animation: counterPunch 280ms cubic-bezier(0.34, 1.56, 0.64, 1) 1;
+      }
+
+      @keyframes counterPunch {
+        0% { transform: scale(1); }
+        30% { transform: scale(1.12); }
+        50% { transform: scale(0.97); }
+        70% { transform: scale(1.04); }
+        100% { transform: scale(1); }
       }
 
       .form-scarcity__display.is-tick .form-scarcity__number {
-        transform: translate(-50%, -30%);
+        transform: translate(-50%, -45%) scale(0.8);
         opacity: 0;
-        filter: blur(1px);
+        filter: blur(2px);
+        color: rgba(212, 0, 0, 0.7);
       }
 
       .form-scarcity__display.is-tick .form-scarcity__number--next {
+        transform: translate(-50%, -50%);
         opacity: 1;
         filter: blur(0);
-        transform: translate(-50%, -50%);
+        color: rgba(212, 165, 116, 1);
+        text-shadow:
+          0 0 20px rgba(212, 165, 116, 0.6),
+          0 2px 10px rgba(0, 0, 0, 0.5);
       }
 
       .form-scarcity__label {
@@ -8463,19 +8478,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .form-scarcity__number {
           transition: none;
         }
+        .form-scarcity__display.is-tick {
+          animation: none;
+        }
       }
 
-      /* Stormbeat Glow Pulse - warm radial glow when seat claimed */
+      /* Stormbeat Glow Pulse - warm radial glow when seat claimed (INTENSIFIED) */
       .form-scarcity__glow {
         position: absolute;
         inset: -8px;
         border-radius: 14px;
         pointer-events: none;
         background: radial-gradient(
-          ellipse 120% 100% at 50% 50%,
-          rgba(212, 165, 116, 0.35) 0%,
-          rgba(183, 106, 59, 0.18) 30%,
-          transparent 70%
+          ellipse 160% 140% at 50% 50%,
+          rgba(212, 165, 116, 0.7) 0%,
+          rgba(183, 106, 59, 0.45) 25%,
+          rgba(212, 0, 0, 0.2) 50%,
+          transparent 75%
         );
         opacity: 0;
         z-index: -1;
@@ -8486,9 +8505,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       @keyframes scoreboardGlow {
-        0% { opacity: 0; transform: scale(0.95); }
-        20% { opacity: 1; transform: scale(1.02); }
-        50% { opacity: 0.6; transform: scale(1); }
+        0% { opacity: 0; transform: scale(0.9); }
+        15% { opacity: 1; transform: scale(1.08); }
+        30% { opacity: 0.9; transform: scale(1.02); }
+        50% { opacity: 0.7; transform: scale(1.05); }
         100% { opacity: 0; transform: scale(1); }
       }
 
@@ -8511,87 +8531,49 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .form-scarcity__glow.is-glow { animation: none; }
       }
 
-      /* Social Proof Toast - "Someone just sat down" */
-      .seat-claim-toast {
-        position: absolute;
-        top: calc(100% + 8px);
-        left: 50%;
-        transform: translateX(-50%) translateY(-4px);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
-        background: linear-gradient(135deg,
-          rgba(28, 19, 15, 0.95) 0%,
-          rgba(14, 9, 6, 0.98) 100%);
-        border: 1px solid rgba(212, 165, 116, 0.25);
-        border-radius: 6px;
-        box-shadow:
-          0 8px 24px rgba(0, 0, 0, 0.5),
-          0 0 20px rgba(212, 165, 116, 0.08),
-          inset 0 1px 0 rgba(255, 255, 255, 0.04);
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-        transition:
-          opacity 280ms cubic-bezier(0.16, 1, 0.3, 1),
-          transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
-          visibility 280ms;
-        white-space: nowrap;
-        z-index: 5;
+      /* Stormbeat Shake - brief jolt when seat claimed */
+      .form-shell.is-shake {
+        animation: stormShake 400ms cubic-bezier(0.36, 0.07, 0.19, 0.97) 1;
       }
 
-      .seat-claim-toast.is-visible {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0);
-      }
-
-      .seat-claim-toast__initials {
-        font-family: "Bodoni Moda", serif;
-        font-size: 0.9rem;
-        font-weight: 700;
-        font-style: italic;
-        color: var(--brass, #d4a574);
-        letter-spacing: 0.02em;
-      }
-
-      .seat-claim-toast__arrow {
-        font-size: 0.75rem;
-        color: rgba(212, 0, 0, 0.8);
-      }
-
-      .seat-claim-toast__text {
-        font-family: "IBM Plex Sans Condensed", sans-serif;
-        font-size: 0.65rem;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.55);
-      }
-
-      .seat-claim-toast.is-visible .seat-claim-toast__initials {
-        animation: initialsSlide 300ms cubic-bezier(0.16, 1, 0.3, 1) 1;
-      }
-
-      @keyframes initialsSlide {
-        0% { opacity: 0; transform: translateX(-8px); }
-        100% { opacity: 1; transform: translateX(0); }
+      @keyframes stormShake {
+        0%, 100% { transform: translateX(0); }
+        10% { transform: translateX(-3px) rotate(-0.3deg); }
+        20% { transform: translateX(3px) rotate(0.3deg); }
+        30% { transform: translateX(-2px) rotate(-0.2deg); }
+        40% { transform: translateX(2px) rotate(0.2deg); }
+        50% { transform: translateX(-1px); }
+        60% { transform: translateX(1px); }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .seat-claim-toast { transition: opacity 100ms, visibility 100ms; }
-        .seat-claim-toast.is-visible .seat-claim-toast__initials { animation: none; }
+        .form-shell.is-shake { animation: none; }
       }
 
-      @media (max-width: 768px) {
-        .seat-claim-toast {
-          top: calc(100% + 6px);
-          padding: 5px 10px;
-          gap: 5px;
+      /* Stormbeat Flash - white/warm flash overlay */
+      .panel--form.is-flash::before {
+        animation: stormFlash 350ms ease-out 1 !important;
+      }
+
+      @keyframes stormFlash {
+        0% {
+          opacity: 0;
+          background: radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
         }
-        .seat-claim-toast__initials { font-size: 0.85rem; }
-        .seat-claim-toast__text { font-size: 0.6rem; }
+        15% {
+          opacity: 1;
+          background: radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.5) 0%, rgba(212, 165, 116, 0.3) 40%, transparent 70%);
+        }
+        40% {
+          opacity: 0.6;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .panel--form.is-flash::before { animation: none !important; }
       }
 
       /* Subtle connection: when a seat ticks down, the form responds */
@@ -11070,12 +11052,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
                 <span class="form-scarcity__number form-scarcity__number--next" id="spotsLeftInlineNext" aria-hidden="true"></span>
               </div>
               <span class="form-scarcity__label">SEATS LEFT</span>
-              <!-- Social Proof Toast -->
-              <div class="seat-claim-toast" id="seatClaimToast" aria-live="polite" aria-atomic="true">
-                <span class="seat-claim-toast__initials" id="seatClaimInitials">M.R.</span>
-                <span class="seat-claim-toast__arrow">→</span>
-                <span class="seat-claim-toast__text">seat claimed</span>
-              </div>
             </div>
 
 <form id="signup" novalidate>
@@ -12207,48 +12183,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       let hasFakeStormOnPhone = false;
       let lastStormScheduledAt = 0; // timestamp when last stormbeat will fire (for cooldown)
 
-      // Cuban name pool for social proof
-      const CUBAN_NAME_POOL = [
-        'M.R.', 'J.G.', 'C.M.', 'R.P.', 'A.L.', 'L.F.', 'E.S.', 'O.H.',
-        'F.C.', 'D.V.', 'G.T.', 'P.D.', 'N.A.', 'S.B.', 'H.O.', 'I.N.',
-        'Y.M.', 'B.R.', 'T.G.', 'V.P.', 'J.R.', 'M.G.', 'R.M.', 'A.P.'
-      ];
-      let recentlyUsedNames = [];
-      let seatClaimToastTimeout = null;
-
-      function getRandomCubanInitials() {
-        const available = CUBAN_NAME_POOL.filter(n => !recentlyUsedNames.includes(n));
-        const pool = available.length > 0 ? available : CUBAN_NAME_POOL;
-        const selected = pool[Math.floor(Math.random() * pool.length)];
-        recentlyUsedNames.push(selected);
-        if (recentlyUsedNames.length > 5) recentlyUsedNames.shift();
-        return selected;
-      }
-
       function triggerScoreboardGlow() {
         const glow = document.getElementById('scoreboardGlow');
         if (!glow) return;
         glow.classList.remove('is-glow');
         requestAnimationFrame(() => glow.classList.add('is-glow'));
         window.setTimeout(() => glow.classList.remove('is-glow'), 850);
-      }
-
-      function showSeatClaimToast() {
-        const toast = document.getElementById('seatClaimToast');
-        const initialsEl = document.getElementById('seatClaimInitials');
-        if (!toast || !initialsEl) return;
-
-        initialsEl.textContent = getRandomCubanInitials();
-
-        if (seatClaimToastTimeout) {
-          window.clearTimeout(seatClaimToastTimeout);
-          toast.classList.remove('is-visible');
-        }
-
-        window.setTimeout(() => toast.classList.add('is-visible'), 180);
-        seatClaimToastTimeout = window.setTimeout(() => {
-          toast.classList.remove('is-visible');
-        }, 1800);
       }
 
       function animateInlineSeatTick(nextValue) {
@@ -12333,6 +12273,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }, 980);
       }
 
+      function triggerFormShake() {
+        const shell = document.getElementById('formShell');
+        if (!shell) return;
+        shell.classList.remove('is-shake');
+        requestAnimationFrame(() => shell.classList.add('is-shake'));
+        window.setTimeout(() => shell.classList.remove('is-shake'), 450);
+      }
+
+      function triggerFormFlash() {
+        const panel = document.querySelector('.panel--form');
+        if (!panel) return;
+        panel.classList.remove('is-flash');
+        requestAnimationFrame(() => panel.classList.add('is-flash'));
+        window.setTimeout(() => panel.classList.remove('is-flash'), 400);
+      }
+
       function applyRealSeatClaim(count = 1) {
         const clamped = Math.max(0, Math.floor(count));
         if (clamped <= 0) return;
@@ -12352,9 +12308,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           pulseSeatConnection();
           triggerFormStormBeat();
 
-          // Scoreboard glow + social proof toast
+          // Intensified effects
           window.setTimeout(() => triggerScoreboardGlow(), 50);
-          window.setTimeout(() => showSeatClaimToast(), 180);
+          window.setTimeout(() => triggerFormFlash(), 0);
+          window.setTimeout(() => triggerFormShake(), 100);
         }
       }
 
@@ -12399,9 +12356,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           window.setTimeout(() => formScarcityEl.classList.remove('is-alert'), 1100);
         }
 
-        // Scoreboard glow + social proof toast
+        // Intensified effects
         window.setTimeout(() => triggerScoreboardGlow(), 50);
-        window.setTimeout(() => showSeatClaimToast(), 180);
+        window.setTimeout(() => triggerFormFlash(), 0);
+        window.setTimeout(() => triggerFormShake(), 100);
       }
 
       function animateCounter(target, duration = 1000) {
