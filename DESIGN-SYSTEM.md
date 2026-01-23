@@ -2,6 +2,7 @@
 
 > *"The domino is not just a game—it is ritual."* — Wifredo Lam
 > *"You made a beautiful domino and then hid it. Put the bone in their face."* — George Lois
+> *"Club 33 works because you can't just buy your way in. Inside is different. Members feel special."* — Walt Disney
 
 ---
 
@@ -18,6 +19,45 @@ Every design decision must answer one question:
 **"Does this feel like it belongs on the table?"**
 
 If it doesn't feel like dominoes clicking on mahogany, cafecito steam, cigar smoke curling in amber light—it doesn't belong.
+
+---
+
+## The Club 33 Principle: Earned Elegance
+
+Walt Disney's Club 33 is the model for **earned exclusivity** in CDL. Not aggressive gatekeeping—refined specialness.
+
+### The Five Pillars
+
+| Pillar | What It Means | CDL Application |
+|--------|---------------|-----------------|
+| **You can't just walk in** | Entry is earned, not bought | Registration is the queue—scroll the panels, earn your seat |
+| **The door is earned** | Access unlocks through action | La Mesa button only appears after registration |
+| **Inside is different** | The space feels separate, special | La Mesa is a room, not a feature |
+| **Members feel special** | Not exclusion, but belonging | You're part of something before the event |
+| **Word of mouth** | The best marketing is "I was there" | "Have you joined La Mesa yet?" |
+
+### Earned Elegance vs. Forced Competition
+
+**DO:** Make users feel they've earned access to something special
+**DON'T:** Push aggressive competitive copy that forces the vibe
+
+The parody terms checkbox ("hablar mierda is sacred at La Mesa") is enough competitive nod. The trash talk will emerge naturally—don't force it.
+
+### Success Moments
+
+When a user completes a journey (registration, entry, achievement), the design should feel like:
+- **Granted access** — not "you won a contest"
+- **Subtle celebration** — not confetti explosions
+- **Earned belonging** — you're part of something now
+
+### Visual Treatment
+
+Club 33 moments use:
+- **Film grain** — 2-3% noise overlay for texture
+- **Vignette** — Dark edges that focus attention
+- **Engraved feel** — Inner shadows, machined corners (8px radius)
+- **Deliberate timing** — Staggered reveals that breathe
+- **Muted celebration** — Glow blooms, not fireworks
 
 ---
 
@@ -701,6 +741,13 @@ When building new UI, verify:
 
 | Date | Change |
 |------|--------|
+| Jan 23, 2026 | **Club 33 Earned Elegance** |
+| | - Added "Club 33 Principle" section to philosophy |
+| | - Success screen polish: film grain, vignette, engraved card |
+| | - Headline "slam" animation on "In." with glow bloom |
+| | - Staggered animation timing (domino → headline → card → tagline → CTA) |
+| | - Removed forced competitive copy ("¡Coge eso!") |
+| | - Simplified CTA to "Enter La Mesa →" |
 | Jan 16, 2026 | **Mobile-First Philosophy** |
 | | - Added "Responsive & Mobile-First" section |
 | | - Documented 99% mobile user base |

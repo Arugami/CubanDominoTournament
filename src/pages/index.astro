@@ -15,7 +15,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <title>La Salida | Cuban Domino League</title>
     <meta
       name="description"
-      content="La Salida — The first Cuban Domino League tournament at Stefan's Lounge. January 31, 2025. They taught you for this moment. Make them proud."
+      content="La Salida — The first Cuban Domino League tournament at Stefan's Lounge. January 31, 2026. They taught you for this moment. Make them proud."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -221,44 +221,127 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-radius: 50%;
         filter: blur(1px);
         opacity: 0;
-        animation: emberFloat 6s ease-in-out infinite;
+        animation: emberFloatA 7s linear infinite;  /* Longer duration, linear for smooth keyframes */
+        will-change: transform, opacity;  /* Hint to GPU for smoother rendering */
       }
 
       /* Varied sizes - some embers are larger, brighter */
       .ember--lg { width: 4px; height: 4px; filter: blur(0.5px); }
       .ember--sm { width: 2px; height: 2px; filter: blur(1.5px); opacity: 0.7; }
 
-      /* 12 embers - denser smoke, varied positions */
-      /* Embers originate from the tile's glow center */
-      .ember:nth-child(1)  { left: 48%; bottom: 42%; animation-delay: 0s; }
-      .ember:nth-child(2)  { left: 51%; bottom: 44%; animation-delay: 0.8s; }
-      .ember:nth-child(3)  { left: 49%; bottom: 40%; animation-delay: 1.6s; }
-      .ember:nth-child(4)  { left: 52%; bottom: 43%; animation-delay: 2.4s; }
-      .ember:nth-child(5)  { left: 47%; bottom: 45%; animation-delay: 3.2s; }
-      .ember:nth-child(6)  { left: 50%; bottom: 41%; animation-delay: 4s; }
-      .ember:nth-child(7)  { left: 48%; bottom: 44%; animation-delay: 0.5s; }
-      .ember:nth-child(8)  { left: 51%; bottom: 42%; animation-delay: 1.3s; }
-      .ember:nth-child(9)  { left: 49%; bottom: 46%; animation-delay: 2.1s; }
-      .ember:nth-child(10) { left: 52%; bottom: 43%; animation-delay: 2.9s; }
-      .ember:nth-child(11) { left: 48%; bottom: 41%; animation-delay: 3.7s; }
-      .ember:nth-child(12) { left: 50%; bottom: 45%; animation-delay: 4.5s; }
+      /* 12 embers with varied paths, positions, and timing */
+      /* Paths A, B, C distributed for organic variety */
+      .ember:nth-child(1)  { left: 48%; bottom: 42%; animation: emberFloatA 7s linear infinite; animation-delay: 0s; }
+      .ember:nth-child(2)  { left: 51%; bottom: 44%; animation: emberFloatB 6.5s linear infinite; animation-delay: 0.7s; }
+      .ember:nth-child(3)  { left: 49%; bottom: 40%; animation: emberFloatC 7.2s linear infinite; animation-delay: 1.4s; }
+      .ember:nth-child(4)  { left: 52%; bottom: 43%; animation: emberFloatA 6.8s linear infinite; animation-delay: 2.1s; }
+      .ember:nth-child(5)  { left: 47%; bottom: 45%; animation: emberFloatB 7.5s linear infinite; animation-delay: 2.8s; }
+      .ember:nth-child(6)  { left: 50%; bottom: 41%; animation: emberFloatC 6.3s linear infinite; animation-delay: 3.5s; }
+      .ember:nth-child(7)  { left: 48%; bottom: 44%; animation: emberFloatA 7.1s linear infinite; animation-delay: 0.4s; }
+      .ember:nth-child(8)  { left: 51%; bottom: 42%; animation: emberFloatB 6.6s linear infinite; animation-delay: 1.1s; }
+      .ember:nth-child(9)  { left: 49%; bottom: 46%; animation: emberFloatC 7.4s linear infinite; animation-delay: 1.8s; }
+      .ember:nth-child(10) { left: 52%; bottom: 43%; animation: emberFloatA 6.9s linear infinite; animation-delay: 2.5s; }
+      .ember:nth-child(11) { left: 48%; bottom: 41%; animation: emberFloatB 7.3s linear infinite; animation-delay: 3.2s; }
+      .ember:nth-child(12) { left: 50%; bottom: 45%; animation: emberFloatC 6.4s linear infinite; animation-delay: 4.0s; }
 
-      @keyframes emberFloat {
+      /* ===== ORGANIC EMBER PATHS - Like sparks from the domino tile ===== */
+      /* Path A: Drifts right with gentle sine wave */
+      @keyframes emberFloatA {
         0% {
           opacity: 0;
-          transform: translateY(0) scale(0.5);
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.3);
         }
-        10% {
-          opacity: 0.8;
-          transform: translateY(-20px) scale(1);
+        5% {
+          opacity: 0.4;
+          transform: translateY(-10px) translateX(2px) rotate(15deg) scale(0.7);
         }
-        90% {
-          opacity: 0.3;
-          transform: translateY(-150px) translateX(20px) scale(0.3);
+        15% {
+          opacity: 0.85;
+          transform: translateY(-30px) translateX(8px) rotate(35deg) scale(1);
+        }
+        30% {
+          opacity: 0.75;
+          transform: translateY(-55px) translateX(5px) rotate(70deg) scale(0.9);
+        }
+        50% {
+          opacity: 0.6;
+          transform: translateY(-90px) translateX(15px) rotate(120deg) scale(0.7);
+        }
+        70% {
+          opacity: 0.4;
+          transform: translateY(-125px) translateX(10px) rotate(180deg) scale(0.5);
+        }
+        85% {
+          opacity: 0.2;
+          transform: translateY(-155px) translateX(20px) rotate(220deg) scale(0.35);
         }
         100% {
           opacity: 0;
-          transform: translateY(-180px) translateX(25px) scale(0);
+          transform: translateY(-180px) translateX(25px) rotate(270deg) scale(0.2);
+        }
+      }
+
+      /* Path B: Drifts left with different rhythm */
+      @keyframes emberFloatB {
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.4);
+        }
+        8% {
+          opacity: 0.5;
+          transform: translateY(-15px) translateX(-3px) rotate(-20deg) scale(0.8);
+        }
+        20% {
+          opacity: 0.8;
+          transform: translateY(-40px) translateX(-10px) rotate(-50deg) scale(1);
+        }
+        40% {
+          opacity: 0.65;
+          transform: translateY(-75px) translateX(-5px) rotate(-100deg) scale(0.85);
+        }
+        60% {
+          opacity: 0.45;
+          transform: translateY(-110px) translateX(-15px) rotate(-160deg) scale(0.6);
+        }
+        80% {
+          opacity: 0.25;
+          transform: translateY(-145px) translateX(-8px) rotate(-220deg) scale(0.4);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-175px) translateX(-18px) rotate(-280deg) scale(0.2);
+        }
+      }
+
+      /* Path C: Mostly vertical with subtle sway */
+      @keyframes emberFloatC {
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.35);
+        }
+        10% {
+          opacity: 0.6;
+          transform: translateY(-20px) translateX(4px) rotate(25deg) scale(0.9);
+        }
+        25% {
+          opacity: 0.8;
+          transform: translateY(-45px) translateX(-2px) rotate(60deg) scale(1);
+        }
+        45% {
+          opacity: 0.55;
+          transform: translateY(-85px) translateX(6px) rotate(110deg) scale(0.75);
+        }
+        65% {
+          opacity: 0.35;
+          transform: translateY(-120px) translateX(-4px) rotate(170deg) scale(0.55);
+        }
+        85% {
+          opacity: 0.15;
+          transform: translateY(-155px) translateX(3px) rotate(230deg) scale(0.35);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-185px) translateX(0) rotate(290deg) scale(0.15);
         }
       }
 
@@ -375,6 +458,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         );
         filter: blur(8px);
         z-index: -1;
+        opacity: 0.6;  /* Match animation start value - prevents flicker */
       }
 
       /* Shadow breathes with tile */
@@ -699,10 +783,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow: hidden !important;
       }
 
+      /* Panel Background Dim - Tobias: "Threshold moment" - 5% dim when entering La Mesa */
+      body.chat-open .story {
+        filter: brightness(0.95);
+        transition: filter 0.3s ease;
+      }
+
       /* Modern browsers: use :has() selector */
       @supports selector(:has(*)) {
         body:has(.chat-panel.is-open) {
           overflow: hidden !important;
+        }
+        body:has(.chat-panel.is-open) .story {
+          filter: brightness(0.95);
+          transition: filter 0.3s ease;
         }
       }
 
@@ -4541,60 +4635,67 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* "LA MESA" badge on left - ESPN sporty energy */
+      /* "LAMESA" badge on left - refined ESPN energy for CDL */
       .mesa-ticker__badge {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        padding: 0 18px;
-        background: linear-gradient(135deg, #cc0000 0%, #8a0000 100%);
+        gap: 6px;
+        padding: 0 16px 0 14px;
+        background: linear-gradient(180deg, #d40000 0%, #b30000 50%, #8a0000 100%);
         color: #ffffff;
-        font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', system-ui, sans-serif;
-        font-size: 0.8rem;
+        font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', Impact, sans-serif;
+        font-size: 0.85rem;
         font-weight: 700;
+        font-style: normal; /* CDL refined — no italic */
         text-transform: uppercase;
-        letter-spacing: 0.02em; /* Tighter — sporty condensed feel */
+        letter-spacing: 0.02em; /* Slight positive tracking — refined, not cramped */
         flex-shrink: 0;
         position: relative;
         z-index: 3;
-        /* Slight skew — motion energy */
-        transform: skewX(-6deg);
+        /* Refined skew — still dynamic but balanced */
+        transform: skewX(-5deg);
         box-shadow:
           4px 0 15px rgba(0,0,0,0.6),
-          inset 0 1px 0 rgba(255,255,255,0.2),
+          inset 0 1px 0 rgba(255,255,255,0.25),
+          inset 0 -1px 0 rgba(0,0,0,0.3),
           0 0 25px rgba(204, 0, 0, 0.4);
-        /* Hard edge on right — ESPN style */
-        clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
+        /* Softer diagonal edge */
+        clip-path: polygon(0 0, 100% 0, 94% 100%, 0 100%);
+        border-left: 3px solid rgba(255,255,255,0.15);
       }
 
-      /* Un-skew the text inside */
+      /* Un-skew the text inside + refined text treatment */
       .mesa-ticker__badge-text {
-        transform: skewX(6deg);
+        transform: skewX(5deg);
+        text-shadow:
+          1px 1px 0 rgba(0,0,0,0.3),
+          0 0 2px rgba(255,255,255,0.05);
+        font-weight: 700;
       }
 
-      /* White pulsing indicator dot - ESPN "LIVE" style */
+      /* White pulsing indicator dot - refined "LIVE" style */
       .mesa-ticker__badge-dot {
-        width: 8px;
-        height: 8px;
+        width: 7px;
+        height: 7px;
         background: #ffffff;
         border-radius: 50%;
-        transform: skewX(6deg);
+        transform: skewX(5deg);
         flex-shrink: 0;
         animation: dotPulse 1.5s ease-in-out infinite;
-        box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
       }
 
       @keyframes dotPulse {
         0%, 100% {
           opacity: 1;
-          transform: skewX(6deg) scale(1);
-          box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+          transform: skewX(5deg) scale(1);
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
         }
         50% {
-          opacity: 0.4;
-          transform: skewX(6deg) scale(0.85);
-          box-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
+          opacity: 0.5;
+          transform: skewX(5deg) scale(0.8);
+          box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
         }
       }
 
@@ -4726,17 +4827,32 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         outline-offset: -2px;
       }
 
-      /* Tobias: Unread message pulse - "The room is calling" */
+      /* LA MESA Heartbeat Pulse - "The room is calling" (Walt's weenie) */
+      @keyframes mesaPulse {
+        0%, 100% {
+          box-shadow: -4px 0 15px rgba(0,0,0,0.4), 0 0 0 0 rgba(212, 165, 116, 0.4);
+        }
+        50% {
+          box-shadow: -4px 0 15px rgba(0,0,0,0.4), 0 0 0 8px rgba(212, 165, 116, 0);
+        }
+      }
+
+      .mesa-ticker__chat-btn:not(.is-pressed):not(:hover) {
+        animation: mesaPulse 2s ease-in-out infinite;
+      }
+
+      /* Tobias: Unread message pulse - stronger urgency */
       .mesa-ticker__chat-btn.has-unread {
-        animation: chatBtnCalling 2s infinite;
+        animation: chatBtnCalling 1.5s infinite;
       }
 
       @keyframes chatBtnCalling {
         0%, 100% { box-shadow: -4px 0 15px rgba(0,0,0,0.4); }
-        50% { 
-          box-shadow: 
-            -4px 0 25px rgba(212, 165, 116, 0.4),
-            inset 0 0 10px rgba(212, 165, 116, 0.2); 
+        50% {
+          box-shadow:
+            -4px 0 25px rgba(212, 165, 116, 0.5),
+            0 0 0 6px rgba(212, 165, 116, 0.3),
+            inset 0 0 10px rgba(212, 165, 116, 0.2);
         }
       }
 
@@ -4799,8 +4915,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           -webkit-transform: translate3d(0, 0, 0);
         }
         .mesa-ticker__badge {
-          transform: skewX(-6deg) translate3d(0, 0, 0);
-          -webkit-transform: skewX(-6deg) translate3d(0, 0, 0);
+          transform: skewX(-5deg) translate3d(0, 0, 0);
+          -webkit-transform: skewX(-5deg) translate3d(0, 0, 0);
         }
         .mesa-ticker__track,
         .mesa-ticker__chat-btn {
@@ -5415,6 +5531,611 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: scale(0.97);
       }
 
+      /* ===========================================
+         TEAMS SYSTEM - Invite Toast & Creation Modal
+         "Dominoes is about teams. Make it a BIG moment."
+         =========================================== */
+
+      /* Team Invite Toast - Slides in from top */
+      .team-invite-toast {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100%);
+        z-index: 10020;
+        width: calc(100% - 32px);
+        max-width: 380px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .team-invite-toast.is-visible {
+        transform: translateX(-50%) translateY(16px);
+        opacity: 1;
+        visibility: visible;
+      }
+
+      @media (min-width: 768px) {
+        .team-invite-toast.is-visible {
+          transform: translateX(-50%) translateY(24px);
+        }
+      }
+
+      .team-invite-toast__content {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 18px;
+        background: linear-gradient(
+          135deg,
+          rgba(28, 19, 15, 0.98) 0%,
+          rgba(20, 14, 10, 0.98) 100%
+        );
+        border: 1px solid rgba(212, 165, 116, 0.3);
+        border-radius: 16px;
+        box-shadow:
+          0 16px 48px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .team-invite-toast__icon {
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
+        border-radius: 50%;
+        color: #0d0906;
+      }
+
+      .team-invite-toast__text {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .team-invite-toast__from {
+        display: block;
+        font-family: "Bodoni Moda", serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--brass);
+        letter-spacing: 0.02em;
+      }
+
+      .team-invite-toast__message {
+        display: block;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 2px;
+      }
+
+      .team-invite-toast__actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .team-invite-toast__btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      }
+
+      .team-invite-toast__btn--accept {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: white;
+      }
+
+      .team-invite-toast__btn--accept:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 16px rgba(34, 197, 94, 0.4);
+      }
+
+      .team-invite-toast__btn--decline {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .team-invite-toast__btn--decline:hover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+      }
+
+      .team-invite-toast__btn:active {
+        transform: scale(0.95);
+      }
+
+      /* Team Creation Modal */
+      .team-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 10015;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .team-modal.is-open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .team-modal__backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(10, 6, 4, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .team-modal__dialog {
+        position: relative;
+        background: linear-gradient(
+          145deg,
+          rgba(28, 19, 15, 0.99) 0%,
+          rgba(18, 12, 9, 0.99) 100%
+        );
+        border: 1px solid rgba(212, 165, 116, 0.25);
+        border-radius: 20px;
+        padding: 32px 28px;
+        max-width: 420px;
+        width: calc(100% - 32px);
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+        box-shadow:
+          0 32px 80px rgba(0, 0, 0, 0.7),
+          0 0 0 1px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        transform: translateY(30px) scale(0.95);
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .team-modal.is-open .team-modal__dialog {
+        transform: translateY(0) scale(1);
+      }
+
+      .team-modal__header {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      .team-modal__title {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--brass);
+        margin: 0 0 8px 0;
+        letter-spacing: 0.04em;
+      }
+
+      .team-modal__subtitle {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+      }
+
+      .team-modal__subtitle span {
+        color: var(--cream);
+        font-weight: 600;
+      }
+
+      .team-modal__form {
+        margin-bottom: 28px;
+      }
+
+      .team-modal__label {
+        display: block;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 10px;
+      }
+
+      .team-modal__input {
+        width: 100%;
+        padding: 16px 20px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 12px;
+        color: var(--cream);
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-align: center;
+        letter-spacing: 0.05em;
+        outline: none;
+        transition: all 0.25s ease;
+        margin-bottom: 24px;
+      }
+
+      .team-modal__input:focus {
+        background: rgba(212, 165, 116, 0.08);
+        border-color: var(--brass);
+        box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.15);
+      }
+
+      .team-modal__input::placeholder {
+        color: rgba(212, 165, 116, 0.35);
+        font-style: italic;
+      }
+
+      /* Archetype Grid */
+      .team-archetype-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .team-archetype {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .team-archetype::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(212, 165, 116, 0.15) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      }
+
+      .team-archetype:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(212, 165, 116, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .team-archetype:hover::before {
+        opacity: 1;
+      }
+
+      .team-archetype.selected {
+        background: rgba(212, 165, 116, 0.12);
+        border-color: var(--brass);
+        box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.2);
+      }
+
+      .team-archetype.selected::before {
+        opacity: 1;
+      }
+
+      .team-archetype__icon {
+        width: 32px;
+        height: 32px;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
+        border-radius: 8px;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+      }
+
+      .team-archetype:hover .team-archetype__icon,
+      .team-archetype.selected .team-archetype__icon {
+        opacity: 1;
+      }
+
+      .team-archetype__name {
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--cream);
+        letter-spacing: 0.02em;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .team-archetype__desc {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.45);
+        margin-top: 4px;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .team-archetype.selected .team-archetype__name {
+        color: var(--brass);
+      }
+
+      /* Team Modal Actions */
+      .team-modal__actions {
+        display: flex;
+        gap: 12px;
+      }
+
+      .team-modal__btn {
+        flex: 1;
+        padding: 16px 24px;
+        border-radius: 12px;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.25s ease;
+      }
+
+      .team-modal__btn--cancel {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .team-modal__btn--cancel:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .team-modal__btn--create {
+        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
+        border: none;
+        color: #0d0906;
+      }
+
+      .team-modal__btn--create:not(:disabled):hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 165, 116, 0.35);
+      }
+
+      .team-modal__btn--create:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .team-modal__btn:active:not(:disabled) {
+        transform: scale(0.97);
+      }
+
+      /* Team Badge - Shows next to player names */
+      .team-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 8px;
+        background: rgba(212, 165, 116, 0.15);
+        border: 1px solid rgba(212, 165, 116, 0.25);
+        border-radius: 6px;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--brass);
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+
+      .team-badge__icon {
+        width: 10px;
+        height: 10px;
+        background: var(--brass);
+        border-radius: 2px;
+        opacity: 0.7;
+      }
+
+      /* Team Whisper Toggle in Chat Input */
+      .whisper-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: rgba(212, 165, 116, 0.1);
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 8px;
+        margin-right: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .whisper-toggle:hover {
+        background: rgba(212, 165, 116, 0.15);
+        border-color: rgba(212, 165, 116, 0.3);
+      }
+
+      .whisper-toggle.is-active {
+        background: rgba(212, 165, 116, 0.2);
+        border-color: var(--brass);
+      }
+
+      .whisper-toggle__icon {
+        width: 16px;
+        height: 16px;
+        color: var(--brass);
+        opacity: 0.7;
+      }
+
+      .whisper-toggle.is-active .whisper-toggle__icon {
+        opacity: 1;
+      }
+
+      .whisper-toggle__label {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .whisper-toggle.is-active .whisper-toggle__label {
+        color: var(--brass);
+      }
+
+      /* Team Whisper Message Styling */
+      .chat-message--whisper {
+        opacity: 0.85;
+      }
+
+      .chat-message--whisper .chat-message__content {
+        background: rgba(212, 165, 116, 0.08);
+        border-left: 2px solid var(--brass);
+        padding-left: 12px;
+      }
+
+      .chat-message--whisper .chat-message__author::before {
+        content: '🔒 ';
+        font-size: 0.8em;
+      }
+
+      /* Whisper Indicator (for non-team members) */
+      .chat-message--whisper-hidden {
+        padding: 8px 16px;
+        margin: 8px 0;
+      }
+
+      .chat-message--whisper-hidden .whisper-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.35);
+        font-style: italic;
+      }
+
+      .whisper-indicator__icon {
+        width: 14px;
+        height: 14px;
+        color: rgba(212, 165, 116, 0.5);
+      }
+
+      /* Team Announcement Message - Public celebration */
+      .chat-message--team-announcement {
+        text-align: center;
+        padding: 16px 20px;
+        margin: 16px 0;
+        background: linear-gradient(
+          135deg,
+          rgba(212, 165, 116, 0.1) 0%,
+          rgba(183, 106, 59, 0.05) 100%
+        );
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 12px;
+      }
+
+      .team-announcement__text {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .team-announcement__names {
+        color: var(--cream);
+        font-weight: 600;
+      }
+
+      .team-announcement__team {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--brass);
+        display: block;
+        margin-top: 6px;
+        letter-spacing: 0.05em;
+      }
+
+      /* Player Name with Invite Action */
+      .chat-message__author-name {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .chat-message__author-name:hover {
+        text-decoration: underline;
+        text-decoration-color: rgba(212, 165, 116, 0.4);
+        text-underline-offset: 2px;
+      }
+
+      /* Player Action Menu (appears on name click) */
+      .player-action-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 100;
+        min-width: 160px;
+        padding: 8px 0;
+        background: rgba(28, 19, 15, 0.98);
+        border: 1px solid rgba(212, 165, 116, 0.2);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: all 0.2s ease;
+      }
+
+      .player-action-menu.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(4px);
+      }
+
+      .player-action-menu__item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 10px 16px;
+        background: none;
+        border: none;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-align: left;
+      }
+
+      .player-action-menu__item:hover {
+        background: rgba(212, 165, 116, 0.1);
+        color: var(--brass);
+      }
+
+      .player-action-menu__item svg {
+        width: 16px;
+        height: 16px;
+        opacity: 0.7;
+      }
+
+      .player-action-menu__item:hover svg {
+        opacity: 1;
+      }
+
       /* Identity Screen - Centered Cluster Layout */
       .chat-identity {
         padding: 40px 24px;
@@ -5633,7 +6354,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;
         user-select: none;
@@ -5642,64 +6363,69 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 1;
       }
 
-      /* Hover: pop up */
+      /* Hover: smooth lift */
       .avatar-option:hover {
-        transform: translateY(-4px) scale(1.1);
+        transform: translateY(-4px) scale(1.08);
         z-index: 10;
       }
 
       .avatar-option:active {
-        transform: scale(0.95);
+        transform: scale(0.96);
+        transition: transform 0.1s ease;
       }
 
       /* PLANT YOUR FLAG - selected state */
       .avatar-option.selected {
         transform: translateY(-6px) scale(1.15);
         z-index: 20;
+        box-shadow: 0 0 20px 8px rgba(255, 200, 100, 0.35);
+        animation: glowPulseSelected 2.5s ease-in-out infinite;
       }
 
-      /* Tobias: "The Slam" - placing a chip on the table */
+      /* Refined slam - smooth lift into place */
       .avatar-option.is-slamming {
-        animation: flagSlam 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        animation: flagSlam 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
       }
 
       @keyframes flagSlam {
         0% {
-          transform: translateY(-4px) scale(1.1);
+          transform: translateY(0) scale(1.0);
         }
-        30% {
-          transform: translateY(2px) scale(0.92);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 20px rgba(212, 165, 116, 0.3);
+        40% {
+          transform: translateY(-10px) scale(1.18);
         }
-        60% {
-          transform: translateY(-8px) scale(1.18);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(212, 165, 116, 0.4);
+        70% {
+          transform: translateY(-5px) scale(1.14);
         }
         100% {
           transform: translateY(-6px) scale(1.15);
-          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
         }
       }
 
-      /* Non-selected flags fade when one is selected */
+      /* Golden glow pulse - Ochún's candlelight */
+      @keyframes glowPulseSelected {
+        0%, 100% {
+          box-shadow: 0 0 18px 6px rgba(255, 200, 100, 0.25);
+        }
+        50% {
+          box-shadow: 0 0 24px 10px rgba(255, 200, 100, 0.4);
+        }
+      }
+
+      /* Non-selected flags - smooth fade */
       .avatar-selector:has(.selected) .avatar-option:not(.selected) {
-        opacity: 0.5;
+        opacity: 0.4;
         transform: scale(0.85);
-        filter: grayscale(0.3);
+        filter: grayscale(0.35);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .avatar-selector:has(.selected) .avatar-option:not(.selected):hover {
-        opacity: 0.9;
-        transform: translateY(-3px) scale(1.0);
+        opacity: 0.95;
+        transform: translateY(-3px) scale(1.02);
         filter: grayscale(0);
+        transition: all 0.2s ease-out;
       }
-
-      /* Selected flag - clean, no glow, just lift */
-      .avatar-option.selected {
-        /* No box-shadow glow - clean look */
-      }
-
-      /* No glow dot - clean minimal look */
 
       .avatar-option .check-mark { display: none; }
 
@@ -5969,7 +6695,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-radius: 12px;
         color: #0d0906;
         padding: 18px 44px;
-        font-family: "Bodoni Moda", serif;
+        font-family: "IBM Plex Sans", sans-serif;
         font-size: 0.85rem;
         font-weight: 700;
         letter-spacing: 0.2em;
@@ -7701,9 +8427,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: radial-gradient(ellipse at center top, rgba(30, 20, 15, 0.98) 0%, rgba(10, 7, 5, 0.99) 100%);
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start; /* SAFE: content flows from top, scrollable when needed */
+        justify-content: flex-start;
         text-align: center;
-        padding: 40px 24px;
+        padding: max(20px, 4dvh) 24px max(16px, 3dvh); /* Compact mobile padding */
         overflow-y: auto;
       }
 
@@ -7756,21 +8482,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Domino Hero */
       .domino-container {
         position: relative;
-        margin-bottom: 40px;
+        margin-bottom: 16px; /* Compact: was 40px → 24px → 16px */
         perspective: 1000px;
       }
 
       .domino {
-        width: 90px;
-        height: 180px;
+        width: 48px;  /* Compact: was 90px → 64px → 48px */
+        height: 96px; /* Compact: was 180px → 128px → 96px */
         background: linear-gradient(165deg, #fefefe 0%, #f5f0eb 40%, #e8e2db 100%);
-        border-radius: 14px;
+        border-radius: 8px; /* Compact: was 14px → 10px → 8px */
         margin: 0 auto;
         position: relative;
         box-shadow:
-          0 25px 50px rgba(0, 0, 0, 0.6),
-          0 0 80px rgba(212, 165, 116, 0.3),
-          0 0 120px rgba(255, 215, 0, 0.1),
+          0 16px 32px rgba(0, 0, 0, 0.6),
+          0 0 48px rgba(212, 165, 116, 0.3),
+          0 0 64px rgba(255, 215, 0, 0.1),
           inset 0 2px 0 rgba(255, 255, 255, 0.8);
         animation: dominoSlam 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
       }
@@ -7820,30 +8546,30 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .pip {
         position: absolute;
-        width: 16px;
-        height: 16px;
+        width: 8px;  /* Compact: was 16px → 11px → 8px */
+        height: 8px; /* Compact: was 16px → 11px → 8px */
         background: radial-gradient(circle at 30% 30%, var(--copper), #2a1810);
         border-radius: 50%;
         box-shadow:
-          inset 0 2px 4px rgba(0, 0, 0, 0.5),
-          0 1px 2px rgba(0, 0, 0, 0.2);
+          inset 0 1px 2px rgba(0, 0, 0, 0.5),
+          0 1px 1px rgba(0, 0, 0, 0.2);
       }
 
-      /* Double six pip positions - top half (90x180 domino) */
-      .domino-top .pip:nth-child(1) { top: 14px; left: 16px; }
-      .domino-top .pip:nth-child(2) { top: 14px; right: 16px; }
-      .domino-top .pip:nth-child(3) { top: 50%; left: 16px; transform: translateY(-50%); }
-      .domino-top .pip:nth-child(4) { top: 50%; right: 16px; transform: translateY(-50%); }
-      .domino-top .pip:nth-child(5) { bottom: 18px; left: 16px; }
-      .domino-top .pip:nth-child(6) { bottom: 18px; right: 16px; }
+      /* Double six pip positions - top half (48x96 compact domino) */
+      .domino-top .pip:nth-child(1) { top: 8px; left: 9px; }
+      .domino-top .pip:nth-child(2) { top: 8px; right: 9px; }
+      .domino-top .pip:nth-child(3) { top: 50%; left: 9px; transform: translateY(-50%); }
+      .domino-top .pip:nth-child(4) { top: 50%; right: 9px; transform: translateY(-50%); }
+      .domino-top .pip:nth-child(5) { bottom: 10px; left: 9px; }
+      .domino-top .pip:nth-child(6) { bottom: 10px; right: 9px; }
 
-      /* Double six pip positions - bottom half */
-      .domino-bottom .pip:nth-child(1) { top: 14px; left: 16px; }
-      .domino-bottom .pip:nth-child(2) { top: 14px; right: 16px; }
-      .domino-bottom .pip:nth-child(3) { top: 50%; left: 16px; transform: translateY(-50%); }
-      .domino-bottom .pip:nth-child(4) { top: 50%; right: 16px; transform: translateY(-50%); }
-      .domino-bottom .pip:nth-child(5) { bottom: 14px; left: 16px; }
-      .domino-bottom .pip:nth-child(6) { bottom: 14px; right: 16px; }
+      /* Double six pip positions - bottom half (48x96 compact domino) */
+      .domino-bottom .pip:nth-child(1) { top: 8px; left: 9px; }
+      .domino-bottom .pip:nth-child(2) { top: 8px; right: 9px; }
+      .domino-bottom .pip:nth-child(3) { top: 50%; left: 9px; transform: translateY(-50%); }
+      .domino-bottom .pip:nth-child(4) { top: 50%; right: 9px; transform: translateY(-50%); }
+      .domino-bottom .pip:nth-child(5) { bottom: 8px; left: 9px; }
+      .domino-bottom .pip:nth-child(6) { bottom: 8px; right: 9px; }
 
       /* Shimmer particles */
       .shimmer {
@@ -7870,11 +8596,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Success Headlines */
       .success-headline {
         font-family: "Bodoni Moda", serif;
-        font-size: clamp(3rem, 12vw, 4.5rem);
+        font-size: clamp(2.5rem, 10vw, 3.5rem); /* Compact: was clamp(3rem, 12vw, 4.5rem) */
         font-weight: 700;
         color: var(--cream);
         letter-spacing: 0.02em;
-        margin-bottom: 12px;
+        margin-bottom: 8px; /* Compact: was 12px */
         animation: fadeUp 0.6s ease-out 0.4s both;
         line-height: 1.1;
       }
@@ -7919,9 +8645,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .success-subheadline {
-        font-size: 1.1rem;
+        font-size: 0.95rem; /* Compact: was 1.1rem → 1rem → 0.95rem */
         color: rgba(255, 255, 255, 0.5);
-        margin-bottom: 36px;
+        margin-bottom: 16px; /* Compact: was 36px → 24px → 16px */
         animation: fadeUp 0.6s ease-out 0.5s both;
         letter-spacing: 0.03em;
       }
@@ -7931,14 +8657,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: linear-gradient(135deg, rgba(20, 14, 10, 0.95) 0%, rgba(30, 20, 15, 0.9) 100%);
         border: 1px solid rgba(212, 165, 116, 0.35);
         border-radius: 8px; /* Sharper, machined feel */
-        padding: 28px 40px;
-        margin-bottom: 32px;
+        padding: 12px 20px; /* Compact: was 28px 40px → 16px 28px → 12px 20px */
+        margin-bottom: 10px; /* Compact: was 32px → 16px → 10px */
         position: relative;
         overflow: hidden;
         flex-shrink: 0; /* Prevent shrinking - content must stay visible */
         animation: cardReveal 0.6s ease-out 1.2s both;
         width: 100%;
-        max-width: 320px;
+        max-width: 260px; /* Compact: was 320px → 280px → 260px */
         /* Engraved/inset feel */
         box-shadow:
           inset 0 2px 4px rgba(0, 0, 0, 0.4),
@@ -7976,45 +8702,45 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .event-date {
         font-family: "Bodoni Moda", serif;
-        font-size: 1.6rem;
+        font-size: 1.25rem; /* Compact: was 1.6rem → 1.4rem → 1.25rem */
         font-weight: 700;
         color: var(--brass);
-        margin-bottom: 8px;
+        margin-bottom: 2px; /* Compact: was 8px → 4px → 2px */
         letter-spacing: 0.02em;
       }
 
       .event-venue {
-        font-size: 1.15rem;
+        font-size: 0.95rem; /* Compact: was 1.15rem → 1rem → 0.95rem */
         color: var(--cream);
-        margin-bottom: 6px;
+        margin-bottom: 2px; /* Compact: was 6px → 4px → 2px */
         font-weight: 500;
         letter-spacing: 0.01em;
       }
 
       .event-time {
-        font-size: 1rem;
+        font-size: 0.85rem; /* Compact: was 1rem → 0.9rem → 0.85rem */
         color: rgba(255, 255, 255, 0.6);
         letter-spacing: 0.02em;
       }
 
       .event-payment {
         font-family: "Bodoni Moda", serif;
-        font-size: 1.1rem;
+        font-size: 0.95rem; /* Compact: was 1.1rem → 1rem → 0.95rem */
         font-style: italic;
         color: var(--brass);
-        margin-top: 12px;
-        padding-top: 12px;
+        margin-top: 6px; /* Compact: was 12px → 8px → 6px */
+        padding-top: 6px; /* Compact: was 12px → 8px → 6px */
         border-top: 1px solid rgba(212, 165, 116, 0.2);
       }
 
-      /* Divider */
+      /* Divider - Hidden on mobile to save space */
       .success-divider {
-        display: flex;
+        display: none; /* Hidden on mobile for compact fit */
         align-items: center;
-        gap: 20px;
-        margin: 28px 0;
+        gap: 12px;
+        margin: 10px 0;
         width: 100%;
-        max-width: 240px;
+        max-width: 180px;
         animation: fadeUp 0.5s ease-out 1.5s both;
       }
 
@@ -8034,10 +8760,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         box-shadow: 0 0 12px rgba(212, 165, 116, 0.4);
       }
 
-      /* Tagline */
+      /* Tagline - Hidden on mobile to save space */
       .success-tagline {
+        display: none; /* Hidden on mobile for compact fit */
         font-family: "Bodoni Moda", serif;
-        font-size: 1.4rem;
+        font-size: 1.1rem;
         font-style: italic;
         color: var(--brass);
         opacity: 0.9;
@@ -8048,14 +8775,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* La Mesa CTA - Club 33 artifact feel */
       .success-mesa-cta {
         font-family: "IBM Plex Sans", system-ui, sans-serif;
-        font-size: 1rem;
+        font-size: 0.9rem; /* Compact: was 1rem → 0.95rem → 0.9rem */
         font-weight: 600;
         color: var(--cream);
         background: linear-gradient(135deg, var(--copper), #6b3020);
         border: none;
-        border-radius: 12px;
-        padding: 16px 32px;
-        margin-top: 32px;
+        border-radius: 8px; /* Compact: was 12px → 10px → 8px */
+        padding: 12px 24px; /* Compact: was 16px 32px → 14px 28px → 12px 24px */
+        margin-top: 12px; /* Compact: was 32px → 20px → 12px */
         cursor: pointer;
         letter-spacing: 0.05em;
         box-shadow:
@@ -8095,8 +8822,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Email reminder */
       .email-reminder {
-        margin-top: 40px;
-        font-size: 0.95rem;
+        margin-top: 16px; /* Compact: was 40px → 24px → 16px */
+        font-size: 0.8rem; /* Compact: was 0.95rem → 0.85rem → 0.8rem */
         color: rgba(255, 255, 255, 0.45);
         animation: fadeUp 0.5s ease-out 2.2s both;
       }
@@ -8112,6 +8839,229 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .email-reminder a:hover {
         color: var(--brass);
         border-bottom-color: var(--brass);
+      }
+
+      /* ========================================
+         WAITING STATE - "The Domino Stands"
+         Premium loading experience before success
+         ======================================== */
+      .registration-waiting {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        background: radial-gradient(ellipse at center top, rgba(30, 20, 15, 0.98) 0%, rgba(10, 7, 5, 0.99) 100%);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+      }
+
+      /* Film grain overlay */
+      .registration-waiting::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.025;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Vignette */
+      .registration-waiting::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.5) 100%);
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .registration-waiting.is-visible {
+        display: flex;
+        animation: waitingFadeIn 0.3s ease-out;
+      }
+
+      @keyframes waitingFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      .registration-waiting > * {
+        position: relative;
+        z-index: 3;
+      }
+
+      /* Standing domino container */
+      .waiting-domino-container {
+        position: relative;
+        margin-bottom: 32px;
+      }
+
+      /* Standing domino - Double Six matching reference */
+      .waiting-domino {
+        width: 72px;
+        height: 144px;
+        background: linear-gradient(175deg, #fefefe 0%, #f8f4f0 30%, #f0ebe5 60%, #e8e2db 100%);
+        border-radius: 12px;
+        position: relative;
+        box-shadow:
+          0 25px 50px rgba(0, 0, 0, 0.5),
+          0 0 80px rgba(212, 165, 116, 0.25),
+          0 0 0 1px rgba(200, 180, 160, 0.3),
+          inset 0 2px 0 rgba(255, 255, 255, 0.9),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+        animation: dominoRock 2.5s ease-in-out infinite;
+        transform-origin: bottom center;
+      }
+
+      @keyframes dominoRock {
+        0%, 100% { transform: rotate(-1.5deg); }
+        50% { transform: rotate(1.5deg); }
+      }
+
+      /* Domino divider line - centered horizontal bar */
+      .waiting-domino-divider {
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        top: 50%;
+        height: 3px;
+        background: linear-gradient(180deg,
+          rgba(120, 80, 50, 0.6) 0%,
+          rgba(180, 130, 90, 0.8) 50%,
+          rgba(100, 70, 45, 0.5) 100%);
+        border-radius: 1.5px;
+        transform: translateY(-50%);
+        box-shadow:
+          inset 0 1px 1px rgba(255, 255, 255, 0.3),
+          0 1px 2px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Waiting domino pip containers - 2x3 grid */
+      .waiting-domino-top,
+      .waiting-domino-bottom {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: calc(50% - 2px);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        padding: 10px 12px;
+        box-sizing: border-box;
+      }
+
+      .waiting-domino-top { top: 0; }
+      .waiting-domino-bottom { bottom: 0; }
+
+      /* Pips - recessed copper circles with 3D depth */
+      .waiting-domino-top .pip,
+      .waiting-domino-bottom .pip {
+        width: 14px;
+        height: 14px;
+        background: radial-gradient(ellipse at 35% 25%,
+          #c49a6c 0%,
+          #a67c52 30%,
+          #7d5a3a 60%,
+          #5a3d28 100%);
+        border-radius: 50%;
+        justify-self: center;
+        align-self: center;
+        box-shadow:
+          inset 0 2px 4px rgba(0, 0, 0, 0.5),
+          inset 0 -1px 2px rgba(255, 255, 255, 0.15),
+          0 1px 1px rgba(255, 255, 255, 0.4);
+      }
+
+      /* Pulsing copper glow behind domino */
+      .waiting-glow {
+        position: absolute;
+        width: 160px;
+        height: 200px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(ellipse at center,
+          rgba(212, 165, 116, 0.35) 0%,
+          rgba(183, 130, 80, 0.2) 40%,
+          transparent 70%);
+        border-radius: 50%;
+        animation: glowPulse 2.5s ease-in-out infinite;
+        z-index: -1;
+      }
+
+      @keyframes glowPulse {
+        0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+        50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.9; }
+      }
+
+      /* "Securing your seat..." text */
+      .waiting-text {
+        font-family: "Bodoni Moda", serif;
+        font-size: 1.2rem;
+        font-style: italic;
+        color: var(--brass);
+        opacity: 0.9;
+        letter-spacing: 0.03em;
+        animation: textPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes textPulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
+      }
+
+      /* Transition state - domino falls with satisfying slam */
+      .registration-waiting.is-transitioning .waiting-domino {
+        animation: dominoFall 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+
+      @keyframes dominoFall {
+        0% { transform: rotate(0deg) scale(1); }
+        70% { transform: rotate(85deg) translateY(10px) scale(1.02); }
+        100% { transform: rotate(90deg) translateY(30px) scale(0.95); opacity: 0; }
+      }
+
+      .registration-waiting.is-transitioning .waiting-glow {
+        animation: glowBurst 0.5s ease-out forwards;
+      }
+
+      @keyframes glowBurst {
+        0% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+        50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.6; }
+        100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+      }
+
+      .registration-waiting.is-transitioning {
+        animation: waitingFadeOut 0.5s ease-out 0.3s forwards;
+      }
+
+      @keyframes waitingFadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+
+      /* Reduced motion support */
+      @media (prefers-reduced-motion: reduce) {
+        .waiting-domino {
+          animation: none;
+        }
+        .waiting-glow {
+          animation: none;
+          opacity: 0.7;
+        }
+        .waiting-text {
+          animation: none;
+          opacity: 0.9;
+        }
+        .registration-waiting.is-transitioning .waiting-domino,
+        .registration-waiting.is-transitioning .waiting-glow,
+        .registration-waiting.is-transitioning {
+          animation: none;
+        }
       }
 
       /* ========================================
@@ -8214,8 +9164,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           padding-top: 16px;
         }
 
-        /* Divider - Balanced spacing */
+        /* Divider - Restored on desktop */
         .success-divider {
+          display: flex; /* Restore on desktop */
           margin: 24px 0;
           max-width: 260px;
         }
@@ -8225,8 +9176,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           height: 10px;
         }
 
-        /* Tagline */
+        /* Tagline - Restored on desktop */
         .success-tagline {
+          display: block; /* Restore on desktop */
           font-size: 1.5rem;
         }
 
@@ -9239,7 +10191,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="hero-tagline">The First Cuban Domino League Championship</p>
 
           <!-- Date/Venue -->
-	          <p class="hero-subtitle">January 31, 2025<span class="dot">•</span><a href="https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ" target="_blank" rel="noreferrer">Stefan's Lounge</a></p>
+	          <p class="hero-subtitle">January 31, 2026<span class="dot">•</span><a href="https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ" target="_blank" rel="noreferrer">Stefan's Lounge</a></p>
         </div>
         <div class="hero-scroll-hint" id="heroScrollHint" aria-hidden="true">
           <div class="hero-scroll-hint__chevron"></div>
@@ -9574,7 +10526,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       <!-- Event Details -->
       <div class="event-details">
-        <div class="event-date">January 31, 2025</div>
+        <div class="event-date">January 31, 2026</div>
         <div class="event-venue">Stefan's Lounge</div>
         <div class="event-time">Doors open at 6PM</div>
         <div class="event-payment">$25 cash on arrival</div>
@@ -9595,6 +10547,39 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       <p class="email-reminder">
         Questions? <a href="mailto:Erik@cubandominoleague.com">Erik@cubandominoleague.com</a>
       </p>
+    </div>
+
+    <!-- Registration Waiting State - "The Domino Stands" -->
+    <div class="registration-waiting" id="registrationWaiting">
+      <div class="waiting-domino-container">
+        <div class="waiting-domino">
+          <div class="waiting-domino-top">
+            <!-- Row 1 -->
+            <span class="pip"></span>
+            <span class="pip"></span>
+            <!-- Row 2 -->
+            <span class="pip"></span>
+            <span class="pip"></span>
+            <!-- Row 3 -->
+            <span class="pip"></span>
+            <span class="pip"></span>
+          </div>
+          <div class="waiting-domino-divider"></div>
+          <div class="waiting-domino-bottom">
+            <!-- Row 1 -->
+            <span class="pip"></span>
+            <span class="pip"></span>
+            <!-- Row 2 -->
+            <span class="pip"></span>
+            <span class="pip"></span>
+            <!-- Row 3 -->
+            <span class="pip"></span>
+            <span class="pip"></span>
+          </div>
+        </div>
+        <div class="waiting-glow"></div>
+      </div>
+      <p class="waiting-text">Securing your seat...</p>
     </div>
 
     <!-- La Mesa Tutorial Panel (shows if user dismisses success without joining) -->
@@ -9649,7 +10634,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       <div class="mesa-ticker" id="mesaTicker">
         <div class="mesa-ticker__badge">
           <span class="mesa-ticker__badge-dot"></span>
-          <span class="mesa-ticker__badge-text">LA MESA</span>
+          <span class="mesa-ticker__badge-text">LAMESA</span>
         </div>
         <div class="mesa-ticker__scroll">
           <div class="mesa-ticker__track" id="tickerTrack">
@@ -9800,13 +10785,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="chat-identity__register-hint" id="chatRegisterHint">
             Don't see your name? <a href="#signup" class="chat-identity__register-link" id="chatRegisterLink">Register first</a>
           </p>
-          <button class="chat-identity__btn" id="chatJoinBtn" disabled>Enter</button>
+          <button class="chat-identity__btn" id="chatJoinBtn" disabled>TAKE YOUR SEAT</button>
         </div>
 
         <!-- Chat Screen Area -->
         <div class="chat-body-container" id="chatBodyContainer" style="display: none;">
           <div class="chat-messages" id="chatMessages">
-            <div class="chat-empty">The table is quiet.</div>
+            <div class="chat-empty">The calm before the storm.</div>
           </div>
 
 
@@ -9830,6 +10815,104 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <div class="leave-modal__actions">
             <button class="leave-modal__btn leave-modal__btn--stay" id="leaveModalStay" type="button">Stay</button>
             <button class="leave-modal__btn leave-modal__btn--leave" id="leaveModalLeave" type="button">Leave</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Invite Notification Toast -->
+      <div class="team-invite-toast" id="teamInviteToast">
+        <div class="team-invite-toast__content">
+          <div class="team-invite-toast__icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="team-invite-toast__text">
+            <span class="team-invite-toast__from" id="inviteFromPlayer">Carmen</span>
+            <span class="team-invite-toast__message">wants to form a team</span>
+          </div>
+          <div class="team-invite-toast__actions">
+            <button class="team-invite-toast__btn team-invite-toast__btn--accept" id="acceptInviteBtn">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </button>
+            <button class="team-invite-toast__btn team-invite-toast__btn--decline" id="declineInviteBtn">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Creation Modal - "Make it a BIG moment" -->
+      <div class="team-modal" id="teamModal">
+        <div class="team-modal__backdrop"></div>
+        <div class="team-modal__dialog">
+          <div class="team-modal__header">
+            <h3 class="team-modal__title">Form Your Team</h3>
+            <p class="team-modal__subtitle">
+              <span id="teamPartner1">You</span> & <span id="teamPartner2">Partner</span>
+            </p>
+          </div>
+
+          <div class="team-modal__form">
+            <label class="team-modal__label">Team Name</label>
+            <input type="text" class="team-modal__input" id="teamNameInput" placeholder="Los..." maxlength="24" />
+
+            <label class="team-modal__label">Choose Your Archetype</label>
+            <div class="team-archetype-grid" id="archetypeGrid">
+              <button class="team-archetype" data-archetype="los_viejos">
+                <span class="team-archetype__icon"></span>
+                <span class="team-archetype__name">Los Viejos</span>
+                <span class="team-archetype__desc">The Wise Ones</span>
+              </button>
+              <button class="team-archetype" data-archetype="los_venenos">
+                <span class="team-archetype__icon"></span>
+                <span class="team-archetype__name">Los Venenos</span>
+                <span class="team-archetype__desc">The Poisoners</span>
+              </button>
+              <button class="team-archetype" data-archetype="la_tranca">
+                <span class="team-archetype__icon"></span>
+                <span class="team-archetype__name">La Tranca</span>
+                <span class="team-archetype__desc">The Blockers</span>
+              </button>
+              <button class="team-archetype" data-archetype="la_carreta">
+                <span class="team-archetype__icon"></span>
+                <span class="team-archetype__name">La Carreta</span>
+                <span class="team-archetype__desc">The Rollers</span>
+              </button>
+              <button class="team-archetype" data-archetype="los_capicuas">
+                <span class="team-archetype__icon"></span>
+                <span class="team-archetype__name">Los Capicuas</span>
+                <span class="team-archetype__desc">The Precision</span>
+              </button>
+              <button class="team-archetype" data-archetype="los_pesados">
+                <span class="team-archetype__icon"></span>
+                <span class="team-archetype__name">Los Pesados</span>
+                <span class="team-archetype__desc">The Heavy Hitters</span>
+              </button>
+              <button class="team-archetype" data-archetype="los_amarradores">
+                <span class="team-archetype__icon"></span>
+                <span class="team-archetype__name">Los Amarradores</span>
+                <span class="team-archetype__desc">The Trappers</span>
+              </button>
+              <button class="team-archetype" data-archetype="la_mula">
+                <span class="team-archetype__icon"></span>
+                <span class="team-archetype__name">La Mula</span>
+                <span class="team-archetype__desc">The Mules</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="team-modal__actions">
+            <button class="team-modal__btn team-modal__btn--cancel" id="teamModalCancel" type="button">Cancel</button>
+            <button class="team-modal__btn team-modal__btn--create" id="teamModalCreate" type="button" disabled>Create Team</button>
           </div>
         </div>
       </div>
@@ -10462,17 +11545,78 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const statusEl = document.getElementById("status");
       const successEl = document.getElementById("success");
       const submitBtn = document.getElementById("submitBtn");
+      const waitingEl = document.getElementById("registrationWaiting");
+      const formShell = document.getElementById("formShell");
+
+      // Helper: Show waiting state with premium feel
+      const showWaitingState = () => {
+        // Fade out form smoothly
+        formShell.style.transition = 'opacity 0.2s ease-out';
+        formShell.style.opacity = '0';
+        // Hide progress tracker and headline
+        const headline = document.querySelector(".panel--form .panel-headline");
+        const tracker = document.querySelector(".progress-tracker");
+        if (headline) headline.style.transition = 'opacity 0.2s ease-out';
+        if (headline) headline.style.opacity = '0';
+        if (tracker) tracker.style.transition = 'opacity 0.2s ease-out';
+        if (tracker) tracker.style.opacity = '0';
+
+        setTimeout(() => {
+          formShell.style.display = 'none';
+          waitingEl.classList.add('is-visible');
+        }, 200);
+      };
+
+      // Helper: Transition from waiting to success
+      const transitionToSuccess = (playerName) => {
+        // Trigger domino fall animation
+        waitingEl.classList.add('is-transitioning');
+
+        setTimeout(() => {
+          waitingEl.classList.remove('is-visible', 'is-transitioning');
+          waitingEl.style.display = 'none';
+          successEl.classList.add('is-visible');
+          statusEl.textContent = '';
+
+          // Mark user as registered
+          localStorage.setItem('cdl_registered', 'true');
+
+          // Broadcast to ticker
+          if (supabase && playerName) {
+            supabase.channel('registrations').send({
+              type: 'broadcast',
+              event: 'new-registration',
+              payload: { playerName }
+            });
+          }
+
+          // Hide everything for clean full-screen takeover
+          document.querySelector(".panel--form .panel-headline").style.display = "none";
+          document.querySelector(".progress-tracker").style.display = "none";
+          const footer = document.querySelector(".footer-note");
+          if (footer) footer.style.display = "none";
+        }, 800); // Wait for domino fall animation
+      };
+
+      // Helper: Return to form on error
+      const returnToForm = (errorMessage) => {
+        waitingEl.classList.remove('is-visible', 'is-transitioning');
+        waitingEl.style.display = 'none';
+        formShell.style.display = 'block';
+        formShell.style.opacity = '1';
+        const headline = document.querySelector(".panel--form .panel-headline");
+        const tracker = document.querySelector(".progress-tracker");
+        if (headline) headline.style.opacity = '1';
+        if (tracker) tracker.style.opacity = '1';
+        statusEl.textContent = errorMessage;
+        submitBtn.disabled = false;
+      };
 
       // DEV ONLY: Test success screen without submitting form
       // Call window.testSuccess() from console to trigger
       window.testSuccess = () => {
-        form.style.display = "none";
-        successEl.classList.add("is-visible");
-        localStorage.setItem('cdl_registered', 'true');
-        document.querySelector(".panel--form .panel-headline").style.display = "none";
-        document.querySelector(".progress-tracker").style.display = "none";
-        const footer = document.querySelector(".footer-note");
-        if (footer) footer.style.display = "none";
+        showWaitingState();
+        setTimeout(() => transitionToSuccess('Test Player'), 1500);
         console.log('✅ Success screen triggered. localStorage set.');
       };
       // DEV ONLY: Reset registration state
@@ -10484,10 +11628,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         if (!form.reportValidity()) return;
-        statusEl.textContent = "Submitting…";
+
+        // Disable button immediately
         submitBtn.disabled = true;
+        statusEl.textContent = "";
+
+        // Show waiting state (premium loading)
+        showWaitingState();
 
         const payload = Object.fromEntries(new FormData(form).entries());
+        const startTime = Date.now();
+        const MIN_WAIT_TIME = 1500; // Minimum 1.5s for premium feel
 
         try {
           const response = await fetch("/api/register", {
@@ -10497,35 +11648,32 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           });
 
           const data = await response.json().catch(() => ({}));
+
           if (data && data.ok) {
             form.reset();
-            form.style.display = "none";
-            successEl.classList.add("is-visible");
-            statusEl.textContent = "";
-            // Mark user as registered
-            localStorage.setItem('cdl_registered', 'true');
 
-            // Broadcast to ticker
-            if (supabase) {
-              supabase.channel('registrations').send({
-                type: 'broadcast',
-                event: 'new-registration',
-                payload: { playerName: payload.playerName }
-              });
-            }
+            // Ensure minimum wait time for premium feel
+            const elapsed = Date.now() - startTime;
+            const remainingWait = Math.max(0, MIN_WAIT_TIME - elapsed);
 
-            // Hide everything except success for clean full-screen takeover
-            document.querySelector(".panel--form .panel-headline").style.display = "none";
-            document.querySelector(".progress-tracker").style.display = "none";
-            const footer = document.querySelector(".footer-note");
-            if (footer) footer.style.display = "none";
+            setTimeout(() => {
+              transitionToSuccess(payload.playerName);
+            }, remainingWait);
           } else {
-            statusEl.textContent = "Error. Try again or contact the host.";
+            // Error - return to form
+            const elapsed = Date.now() - startTime;
+            const remainingWait = Math.max(0, 500 - elapsed); // Brief pause before showing error
+            setTimeout(() => {
+              returnToForm("Error. Try again or contact the host.");
+            }, remainingWait);
           }
         } catch (error) {
-          statusEl.textContent = "Network error. Please try again.";
-        } finally {
-          submitBtn.disabled = false;
+          // Network error - return to form
+          const elapsed = Date.now() - startTime;
+          const remainingWait = Math.max(0, 500 - elapsed);
+          setTimeout(() => {
+            returnToForm("Network error. Please try again.");
+          }, remainingWait);
         }
       });
 
@@ -11308,7 +12456,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
           // Clear message list for clean slate
           if (chatMessages) {
-            chatMessages.innerHTML = '<div class="chat-empty">The table is quiet.</div>';
+            chatMessages.innerHTML = '<div class="chat-empty">The calm before the storm.</div>';
           }
 
           hideLeaveModal();
@@ -11984,6 +13132,199 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           console.error('Failed to toggle pin:', err);
         }
       }
+
+      // ===========================================
+      // TEAMS SYSTEM - "Dominoes is about teams"
+      // ===========================================
+      let currentTeam = null;
+      let pendingInvite = null;
+      let selectedArchetype = null;
+
+      const teamInviteToast = document.getElementById('teamInviteToast');
+      const inviteFromPlayer = document.getElementById('inviteFromPlayer');
+      const acceptInviteBtn = document.getElementById('acceptInviteBtn');
+      const declineInviteBtn = document.getElementById('declineInviteBtn');
+      const teamModal = document.getElementById('teamModal');
+      const teamPartner1 = document.getElementById('teamPartner1');
+      const teamPartner2 = document.getElementById('teamPartner2');
+      const teamNameInput = document.getElementById('teamNameInput');
+      const archetypeGrid = document.getElementById('archetypeGrid');
+      const teamModalCancel = document.getElementById('teamModalCancel');
+      const teamModalCreate = document.getElementById('teamModalCreate');
+
+      const archetypeNames = {
+        los_viejos: 'Los Viejos', los_venenos: 'Los Venenos', la_tranca: 'La Tranca',
+        la_carreta: 'La Carreta', los_capicuas: 'Los Capicúas', los_pesados: 'Los Pesados',
+        los_amarradores: 'Los Amarradores', la_mula: 'La Mula'
+      };
+
+      async function checkPlayerTeam(playerName) {
+        if (!supabase) return null;
+        try {
+          const { data, error } = await supabase.from('teams').select('*')
+            .or(`player1_name.eq.${playerName},player2_name.eq.${playerName}`).maybeSingle();
+          if (error) throw error;
+          if (data) {
+            currentTeam = { id: data.id, name: data.name, archetype: data.archetype,
+              teammate: data.player1_name === playerName ? data.player2_name : data.player1_name };
+            return currentTeam;
+          }
+        } catch (err) { console.error('Failed to check team:', err); }
+        return null;
+      }
+
+      async function checkPendingInvites(playerName) {
+        if (!supabase) return;
+        try {
+          const { data, error } = await supabase.from('team_invites').select('*')
+            .eq('to_player', playerName).eq('status', 'pending')
+            .order('created_at', { ascending: false }).limit(1);
+          if (error) throw error;
+          if (data && data.length > 0) showInviteToast(data[0]);
+        } catch (err) { console.error('Failed to check invites:', err); }
+      }
+
+      function showInviteToast(invite) {
+        pendingInvite = invite;
+        if (inviteFromPlayer) inviteFromPlayer.textContent = invite.from_player;
+        if (teamInviteToast) {
+          teamInviteToast.classList.add('is-visible');
+          setTimeout(() => { if (pendingInvite?.id === invite.id) hideInviteToast(); }, 30000);
+        }
+      }
+
+      function hideInviteToast() {
+        if (teamInviteToast) teamInviteToast.classList.remove('is-visible');
+        pendingInvite = null;
+      }
+
+      async function sendTeamInvite(toPlayer) {
+        if (!supabase || !chatIdentity || currentTeam) return;
+        try {
+          const existingTeam = await checkPlayerTeam(toPlayer);
+          if (existingTeam) { alert(`${toPlayer} is already on a team.`); return; }
+          const { data: existing } = await supabase.from('team_invites').select('id')
+            .eq('from_player', chatIdentity.playerName).eq('to_player', toPlayer)
+            .eq('status', 'pending').maybeSingle();
+          if (existing) { alert('You already sent an invite to this player.'); return; }
+          const { error } = await supabase.from('team_invites').insert({
+            from_player: chatIdentity.playerName, to_player: toPlayer });
+          if (error) throw error;
+          alert(`Invite sent to ${toPlayer}!`);
+        } catch (err) { console.error('Failed to send invite:', err); alert('Failed to send invite.'); }
+      }
+
+      async function acceptTeamInvite() {
+        if (!supabase || !pendingInvite || !chatIdentity) return;
+        try {
+          const { error } = await supabase.from('team_invites').update({
+            status: 'accepted', responded_at: new Date().toISOString()
+          }).eq('id', pendingInvite.id);
+          if (error) throw error;
+          hideInviteToast();
+          openTeamModal(pendingInvite.from_player, chatIdentity.playerName);
+        } catch (err) { console.error('Failed to accept invite:', err); }
+      }
+
+      async function declineTeamInvite() {
+        if (!supabase || !pendingInvite) return;
+        try {
+          await supabase.from('team_invites').update({
+            status: 'declined', responded_at: new Date().toISOString()
+          }).eq('id', pendingInvite.id);
+          hideInviteToast();
+        } catch (err) { console.error('Failed to decline invite:', err); }
+      }
+
+      function openTeamModal(player1, player2) {
+        if (teamPartner1) teamPartner1.textContent = player1;
+        if (teamPartner2) teamPartner2.textContent = player2;
+        if (teamNameInput) teamNameInput.value = '';
+        selectedArchetype = null;
+        document.querySelectorAll('.team-archetype').forEach(btn => btn.classList.remove('selected'));
+        if (teamModalCreate) teamModalCreate.disabled = true;
+        if (teamModal) teamModal.classList.add('is-open');
+      }
+
+      function closeTeamModal() {
+        if (teamModal) teamModal.classList.remove('is-open');
+        selectedArchetype = null;
+      }
+
+      async function createTeam() {
+        if (!supabase || !chatIdentity || !selectedArchetype) return;
+        const teamName = teamNameInput?.value.trim();
+        if (!teamName) { alert('Please enter a team name.'); return; }
+        const partner1 = teamPartner1?.textContent;
+        const partner2 = teamPartner2?.textContent;
+        try {
+          const { data: team, error } = await supabase.from('teams').insert({
+            name: teamName, archetype: selectedArchetype, player1_name: partner1, player2_name: partner2
+          }).select().single();
+          if (error) throw error;
+          currentTeam = { id: team.id, name: team.name, archetype: team.archetype,
+            teammate: partner1 === chatIdentity.playerName ? partner2 : partner1 };
+          closeTeamModal();
+          await postTeamAnnouncement(partner1, partner2, teamName, selectedArchetype);
+        } catch (err) {
+          console.error('Failed to create team:', err);
+          alert(err.message?.includes('unique') ? 'That team name is already taken!' : 'Failed to create team.');
+        }
+      }
+
+      async function postTeamAnnouncement(player1, player2, teamName, archetype) {
+        if (!supabase) return;
+        try {
+          await supabase.from('messages').insert({
+            team_name: teamName, player_name: 'System',
+            content: `🤝 ${player1} & ${player2} are now **${teamName}** (${archetypeNames[archetype] || archetype})`,
+            avatar: 'domino'
+          });
+        } catch (err) { console.error('Failed to post announcement:', err); }
+      }
+
+      function validateTeamForm() {
+        if (teamModalCreate) teamModalCreate.disabled = !(teamNameInput?.value.trim() && selectedArchetype);
+      }
+
+      if (acceptInviteBtn) acceptInviteBtn.addEventListener('click', acceptTeamInvite);
+      if (declineInviteBtn) declineInviteBtn.addEventListener('click', declineTeamInvite);
+      if (teamModalCancel) teamModalCancel.addEventListener('click', closeTeamModal);
+      if (teamModalCreate) teamModalCreate.addEventListener('click', createTeam);
+      if (teamNameInput) teamNameInput.addEventListener('input', validateTeamForm);
+
+      if (archetypeGrid) {
+        archetypeGrid.addEventListener('click', (e) => {
+          const btn = e.target.closest('.team-archetype');
+          if (!btn) return;
+          document.querySelectorAll('.team-archetype').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedArchetype = btn.dataset.archetype;
+          validateTeamForm();
+        });
+      }
+
+      if (teamModal) teamModal.querySelector('.team-modal__backdrop')?.addEventListener('click', closeTeamModal);
+
+      function subscribeToTeamInvites(playerName) {
+        if (!supabase) return;
+        supabase.channel('team-invites').on('postgres_changes', {
+          event: 'INSERT', schema: 'public', table: 'team_invites', filter: `to_player=eq.${playerName}`
+        }, (payload) => { if (payload.new.status === 'pending') showInviteToast(payload.new); }).subscribe();
+      }
+
+      if (chatJoinBtn) {
+        chatJoinBtn.addEventListener('click', async () => {
+          setTimeout(async () => {
+            if (chatIdentity) {
+              await checkPlayerTeam(chatIdentity.playerName);
+              await checkPendingInvites(chatIdentity.playerName);
+              subscribeToTeamInvites(chatIdentity.playerName);
+            }
+          }, 100);
+        });
+      }
+      window.sendTeamInvite = sendTeamInvite;
 
       // ===========================================
       // COLOR FLASH FIX TESTER

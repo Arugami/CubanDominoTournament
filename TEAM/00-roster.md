@@ -52,6 +52,15 @@
 
 ---
 
+## Product & Experience
+
+| Role | Name | Status |
+|------|------|--------|
+| **Chief Product Designer** | Tobias van Schneider | ✅ Hired |
+| **Chief Experience Architect** | Walt Disney | ✅ Hired |
+
+---
+
 ## Open Positions
 
 1. **COO** — Day-to-day operations, logistics, venues
@@ -82,6 +91,10 @@
 ### Production
 - [Steve Lipscomb — Head of Broadcast & Production](./head-of-broadcast-and-production-steve-lipscomb.md)
 
+### Product & Experience
+- [Tobias van Schneider — Chief Product Designer](./chief-product-designer-tobias-van-schneider.md)
+- [Walt Disney — Chief Experience Architect](./chief-experience-architect-walt-disney.md)
+
 ---
 
 ## Interview Records
@@ -90,4 +103,4 @@ All interview transcripts archived in [DECISION RECORDS](./DECISION%20RECORDS/)
 
 ---
 
-*Cuban Domino League — 10 legends hired, building the dream.*
+*Cuban Domino League — 12 legends hired, building the dream.*
