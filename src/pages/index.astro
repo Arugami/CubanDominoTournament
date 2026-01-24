@@ -2445,52 +2445,52 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Staggered timing - embers emerge continuously after greeting lands */
-      /* Using ease-out for organic "settling warmth" feel */
+      /* Staggered timing - embers emerge WITH text entrance (2.3s greeting delay) */
+      /* Synced with "Que Bola Asere" text animation for cohesive feel */
       .panel--whisper.in-view .greeting-ember:nth-child(2) {
-        animation: greetingEmberA 6.5s ease-out 3.8s infinite;
+        animation: greetingEmberA 6.5s ease-out 2.5s infinite;
       }
       .panel--whisper.in-view .greeting-ember:nth-child(3) {
-        animation: greetingEmberB 7.2s ease-out 4.0s infinite;
+        animation: greetingEmberB 7.2s ease-out 2.7s infinite;
       }
       .panel--whisper.in-view .greeting-ember:nth-child(4) {
-        animation: greetingEmberC 6.8s ease-out 4.3s infinite;
+        animation: greetingEmberC 6.8s ease-out 2.9s infinite;
       }
       /* Spark variant - brighter recognition flash */
       .panel--whisper.in-view .greeting-ember:nth-child(5) {
-        animation: greetingEmberASpark 7.5s ease-out 4.6s infinite;
+        animation: greetingEmberASpark 7.5s ease-out 3.1s infinite;
       }
       .panel--whisper.in-view .greeting-ember:nth-child(6) {
-        animation: greetingEmberB 6.3s ease-out 4.9s infinite;
+        animation: greetingEmberB 6.3s ease-out 3.4s infinite;
       }
       /* Warming transition - cool to hot as it rises */
       .panel--whisper.in-view .greeting-ember:nth-child(7) {
-        animation: greetingEmberWarming 7.0s ease-out 5.2s infinite;
+        animation: greetingEmberWarming 7.0s ease-out 3.7s infinite;
       }
       .panel--whisper.in-view .greeting-ember:nth-child(8) {
-        animation: greetingEmberA 6.6s ease-out 5.5s infinite;
+        animation: greetingEmberA 6.6s ease-out 4.0s infinite;
       }
       /* Another spark variant */
       .panel--whisper.in-view .greeting-ember:nth-child(9) {
-        animation: greetingEmberASpark 7.3s ease-out 5.8s infinite;
+        animation: greetingEmberASpark 7.3s ease-out 4.3s infinite;
       }
       /* Another warming transition */
       .panel--whisper.in-view .greeting-ember:nth-child(10) {
-        animation: greetingEmberWarming 6.4s ease-out 6.1s infinite;
+        animation: greetingEmberWarming 6.4s ease-out 4.6s infinite;
       }
       .panel--whisper.in-view .greeting-ember:nth-child(11) {
-        animation: greetingEmberA 7.1s ease-out 6.4s infinite;
+        animation: greetingEmberA 7.1s ease-out 4.9s infinite;
       }
 
-      /* Micro-mote animations - atmospheric depth */
+      /* Micro-mote animations - atmospheric depth (synced with embers) */
       .panel--whisper.in-view .greeting-mote:nth-child(12) {
-        animation: greetingMote 8.5s ease-out 4.2s infinite;
+        animation: greetingMote 8.5s ease-out 2.9s infinite;
       }
       .panel--whisper.in-view .greeting-mote:nth-child(13) {
-        animation: greetingMote 9.2s ease-out 5.0s infinite;
+        animation: greetingMote 9.2s ease-out 3.7s infinite;
       }
       .panel--whisper.in-view .greeting-mote:nth-child(14) {
-        animation: greetingMote 7.8s ease-out 5.8s infinite;
+        animation: greetingMote 7.8s ease-out 4.5s infinite;
       }
 
 
@@ -3314,6 +3314,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: scrollHintReveal 1s ease-out 2.5s forwards;  /* Standardized: 2.5s after panel entry for consistent rhythm */
       }
 
+      /* Smooth transitions for has-played state changes
+         Prevents abrupt "light flicker" when animations end and class is added
+         The 0.5s ease-out masks the class toggle, feels like camera "settling" */
+      .whisper-setup,
+      .whisper-greeting,
+      .whisper-line--mystery {
+        transition: opacity 0.5s ease-out, text-shadow 0.5s ease-out, filter 0.5s ease-out;
+      }
+
       /* Once played: returning should feel "static" and inevitable (no replays). */
       .panel--whisper.has-played .whisper-setup {
         opacity: 1;
@@ -3759,7 +3768,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* "Te toca." - THE CLIMAX - RISES from below */
       /* Starts at 10.0s (after goodbye absorbs), 2.0s duration, lands at 12.0s */
       .panel--build.in-view:not(.has-played) .build-word--torch {
-        animation: torchRise 2.0s cubic-bezier(0.16, 1, 0.3, 1) 10.0s forwards;  /* 1s sooner */
+        animation: torchRise 2.0s cubic-bezier(0.16, 1, 0.3, 1) 10.5s forwards;  /* Lin-Manuel's 1.2s silence after "Every goodbye" */
       }
 
       /* Legacy: keep inherited animation */
@@ -4029,6 +4038,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           transform: translateY(0);
           filter: blur(0);
         }
+      }
+
+      /* Smooth transitions for has-played state changes (Panel 3)
+         Prevents abrupt "light flicker" when animations end */
+      .build-word--primary,
+      .build-family__line,
+      .build-lifecycle__line,
+      .build-lifecycle__closer,
+      .build-word--torch {
+        transition: opacity 0.5s ease-out, text-shadow 0.5s ease-out, filter 0.5s ease-out;
       }
 
       .panel--build.has-played .build-setup {
@@ -4480,6 +4499,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .panel--slam.in-view:not(.has-played) .slam-scroll-hint {
         animation: scrollHintReveal 1s ease-out 2.5s forwards;  /* Standardized: 2.5s after panel entry for consistent rhythm */
+      }
+
+      /* Smooth transitions for has-played state changes (Panel 4)
+         Note: .slam-word already has transition defined in base styles */
+      .slam-slogan {
+        transition: opacity 0.5s ease-out, text-shadow 0.5s ease-out, filter 0.5s ease-out;
       }
 
       .panel--slam.has-played .slam-word {
@@ -5571,11 +5596,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        display: block;
 	        border-radius: 50%;
 	        object-fit: cover;
+	        object-position: center center;
 	        user-select: none;
 	        -webkit-user-drag: none;
 	        pointer-events: none;
 	        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
 	        transition: transform 0.15s ease, box-shadow 0.15s ease;
+	      }
+
+	      /* Country name label above flag */
+	      .avatar-option::before {
+	        content: attr(title);
+	        font-family: "IBM Plex Sans", sans-serif;
+	        font-size: 0.5rem;
+	        color: rgba(255,255,255,0.5);
+	        text-transform: uppercase;
+	        letter-spacing: 0.05em;
+	        margin-bottom: 4px;
+	        white-space: nowrap;
+	        overflow: hidden;
+	        text-overflow: ellipsis;
+	        max-width: 48px;
+	        display: block;
+	        text-align: center;
+	        order: -1;
+	      }
+
+	      .avatar-option.selected::before {
+	        color: rgba(255,255,255,0.8);
 	      }
 
 	      @media (hover: hover) and (pointer: fine) {
@@ -7485,12 +7533,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .chat-identity__title {
-        font-family: "Bodoni Moda", serif;
-        font-size: 2rem;
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 1.8rem;
         color: var(--brass);
         margin-bottom: 0;
         font-weight: 700;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.02em;
         text-transform: uppercase;
         text-shadow:
           0 0 40px rgba(212, 165, 116, 0.2),
@@ -7642,16 +7690,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .avatar-option {
         width: 48px;
-        height: 48px;
+        height: auto;
         flex-shrink: 0;
-        border-radius: 50%;
+        border-radius: 0;
         cursor: pointer;
         position: relative;
         background: transparent;
         border: none;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;
@@ -7660,6 +7709,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         scroll-snap-align: center;
         /* scroll-snap-stop: normal (default) - allows momentum to carry past multiple flags */
         z-index: 1;
+        padding-top: 4px;
       }
 
       @media (hover: hover) and (pointer: fine) {
@@ -12444,7 +12494,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       <div class="success-divider">
         <span class="divider-pip"></span>
       </div>
-      <p class="success-tagline">"Your seat's waiting."</p>
+      <p class="success-tagline">"La mesa te espera."</p>
 
       <!-- La Mesa CTA -->
       <button class="success-mesa-cta" id="successMesaCta">
@@ -12579,7 +12629,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <!-- Identity selection -->
         <div class="chat-identity" id="chatIdentity">
           <p class="chat-identity__title">Claim Your Seat</p>
-          <p class="chat-identity__subtitle">Plant your flag.</p>
+          <p class="chat-identity__subtitle">Show them where you're from.</p>
 
           <!-- Live player count for FOMO -->
           <div class="mesa-live-indicator" id="mesaLiveIndicator">
@@ -12590,82 +12640,681 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <div class="avatar-selector-frame">
             <span class="avatar-selector__center-cue" aria-hidden="true"></span>
             <div class="avatar-selector">
-              <!-- Priority: Cuba, USA, then Caribbean & Latin America -->
-	              <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/cu.svg" alt="Cuba" width="32" height="32" decoding="async" loading="eager" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="usa" title="USA">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/us.svg" alt="USA" width="32" height="32" decoding="async" loading="eager" draggable="false" />
-	              </div>
-              <!-- Caribbean -->
-	              <div class="avatar-option" data-avatar="pr" title="Puerto Rico">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/pr.svg" alt="Puerto Rico" width="32" height="32" decoding="async" loading="eager" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="dr" title="Dominican Republic">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/do.svg" alt="Dominican Republic" width="32" height="32" decoding="async" loading="eager" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="jamaica" title="Jamaica">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/jm.svg" alt="Jamaica" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="haiti" title="Haiti">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/ht.svg" alt="Haiti" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-              <!-- Central & South America -->
-	              <div class="avatar-option" data-avatar="mexico" title="Mexico">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/mx.svg" alt="Mexico" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="venezuela" title="Venezuela">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/ve.svg" alt="Venezuela" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="colombia" title="Colombia">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/co.svg" alt="Colombia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="panama" title="Panama">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/pa.svg" alt="Panama" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="nicaragua" title="Nicaragua">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/ni.svg" alt="Nicaragua" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="honduras" title="Honduras">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/hn.svg" alt="Honduras" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="brazil" title="Brazil">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/br.svg" alt="Brazil" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="argentina" title="Argentina">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/ar.svg" alt="Argentina" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="peru" title="Peru">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/pe.svg" alt="Peru" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="ecuador" title="Ecuador">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/ec.svg" alt="Ecuador" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="chile" title="Chile">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/cl.svg" alt="Chile" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-              <!-- North America & Europe -->
-	              <div class="avatar-option" data-avatar="canada" title="Canada">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/ca.svg" alt="Canada" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="spain" title="Spain">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/es.svg" alt="Spain" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="italy" title="Italy">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/it.svg" alt="Italy" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="france" title="France">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/fr.svg" alt="France" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="germany" title="Germany">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/de.svg" alt="Germany" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="uk" title="United Kingdom">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/gb.svg" alt="United Kingdom" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
-	              <div class="avatar-option" data-avatar="portugal" title="Portugal">
-	                <img class="avatar-flag-img" src="https://flagcdn.com/pt.svg" alt="Portugal" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
-	              </div>
+              <!-- 1. PRIORITY: Cuba & USA -->
+              <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cu.svg" alt="Cuba" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="usa" title="USA">
+                <img class="avatar-flag-img" src="https://flagcdn.com/us.svg" alt="USA" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+              </div>
+              <!-- 2. CARIBBEAN -->
+              <div class="avatar-option" data-avatar="puerto-rico" title="Puerto Rico">
+                <img class="avatar-flag-img" src="https://flagcdn.com/pr.svg" alt="Puerto Rico" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="dominican-republic" title="Dominican Republic">
+                <img class="avatar-flag-img" src="https://flagcdn.com/do.svg" alt="Dominican Republic" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="jamaica" title="Jamaica">
+                <img class="avatar-flag-img" src="https://flagcdn.com/jm.svg" alt="Jamaica" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="haiti" title="Haiti">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ht.svg" alt="Haiti" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="trinidad-and-tobago" title="Trinidad and Tobago">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tt.svg" alt="Trinidad and Tobago" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="bahamas" title="Bahamas">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bs.svg" alt="Bahamas" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="barbados" title="Barbados">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bb.svg" alt="Barbados" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="saint-lucia" title="Saint Lucia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/lc.svg" alt="Saint Lucia" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="grenada" title="Grenada">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gd.svg" alt="Grenada" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="saint-vincent" title="Saint Vincent and the Grenadines">
+                <img class="avatar-flag-img" src="https://flagcdn.com/vc.svg" alt="Saint Vincent and the Grenadines" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="antigua-and-barbuda" title="Antigua and Barbuda">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ag.svg" alt="Antigua and Barbuda" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="dominica" title="Dominica">
+                <img class="avatar-flag-img" src="https://flagcdn.com/dm.svg" alt="Dominica" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="saint-kitts-and-nevis" title="Saint Kitts and Nevis">
+                <img class="avatar-flag-img" src="https://flagcdn.com/kn.svg" alt="Saint Kitts and Nevis" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="curacao" title="Curaçao">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cw.svg" alt="Curaçao" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="aruba" title="Aruba">
+                <img class="avatar-flag-img" src="https://flagcdn.com/aw.svg" alt="Aruba" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="us-virgin-islands" title="U.S. Virgin Islands">
+                <img class="avatar-flag-img" src="https://flagcdn.com/vi.svg" alt="U.S. Virgin Islands" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="british-virgin-islands" title="British Virgin Islands">
+                <img class="avatar-flag-img" src="https://flagcdn.com/vg.svg" alt="British Virgin Islands" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="cayman-islands" title="Cayman Islands">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ky.svg" alt="Cayman Islands" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="turks-and-caicos" title="Turks and Caicos Islands">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tc.svg" alt="Turks and Caicos Islands" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="bermuda" title="Bermuda">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bm.svg" alt="Bermuda" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="anguilla" title="Anguilla">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ai.svg" alt="Anguilla" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="montserrat" title="Montserrat">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ms.svg" alt="Montserrat" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="sint-maarten" title="Sint Maarten">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sx.svg" alt="Sint Maarten" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="guadeloupe" title="Guadeloupe">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gp.svg" alt="Guadeloupe" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="martinique" title="Martinique">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mq.svg" alt="Martinique" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="bonaire" title="Bonaire">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bq.svg" alt="Bonaire" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <!-- 3. CENTRAL AMERICA -->
+              <div class="avatar-option" data-avatar="mexico" title="Mexico">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mx.svg" alt="Mexico" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="guatemala" title="Guatemala">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gt.svg" alt="Guatemala" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="belize" title="Belize">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bz.svg" alt="Belize" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="honduras" title="Honduras">
+                <img class="avatar-flag-img" src="https://flagcdn.com/hn.svg" alt="Honduras" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="el-salvador" title="El Salvador">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sv.svg" alt="El Salvador" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="nicaragua" title="Nicaragua">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ni.svg" alt="Nicaragua" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="costa-rica" title="Costa Rica">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cr.svg" alt="Costa Rica" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="panama" title="Panama">
+                <img class="avatar-flag-img" src="https://flagcdn.com/pa.svg" alt="Panama" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <!-- 4. SOUTH AMERICA -->
+              <div class="avatar-option" data-avatar="venezuela" title="Venezuela">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ve.svg" alt="Venezuela" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="colombia" title="Colombia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/co.svg" alt="Colombia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="brazil" title="Brazil">
+                <img class="avatar-flag-img" src="https://flagcdn.com/br.svg" alt="Brazil" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="argentina" title="Argentina">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ar.svg" alt="Argentina" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="peru" title="Peru">
+                <img class="avatar-flag-img" src="https://flagcdn.com/pe.svg" alt="Peru" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="chile" title="Chile">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cl.svg" alt="Chile" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="ecuador" title="Ecuador">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ec.svg" alt="Ecuador" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="bolivia" title="Bolivia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bo.svg" alt="Bolivia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="paraguay" title="Paraguay">
+                <img class="avatar-flag-img" src="https://flagcdn.com/py.svg" alt="Paraguay" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="uruguay" title="Uruguay">
+                <img class="avatar-flag-img" src="https://flagcdn.com/uy.svg" alt="Uruguay" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="guyana" title="Guyana">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gy.svg" alt="Guyana" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="suriname" title="Suriname">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sr.svg" alt="Suriname" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="french-guiana" title="French Guiana">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gf.svg" alt="French Guiana" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <!-- 5. NORTH AMERICA -->
+              <div class="avatar-option" data-avatar="canada" title="Canada">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ca.svg" alt="Canada" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <!-- 6. EUROPE -->
+              <div class="avatar-option" data-avatar="spain" title="Spain">
+                <img class="avatar-flag-img" src="https://flagcdn.com/es.svg" alt="Spain" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="portugal" title="Portugal">
+                <img class="avatar-flag-img" src="https://flagcdn.com/pt.svg" alt="Portugal" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="italy" title="Italy">
+                <img class="avatar-flag-img" src="https://flagcdn.com/it.svg" alt="Italy" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="france" title="France">
+                <img class="avatar-flag-img" src="https://flagcdn.com/fr.svg" alt="France" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="germany" title="Germany">
+                <img class="avatar-flag-img" src="https://flagcdn.com/de.svg" alt="Germany" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="united-kingdom" title="United Kingdom">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gb.svg" alt="United Kingdom" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="ireland" title="Ireland">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ie.svg" alt="Ireland" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="netherlands" title="Netherlands">
+                <img class="avatar-flag-img" src="https://flagcdn.com/nl.svg" alt="Netherlands" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="belgium" title="Belgium">
+                <img class="avatar-flag-img" src="https://flagcdn.com/be.svg" alt="Belgium" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="switzerland" title="Switzerland">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ch.svg" alt="Switzerland" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="austria" title="Austria">
+                <img class="avatar-flag-img" src="https://flagcdn.com/at.svg" alt="Austria" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="poland" title="Poland">
+                <img class="avatar-flag-img" src="https://flagcdn.com/pl.svg" alt="Poland" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="czechia" title="Czechia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cz.svg" alt="Czechia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="slovakia" title="Slovakia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sk.svg" alt="Slovakia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="hungary" title="Hungary">
+                <img class="avatar-flag-img" src="https://flagcdn.com/hu.svg" alt="Hungary" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="romania" title="Romania">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ro.svg" alt="Romania" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="bulgaria" title="Bulgaria">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bg.svg" alt="Bulgaria" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="greece" title="Greece">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gr.svg" alt="Greece" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="croatia" title="Croatia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/hr.svg" alt="Croatia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="slovenia" title="Slovenia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/si.svg" alt="Slovenia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="serbia" title="Serbia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/rs.svg" alt="Serbia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="bosnia" title="Bosnia and Herzegovina">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ba.svg" alt="Bosnia and Herzegovina" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="montenegro" title="Montenegro">
+                <img class="avatar-flag-img" src="https://flagcdn.com/me.svg" alt="Montenegro" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="north-macedonia" title="North Macedonia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mk.svg" alt="North Macedonia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="albania" title="Albania">
+                <img class="avatar-flag-img" src="https://flagcdn.com/al.svg" alt="Albania" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="kosovo" title="Kosovo">
+                <img class="avatar-flag-img" src="https://flagcdn.com/xk.svg" alt="Kosovo" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="ukraine" title="Ukraine">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ua.svg" alt="Ukraine" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="russia" title="Russia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ru.svg" alt="Russia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="belarus" title="Belarus">
+                <img class="avatar-flag-img" src="https://flagcdn.com/by.svg" alt="Belarus" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="moldova" title="Moldova">
+                <img class="avatar-flag-img" src="https://flagcdn.com/md.svg" alt="Moldova" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="lithuania" title="Lithuania">
+                <img class="avatar-flag-img" src="https://flagcdn.com/lt.svg" alt="Lithuania" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="latvia" title="Latvia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/lv.svg" alt="Latvia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="estonia" title="Estonia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ee.svg" alt="Estonia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="finland" title="Finland">
+                <img class="avatar-flag-img" src="https://flagcdn.com/fi.svg" alt="Finland" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="sweden" title="Sweden">
+                <img class="avatar-flag-img" src="https://flagcdn.com/se.svg" alt="Sweden" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="norway" title="Norway">
+                <img class="avatar-flag-img" src="https://flagcdn.com/no.svg" alt="Norway" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="denmark" title="Denmark">
+                <img class="avatar-flag-img" src="https://flagcdn.com/dk.svg" alt="Denmark" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="iceland" title="Iceland">
+                <img class="avatar-flag-img" src="https://flagcdn.com/is.svg" alt="Iceland" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="luxembourg" title="Luxembourg">
+                <img class="avatar-flag-img" src="https://flagcdn.com/lu.svg" alt="Luxembourg" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="liechtenstein" title="Liechtenstein">
+                <img class="avatar-flag-img" src="https://flagcdn.com/li.svg" alt="Liechtenstein" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="monaco" title="Monaco">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mc.svg" alt="Monaco" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="andorra" title="Andorra">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ad.svg" alt="Andorra" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="san-marino" title="San Marino">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sm.svg" alt="San Marino" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="vatican" title="Vatican City">
+                <img class="avatar-flag-img" src="https://flagcdn.com/va.svg" alt="Vatican City" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="malta" title="Malta">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mt.svg" alt="Malta" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="cyprus" title="Cyprus">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cy.svg" alt="Cyprus" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="turkey" title="Turkey">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tr.svg" alt="Turkey" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="georgia" title="Georgia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ge.svg" alt="Georgia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="armenia" title="Armenia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/am.svg" alt="Armenia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="azerbaijan" title="Azerbaijan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/az.svg" alt="Azerbaijan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <!-- 7. ASIA -->
+              <div class="avatar-option" data-avatar="china" title="China">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cn.svg" alt="China" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="japan" title="Japan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/jp.svg" alt="Japan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="south-korea" title="South Korea">
+                <img class="avatar-flag-img" src="https://flagcdn.com/kr.svg" alt="South Korea" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="north-korea" title="North Korea">
+                <img class="avatar-flag-img" src="https://flagcdn.com/kp.svg" alt="North Korea" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="taiwan" title="Taiwan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tw.svg" alt="Taiwan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="hong-kong" title="Hong Kong">
+                <img class="avatar-flag-img" src="https://flagcdn.com/hk.svg" alt="Hong Kong" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="macau" title="Macau">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mo.svg" alt="Macau" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="mongolia" title="Mongolia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mn.svg" alt="Mongolia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="vietnam" title="Vietnam">
+                <img class="avatar-flag-img" src="https://flagcdn.com/vn.svg" alt="Vietnam" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="thailand" title="Thailand">
+                <img class="avatar-flag-img" src="https://flagcdn.com/th.svg" alt="Thailand" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="philippines" title="Philippines">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ph.svg" alt="Philippines" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="indonesia" title="Indonesia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/id.svg" alt="Indonesia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="malaysia" title="Malaysia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/my.svg" alt="Malaysia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="singapore" title="Singapore">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sg.svg" alt="Singapore" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="brunei" title="Brunei">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bn.svg" alt="Brunei" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="cambodia" title="Cambodia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/kh.svg" alt="Cambodia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="laos" title="Laos">
+                <img class="avatar-flag-img" src="https://flagcdn.com/la.svg" alt="Laos" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="myanmar" title="Myanmar">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mm.svg" alt="Myanmar" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="timor-leste" title="Timor-Leste">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tl.svg" alt="Timor-Leste" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="india" title="India">
+                <img class="avatar-flag-img" src="https://flagcdn.com/in.svg" alt="India" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="pakistan" title="Pakistan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/pk.svg" alt="Pakistan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="bangladesh" title="Bangladesh">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bd.svg" alt="Bangladesh" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="nepal" title="Nepal">
+                <img class="avatar-flag-img" src="https://flagcdn.com/np.svg" alt="Nepal" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="bhutan" title="Bhutan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bt.svg" alt="Bhutan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="sri-lanka" title="Sri Lanka">
+                <img class="avatar-flag-img" src="https://flagcdn.com/lk.svg" alt="Sri Lanka" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="maldives" title="Maldives">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mv.svg" alt="Maldives" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="afghanistan" title="Afghanistan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/af.svg" alt="Afghanistan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="iran" title="Iran">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ir.svg" alt="Iran" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="iraq" title="Iraq">
+                <img class="avatar-flag-img" src="https://flagcdn.com/iq.svg" alt="Iraq" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="syria" title="Syria">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sy.svg" alt="Syria" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="lebanon" title="Lebanon">
+                <img class="avatar-flag-img" src="https://flagcdn.com/lb.svg" alt="Lebanon" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="jordan" title="Jordan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/jo.svg" alt="Jordan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="israel" title="Israel">
+                <img class="avatar-flag-img" src="https://flagcdn.com/il.svg" alt="Israel" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="palestine" title="Palestine">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ps.svg" alt="Palestine" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="saudi-arabia" title="Saudi Arabia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sa.svg" alt="Saudi Arabia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="yemen" title="Yemen">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ye.svg" alt="Yemen" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="oman" title="Oman">
+                <img class="avatar-flag-img" src="https://flagcdn.com/om.svg" alt="Oman" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="uae" title="United Arab Emirates">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ae.svg" alt="United Arab Emirates" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="qatar" title="Qatar">
+                <img class="avatar-flag-img" src="https://flagcdn.com/qa.svg" alt="Qatar" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="bahrain" title="Bahrain">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bh.svg" alt="Bahrain" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="kuwait" title="Kuwait">
+                <img class="avatar-flag-img" src="https://flagcdn.com/kw.svg" alt="Kuwait" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="kazakhstan" title="Kazakhstan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/kz.svg" alt="Kazakhstan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="uzbekistan" title="Uzbekistan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/uz.svg" alt="Uzbekistan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="turkmenistan" title="Turkmenistan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tm.svg" alt="Turkmenistan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="tajikistan" title="Tajikistan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tj.svg" alt="Tajikistan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="kyrgyzstan" title="Kyrgyzstan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/kg.svg" alt="Kyrgyzstan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <!-- 8. AFRICA -->
+              <div class="avatar-option" data-avatar="egypt" title="Egypt">
+                <img class="avatar-flag-img" src="https://flagcdn.com/eg.svg" alt="Egypt" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="morocco" title="Morocco">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ma.svg" alt="Morocco" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="algeria" title="Algeria">
+                <img class="avatar-flag-img" src="https://flagcdn.com/dz.svg" alt="Algeria" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="tunisia" title="Tunisia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tn.svg" alt="Tunisia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="libya" title="Libya">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ly.svg" alt="Libya" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="sudan" title="Sudan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sd.svg" alt="Sudan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="south-sudan" title="South Sudan">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ss.svg" alt="South Sudan" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="ethiopia" title="Ethiopia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/et.svg" alt="Ethiopia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="eritrea" title="Eritrea">
+                <img class="avatar-flag-img" src="https://flagcdn.com/er.svg" alt="Eritrea" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="djibouti" title="Djibouti">
+                <img class="avatar-flag-img" src="https://flagcdn.com/dj.svg" alt="Djibouti" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="somalia" title="Somalia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/so.svg" alt="Somalia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="kenya" title="Kenya">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ke.svg" alt="Kenya" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="uganda" title="Uganda">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ug.svg" alt="Uganda" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="tanzania" title="Tanzania">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tz.svg" alt="Tanzania" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="rwanda" title="Rwanda">
+                <img class="avatar-flag-img" src="https://flagcdn.com/rw.svg" alt="Rwanda" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="burundi" title="Burundi">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bi.svg" alt="Burundi" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="dr-congo" title="DR Congo">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cd.svg" alt="DR Congo" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="congo" title="Republic of the Congo">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cg.svg" alt="Republic of the Congo" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="central-african-republic" title="Central African Republic">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cf.svg" alt="Central African Republic" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="cameroon" title="Cameroon">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cm.svg" alt="Cameroon" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="nigeria" title="Nigeria">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ng.svg" alt="Nigeria" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="ghana" title="Ghana">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gh.svg" alt="Ghana" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="ivory-coast" title="Ivory Coast">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ci.svg" alt="Ivory Coast" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="senegal" title="Senegal">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sn.svg" alt="Senegal" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="mali" title="Mali">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ml.svg" alt="Mali" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="burkina-faso" title="Burkina Faso">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bf.svg" alt="Burkina Faso" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="niger" title="Niger">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ne.svg" alt="Niger" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="chad" title="Chad">
+                <img class="avatar-flag-img" src="https://flagcdn.com/td.svg" alt="Chad" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="mauritania" title="Mauritania">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mr.svg" alt="Mauritania" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="gambia" title="Gambia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gm.svg" alt="Gambia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="guinea-bissau" title="Guinea-Bissau">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gw.svg" alt="Guinea-Bissau" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="guinea" title="Guinea">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gn.svg" alt="Guinea" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="sierra-leone" title="Sierra Leone">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sl.svg" alt="Sierra Leone" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="liberia" title="Liberia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/lr.svg" alt="Liberia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="togo" title="Togo">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tg.svg" alt="Togo" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="benin" title="Benin">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bj.svg" alt="Benin" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="gabon" title="Gabon">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ga.svg" alt="Gabon" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="equatorial-guinea" title="Equatorial Guinea">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gq.svg" alt="Equatorial Guinea" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="sao-tome" title="São Tomé and Príncipe">
+                <img class="avatar-flag-img" src="https://flagcdn.com/st.svg" alt="São Tomé and Príncipe" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="angola" title="Angola">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ao.svg" alt="Angola" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="zambia" title="Zambia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/zm.svg" alt="Zambia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="zimbabwe" title="Zimbabwe">
+                <img class="avatar-flag-img" src="https://flagcdn.com/zw.svg" alt="Zimbabwe" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="malawi" title="Malawi">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mw.svg" alt="Malawi" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="mozambique" title="Mozambique">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mz.svg" alt="Mozambique" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="madagascar" title="Madagascar">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mg.svg" alt="Madagascar" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="mauritius" title="Mauritius">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mu.svg" alt="Mauritius" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="seychelles" title="Seychelles">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sc.svg" alt="Seychelles" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="comoros" title="Comoros">
+                <img class="avatar-flag-img" src="https://flagcdn.com/km.svg" alt="Comoros" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="south-africa" title="South Africa">
+                <img class="avatar-flag-img" src="https://flagcdn.com/za.svg" alt="South Africa" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="namibia" title="Namibia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/na.svg" alt="Namibia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="botswana" title="Botswana">
+                <img class="avatar-flag-img" src="https://flagcdn.com/bw.svg" alt="Botswana" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="eswatini" title="Eswatini">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sz.svg" alt="Eswatini" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="lesotho" title="Lesotho">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ls.svg" alt="Lesotho" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="cabo-verde" title="Cabo Verde">
+                <img class="avatar-flag-img" src="https://flagcdn.com/cv.svg" alt="Cabo Verde" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <!-- 9. OCEANIA -->
+              <div class="avatar-option" data-avatar="australia" title="Australia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/au.svg" alt="Australia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="new-zealand" title="New Zealand">
+                <img class="avatar-flag-img" src="https://flagcdn.com/nz.svg" alt="New Zealand" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="papua-new-guinea" title="Papua New Guinea">
+                <img class="avatar-flag-img" src="https://flagcdn.com/pg.svg" alt="Papua New Guinea" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="fiji" title="Fiji">
+                <img class="avatar-flag-img" src="https://flagcdn.com/fj.svg" alt="Fiji" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="samoa" title="Samoa">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ws.svg" alt="Samoa" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="tonga" title="Tonga">
+                <img class="avatar-flag-img" src="https://flagcdn.com/to.svg" alt="Tonga" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="vanuatu" title="Vanuatu">
+                <img class="avatar-flag-img" src="https://flagcdn.com/vu.svg" alt="Vanuatu" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="solomon-islands" title="Solomon Islands">
+                <img class="avatar-flag-img" src="https://flagcdn.com/sb.svg" alt="Solomon Islands" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="kiribati" title="Kiribati">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ki.svg" alt="Kiribati" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="micronesia" title="Micronesia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/fm.svg" alt="Micronesia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="marshall-islands" title="Marshall Islands">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mh.svg" alt="Marshall Islands" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="palau" title="Palau">
+                <img class="avatar-flag-img" src="https://flagcdn.com/pw.svg" alt="Palau" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="nauru" title="Nauru">
+                <img class="avatar-flag-img" src="https://flagcdn.com/nr.svg" alt="Nauru" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="tuvalu" title="Tuvalu">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tv.svg" alt="Tuvalu" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="guam" title="Guam">
+                <img class="avatar-flag-img" src="https://flagcdn.com/gu.svg" alt="Guam" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="american-samoa" title="American Samoa">
+                <img class="avatar-flag-img" src="https://flagcdn.com/as.svg" alt="American Samoa" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="northern-mariana-islands" title="Northern Mariana Islands">
+                <img class="avatar-flag-img" src="https://flagcdn.com/mp.svg" alt="Northern Mariana Islands" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="french-polynesia" title="French Polynesia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/pf.svg" alt="French Polynesia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="new-caledonia" title="New Caledonia">
+                <img class="avatar-flag-img" src="https://flagcdn.com/nc.svg" alt="New Caledonia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="cook-islands" title="Cook Islands">
+                <img class="avatar-flag-img" src="https://flagcdn.com/ck.svg" alt="Cook Islands" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="niue" title="Niue">
+                <img class="avatar-flag-img" src="https://flagcdn.com/nu.svg" alt="Niue" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
+              <div class="avatar-option" data-avatar="tokelau" title="Tokelau">
+                <img class="avatar-flag-img" src="https://flagcdn.com/tk.svg" alt="Tokelau" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+              </div>
             </div>
           </div>
           <p class="avatar-hint">Scroll to find your flag</p>
@@ -13160,9 +13809,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         // Re-enable scroll-snap after a small delay to let iOS settle
         // The RAF loop caused conflicts with iOS momentum scrolling
+        // Increased from 80ms to 150ms to allow snap correction to complete smoothly
         setTimeout(() => {
           storyEl.style.scrollSnapType = originalSnapType || 'y mandatory';
-        }, 80);
+        }, 150);
       }
 
       // Track form interaction state - prevents snap re-engaging while user is filling form
@@ -13324,26 +13974,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           scrollBlockTarget.removeEventListener('wheel', preventScroll);
           scrollBlockTarget.removeEventListener('touchmove', preventScroll);
 
-          // Opacity + blur dip during snap correction - creates "camera cut" feel
-          // Masks any positional micro-jerk when scroll-snap kicks in
-          // Extended to 120ms with ease-in-out for smoother masking (brain perceives ~16ms shifts)
-          // Subtle blur (0.5px) further softens edges during correction
-          if (storyEl) {
-            storyEl.style.opacity = '0.92';
-            storyEl.style.filter = 'blur(0.5px)';
-            storyEl.style.transition = 'opacity 120ms ease-in-out, filter 120ms ease-in-out';
-            setTimeout(() => {
-              if (storyEl) {
-                storyEl.style.opacity = '1';
-                storyEl.style.filter = '';
-                // Clear transition after settling
-                setTimeout(() => {
-                  if (storyEl) storyEl.style.transition = '';
-                }, 120);
-              }
-            }, 120);
-          }
-
           // Enable smooth scroll temporarily so any snap correction feels cinematic
           // This prevents the "browser nudged the page" feeling
           if (storyEl) {
@@ -13368,19 +13998,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !whisperHasPlayed) {
             whisperHasPlayed = true;
             alignPanelAfterSettle(whisperPanel);
-            lockScroll(6500, () => whisperPanel?.classList.add('has-played'));  // 6.5s - reduced for "room" feel
+            lockScroll(6500, () => {
+              // Double-RAF: Let browser complete any pending paints before class toggle
+              // Prevents "light flicker" from abrupt state change
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => whisperPanel?.classList.add('has-played'));
+              });
+            });
           }
         });
       }, { threshold: 0.6 });
 
-      // Panel 3 (Build/Revelation) scroll-lock - 8 seconds
-      // Tobias: 13s was an eternity - drama still lands at 8s, feels like "room holding you"
+      // Panel 3 (Build/Revelation) scroll-lock - 12.5 seconds
+      // Full sequence: "Te toca" at 10.5s + 2.0s animation = 12.5s total
       const buildObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !buildHasPlayed) {
             buildHasPlayed = true;
             alignPanelAfterSettle(buildPanel);
-            lockScroll(8000, () => buildPanel?.classList.add('has-played'));  // 8s - reduced for "room" feel
+            lockScroll(12500, () => {
+              // Double-RAF: Let browser complete any pending paints before class toggle
+              // Prevents "light flicker" from abrupt state change
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => buildPanel?.classList.add('has-played'));
+              });
+            });
           }
         });
       }, { threshold: 0.6 });
@@ -13392,7 +14034,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !slamHasPlayed) {
             slamHasPlayed = true;
             alignPanelAfterSettle(slamPanel);
-            lockScroll(5000, () => slamPanel?.classList.add('has-played'));  // 5s - reduced for "room" feel
+            lockScroll(5000, () => {
+              // Double-RAF: Let browser complete any pending paints before class toggle
+              // Prevents "light flicker" from abrupt state change
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => slamPanel?.classList.add('has-played'));
+              });
+            });
 
             // Haptic feedback at SEAT impact moment (1.8s delay + 45% of 1.2s animation = 2.34s)
             setTimeout(() => {
@@ -14993,13 +15641,237 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Map of avatar codes to emojis
       const FLAG_MAP = {
+        // Priority: Cuba & USA
         'cuba': '🇨🇺',
         'usa': '🇺🇸',
-        'pr': '🇵🇷',
-        'dr': '🇩🇴',
+        // Caribbean
+        'puerto-rico': '🇵🇷',
+        'dominican-republic': '🇩🇴',
+        'jamaica': '🇯🇲',
+        'haiti': '🇭🇹',
+        'trinidad-and-tobago': '🇹🇹',
+        'bahamas': '🇧🇸',
+        'barbados': '🇧🇧',
+        'saint-lucia': '🇱🇨',
+        'grenada': '🇬🇩',
+        'saint-vincent': '🇻🇨',
+        'antigua-and-barbuda': '🇦🇬',
+        'dominica': '🇩🇲',
+        'saint-kitts-and-nevis': '🇰🇳',
+        'curacao': '🇨🇼',
+        'aruba': '🇦🇼',
+        'us-virgin-islands': '🇻🇮',
+        'british-virgin-islands': '🇻🇬',
+        'cayman-islands': '🇰🇾',
+        'turks-and-caicos': '🇹🇨',
+        'bermuda': '🇧🇲',
+        'anguilla': '🇦🇮',
+        'montserrat': '🇲🇸',
+        'sint-maarten': '🇸🇽',
+        'guadeloupe': '🇬🇵',
+        'martinique': '🇲🇶',
+        'bonaire': '🇧🇶',
+        // Central America
+        'mexico': '🇲🇽',
+        'guatemala': '🇬🇹',
+        'belize': '🇧🇿',
+        'honduras': '🇭🇳',
+        'el-salvador': '🇸🇻',
+        'nicaragua': '🇳🇮',
+        'costa-rica': '🇨🇷',
+        'panama': '🇵🇦',
+        // South America
         'venezuela': '🇻🇪',
         'colombia': '🇨🇴',
-        'spain': '🇪🇸'
+        'brazil': '🇧🇷',
+        'argentina': '🇦🇷',
+        'peru': '🇵🇪',
+        'chile': '🇨🇱',
+        'ecuador': '🇪🇨',
+        'bolivia': '🇧🇴',
+        'paraguay': '🇵🇾',
+        'uruguay': '🇺🇾',
+        'guyana': '🇬🇾',
+        'suriname': '🇸🇷',
+        'french-guiana': '🇬🇫',
+        // North America
+        'canada': '🇨🇦',
+        // Europe
+        'spain': '🇪🇸',
+        'portugal': '🇵🇹',
+        'italy': '🇮🇹',
+        'france': '🇫🇷',
+        'germany': '🇩🇪',
+        'united-kingdom': '🇬🇧',
+        'ireland': '🇮🇪',
+        'netherlands': '🇳🇱',
+        'belgium': '🇧🇪',
+        'switzerland': '🇨🇭',
+        'austria': '🇦🇹',
+        'poland': '🇵🇱',
+        'czechia': '🇨🇿',
+        'slovakia': '🇸🇰',
+        'hungary': '🇭🇺',
+        'romania': '🇷🇴',
+        'bulgaria': '🇧🇬',
+        'greece': '🇬🇷',
+        'croatia': '🇭🇷',
+        'slovenia': '🇸🇮',
+        'serbia': '🇷🇸',
+        'bosnia': '🇧🇦',
+        'montenegro': '🇲🇪',
+        'north-macedonia': '🇲🇰',
+        'albania': '🇦🇱',
+        'kosovo': '🇽🇰',
+        'ukraine': '🇺🇦',
+        'russia': '🇷🇺',
+        'belarus': '🇧🇾',
+        'moldova': '🇲🇩',
+        'lithuania': '🇱🇹',
+        'latvia': '🇱🇻',
+        'estonia': '🇪🇪',
+        'finland': '🇫🇮',
+        'sweden': '🇸🇪',
+        'norway': '🇳🇴',
+        'denmark': '🇩🇰',
+        'iceland': '🇮🇸',
+        'luxembourg': '🇱🇺',
+        'liechtenstein': '🇱🇮',
+        'monaco': '🇲🇨',
+        'andorra': '🇦🇩',
+        'san-marino': '🇸🇲',
+        'vatican': '🇻🇦',
+        'malta': '🇲🇹',
+        'cyprus': '🇨🇾',
+        'turkey': '🇹🇷',
+        'georgia': '🇬🇪',
+        'armenia': '🇦🇲',
+        'azerbaijan': '🇦🇿',
+        // Asia
+        'china': '🇨🇳',
+        'japan': '🇯🇵',
+        'south-korea': '🇰🇷',
+        'north-korea': '🇰🇵',
+        'taiwan': '🇹🇼',
+        'hong-kong': '🇭🇰',
+        'macau': '🇲🇴',
+        'mongolia': '🇲🇳',
+        'vietnam': '🇻🇳',
+        'thailand': '🇹🇭',
+        'philippines': '🇵🇭',
+        'indonesia': '🇮🇩',
+        'malaysia': '🇲🇾',
+        'singapore': '🇸🇬',
+        'brunei': '🇧🇳',
+        'cambodia': '🇰🇭',
+        'laos': '🇱🇦',
+        'myanmar': '🇲🇲',
+        'timor-leste': '🇹🇱',
+        'india': '🇮🇳',
+        'pakistan': '🇵🇰',
+        'bangladesh': '🇧🇩',
+        'nepal': '🇳🇵',
+        'bhutan': '🇧🇹',
+        'sri-lanka': '🇱🇰',
+        'maldives': '🇲🇻',
+        'afghanistan': '🇦🇫',
+        'iran': '🇮🇷',
+        'iraq': '🇮🇶',
+        'syria': '🇸🇾',
+        'lebanon': '🇱🇧',
+        'jordan': '🇯🇴',
+        'israel': '🇮🇱',
+        'palestine': '🇵🇸',
+        'saudi-arabia': '🇸🇦',
+        'yemen': '🇾🇪',
+        'oman': '🇴🇲',
+        'uae': '🇦🇪',
+        'qatar': '🇶🇦',
+        'bahrain': '🇧🇭',
+        'kuwait': '🇰🇼',
+        'kazakhstan': '🇰🇿',
+        'uzbekistan': '🇺🇿',
+        'turkmenistan': '🇹🇲',
+        'tajikistan': '🇹🇯',
+        'kyrgyzstan': '🇰🇬',
+        // Africa
+        'egypt': '🇪🇬',
+        'morocco': '🇲🇦',
+        'algeria': '🇩🇿',
+        'tunisia': '🇹🇳',
+        'libya': '🇱🇾',
+        'sudan': '🇸🇩',
+        'south-sudan': '🇸🇸',
+        'ethiopia': '🇪🇹',
+        'eritrea': '🇪🇷',
+        'djibouti': '🇩🇯',
+        'somalia': '🇸🇴',
+        'kenya': '🇰🇪',
+        'uganda': '🇺🇬',
+        'tanzania': '🇹🇿',
+        'rwanda': '🇷🇼',
+        'burundi': '🇧🇮',
+        'dr-congo': '🇨🇩',
+        'congo': '🇨🇬',
+        'central-african-republic': '🇨🇫',
+        'cameroon': '🇨🇲',
+        'nigeria': '🇳🇬',
+        'ghana': '🇬🇭',
+        'ivory-coast': '🇨🇮',
+        'senegal': '🇸🇳',
+        'mali': '🇲🇱',
+        'burkina-faso': '🇧🇫',
+        'niger': '🇳🇪',
+        'chad': '🇹🇩',
+        'mauritania': '🇲🇷',
+        'gambia': '🇬🇲',
+        'guinea-bissau': '🇬🇼',
+        'guinea': '🇬🇳',
+        'sierra-leone': '🇸🇱',
+        'liberia': '🇱🇷',
+        'togo': '🇹🇬',
+        'benin': '🇧🇯',
+        'gabon': '🇬🇦',
+        'equatorial-guinea': '🇬🇶',
+        'sao-tome': '🇸🇹',
+        'angola': '🇦🇴',
+        'zambia': '🇿🇲',
+        'zimbabwe': '🇿🇼',
+        'malawi': '🇲🇼',
+        'mozambique': '🇲🇿',
+        'madagascar': '🇲🇬',
+        'mauritius': '🇲🇺',
+        'seychelles': '🇸🇨',
+        'comoros': '🇰🇲',
+        'south-africa': '🇿🇦',
+        'namibia': '🇳🇦',
+        'botswana': '🇧🇼',
+        'eswatini': '🇸🇿',
+        'lesotho': '🇱🇸',
+        'cabo-verde': '🇨🇻',
+        // Oceania
+        'australia': '🇦🇺',
+        'new-zealand': '🇳🇿',
+        'papua-new-guinea': '🇵🇬',
+        'fiji': '🇫🇯',
+        'samoa': '🇼🇸',
+        'tonga': '🇹🇴',
+        'vanuatu': '🇻🇺',
+        'solomon-islands': '🇸🇧',
+        'kiribati': '🇰🇮',
+        'micronesia': '🇫🇲',
+        'marshall-islands': '🇲🇭',
+        'palau': '🇵🇼',
+        'nauru': '🇳🇷',
+        'tuvalu': '🇹🇻',
+        'guam': '🇬🇺',
+        'american-samoa': '🇦🇸',
+        'northern-mariana-islands': '🇲🇵',
+        'french-polynesia': '🇵🇫',
+        'new-caledonia': '🇳🇨',
+        'cook-islands': '🇨🇰',
+        'niue': '🇳🇺',
+        'tokelau': '🇹🇰'
       };
 
       // Simple hash function for consistent avatars for others
@@ -15025,16 +15897,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         // Default to 'cuba' if local, or hash if remote
         let avatarType = msg.avatar || (isSelf ? (chatIdentity.avatar || 'cuba') : getHashAvatar(msg.player_name));
 
-        // Handle legacy avatars (map old pixel types to flags if they exist in DB)
+        // Handle legacy avatars (map old codes to new human-readable codes)
         if (!FLAG_MAP[avatarType]) {
-             // quick map for legacy data
+             // Legacy pixel avatars
              if (avatarType === 'domino') avatarType = 'cuba';
              else if (avatarType === 'cigar') avatarType = 'usa';
-             else if (avatarType === 'cafecito') avatarType = 'pr';
-             else if (avatarType === 'carro') avatarType = 'dr';
+             else if (avatarType === 'cafecito') avatarType = 'puerto-rico';
+             else if (avatarType === 'carro') avatarType = 'dominican-republic';
              else if (avatarType === 'palma') avatarType = 'venezuela';
              else if (avatarType === 'bandera') avatarType = 'colombia';
              else if (avatarType === 'conga') avatarType = 'spain';
+             // Legacy shorthand codes
+             else if (avatarType === 'pr') avatarType = 'puerto-rico';
+             else if (avatarType === 'dr') avatarType = 'dominican-republic';
+             else if (avatarType === 'uk') avatarType = 'united-kingdom';
              else avatarType = 'cuba'; // Fallback
         }
 
