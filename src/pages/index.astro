@@ -2102,6 +2102,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         --ember-hot: rgba(255, 210, 140, 0.95);
         --ember-warm: rgba(255, 180, 100, 0.9);
         --ember-cool: rgba(220, 150, 90, 0.75);
+        --ember-sepia: rgba(195, 160, 110, 0.65);
       }
 
       .greeting-ember {
@@ -2137,6 +2138,27 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .greeting-ember--hot { background: var(--ember-hot); }
       .greeting-ember--cool { background: var(--ember-cool); }
 
+      /* Spark variant - brighter ignition flash for recognition moment */
+      .greeting-ember--spark {
+        background: var(--ember-hot);
+        box-shadow:
+          0 0 8px var(--ember-hot),
+          0 0 16px rgba(255, 210, 140, 0.6);
+      }
+
+      /* Micro-mote layer - atmospheric depth particles */
+      .greeting-mote {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        background: var(--ember-cool);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        filter: blur(1.5px);
+        will-change: transform, opacity;
+      }
+
       /* 10 embers clustered at text center, rising outward */
       .greeting-ember:nth-child(2)  { left: 45%; top: 50%; }
       .greeting-ember:nth-child(3)  { left: 50%; top: 45%; }
@@ -2149,9 +2171,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .greeting-ember:nth-child(10) { left: 51%; top: 49%; }
       .greeting-ember:nth-child(11) { left: 47%; top: 51%; }
 
+      /* Micro-motes positioned for atmospheric depth */
+      .greeting-mote:nth-child(12) { left: 43%; top: 47%; }
+      .greeting-mote:nth-child(13) { left: 57%; top: 53%; }
+      .greeting-mote:nth-child(14) { left: 50%; top: 42%; }
+
       /* ===== ORGANIC EMBER PATHS - 8-step journeys matching loading screen ===== */
 
-      /* Path A: Drifts right with gentle sine wave + breathing pulse */
+      /* Path A: Drifts right with gentle sine wave + double-beat breathing */
       @keyframes greetingEmberA {
         0% {
           opacity: 0;
@@ -2166,24 +2193,32 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           transform: translateY(-25px) translateX(8px) rotate(40deg) scale(1);
         }
         30% {
-          opacity: 0.7;
+          opacity: 0.68; /* Micro-flicker */
           transform: translateY(-50px) translateX(5px) rotate(75deg) scale(0.9);
         }
-        45% {
-          opacity: 0.6;
-          transform: translateY(-75px) translateX(12px) rotate(110deg) scale(1.1); /* Breathing pulse */
+        42% {
+          opacity: 0.62;
+          transform: translateY(-68px) translateX(10px) rotate(100deg) scale(1.08); /* Lub */
         }
-        60% {
-          opacity: 0.45;
-          transform: translateY(-95px) translateX(8px) rotate(150deg) scale(0.8);
+        48% {
+          opacity: 0.58;
+          transform: translateY(-78px) translateX(12px) rotate(115deg) scale(0.95); /* Dub */
+        }
+        54% {
+          opacity: 0.55;
+          transform: translateY(-85px) translateX(11px) rotate(128deg) scale(1.05); /* Settle */
+        }
+        65% {
+          opacity: 0.42;
+          transform: translateY(-98px) translateX(8px) rotate(155deg) scale(0.78);
         }
         80% {
-          opacity: 0.25;
-          transform: translateY(-115px) translateX(15px) rotate(200deg) scale(0.5);
+          opacity: 0.22;
+          transform: translateY(-115px) translateX(15px) rotate(200deg) scale(0.48);
         }
         90% {
-          opacity: 0.12;
-          transform: translateY(-128px) translateX(18px) rotate(230deg) scale(0.35);
+          opacity: 0.1;
+          transform: translateY(-128px) translateX(18px) rotate(230deg) scale(0.32);
         }
         100% {
           opacity: 0;
@@ -2191,7 +2226,123 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Path B: Drifts left with different rhythm */
+      /* Path A with spark variant - brighter recognition flash */
+      @keyframes greetingEmberASpark {
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.2);
+        }
+        3% {
+          opacity: 1.0; /* Bright recognition flash */
+          transform: translateY(-4px) translateX(1px) rotate(8deg) scale(1.3);
+        }
+        8% {
+          opacity: 0.85;
+          transform: translateY(-12px) translateX(3px) rotate(20deg) scale(0.9);
+        }
+        18% {
+          opacity: 0.72;
+          transform: translateY(-28px) translateX(9px) rotate(45deg) scale(1);
+        }
+        32% {
+          opacity: 0.65;
+          transform: translateY(-52px) translateX(6px) rotate(78deg) scale(0.88);
+        }
+        45% {
+          opacity: 0.58;
+          transform: translateY(-72px) translateX(11px) rotate(108deg) scale(1.06);
+        }
+        52% {
+          opacity: 0.52;
+          transform: translateY(-82px) translateX(13px) rotate(125deg) scale(0.92);
+        }
+        65% {
+          opacity: 0.38;
+          transform: translateY(-98px) translateX(9px) rotate(158deg) scale(0.72);
+        }
+        82% {
+          opacity: 0.18;
+          transform: translateY(-118px) translateX(16px) rotate(205deg) scale(0.42);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-142px) translateX(21px) rotate(265deg) scale(0.18);
+        }
+      }
+
+      /* Warming transition - particle warms from cool to hot as it rises */
+      @keyframes greetingEmberWarming {
+        0% {
+          opacity: 0;
+          background: var(--ember-cool);
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.25);
+        }
+        6% {
+          opacity: 0.85;
+          background: var(--ember-cool);
+          transform: translateY(-10px) translateX(-2px) rotate(-18deg) scale(0.85);
+        }
+        20% {
+          opacity: 0.72;
+          background: var(--ember-warm);
+          transform: translateY(-32px) translateX(-8px) rotate(-45deg) scale(1);
+        }
+        40% {
+          opacity: 0.62;
+          background: var(--ember-warm);
+          transform: translateY(-58px) translateX(-5px) rotate(-82deg) scale(1.05);
+        }
+        55% {
+          opacity: 0.52;
+          background: var(--ember-hot);
+          transform: translateY(-78px) translateX(-12px) rotate(-120deg) scale(0.92);
+        }
+        70% {
+          opacity: 0.35;
+          background: var(--ember-hot);
+          transform: translateY(-98px) translateX(-9px) rotate(-165deg) scale(0.68);
+        }
+        88% {
+          opacity: 0.15;
+          background: var(--ember-hot);
+          transform: translateY(-122px) translateX(-16px) rotate(-215deg) scale(0.38);
+        }
+        100% {
+          opacity: 0;
+          background: var(--ember-hot);
+          transform: translateY(-145px) translateX(-20px) rotate(-260deg) scale(0.15);
+        }
+      }
+
+      /* Micro-mote path - tiny atmospheric particles with more drift */
+      @keyframes greetingMote {
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) scale(0.5);
+        }
+        10% {
+          opacity: 0.45;
+          transform: translateY(-5px) translateX(3px) scale(0.8);
+        }
+        35% {
+          opacity: 0.4;
+          transform: translateY(-20px) translateX(-5px) scale(1);
+        }
+        60% {
+          opacity: 0.3;
+          transform: translateY(-45px) translateX(8px) scale(0.9);
+        }
+        85% {
+          opacity: 0.15;
+          transform: translateY(-70px) translateX(-3px) scale(0.6);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-90px) translateX(5px) scale(0.4);
+        }
+      }
+
+      /* Path B: Drifts left with double-beat breathing */
       @keyframes greetingEmberB {
         0% {
           opacity: 0;
@@ -2202,28 +2353,36 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           transform: translateY(-10px) translateX(-3px) rotate(-20deg) scale(0.85);
         }
         18% {
-          opacity: 0.8;
+          opacity: 0.78;
           transform: translateY(-30px) translateX(-10px) rotate(-50deg) scale(1);
         }
-        35% {
+        32% {
           opacity: 0.65;
-          transform: translateY(-55px) translateX(-6px) rotate(-90deg) scale(0.95);
+          transform: translateY(-52px) translateX(-6px) rotate(-85deg) scale(0.92);
+        }
+        44% {
+          opacity: 0.58;
+          transform: translateY(-70px) translateX(-12px) rotate(-115deg) scale(1.08); /* Lub */
         }
         50% {
-          opacity: 0.55;
-          transform: translateY(-80px) translateX(-14px) rotate(-130deg) scale(1.15); /* Breathing pulse */
+          opacity: 0.52;
+          transform: translateY(-80px) translateX(-14px) rotate(-130deg) scale(0.95); /* Dub */
         }
-        65% {
-          opacity: 0.4;
-          transform: translateY(-100px) translateX(-10px) rotate(-175deg) scale(0.7);
+        56% {
+          opacity: 0.48;
+          transform: translateY(-88px) translateX(-12px) rotate(-148deg) scale(1.03); /* Settle */
+        }
+        68% {
+          opacity: 0.35;
+          transform: translateY(-102px) translateX(-10px) rotate(-178deg) scale(0.68);
         }
         85% {
-          opacity: 0.2;
-          transform: translateY(-125px) translateX(-18px) rotate(-220deg) scale(0.4);
+          opacity: 0.18;
+          transform: translateY(-125px) translateX(-18px) rotate(-222deg) scale(0.38);
         }
         92% {
-          opacity: 0.1;
-          transform: translateY(-138px) translateX(-20px) rotate(-250deg) scale(0.28);
+          opacity: 0.08;
+          transform: translateY(-138px) translateX(-20px) rotate(-252deg) scale(0.25);
         }
         100% {
           opacity: 0;
@@ -2231,7 +2390,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Path C: Mostly vertical with subtle sway */
+      /* Path C: Mostly vertical with subtle sway + double-beat breathing */
       @keyframes greetingEmberC {
         0% {
           opacity: 0;
@@ -2242,32 +2401,40 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           transform: translateY(-12px) translateX(1px) rotate(10deg) scale(0.9);
         }
         16% {
-          opacity: 0.75;
+          opacity: 0.73;
           transform: translateY(-35px) translateX(-3px) rotate(35deg) scale(1);
         }
-        32% {
-          opacity: 0.65;
-          transform: translateY(-60px) translateX(4px) rotate(70deg) scale(0.85);
+        30% {
+          opacity: 0.62;
+          transform: translateY(-58px) translateX(3px) rotate(65deg) scale(0.88);
         }
-        48% {
+        43% {
+          opacity: 0.55;
+          transform: translateY(-75px) translateX(-1px) rotate(95deg) scale(1.08); /* Lub */
+        }
+        49% {
           opacity: 0.5;
-          transform: translateY(-85px) translateX(-2px) rotate(115deg) scale(1.1); /* Breathing pulse */
+          transform: translateY(-85px) translateX(-2px) rotate(112deg) scale(0.95); /* Dub */
         }
-        64% {
-          opacity: 0.35;
-          transform: translateY(-105px) translateX(5px) rotate(160deg) scale(0.65);
+        55% {
+          opacity: 0.45;
+          transform: translateY(-92px) translateX(2px) rotate(128deg) scale(1.05); /* Settle */
         }
-        82% {
-          opacity: 0.15;
-          transform: translateY(-125px) translateX(-1px) rotate(210deg) scale(0.4);
+        68% {
+          opacity: 0.32;
+          transform: translateY(-108px) translateX(4px) rotate(162deg) scale(0.62);
         }
-        91% {
-          opacity: 0.08;
-          transform: translateY(-135px) translateX(1px) rotate(240deg) scale(0.3);
+        84% {
+          opacity: 0.14;
+          transform: translateY(-128px) translateX(-1px) rotate(212deg) scale(0.38);
+        }
+        92% {
+          opacity: 0.06;
+          transform: translateY(-138px) translateX(1px) rotate(242deg) scale(0.28);
         }
         100% {
           opacity: 0;
-          transform: translateY(-145px) translateX(3px) rotate(270deg) scale(0.2);
+          transform: translateY(-148px) translateX(3px) rotate(270deg) scale(0.18);
         }
       }
 
@@ -2869,7 +3036,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--whisper.in-view .whisper-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 8.0s forwards;  /* Appears at 8.0s - after recognition sinks in */
+        animation: scrollHintReveal 1s ease-out 2.5s forwards;  /* Standardized: 2.5s after panel entry for consistent rhythm */
       }
 
       /* Once played: returning should feel "static" and inevitable (no replays). */
@@ -3326,7 +3493,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--build.in-view:not(.has-played) .build-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 12.5s forwards;  /* Appears at 12.5s (after Te toca lands at 12.0s) */
+        animation: scrollHintReveal 1s ease-out 2.5s forwards;  /* Standardized: 2.5s after panel entry for consistent rhythm */
       }
 
       /* ANCESTOR DESCENDS - SMOOTH drop from above (no bounce) */
@@ -4037,7 +4204,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--slam.in-view:not(.has-played) .slam-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 5.5s forwards;  /* After slogan lands */
+        animation: scrollHintReveal 1s ease-out 2.5s forwards;  /* Standardized: 2.5s after panel entry for consistent rhythm */
       }
 
       .panel--slam.has-played .slam-word {
@@ -5122,48 +5289,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          background-size: contain;
       }
 
-      /* Pixel Flag Emoji - retro game aesthetic (for selector) */
-      .avatar-flag-pixel {
-        font-size: 28px;
-        line-height: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-        font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-        z-index: 1;
-        image-rendering: pixelated;
-        image-rendering: crisp-edges;
-        filter: contrast(1.15) saturate(1.3) drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-        transition: transform 0.15s ease;
-      }
+	      /* Circular flag assets (for selector) */
+	      .avatar-flag-img {
+	        width: 32px;
+	        height: 32px;
+	        display: block;
+	        border-radius: 50%;
+	        object-fit: cover;
+	        user-select: none;
+	        -webkit-user-drag: none;
+	        pointer-events: none;
+	        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+	        transition: transform 0.15s ease, box-shadow 0.15s ease;
+	      }
 
-      @media (hover: hover) and (pointer: fine) {
-        .avatar-option:hover .avatar-flag-pixel {
-          transform: scale(1.15);
-        }
-      }
+	      @media (hover: hover) and (pointer: fine) {
+	        .avatar-option:hover .avatar-flag-img {
+	          transform: scale(1.08);
+	        }
+	      }
 
-      .avatar-option.selected .avatar-flag-pixel {
-        filter: contrast(1.2) saturate(1.4) drop-shadow(0 0 8px rgba(255,215,0,0.4));
-      }
-
-      /* iOS Safari: color-emoji glyph metrics + filter compositing can make the ring feel detached */
-      @supports (-webkit-touch-callout: none) {
-        .avatar-flag-pixel {
-          padding-top: 3px;
-          filter: none;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
-        }
-        .avatar-option.selected .avatar-flag-pixel {
-          filter: none;
-          text-shadow:
-            0 2px 4px rgba(0, 0, 0, 0.55),
-            0 0 10px rgba(255, 215, 0, 0.35);
-        }
-      }
+	      .avatar-option.selected .avatar-flag-img {
+	        box-shadow:
+	          0 2px 4px rgba(0, 0, 0, 0.55),
+	          0 0 10px rgba(255, 215, 0, 0.25);
+	      }
 
       /* Flag in chat messages - inline with name */
       .chat-message__flag {
@@ -7324,9 +7474,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: translateY(-2px) scale(0.98);
         filter: grayscale(0.08) contrast(1.2) saturate(1.25);
       }
-      .avatar-option.is-centered:not(.selected) .avatar-flag-pixel {
-        transform: scale(1.06);
-      }
+	      .avatar-option.is-centered:not(.selected) .avatar-flag-img {
+	        transform: scale(1.04);
+	      }
 
       /* Snap animation when flag enters center - tactile "click" feel */
       .avatar-option.just-centered:not(.selected) {
@@ -8435,7 +8585,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Scroll hint - fade in only, NO BOUNCE */
       .panel--rules.in-view:not(.has-played) .rules-scroll-hint {
-        animation: scrollHintReveal 0.8s ease-out 2.2s forwards;
+        animation: scrollHintReveal 0.8s ease-out 2.5s forwards;  /* Standardized: 2.5s for consistent rhythm */
       }
 
 	      .panel--rules.has-played .hero-badge,
@@ -12111,81 +12261,81 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <span class="avatar-selector__center-cue" aria-hidden="true"></span>
             <div class="avatar-selector">
               <!-- Priority: Cuba, USA, then Caribbean & Latin America -->
-              <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
-                <span class="avatar-flag-pixel">🇨🇺</span>
-              </div>
-              <div class="avatar-option" data-avatar="usa" title="USA">
-                <span class="avatar-flag-pixel">🇺🇸</span>
-              </div>
+	              <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
+	                <img class="avatar-flag-img" src="/flags/circle/cuba.svg" alt="Cuba" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="usa" title="USA">
+	                <img class="avatar-flag-img" src="/flags/circle/usa.svg" alt="USA" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+	              </div>
               <!-- Caribbean -->
-              <div class="avatar-option" data-avatar="pr" title="Puerto Rico">
-                <span class="avatar-flag-pixel">🇵🇷</span>
-              </div>
-              <div class="avatar-option" data-avatar="dr" title="Dominican Republic">
-                <span class="avatar-flag-pixel">🇩🇴</span>
-              </div>
-              <div class="avatar-option" data-avatar="jamaica" title="Jamaica">
-                <span class="avatar-flag-pixel">🇯🇲</span>
-              </div>
-              <div class="avatar-option" data-avatar="haiti" title="Haiti">
-                <span class="avatar-flag-pixel">🇭🇹</span>
-              </div>
+	              <div class="avatar-option" data-avatar="pr" title="Puerto Rico">
+	                <img class="avatar-flag-img" src="/flags/circle/pr.svg" alt="Puerto Rico" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="dr" title="Dominican Republic">
+	                <img class="avatar-flag-img" src="/flags/circle/dr.svg" alt="Dominican Republic" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="jamaica" title="Jamaica">
+	                <img class="avatar-flag-img" src="/flags/circle/jamaica.svg" alt="Jamaica" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="haiti" title="Haiti">
+	                <img class="avatar-flag-img" src="/flags/circle/haiti.svg" alt="Haiti" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
               <!-- Central & South America -->
-              <div class="avatar-option" data-avatar="mexico" title="Mexico">
-                <span class="avatar-flag-pixel">🇲🇽</span>
-              </div>
-              <div class="avatar-option" data-avatar="venezuela" title="Venezuela">
-                <span class="avatar-flag-pixel">🇻🇪</span>
-              </div>
-              <div class="avatar-option" data-avatar="colombia" title="Colombia">
-                <span class="avatar-flag-pixel">🇨🇴</span>
-              </div>
-              <div class="avatar-option" data-avatar="panama" title="Panama">
-                <span class="avatar-flag-pixel">🇵🇦</span>
-              </div>
-              <div class="avatar-option" data-avatar="nicaragua" title="Nicaragua">
-                <span class="avatar-flag-pixel">🇳🇮</span>
-              </div>
-              <div class="avatar-option" data-avatar="honduras" title="Honduras">
-                <span class="avatar-flag-pixel">🇭🇳</span>
-              </div>
-              <div class="avatar-option" data-avatar="brazil" title="Brazil">
-                <span class="avatar-flag-pixel">🇧🇷</span>
-              </div>
-              <div class="avatar-option" data-avatar="argentina" title="Argentina">
-                <span class="avatar-flag-pixel">🇦🇷</span>
-              </div>
-              <div class="avatar-option" data-avatar="peru" title="Peru">
-                <span class="avatar-flag-pixel">🇵🇪</span>
-              </div>
-              <div class="avatar-option" data-avatar="ecuador" title="Ecuador">
-                <span class="avatar-flag-pixel">🇪🇨</span>
-              </div>
-              <div class="avatar-option" data-avatar="chile" title="Chile">
-                <span class="avatar-flag-pixel">🇨🇱</span>
-              </div>
+	              <div class="avatar-option" data-avatar="mexico" title="Mexico">
+	                <img class="avatar-flag-img" src="/flags/circle/mexico.svg" alt="Mexico" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="venezuela" title="Venezuela">
+	                <img class="avatar-flag-img" src="/flags/circle/venezuela.svg" alt="Venezuela" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="colombia" title="Colombia">
+	                <img class="avatar-flag-img" src="/flags/circle/colombia.svg" alt="Colombia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="panama" title="Panama">
+	                <img class="avatar-flag-img" src="/flags/circle/panama.svg" alt="Panama" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="nicaragua" title="Nicaragua">
+	                <img class="avatar-flag-img" src="/flags/circle/nicaragua.svg" alt="Nicaragua" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="honduras" title="Honduras">
+	                <img class="avatar-flag-img" src="/flags/circle/honduras.svg" alt="Honduras" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="brazil" title="Brazil">
+	                <img class="avatar-flag-img" src="/flags/circle/brazil.svg" alt="Brazil" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="argentina" title="Argentina">
+	                <img class="avatar-flag-img" src="/flags/circle/argentina.svg" alt="Argentina" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="peru" title="Peru">
+	                <img class="avatar-flag-img" src="/flags/circle/peru.svg" alt="Peru" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="ecuador" title="Ecuador">
+	                <img class="avatar-flag-img" src="/flags/circle/ecuador.svg" alt="Ecuador" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="chile" title="Chile">
+	                <img class="avatar-flag-img" src="/flags/circle/chile.svg" alt="Chile" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
               <!-- North America & Europe -->
-              <div class="avatar-option" data-avatar="canada" title="Canada">
-                <span class="avatar-flag-pixel">🇨🇦</span>
-              </div>
-              <div class="avatar-option" data-avatar="spain" title="Spain">
-                <span class="avatar-flag-pixel">🇪🇸</span>
-              </div>
-              <div class="avatar-option" data-avatar="italy" title="Italy">
-                <span class="avatar-flag-pixel">🇮🇹</span>
-              </div>
-              <div class="avatar-option" data-avatar="france" title="France">
-                <span class="avatar-flag-pixel">🇫🇷</span>
-              </div>
-              <div class="avatar-option" data-avatar="germany" title="Germany">
-                <span class="avatar-flag-pixel">🇩🇪</span>
-              </div>
-              <div class="avatar-option" data-avatar="uk" title="United Kingdom">
-                <span class="avatar-flag-pixel">🇬🇧</span>
-              </div>
-              <div class="avatar-option" data-avatar="portugal" title="Portugal">
-                <span class="avatar-flag-pixel">🇵🇹</span>
-              </div>
+	              <div class="avatar-option" data-avatar="canada" title="Canada">
+	                <img class="avatar-flag-img" src="/flags/circle/canada.svg" alt="Canada" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="spain" title="Spain">
+	                <img class="avatar-flag-img" src="/flags/circle/spain.svg" alt="Spain" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="italy" title="Italy">
+	                <img class="avatar-flag-img" src="/flags/circle/italy.svg" alt="Italy" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="france" title="France">
+	                <img class="avatar-flag-img" src="/flags/circle/france.svg" alt="France" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="germany" title="Germany">
+	                <img class="avatar-flag-img" src="/flags/circle/germany.svg" alt="Germany" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="uk" title="United Kingdom">
+	                <img class="avatar-flag-img" src="/flags/circle/uk.svg" alt="United Kingdom" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
+	              <div class="avatar-option" data-avatar="portugal" title="Portugal">
+	                <img class="avatar-flag-img" src="/flags/circle/portugal.svg" alt="Portugal" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	              </div>
             </div>
           </div>
           <p class="avatar-hint">Scroll to find your flag</p>
@@ -12816,18 +12966,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
           // Opacity dip during snap correction - creates "camera cut" feel
           // Masks any positional micro-jerk when scroll-snap kicks in
+          // Extended to 120ms with ease-in-out for smoother masking (brain perceives ~16ms shifts)
           if (storyEl) {
-            storyEl.style.opacity = '0.95';
-            storyEl.style.transition = 'opacity 50ms ease';
+            storyEl.style.opacity = '0.92';
+            storyEl.style.transition = 'opacity 120ms ease-in-out';
             setTimeout(() => {
               if (storyEl) {
                 storyEl.style.opacity = '1';
                 // Clear transition after settling
                 setTimeout(() => {
                   if (storyEl) storyEl.style.transition = '';
-                }, 50);
+                }, 120);
               }
-            }, 50);
+            }, 120);
           }
 
           // Enable smooth scroll temporarily so any snap correction feels cinematic
@@ -12847,36 +12998,38 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      // Panel 2 (Whisper) scroll-lock - 8.5 seconds (ancestor speaking through time needs room to breathe)
+      // Panel 2 (Whisper) scroll-lock - 6.5 seconds
+      // Tobias: "Rooms you can leave freely" - shorter lock feels like room holding you, not trapped
       const whisperObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !whisperHasPlayed) {
             whisperHasPlayed = true;
             alignPanelAfterSettle(whisperPanel);
-            lockScroll(8500, () => whisperPanel?.classList.add('has-played'));  // 8.5s - recognition lands at 6.6s, scroll hint at 8s
+            lockScroll(6500, () => whisperPanel?.classList.add('has-played'));  // 6.5s - reduced for "room" feel
           }
         });
       }, { threshold: 0.6 });
 
-      // Panel 3 (Build/Revelation) scroll-lock - 14 seconds
-      // Maximum drama: 4s pause after "Every goodbye." before torch passes
+      // Panel 3 (Build/Revelation) scroll-lock - 8 seconds
+      // Tobias: 13s was an eternity - drama still lands at 8s, feels like "room holding you"
       const buildObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !buildHasPlayed) {
             buildHasPlayed = true;
             alignPanelAfterSettle(buildPanel);
-            lockScroll(13000, () => buildPanel?.classList.add('has-played'));  // 13s - Te toca arrives 1s sooner
+            lockScroll(8000, () => buildPanel?.classList.add('has-played'));  // 8s - reduced for "room" feel
           }
         });
       }, { threshold: 0.6 });
 
-      // Panel 4 (Slam/Stakes) scroll-lock - 3.5 seconds
+      // Panel 4 (Slam/Stakes) scroll-lock - 5 seconds
+      // Tobias: Just enough for SEAT slam to land, slogan at 3.8s + buffer
       const slamObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !slamHasPlayed) {
             slamHasPlayed = true;
             alignPanelAfterSettle(slamPanel);
-            lockScroll(6000, () => slamPanel?.classList.add('has-played'));  // 6s - SEAT slam reverberates, slogan lands at 5.6s
+            lockScroll(5000, () => slamPanel?.classList.add('has-played'));  // 5s - reduced for "room" feel
 
             // Haptic feedback at SEAT impact moment (1.8s delay + 45% of 1.2s animation = 2.34s)
             setTimeout(() => {
@@ -12888,13 +13041,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         });
       }, { threshold: 0.6 });
 
-	      // Panel 5 (Rules/La Ley) scroll-lock - 3 seconds
+	      // Panel 5 (Rules/La Ley) scroll-lock - 2.5 seconds
+	      // Tobias: Quick but complete - all cards animate in by 1.8s
 	      const rulesObserver = new IntersectionObserver((entries) => {
 	        entries.forEach(entry => {
 	          if (entry.isIntersecting && !rulesHasPlayed) {
 	            rulesHasPlayed = true;
 	            alignPanelAfterSettle(rulesPanel);
-	            lockScroll(3000, () => {
+	            lockScroll(2500, () => {
 	              // Let Safari finish its snap/momentum and the unlock paint before we flip to the static state.
 	              requestAnimationFrame(() => {
 	                requestAnimationFrame(() => rulesPanel?.classList.add('has-played'));
