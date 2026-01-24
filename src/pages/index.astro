@@ -38,9 +38,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       @font-face {
         font-family: 'SF Sports Night';
-        src: url('/FONT/sf-sports-night/TrueType/SFSportsNight.ttf') format('truetype');
+        src: url('/FONT/sf-sports-night/TrueType/SFSportsNight.woff2') format('woff2'),
+             url('/FONT/sf-sports-night/TrueType/SFSportsNight.ttf') format('truetype');
         font-weight: normal;
-        font-style: italic;
+        font-style: normal;
         font-display: swap;
       }
 
@@ -90,6 +91,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: center;
         transition: opacity 0.6s ease-out, visibility 0.6s ease-out, transform 0.7s ease-out;
         overflow: hidden;
+        transform: translate3d(0, 0, 0);
+        will-change: opacity, transform;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
       }
 
       /* Keep the loader visible, but stop blocking scroll/taps quickly. */
@@ -185,15 +190,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0.035;
         pointer-events: none;
         z-index: 10;
-        /* Slower/softer to avoid "shadow flicker" perception on the tile */
-        animation: grainShift 1.8s steps(6) infinite;
+        /* Smooth (non-steps) motion avoids "flicker" reads on the tile shadow */
+        animation: grainShift 7s linear infinite;
+        will-change: transform;
       }
 
       @keyframes grainShift {
         0%, 100% { transform: translate3d(0, 0, 0); }
-        25% { transform: translate3d(-1%, -1%, 0); }
-        50% { transform: translate3d(1%, 0.5%, 0); }
-        75% { transform: translate3d(-0.5%, 0.75%, 0); }
+        20% { transform: translate3d(-0.6%, -0.4%, 0); }
+        40% { transform: translate3d(0.45%, 0.3%, 0); }
+        60% { transform: translate3d(-0.35%, 0.55%, 0); }
+        80% { transform: translate3d(0.25%, -0.25%, 0); }
       }
 
       /* Deep vignette - pulls focus to center */
@@ -479,24 +486,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: shadowBreath 6s ease-in-out infinite;
       }
 
-	      @keyframes shadowBreath {
-	        0%, 100% {
-	          transform: translate3d(-50%, 0, 0) scale3d(1, 1, 1);
-	          opacity: 0.6;
-	        }
-	        25% {
-	          transform: translate3d(-50%, 0, 0) scale3d(0.95, 0.95, 1);
-	          opacity: 0.5;
-	        }
-	        50% {
-	          transform: translate3d(-50%, 0, 0) scale3d(1, 1, 1);
-	          opacity: 0.6;
-	        }
-	        75% {
-	          transform: translate3d(-50%, 0, 0) scale3d(1.05, 1.05, 1);
-	          opacity: 0.7;
-	        }
-	      }
+		      @keyframes shadowBreath {
+		        0%, 100% {
+		          opacity: 0.6;
+		        }
+		        25% {
+		          opacity: 0.5;
+		        }
+		        50% {
+		          opacity: 0.6;
+		        }
+		        75% {
+		          opacity: 0.7;
+		        }
+		      }
 
       @keyframes tileAppear {
         0% {
@@ -5617,26 +5620,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        transition: transform 0.15s ease, box-shadow 0.15s ease;
 	      }
 
-	      /* Country name label above flag */
+	      /* Country name label above flag - HIDDEN */
 	      .avatar-option::before {
-	        content: attr(title);
-	        font-family: "IBM Plex Sans", sans-serif;
-	        font-size: 0.5rem;
-	        color: rgba(255,255,255,0.5);
-	        text-transform: uppercase;
-	        letter-spacing: 0.05em;
-	        margin-bottom: 4px;
-	        white-space: nowrap;
-	        overflow: hidden;
-	        text-overflow: ellipsis;
-	        max-width: 48px;
-	        display: block;
-	        text-align: center;
-	        order: -1;
-	      }
-
-	      .avatar-option.selected::before {
-	        color: rgba(255,255,255,0.8);
+	        display: none !important;
 	      }
 
 	      @media (hover: hover) and (pointer: fine) {
@@ -5647,8 +5633,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	      .avatar-option.selected .avatar-flag-img {
 	        box-shadow:
-	          0 2px 4px rgba(0, 0, 0, 0.55),
-	          0 0 10px rgba(255, 215, 0, 0.25);
+	          0 0 0 2px rgba(212, 165, 116, 0.8),
+	          0 2px 8px rgba(0, 0, 0, 0.55),
+	          0 0 16px rgba(212, 165, 116, 0.5);
 	      }
 
       /* Flag in chat messages - inline with name */
@@ -7748,12 +7735,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .avatar-option.selected {
         transform: translateY(-6px) scale(1.15);
         z-index: 20;
-        /* Draw the ring on the element itself (avoids pseudo-element paint issues on iOS/Safari) */
-        background: radial-gradient(circle, rgba(212, 165, 116, 0.15) 0%, transparent 70%);
-        box-shadow:
-          0 0 0 2px rgba(212, 165, 116, 0.7),
-          0 0 12px rgba(212, 165, 116, 0.5),
-          inset 0 0 8px rgba(212, 165, 116, 0.2);
       }
 
       /* Refined slam - smooth lift into place */
@@ -13546,26 +13527,69 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	          loadingScreen.classList.add('is-anticipating');
 	        }, ANTICIPATION_MS);
 
-	        // "The Smoke Clears" — start exit animation (embers accelerate, tile recedes)
-	        setTimeout(() => {
-	          loadingScreen.classList.add('is-exiting');
-	        }, VISUAL_HOLD_MS - EXIT_ANIMATION_MS);
+		        // "The Smoke Clears" — start exit animation (embers accelerate, tile recedes)
+		        setTimeout(() => {
+		          loadingScreen.classList.add('is-exiting');
+		        }, VISUAL_HOLD_MS - EXIT_ANIMATION_MS);
 
-	        setTimeout(() => {
-	          loadingScreen.classList.add('is-hidden');
-	          // "Darkness beat" — brief pause before hero reveals (tightened for hypnotic continuity)
-	          // Reduced from 150ms to 80ms for tighter "camera cut" feel
-	          setTimeout(() => {
-	            markReady();
-	          }, 80);
-	          // Fully remove from DOM after fade completes (700ms exit + buffer)
-	          setTimeout(() => {
-	            if (loadingScreen.parentNode) {
-	              loadingScreen.remove();
-	            }
-	          }, 900);
-	        }, VISUAL_HOLD_MS);
-	      }
+		        const getMaxTransitionMs = (el) => {
+		          const style = window.getComputedStyle(el);
+		          const durations = style.transitionDuration.split(',').map((value) => value.trim());
+		          const delays = style.transitionDelay.split(',').map((value) => value.trim());
+
+		          const parseMs = (value) => {
+		            if (!value) return 0;
+		            if (value.endsWith('ms')) return Number.parseFloat(value);
+		            if (value.endsWith('s')) return Number.parseFloat(value) * 1000;
+		            return Number.parseFloat(value) || 0;
+		          };
+
+		          const totalMs = durations.map((duration, idx) => {
+		            const delay = delays[idx] ?? delays[0] ?? '0s';
+		            return parseMs(duration) + parseMs(delay);
+		          });
+
+		          return Math.max(0, ...totalMs);
+		        };
+
+		        setTimeout(() => {
+		          loadingScreen.classList.add('is-hidden');
+		          // Only hand off once the loader actually finishes fading.
+		          // This prevents hero/pip animations from running "under" the loader mid-fade (common flicker trigger).
+		          const DARK_BEAT_MS = 80;
+		          const fadeMs = getMaxTransitionMs(loadingScreen);
+		          const fallbackMs = Math.max(650, fadeMs + 250);
+
+		          let didHandoff = false;
+		          const handoff = () => {
+		            if (didHandoff) return;
+		            didHandoff = true;
+		            setTimeout(() => {
+		              markReady();
+		              if (loadingScreen.parentNode) loadingScreen.remove();
+		            }, DARK_BEAT_MS);
+		          };
+
+		          const onTransitionEnd = (event) => {
+		            if (event.target !== loadingScreen) return;
+		            if (event.propertyName !== 'opacity') return;
+		            cleanup();
+		            handoff();
+		          };
+
+		          let fallbackTimer = null;
+		          const cleanup = () => {
+		            loadingScreen.removeEventListener('transitionend', onTransitionEnd);
+		            if (fallbackTimer) clearTimeout(fallbackTimer);
+		          };
+
+		          loadingScreen.addEventListener('transitionend', onTransitionEnd);
+		          fallbackTimer = setTimeout(() => {
+		            cleanup();
+		            handoff();
+		          }, fallbackMs);
+		        }, VISUAL_HOLD_MS);
+		      }
 
 	      // Trigger dismissal as soon as DOM is ready (don't wait for full window load).
 	      if (document.readyState === 'complete' || document.readyState === 'interactive') {
