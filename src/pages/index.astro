@@ -2065,144 +2065,649 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: greetingDrift 1.5s ease-out 2.3s forwards;
       }
 
-      /* Shimmer particles - alive, magical presence after greeting lands */
+      /* ===== GREETING EMBERS - alive, present, welcoming ===== */
+      /* Embers rise from the greeting like warmth from a familiar voice */
+
       .whisper-greeting-wrap {
         position: relative;
         display: inline-block;
       }
 
-      /* ===== GREETING EMBERS - alive, present, welcoming ===== */
+      /* Text glow - the ember source */
+      .panel--whisper.in-view .whisper-greeting {
+        text-shadow:
+          0 0 30px rgba(255, 180, 100, 0.4),
+          0 0 60px rgba(255, 180, 100, 0.2),
+          0 0 100px rgba(212, 165, 116, 0.15);
+        animation: textEmberGlow 4s ease-in-out infinite;
+      }
+
+      @keyframes textEmberGlow {
+        0%, 100% {
+          text-shadow:
+            0 0 30px rgba(255, 180, 100, 0.4),
+            0 0 60px rgba(255, 180, 100, 0.2),
+            0 0 100px rgba(212, 165, 116, 0.15);
+        }
+        50% {
+          text-shadow:
+            0 0 40px rgba(255, 180, 100, 0.5),
+            0 0 80px rgba(255, 180, 100, 0.3),
+            0 0 120px rgba(212, 165, 116, 0.2);
+        }
+      }
+
+      /* Color temperature variants */
+      :root {
+        --ember-hot: rgba(255, 210, 140, 0.95);
+        --ember-warm: rgba(255, 180, 100, 0.9);
+        --ember-cool: rgba(220, 150, 90, 0.75);
+      }
+
       .greeting-ember {
         position: absolute;
         width: 3px;
         height: 3px;
-        background: var(--ember-color);
+        background: var(--ember-warm);
         border-radius: 50%;
         opacity: 0;
         pointer-events: none;
         filter: blur(0.5px);
+        will-change: transform, opacity;
       }
 
-      .greeting-ember--lg { width: 4px; height: 4px; filter: blur(0.3px); }
-      .greeting-ember--sm { width: 2px; height: 2px; filter: blur(1px); }
+      /* Size variants with glow halos */
+      .greeting-ember--lg {
+        width: 5px;
+        height: 5px;
+        filter: blur(0.3px);
+        box-shadow:
+          0 0 6px var(--ember-hot),
+          0 0 12px rgba(255, 180, 100, 0.4);
+      }
+      .greeting-ember--md { width: 3px; height: 3px; filter: blur(0.5px); }
+      .greeting-ember--sm {
+        width: 2px;
+        height: 2px;
+        filter: blur(1px);
+        background: var(--ember-cool);
+      }
 
-      /* Positions around the greeting text */
-      .greeting-ember:nth-child(2) { left: 8%; top: -10px; }
-      .greeting-ember:nth-child(3) { right: 12%; top: -8px; }
-      .greeting-ember:nth-child(4) { left: 30%; bottom: -12px; }
-      .greeting-ember:nth-child(5) { right: 25%; bottom: -10px; }
-      .greeting-ember:nth-child(6) { left: 55%; top: -14px; }
+      /* Temperature variants */
+      .greeting-ember--hot { background: var(--ember-hot); }
+      .greeting-ember--cool { background: var(--ember-cool); }
 
-      /* Three organic paths - matching loading screen aesthetic */
+      /* 10 embers clustered at text center, rising outward */
+      .greeting-ember:nth-child(2)  { left: 45%; top: 50%; }
+      .greeting-ember:nth-child(3)  { left: 50%; top: 45%; }
+      .greeting-ember:nth-child(4)  { left: 55%; top: 50%; }
+      .greeting-ember:nth-child(5)  { left: 48%; top: 55%; }
+      .greeting-ember:nth-child(6)  { left: 52%; top: 48%; }
+      .greeting-ember:nth-child(7)  { left: 46%; top: 52%; }
+      .greeting-ember:nth-child(8)  { left: 54%; top: 46%; }
+      .greeting-ember:nth-child(9)  { left: 49%; top: 54%; }
+      .greeting-ember:nth-child(10) { left: 51%; top: 49%; }
+      .greeting-ember:nth-child(11) { left: 47%; top: 51%; }
+
+      /* ===== ORGANIC EMBER PATHS - 8-step journeys matching loading screen ===== */
+
+      /* Path A: Drifts right with gentle sine wave + breathing pulse */
       @keyframes greetingEmberA {
-        0% { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg) scale(0.3); }
-        10% { opacity: 0.7; transform: translateY(-8px) translateX(3px) rotate(25deg) scale(0.9); }
-        30% { opacity: 0.85; transform: translateY(-20px) translateX(8px) rotate(60deg) scale(1); }
-        60% { opacity: 0.6; transform: translateY(-35px) translateX(5px) rotate(120deg) scale(0.8); }
-        100% { opacity: 0; transform: translateY(-50px) translateX(12px) rotate(180deg) scale(0.4); }
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.2);
+        }
+        5% {
+          opacity: 0.9; /* Spark flash */
+          transform: translateY(-8px) translateX(2px) rotate(15deg) scale(0.8);
+        }
+        15% {
+          opacity: 0.75;
+          transform: translateY(-25px) translateX(8px) rotate(40deg) scale(1);
+        }
+        30% {
+          opacity: 0.7;
+          transform: translateY(-50px) translateX(5px) rotate(75deg) scale(0.9);
+        }
+        45% {
+          opacity: 0.6;
+          transform: translateY(-75px) translateX(12px) rotate(110deg) scale(1.1); /* Breathing pulse */
+        }
+        60% {
+          opacity: 0.45;
+          transform: translateY(-95px) translateX(8px) rotate(150deg) scale(0.8);
+        }
+        80% {
+          opacity: 0.25;
+          transform: translateY(-115px) translateX(15px) rotate(200deg) scale(0.5);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-140px) translateX(20px) rotate(260deg) scale(0.2);
+        }
       }
 
+      /* Path B: Drifts left with different rhythm */
       @keyframes greetingEmberB {
-        0% { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg) scale(0.4); }
-        15% { opacity: 0.75; transform: translateY(-10px) translateX(-4px) rotate(-30deg) scale(1); }
-        40% { opacity: 0.7; transform: translateY(-25px) translateX(-10px) rotate(-80deg) scale(0.85); }
-        70% { opacity: 0.4; transform: translateY(-40px) translateX(-6px) rotate(-140deg) scale(0.6); }
-        100% { opacity: 0; transform: translateY(-55px) translateX(-12px) rotate(-200deg) scale(0.3); }
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.25);
+        }
+        6% {
+          opacity: 0.95; /* Spark flash */
+          transform: translateY(-10px) translateX(-3px) rotate(-20deg) scale(0.85);
+        }
+        18% {
+          opacity: 0.8;
+          transform: translateY(-30px) translateX(-10px) rotate(-50deg) scale(1);
+        }
+        35% {
+          opacity: 0.65;
+          transform: translateY(-55px) translateX(-6px) rotate(-90deg) scale(0.95);
+        }
+        50% {
+          opacity: 0.55;
+          transform: translateY(-80px) translateX(-14px) rotate(-130deg) scale(1.15); /* Breathing pulse */
+        }
+        65% {
+          opacity: 0.4;
+          transform: translateY(-100px) translateX(-10px) rotate(-175deg) scale(0.7);
+        }
+        85% {
+          opacity: 0.2;
+          transform: translateY(-125px) translateX(-18px) rotate(-220deg) scale(0.4);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-150px) translateX(-22px) rotate(-280deg) scale(0.15);
+        }
       }
 
+      /* Path C: Mostly vertical with subtle sway */
       @keyframes greetingEmberC {
-        0% { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg) scale(0.35); }
-        12% { opacity: 0.8; transform: translateY(-12px) translateX(2px) rotate(20deg) scale(0.95); }
-        35% { opacity: 0.65; transform: translateY(-28px) translateX(-3px) rotate(55deg) scale(0.9); }
-        65% { opacity: 0.45; transform: translateY(-42px) translateX(4px) rotate(110deg) scale(0.65); }
-        100% { opacity: 0; transform: translateY(-58px) translateX(-2px) rotate(170deg) scale(0.35); }
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.3);
+        }
+        4% {
+          opacity: 0.85; /* Spark flash */
+          transform: translateY(-12px) translateX(1px) rotate(10deg) scale(0.9);
+        }
+        16% {
+          opacity: 0.75;
+          transform: translateY(-35px) translateX(-3px) rotate(35deg) scale(1);
+        }
+        32% {
+          opacity: 0.65;
+          transform: translateY(-60px) translateX(4px) rotate(70deg) scale(0.85);
+        }
+        48% {
+          opacity: 0.5;
+          transform: translateY(-85px) translateX(-2px) rotate(115deg) scale(1.1); /* Breathing pulse */
+        }
+        64% {
+          opacity: 0.35;
+          transform: translateY(-105px) translateX(5px) rotate(160deg) scale(0.65);
+        }
+        82% {
+          opacity: 0.15;
+          transform: translateY(-125px) translateX(-1px) rotate(210deg) scale(0.4);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-145px) translateX(3px) rotate(270deg) scale(0.2);
+        }
       }
 
-      /* Staggered timing after greeting lands (3.8s = drift complete) */
+      /* Staggered timing - embers emerge continuously after greeting lands */
       .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(2) {
-        animation: greetingEmberA 5.5s ease-out 3.8s infinite;
+        animation: greetingEmberA 6.5s linear 3.8s infinite;
       }
       .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(3) {
-        animation: greetingEmberB 6.2s ease-out 4.2s infinite;
+        animation: greetingEmberB 7.2s linear 4.0s infinite;
       }
       .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(4) {
-        animation: greetingEmberC 5.8s ease-out 4.6s infinite;
+        animation: greetingEmberC 6.8s linear 4.3s infinite;
       }
       .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(5) {
-        animation: greetingEmberA 6.5s ease-out 5.0s infinite;
+        animation: greetingEmberA 7.5s linear 4.6s infinite;
       }
       .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(6) {
-        animation: greetingEmberB 5.2s ease-out 5.4s infinite;
+        animation: greetingEmberB 6.3s linear 4.9s infinite;
+      }
+      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(7) {
+        animation: greetingEmberC 7.0s linear 5.2s infinite;
+      }
+      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(8) {
+        animation: greetingEmberA 6.6s linear 5.5s infinite;
+      }
+      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(9) {
+        animation: greetingEmberB 7.3s linear 5.8s infinite;
+      }
+      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(10) {
+        animation: greetingEmberC 6.4s linear 6.1s infinite;
+      }
+      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(11) {
+        animation: greetingEmberA 7.1s linear 6.4s infinite;
       }
 
+
       /* ===== LINEAGE DUST - ancestral memory, dust in afternoon light ===== */
-      /* Different from greeting: slower, horizontal drift, settling not rising */
+      /* These drift horizontally like motes catching light through a window */
 
       .lineage-dust-wrap {
         position: relative;
         display: inline-block;
       }
 
+      /* Text glow - softer, more nostalgic */
+      .panel--build.in-view .build-family__line--generations {
+        text-shadow:
+          0 0 25px rgba(255, 180, 100, 0.3),
+          0 0 50px rgba(212, 165, 116, 0.15);
+        animation: lineageTextGlow 5s ease-in-out infinite;
+      }
+
+      @keyframes lineageTextGlow {
+        0%, 100% {
+          text-shadow:
+            0 0 25px rgba(255, 180, 100, 0.3),
+            0 0 50px rgba(212, 165, 116, 0.15);
+        }
+        50% {
+          text-shadow:
+            0 0 35px rgba(255, 180, 100, 0.4),
+            0 0 70px rgba(212, 165, 116, 0.25);
+        }
+      }
+
       .lineage-dust {
         position: absolute;
         width: 3px;
         height: 3px;
-        background: var(--ember-color);
+        background: var(--ember-warm);
         border-radius: 50%;
         opacity: 0;
         pointer-events: none;
         filter: blur(0.5px);
+        will-change: transform, opacity;
       }
 
-      .lineage-dust--lg { width: 4px; height: 4px; filter: blur(0.3px); }
-      .lineage-dust--sm { width: 2px; height: 2px; filter: blur(1px); }
+      .lineage-dust--lg {
+        width: 4px;
+        height: 4px;
+        filter: blur(0.3px);
+        box-shadow:
+          0 0 5px var(--ember-warm),
+          0 0 10px rgba(255, 180, 100, 0.3);
+      }
+      .lineage-dust--md { width: 3px; height: 3px; filter: blur(0.5px); }
+      .lineage-dust--sm {
+        width: 2px;
+        height: 2px;
+        filter: blur(1.2px);
+        background: var(--ember-cool);
+      }
 
-      /* Positioned in the GAP between "tío" and "father" - where generations connect */
-      .lineage-dust:nth-child(2) { left: 40%; top: 35%; }
-      .lineage-dust:nth-child(3) { left: 48%; top: 55%; }
-      .lineage-dust:nth-child(4) { left: 35%; top: 20%; }
-      .lineage-dust:nth-child(5) { left: 58%; top: 45%; }
-      .lineage-dust:nth-child(6) { left: 45%; top: 70%; }
+      /* 10 particles in the space between tío and father */
+      .lineage-dust:nth-child(2)  { left: 42%; top: 40%; }
+      .lineage-dust:nth-child(3)  { left: 48%; top: 50%; }
+      .lineage-dust:nth-child(4)  { left: 45%; top: 35%; }
+      .lineage-dust:nth-child(5)  { left: 52%; top: 55%; }
+      .lineage-dust:nth-child(6)  { left: 46%; top: 60%; }
+      .lineage-dust:nth-child(7)  { left: 50%; top: 45%; }
+      .lineage-dust:nth-child(8)  { left: 44%; top: 52%; }
+      .lineage-dust:nth-child(9)  { left: 54%; top: 42%; }
+      .lineage-dust:nth-child(10) { left: 47%; top: 58%; }
+      .lineage-dust:nth-child(11) { left: 51%; top: 48%; }
 
-      /* Horizontal drift paths - dust suspended in sunlight */
+      /* ===== LINEAGE DUST PATHS - Horizontal drift like dust in sunlight ===== */
+
+      /* Path A: Drifts right, settling slowly */
       @keyframes lineageDustA {
-        0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.3); }
-        15% { opacity: 0.6; transform: translate(5px, -3px) rotate(15deg) scale(0.9); }
-        50% { opacity: 0.55; transform: translate(12px, 2px) rotate(45deg) scale(1); }
-        85% { opacity: 0.3; transform: translate(18px, 6px) rotate(80deg) scale(0.7); }
-        100% { opacity: 0; transform: translate(22px, 10px) rotate(100deg) scale(0.4); }
+        0% {
+          opacity: 0;
+          transform: translate(0, 0) rotate(0deg) scale(0.2);
+        }
+        8% {
+          opacity: 0.7; /* Gentle spark */
+          transform: translate(8px, -4px) rotate(15deg) scale(0.9);
+        }
+        25% {
+          opacity: 0.6;
+          transform: translate(25px, 2px) rotate(35deg) scale(1);
+        }
+        45% {
+          opacity: 0.55;
+          transform: translate(45px, 8px) rotate(60deg) scale(1.1); /* Breathing */
+        }
+        65% {
+          opacity: 0.4;
+          transform: translate(65px, 15px) rotate(90deg) scale(0.85);
+        }
+        85% {
+          opacity: 0.2;
+          transform: translate(80px, 25px) rotate(120deg) scale(0.5);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(95px, 35px) rotate(150deg) scale(0.25);
+        }
       }
 
+      /* Path B: Drifts left, slightly rising */
       @keyframes lineageDustB {
-        0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.4); }
-        20% { opacity: 0.55; transform: translate(-6px, -2px) rotate(-20deg) scale(1); }
-        55% { opacity: 0.5; transform: translate(-14px, 4px) rotate(-50deg) scale(0.85); }
-        80% { opacity: 0.25; transform: translate(-20px, 8px) rotate(-85deg) scale(0.55); }
-        100% { opacity: 0; transform: translate(-25px, 12px) rotate(-110deg) scale(0.3); }
+        0% {
+          opacity: 0;
+          transform: translate(0, 0) rotate(0deg) scale(0.25);
+        }
+        10% {
+          opacity: 0.65; /* Gentle spark */
+          transform: translate(-10px, -6px) rotate(-20deg) scale(0.95);
+        }
+        28% {
+          opacity: 0.55;
+          transform: translate(-30px, -2px) rotate(-45deg) scale(1);
+        }
+        48% {
+          opacity: 0.5;
+          transform: translate(-50px, 5px) rotate(-75deg) scale(1.1); /* Breathing */
+        }
+        68% {
+          opacity: 0.35;
+          transform: translate(-70px, 12px) rotate(-110deg) scale(0.75);
+        }
+        88% {
+          opacity: 0.15;
+          transform: translate(-85px, 22px) rotate(-145deg) scale(0.45);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-100px, 30px) rotate(-180deg) scale(0.2);
+        }
       }
 
+      /* Path C: Gentle downward float with sway */
       @keyframes lineageDustC {
-        0% { opacity: 0; transform: translate(0, -4px) rotate(0deg) scale(0.35); }
-        25% { opacity: 0.65; transform: translate(3px, 2px) rotate(25deg) scale(1); }
-        60% { opacity: 0.45; transform: translate(-2px, 10px) rotate(55deg) scale(0.8); }
-        100% { opacity: 0; transform: translate(4px, 18px) rotate(90deg) scale(0.45); }
+        0% {
+          opacity: 0;
+          transform: translate(0, 0) rotate(0deg) scale(0.3);
+        }
+        12% {
+          opacity: 0.6; /* Gentle spark */
+          transform: translate(5px, 8px) rotate(12deg) scale(0.9);
+        }
+        30% {
+          opacity: 0.55;
+          transform: translate(-8px, 25px) rotate(30deg) scale(1);
+        }
+        50% {
+          opacity: 0.45;
+          transform: translate(10px, 45px) rotate(55deg) scale(1.05); /* Breathing */
+        }
+        70% {
+          opacity: 0.3;
+          transform: translate(-5px, 65px) rotate(85deg) scale(0.7);
+        }
+        90% {
+          opacity: 0.12;
+          transform: translate(8px, 85px) rotate(115deg) scale(0.4);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(0px, 100px) rotate(140deg) scale(0.2);
+        }
       }
 
-      /* Dust appears after text scales in (3.0s + 1.0s duration = 4.0s complete) */
+      /* Slower timing for contemplative feel */
       .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(2) {
-        animation: lineageDustA 7s ease-in-out 4.2s infinite;
+        animation: lineageDustA 8s linear 4.2s infinite;
       }
       .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(3) {
-        animation: lineageDustB 8s ease-in-out 4.8s infinite;
+        animation: lineageDustB 9s linear 4.6s infinite;
       }
       .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(4) {
-        animation: lineageDustC 6.5s ease-in-out 5.2s infinite;
+        animation: lineageDustC 7.5s linear 5.0s infinite;
       }
       .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(5) {
-        animation: lineageDustA 7.5s ease-in-out 5.8s infinite;
+        animation: lineageDustA 8.5s linear 5.4s infinite;
       }
       .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(6) {
-        animation: lineageDustB 8.5s ease-in-out 6.4s infinite;
+        animation: lineageDustB 9.2s linear 5.8s infinite;
+      }
+      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(7) {
+        animation: lineageDustC 7.8s linear 6.2s infinite;
+      }
+      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(8) {
+        animation: lineageDustA 8.8s linear 6.6s infinite;
+      }
+      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(9) {
+        animation: lineageDustB 8.2s linear 7.0s infinite;
+      }
+      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(10) {
+        animation: lineageDustC 9.5s linear 7.4s infinite;
+      }
+      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(11) {
+        animation: lineageDustA 7.2s linear 7.8s infinite;
+      }
+
+      /* ===== MESA EMBERS - the table beckons ===== */
+      /* These rise from "La mesa te espera" like warmth from a waiting table */
+
+      .slam-slogan-wrap {
+        position: relative;
+        display: inline-block;
+      }
+
+      /* Text glow - inviting warmth */
+      .panel--slam.in-view .slam-slogan {
+        text-shadow:
+          0 0 25px rgba(255, 180, 100, 0.35),
+          0 0 50px rgba(212, 165, 116, 0.2),
+          0 0 80px rgba(212, 165, 116, 0.1);
+        animation: mesaTextGlow 3.5s ease-in-out infinite;
+      }
+
+      @keyframes mesaTextGlow {
+        0%, 100% {
+          text-shadow:
+            0 0 25px rgba(255, 180, 100, 0.35),
+            0 0 50px rgba(212, 165, 116, 0.2),
+            0 0 80px rgba(212, 165, 116, 0.1);
+        }
+        50% {
+          text-shadow:
+            0 0 35px rgba(255, 180, 100, 0.45),
+            0 0 70px rgba(212, 165, 116, 0.3),
+            0 0 100px rgba(212, 165, 116, 0.15);
+        }
+      }
+
+      .mesa-ember {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: var(--ember-warm);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        filter: blur(0.5px);
+        will-change: transform, opacity;
+      }
+
+      /* Size variants with glow halos */
+      .mesa-ember--lg {
+        width: 5px;
+        height: 5px;
+        filter: blur(0.3px);
+        box-shadow:
+          0 0 6px var(--ember-hot),
+          0 0 12px rgba(255, 180, 100, 0.4);
+      }
+      .mesa-ember--md { width: 3px; height: 3px; filter: blur(0.5px); }
+      .mesa-ember--sm {
+        width: 2px;
+        height: 2px;
+        filter: blur(1px);
+        background: var(--ember-cool);
+      }
+
+      /* Temperature variants */
+      .mesa-ember--hot { background: var(--ember-hot); }
+      .mesa-ember--cool { background: var(--ember-cool); }
+
+      /* 10 embers spread across the slogan text */
+      .mesa-ember:nth-child(2)  { left: 20%; top: 50%; }
+      .mesa-ember:nth-child(3)  { left: 35%; top: 45%; }
+      .mesa-ember:nth-child(4)  { left: 50%; top: 50%; }
+      .mesa-ember:nth-child(5)  { left: 65%; top: 45%; }
+      .mesa-ember:nth-child(6)  { left: 80%; top: 50%; }
+      .mesa-ember:nth-child(7)  { left: 28%; top: 55%; }
+      .mesa-ember:nth-child(8)  { left: 42%; top: 48%; }
+      .mesa-ember:nth-child(9)  { left: 58%; top: 52%; }
+      .mesa-ember:nth-child(10) { left: 72%; top: 47%; }
+      .mesa-ember:nth-child(11) { left: 45%; top: 53%; }
+
+      /* ===== MESA EMBER PATHS - Rising invitation ===== */
+
+      /* Path A: Rises with gentle rightward drift */
+      @keyframes mesaEmberA {
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.2);
+        }
+        6% {
+          opacity: 0.85; /* Spark flash */
+          transform: translateY(-10px) translateX(3px) rotate(18deg) scale(0.85);
+        }
+        18% {
+          opacity: 0.75;
+          transform: translateY(-28px) translateX(8px) rotate(45deg) scale(1);
+        }
+        35% {
+          opacity: 0.65;
+          transform: translateY(-52px) translateX(6px) rotate(80deg) scale(0.9);
+        }
+        50% {
+          opacity: 0.55;
+          transform: translateY(-72px) translateX(12px) rotate(115deg) scale(1.1); /* Breathing pulse */
+        }
+        65% {
+          opacity: 0.4;
+          transform: translateY(-88px) translateX(10px) rotate(155deg) scale(0.75);
+        }
+        82% {
+          opacity: 0.2;
+          transform: translateY(-105px) translateX(16px) rotate(200deg) scale(0.45);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-120px) translateX(20px) rotate(250deg) scale(0.2);
+        }
+      }
+
+      /* Path B: Rises with leftward drift */
+      @keyframes mesaEmberB {
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.25);
+        }
+        5% {
+          opacity: 0.9; /* Spark flash */
+          transform: translateY(-12px) translateX(-4px) rotate(-22deg) scale(0.9);
+        }
+        16% {
+          opacity: 0.8;
+          transform: translateY(-32px) translateX(-10px) rotate(-55deg) scale(1);
+        }
+        32% {
+          opacity: 0.65;
+          transform: translateY(-55px) translateX(-8px) rotate(-95deg) scale(0.95);
+        }
+        48% {
+          opacity: 0.55;
+          transform: translateY(-75px) translateX(-15px) rotate(-135deg) scale(1.15); /* Breathing pulse */
+        }
+        64% {
+          opacity: 0.4;
+          transform: translateY(-92px) translateX(-12px) rotate(-180deg) scale(0.7);
+        }
+        84% {
+          opacity: 0.18;
+          transform: translateY(-108px) translateX(-18px) rotate(-225deg) scale(0.4);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-125px) translateX(-22px) rotate(-275deg) scale(0.15);
+        }
+      }
+
+      /* Path C: Rises mostly straight with subtle sway */
+      @keyframes mesaEmberC {
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.3);
+        }
+        7% {
+          opacity: 0.8; /* Spark flash */
+          transform: translateY(-14px) translateX(2px) rotate(12deg) scale(0.9);
+        }
+        20% {
+          opacity: 0.7;
+          transform: translateY(-38px) translateX(-2px) rotate(38deg) scale(1);
+        }
+        38% {
+          opacity: 0.6;
+          transform: translateY(-62px) translateX(4px) rotate(72deg) scale(0.85);
+        }
+        52% {
+          opacity: 0.5;
+          transform: translateY(-82px) translateX(-1px) rotate(110deg) scale(1.08); /* Breathing pulse */
+        }
+        68% {
+          opacity: 0.35;
+          transform: translateY(-98px) translateX(5px) rotate(152deg) scale(0.65);
+        }
+        86% {
+          opacity: 0.15;
+          transform: translateY(-112px) translateX(0px) rotate(198deg) scale(0.4);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-128px) translateX(4px) rotate(248deg) scale(0.2);
+        }
+      }
+
+      /* Staggered timing - embers emerge after slogan lands (5.6s complete) */
+      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(2) {
+        animation: mesaEmberA 6s linear 5.8s infinite;
+      }
+      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(3) {
+        animation: mesaEmberB 6.8s linear 6.0s infinite;
+      }
+      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(4) {
+        animation: mesaEmberC 6.3s linear 6.3s infinite;
+      }
+      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(5) {
+        animation: mesaEmberA 7s linear 6.6s infinite;
+      }
+      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(6) {
+        animation: mesaEmberB 5.8s linear 6.9s infinite;
+      }
+      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(7) {
+        animation: mesaEmberC 6.5s linear 7.2s infinite;
+      }
+      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(8) {
+        animation: mesaEmberA 6.2s linear 7.5s infinite;
+      }
+      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(9) {
+        animation: mesaEmberB 7.2s linear 7.8s infinite;
+      }
+      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(10) {
+        animation: mesaEmberC 5.9s linear 8.1s infinite;
+      }
+      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(11) {
+        animation: mesaEmberA 6.7s linear 8.4s infinite;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
@@ -8660,99 +9165,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Stormbeat Glow Pulse - warm radial glow when seat claimed (INTENSIFIED) */
-      .form-scarcity__glow {
-        position: absolute;
-        inset: -8px;
-        border-radius: 14px;
-        pointer-events: none;
-        background: radial-gradient(
-          ellipse 160% 140% at 50% 50%,
-          rgba(212, 165, 116, 0.7) 0%,
-          rgba(183, 106, 59, 0.45) 25%,
-          rgba(212, 0, 0, 0.2) 50%,
-          transparent 75%
-        );
-        opacity: 0;
-        z-index: -1;
-      }
-
-      .form-scarcity__glow.is-glow {
-        animation: scoreboardGlow 800ms ease-out 1;
-      }
-
-      @keyframes scoreboardGlow {
-        0% { opacity: 0; transform: scale(0.9); }
-        15% { opacity: 1; transform: scale(1.08); }
-        30% { opacity: 0.9; transform: scale(1.02); }
-        50% { opacity: 0.7; transform: scale(1.05); }
-        100% { opacity: 0; transform: scale(1); }
-      }
-
-      /* Progressive intensity when seats low */
-      .form-scarcity.is-hot .form-scarcity__glow {
-        background: radial-gradient(
-          ellipse 130% 110% at 50% 50%,
-          rgba(212, 0, 0, 0.25) 0%,
-          rgba(212, 165, 116, 0.3) 25%,
-          rgba(183, 106, 59, 0.15) 50%,
-          transparent 75%
-        );
-      }
-
-      .form-scarcity.is-hot .form-scarcity__glow.is-glow {
-        animation-duration: 1000ms;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .form-scarcity__glow.is-glow { animation: none; }
-      }
-
-      /* Stormbeat Shake - brief jolt when seat claimed */
-      .form-shell.is-shake {
-        animation: stormShake 400ms cubic-bezier(0.36, 0.07, 0.19, 0.97) 1;
-      }
-
-      @keyframes stormShake {
-        0%, 100% { transform: translateX(0); }
-        10% { transform: translateX(-6px) rotate(-0.5deg); }
-        20% { transform: translateX(5px) rotate(0.4deg); }
-        30% { transform: translateX(-4px) rotate(-0.3deg); }
-        40% { transform: translateX(4px) rotate(0.3deg); }
-        50% { transform: translateX(-2px); }
-        60% { transform: translateX(2px); }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .form-shell.is-shake { animation: none; }
-      }
-
-      /* Stormbeat Flash - white/warm flash overlay */
-      .panel--form.is-flash::before {
-        animation: stormFlash 350ms ease-out 1 !important;
-      }
-
-      @keyframes stormFlash {
-        0% {
-          opacity: 0;
-          background: radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.6) 0%, transparent 60%);
-        }
-        12% {
-          opacity: 1;
-          background: radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.7) 0%, rgba(212, 165, 116, 0.5) 35%, rgba(212, 0, 0, 0.15) 60%, transparent 80%);
-        }
-        35% {
-          opacity: 0.7;
-        }
-        100% {
-          opacity: 0;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .panel--form.is-flash::before { animation: none !important; }
-      }
-
       /* Subtle connection: when a seat ticks down, the form responds */
       .form-shell.is-seat-shift {
         border-color: rgba(212, 165, 116, 0.32);
@@ -8778,63 +9190,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         height: 2px;
         transform: skewX(0);
         box-shadow: 0 2px 12px rgba(212, 0, 0, 0.12);
-      }
-
-      /* Subtle “stormbeat” — immersive urgency without stealing focus */
-      .panel--form::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        opacity: 0;
-        z-index: 2; /* Above content, pointer-events:none keeps inputs usable */
-        background:
-          radial-gradient(ellipse at 50% 35%, rgba(0, 0, 0, 0.55) 0%, transparent 55%),
-          radial-gradient(ellipse at 30% 20%, rgba(212, 0, 0, 0.08) 0%, transparent 60%),
-          linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, transparent 40%);
-      }
-
-      .panel--form.is-storm::before {
-        animation: stormBeat 900ms ease-out 1;
-      }
-
-      @keyframes stormBeat {
-        0% { opacity: 0; }
-        16% { opacity: 0.34; }
-        28% { opacity: 0.08; }
-        46% { opacity: 0.22; }
-        62% { opacity: 0.1; }
-        100% { opacity: 0; }
-      }
-
-      /* Enhanced stormbeat: warm brass glow from below (the "heat" of competition) */
-      .panel--form::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        opacity: 0;
-        z-index: 1;
-        background: radial-gradient(ellipse 120% 80% at 50% 100%,
-          rgba(183, 106, 59, 0.12) 0%, transparent 50%);
-      }
-
-      .panel--form.is-storm::after {
-        animation: stormWarmth 900ms ease-out 1;
-      }
-
-      @keyframes stormWarmth {
-        0% { opacity: 0; }
-        20% { opacity: 1; }
-        50% { opacity: 0.7; }
-        100% { opacity: 0; }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .panel--form.is-storm::before,
-        .panel--form.is-storm::after {
-          animation: none;
-        }
       }
 
       /* Form Header - Scarcity + Tagline */
@@ -9900,6 +10255,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.9; }
       }
 
+      /* Warm wash overlay - visual bridge during transition */
+      .waiting-warm-wash {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at center,
+          rgba(212, 165, 116, 0.4) 0%,
+          rgba(183, 130, 80, 0.2) 50%,
+          transparent 80%);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 10;
+      }
+
       /* "Securing your seat..." text */
       .waiting-text {
         font-family: "Bodoni Moda", serif;
@@ -9916,27 +10284,68 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         50% { opacity: 1; }
       }
 
-      /* Transition state - subtle fade out */
+      /* Transition state - glow bridge + weighted handoff */
       .registration-waiting.is-transitioning .waiting-domino {
-        animation: dominoFadeOut 0.4s ease-out forwards;
+        animation: dominoFadeQuick 0.3s ease-out forwards;
       }
 
-      @keyframes dominoFadeOut {
+      @keyframes dominoFadeQuick {
         0% { opacity: 1; transform: rotate(0); }
-        100% { opacity: 0; transform: rotate(0) scale(0.95); }
+        100% { opacity: 0; transform: rotate(0) scale(0.9); }
       }
 
       .registration-waiting.is-transitioning .waiting-glow {
-        animation: glowFadeOut 0.4s ease-out forwards;
+        animation: glowIntensify 0.4s ease-in forwards;
       }
 
-      @keyframes glowFadeOut {
-        from { opacity: 0.7; }
+      @keyframes glowIntensify {
+        0% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.5;
+          filter: blur(0);
+        }
+        60% {
+          transform: translate(-50%, -50%) scale(1.8);
+          opacity: 1;
+          filter: blur(20px);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(3);
+          opacity: 0;
+          filter: blur(40px);
+        }
+      }
+
+      .registration-waiting.is-transitioning .waiting-warm-wash {
+        animation: warmWash 0.6s ease-out forwards;
+      }
+
+      @keyframes warmWash {
+        0% {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+        40% {
+          opacity: 1;
+          transform: scale(1.5);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(2);
+        }
+      }
+
+      .registration-waiting.is-transitioning .waiting-text {
+        animation: textFadeQuick 0.25s ease-out forwards;
+      }
+
+      @keyframes textFadeQuick {
+        from { opacity: 0.9; }
         to { opacity: 0; }
       }
 
       .registration-waiting.is-transitioning {
-        animation: waitingFadeOut 0.5s ease-out 0.3s forwards;
+        animation: waitingFadeOut 0.4s ease-out 0.2s forwards;
       }
 
       @keyframes waitingFadeOut {
@@ -9957,8 +10366,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           animation: none;
           opacity: 0.9;
         }
+        .waiting-warm-wash {
+          display: none;
+        }
         .registration-waiting.is-transitioning .waiting-domino,
         .registration-waiting.is-transitioning .waiting-glow,
+        .registration-waiting.is-transitioning .waiting-warm-wash,
+        .registration-waiting.is-transitioning .waiting-text,
         .registration-waiting.is-transitioning {
           animation: none;
         }
@@ -11110,11 +11524,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="whisper-setup">This table remembers.</p>
           <div class="whisper-greeting-wrap">
             <p class="whisper-greeting">Que bola asere</p>
+            <span class="greeting-ember greeting-ember--sm greeting-ember--cool"></span>
+            <span class="greeting-ember greeting-ember--md"></span>
+            <span class="greeting-ember greeting-ember--lg greeting-ember--hot"></span>
             <span class="greeting-ember greeting-ember--sm"></span>
-            <span class="greeting-ember"></span>
+            <span class="greeting-ember greeting-ember--md greeting-ember--hot"></span>
+            <span class="greeting-ember greeting-ember--sm greeting-ember--cool"></span>
             <span class="greeting-ember greeting-ember--lg"></span>
-            <span class="greeting-ember greeting-ember--sm"></span>
-            <span class="greeting-ember"></span>
+            <span class="greeting-ember greeting-ember--md greeting-ember--cool"></span>
+            <span class="greeting-ember greeting-ember--sm greeting-ember--hot"></span>
+            <span class="greeting-ember greeting-ember--md"></span>
           </div>
         </div>
 
@@ -11147,10 +11566,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <div class="lineage-dust-wrap">
                 <span class="build-family__line build-family__line--generations">Your tío. Your father.</span>
                 <span class="lineage-dust lineage-dust--sm"></span>
-                <span class="lineage-dust"></span>
+                <span class="lineage-dust lineage-dust--md"></span>
                 <span class="lineage-dust lineage-dust--lg"></span>
                 <span class="lineage-dust lineage-dust--sm"></span>
-                <span class="lineage-dust"></span>
+                <span class="lineage-dust lineage-dust--md"></span>
+                <span class="lineage-dust lineage-dust--sm"></span>
+                <span class="lineage-dust lineage-dust--lg"></span>
+                <span class="lineage-dust lineage-dust--md"></span>
+                <span class="lineage-dust lineage-dust--sm"></span>
+                <span class="lineage-dust lineage-dust--md"></span>
               </div>
             </div>
             <div class="build-lifecycle">
@@ -11196,7 +11620,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <span class="slam-word slam-word--takes">Your</span>
             <span class="slam-word slam-word--all">SEAT</span>
           </div>
-          <p class="slam-slogan">La mesa te espera.</p>
+          <div class="slam-slogan-wrap">
+            <p class="slam-slogan">La mesa te espera.</p>
+            <span class="mesa-ember mesa-ember--sm mesa-ember--cool"></span>
+            <span class="mesa-ember mesa-ember--md"></span>
+            <span class="mesa-ember mesa-ember--lg mesa-ember--hot"></span>
+            <span class="mesa-ember mesa-ember--sm"></span>
+            <span class="mesa-ember mesa-ember--md mesa-ember--hot"></span>
+            <span class="mesa-ember mesa-ember--sm mesa-ember--cool"></span>
+            <span class="mesa-ember mesa-ember--lg"></span>
+            <span class="mesa-ember mesa-ember--md mesa-ember--cool"></span>
+            <span class="mesa-ember mesa-ember--sm mesa-ember--hot"></span>
+            <span class="mesa-ember mesa-ember--md"></span>
+          </div>
         </div>
 
         <!-- BOTTOM LETTERBOX - Scroll hint only -->
@@ -11296,7 +11732,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <!-- Scarcity Counter -->
             <div class="form-scarcity" id="formScarcity">
               <div class="form-scarcity__display">
-                <div class="form-scarcity__glow" id="scoreboardGlow" aria-hidden="true"></div>
                 <span class="form-scarcity__number" id="spotsLeftInline">{PLAYERS_GOAL - PLAYERS_REGISTERED}</span>
                 <span class="form-scarcity__number form-scarcity__number--next" id="spotsLeftInlineNext" aria-hidden="true"></span>
               </div>
@@ -11495,6 +11930,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
         </div>
         <div class="waiting-glow"></div>
+        <div class="waiting-warm-wash"></div>
       </div>
       <p class="waiting-text">Securing your seat...</p>
     </div>
@@ -12426,19 +12862,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       let didTriggerSeatMomentum = false;
       let seatMomentumLabelTimeout = null;
 
-      // Fake stormbeat triggers (Rainforest Cafe-style urgency)
-      let fakeStormTriggerCount = 0;
-      let hasFakeStormOnPhone = false;
-      let lastStormScheduledAt = 0; // timestamp when last stormbeat will fire (for cooldown)
-
-      function triggerScoreboardGlow() {
-        const glow = document.getElementById('scoreboardGlow');
-        if (!glow) return;
-        glow.classList.remove('is-glow');
-        requestAnimationFrame(() => glow.classList.add('is-glow'));
-        window.setTimeout(() => glow.classList.remove('is-glow'), 850);
-      }
-
       function animateInlineSeatTick(nextValue) {
         if (!spotsLeftInlineEl || !spotsLeftInlineNextEl) return;
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -12507,36 +12930,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }, 2200);
       }
 
-      function triggerFormStormBeat() {
-        const panel = document.querySelector('.panel--form');
-        if (!panel) return;
-        if (!panel.classList.contains('in-view')) return;
-
-        panel.classList.remove('is-storm');
-        requestAnimationFrame(() => {
-          panel.classList.add('is-storm');
-        });
-        window.setTimeout(() => {
-          panel.classList.remove('is-storm');
-        }, 980);
-      }
-
-      function triggerFormShake() {
-        const shell = document.getElementById('formShell');
-        if (!shell) return;
-        shell.classList.remove('is-shake');
-        requestAnimationFrame(() => shell.classList.add('is-shake'));
-        window.setTimeout(() => shell.classList.remove('is-shake'), 450);
-      }
-
-      function triggerFormFlash() {
-        const panel = document.querySelector('.panel--form');
-        if (!panel) return;
-        panel.classList.remove('is-flash');
-        requestAnimationFrame(() => panel.classList.add('is-flash'));
-        window.setTimeout(() => panel.classList.remove('is-flash'), 400);
-      }
-
       function applyRealSeatClaim(count = 1) {
         const clamped = Math.max(0, Math.floor(count));
         if (clamped <= 0) return;
@@ -12546,21 +12939,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         seatsMomentumDelta = Math.max(seatsMomentumDelta - clamped, 0);
 
         updateSpotsRemaining(seatsRemainingActual, { animate: true, tick: true });
-        const formInView = document.querySelector('.panel--form')?.classList.contains('in-view');
-        if (formInView) {
-          if (formScarcityEl) {
-            formScarcityEl.classList.add('is-alert');
-            window.setTimeout(() => formScarcityEl.classList.remove('is-alert'), 1100);
-          }
-          showSeatMomentumLabel('SEAT TAKEN');
-          pulseSeatConnection();
-          triggerFormStormBeat();
-
-          // Intensified effects
-          window.setTimeout(() => triggerScoreboardGlow(), 50);
-          window.setTimeout(() => triggerFormFlash(), 0);
-          window.setTimeout(() => triggerFormShake(), 100);
-        }
       }
 
       function triggerSeatMomentum() {
@@ -12574,40 +12952,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         showSeatMomentumLabel('SEAT CLAIMED');
         updateSpotsRemaining(seatsRemainingActual, { animate: true, tick: true });
         pulseSeatConnection();
-      }
-
-      // Fake stormbeat: simulates "someone just registered" for urgency
-      // Triggers max 2 times per session - once on name, once on phone
-      function triggerFakeStormbeat() {
-        // Guard: max 2 triggers
-        if (fakeStormTriggerCount >= 2) return;
-        // Guard: respect reduced motion
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reduceMotion) return;
-        // Guard: need seats remaining
-        if (seatsRemainingActual <= 0) return;
-
-        fakeStormTriggerCount++;
-
-        // Decrement actual seats (this is a "fake" registration)
-        seatsRemainingActual = Math.max(seatsRemainingActual - 1, 0);
-
-        // Fire the visual effects
-        updateSpotsRemaining(seatsRemainingActual, { animate: true, tick: true });
-        showSeatMomentumLabel('SEAT TAKEN!');
-        pulseSeatConnection();
-        triggerFormStormBeat();
-
-        // Add alert class for extra emphasis
-        if (formScarcityEl) {
-          formScarcityEl.classList.add('is-alert');
-          window.setTimeout(() => formScarcityEl.classList.remove('is-alert'), 1100);
-        }
-
-        // Intensified effects
-        window.setTimeout(() => triggerScoreboardGlow(), 50);
-        window.setTimeout(() => triggerFormFlash(), 0);
-        window.setTimeout(() => triggerFormShake(), 100);
       }
 
       function animateCounter(target, duration = 1000) {
@@ -12679,28 +13023,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if ((playerNameInput.value || '').trim().length < 2) return;
           // Small delay so it reads as "the room moved" in response to your action.
           window.setTimeout(triggerSeatMomentum, 450);
-        },
-        { passive: true }
-      );
-
-      // Fake stormbeat trigger: fire "someone just registered" when typing phone
-      // This creates manufactured urgency (Rainforest Cafe style) - appears to be
-      // other registrations happening while you fill out the form
-      const phoneInput = form?.querySelector('input[name="phone"]');
-      phoneInput?.addEventListener(
-        'input',
-        () => {
-          if (hasFakeStormOnPhone) return;
-          const digitsOnly = (phoneInput.value || '').replace(/\D/g, '');
-          if (digitsOnly.length < 3) return;
-          hasFakeStormOnPhone = true;
-          // Randomized delay (600-900ms)
-          const baseDelay = 600 + Math.random() * 300;
-          const now = Date.now();
-          const minGap = 3000; // 3 seconds between stormbeats
-          const actualDelay = Math.max(baseDelay, lastStormScheduledAt - now + minGap);
-          lastStormScheduledAt = now + actualDelay;
-          window.setTimeout(triggerFakeStormbeat, actualDelay);
         },
         { passive: true }
       );
@@ -12835,7 +13157,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           document.querySelector(".progress-tracker").style.display = "none";
           const footer = document.querySelector(".footer-note");
           if (footer) footer.style.display = "none";
-        }, 1000); // Extended delay to let slam breathe
+        }, 600); // Warm wash timing - success appears during wash clearing
       };
 
       // Helper: Return to form on error
@@ -14236,7 +14558,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             addTickerEvent('register', payload.payload.playerName);
             updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
 
-            // If the form scene is active, make the room react (subtle “stormbeat” urgency).
+            // Update the seats remaining counter
             applyRealSeatClaim(1);
           })
           .subscribe();
