@@ -2181,6 +2181,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           opacity: 0.25;
           transform: translateY(-115px) translateX(15px) rotate(200deg) scale(0.5);
         }
+        90% {
+          opacity: 0.12;
+          transform: translateY(-128px) translateX(18px) rotate(230deg) scale(0.35);
+        }
         100% {
           opacity: 0;
           transform: translateY(-140px) translateX(20px) rotate(260deg) scale(0.2);
@@ -2217,6 +2221,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           opacity: 0.2;
           transform: translateY(-125px) translateX(-18px) rotate(-220deg) scale(0.4);
         }
+        92% {
+          opacity: 0.1;
+          transform: translateY(-138px) translateX(-20px) rotate(-250deg) scale(0.28);
+        }
         100% {
           opacity: 0;
           transform: translateY(-150px) translateX(-22px) rotate(-280deg) scale(0.15);
@@ -2252,6 +2260,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         82% {
           opacity: 0.15;
           transform: translateY(-125px) translateX(-1px) rotate(210deg) scale(0.4);
+        }
+        91% {
+          opacity: 0.08;
+          transform: translateY(-135px) translateX(1px) rotate(240deg) scale(0.3);
         }
         100% {
           opacity: 0;
@@ -5114,12 +5126,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .avatar-flag-pixel {
         font-size: 28px;
         line-height: 1;
-        display: block;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
         font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-        position: relative;
-        /* Color-emoji glyphs render high on the baseline in some browsers */
-        top: 2px;
         z-index: 1;
         image-rendering: pixelated;
         image-rendering: crisp-edges;
@@ -9635,7 +9647,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .success.is-visible {
         display: flex;
-        animation: successReveal 0.8s ease-out, roomWelcome 1.5s ease-in-out 0.2s;
+        z-index: 100000; /* Above loading screen (99999) during handoff */
+        opacity: 1; /* Instant - no fade, prevents flicker during loading transition */
+        animation: roomWelcome 1.5s ease-in-out 0.2s; /* Room warmth effect only */
       }
 
       @keyframes successReveal {
@@ -10115,7 +10129,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Reduced motion: Show success elements immediately */
       @media (prefers-reduced-motion: reduce) {
         .success.is-visible {
-          animation: successReveal 0.3s ease-out;
+          animation: none; /* No animations for reduced motion */
         }
         .domino {
           animation: none;
@@ -12520,6 +12534,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
           // Fire ember release when loading screen completes - visual handoff
           const triggerEmberRelease = () => {
+            // Skip if success screen is showing (prevents golden pip flash during registration flow)
+            if (document.body.dataset.successActive === 'true') return;
             backToTop.classList.add('ember-release');
           };
 
@@ -13196,6 +13212,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Helper: Transition from waiting to success
       const transitionToSuccess = (playerName) => {
+        // Flag to prevent back-to-top pip from activating during success screen
+        document.body.dataset.successActive = 'true';
+
         // Trigger subtle fade transition
         waitingEl.classList.add('is-transitioning');
 
