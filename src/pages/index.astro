@@ -2679,34 +2679,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Staggered timing - embers emerge after slogan lands (5.6s complete) */
-      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(2) {
+      /* Note: Removed :not(.has-played) so embers persist as ambient effect */
+      .panel--slam.in-view .mesa-ember:nth-child(2) {
         animation: mesaEmberA 6s linear 5.8s infinite;
       }
-      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(3) {
+      .panel--slam.in-view .mesa-ember:nth-child(3) {
         animation: mesaEmberB 6.8s linear 6.0s infinite;
       }
-      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(4) {
+      .panel--slam.in-view .mesa-ember:nth-child(4) {
         animation: mesaEmberC 6.3s linear 6.3s infinite;
       }
-      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(5) {
+      .panel--slam.in-view .mesa-ember:nth-child(5) {
         animation: mesaEmberA 7s linear 6.6s infinite;
       }
-      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(6) {
+      .panel--slam.in-view .mesa-ember:nth-child(6) {
         animation: mesaEmberB 5.8s linear 6.9s infinite;
       }
-      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(7) {
+      .panel--slam.in-view .mesa-ember:nth-child(7) {
         animation: mesaEmberC 6.5s linear 7.2s infinite;
       }
-      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(8) {
+      .panel--slam.in-view .mesa-ember:nth-child(8) {
         animation: mesaEmberA 6.2s linear 7.5s infinite;
       }
-      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(9) {
+      .panel--slam.in-view .mesa-ember:nth-child(9) {
         animation: mesaEmberB 7.2s linear 7.8s infinite;
       }
-      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(10) {
+      .panel--slam.in-view .mesa-ember:nth-child(10) {
         animation: mesaEmberC 5.9s linear 8.1s infinite;
       }
-      .panel--slam.in-view:not(.has-played) .mesa-ember:nth-child(11) {
+      .panel--slam.in-view .mesa-ember:nth-child(11) {
         animation: mesaEmberA 6.7s linear 8.4s infinite;
       }
 
@@ -13048,6 +13049,27 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }, { threshold: 0.3 });
 
       observer.observe(formPanel);
+
+      // Fetch live registration count from Google Sheets
+      let livePlayerCount = PLAYERS_REGISTERED;
+      fetch('/api/players')
+        .then(r => r.json())
+        .then(data => {
+          livePlayerCount = data.players?.length || 0;
+          const remaining = PLAYERS_GOAL - livePlayerCount;
+
+          // Update counter display
+          if (playerCountEl) playerCountEl.textContent = livePlayerCount;
+
+          // Update seats remaining state and UI
+          seatsRemainingActual = remaining;
+          updateSpotsRemaining(remaining, { animate: false });
+
+          // Update progress bar
+          const percentage = (livePlayerCount / PLAYERS_GOAL) * 100;
+          if (progressFillEl) progressFillEl.style.width = percentage + '%';
+        })
+        .catch(err => console.warn('Could not fetch live count:', err));
 
       // Form submission
       const form = document.getElementById("signup");
