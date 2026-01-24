@@ -5117,6 +5117,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-align: center;
         font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
         position: relative;
+        /* Color-emoji glyphs render high on the baseline in some browsers */
+        top: 2px;
         z-index: 1;
         image-rendering: pixelated;
         image-rendering: crisp-edges;
@@ -7230,30 +7232,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .avatar-option.selected {
         transform: translateY(-6px) scale(1.15);
         z-index: 20;
-      }
-
-      /* Selected flag with defined ring + snap animation */
-      .avatar-option.selected::after {
-        content: '';
-        position: absolute;
-        top: -6px;
-        left: -6px;
-        right: -6px;
-        bottom: -6px;
-        border-radius: 50%;
-        border: 2px solid rgba(212, 165, 116, 0.7);
+        /* Draw the ring on the element itself (avoids pseudo-element paint issues on iOS/Safari) */
         background: radial-gradient(circle, rgba(212, 165, 116, 0.15) 0%, transparent 70%);
         box-shadow:
+          0 0 0 2px rgba(212, 165, 116, 0.7),
           0 0 12px rgba(212, 165, 116, 0.5),
           inset 0 0 8px rgba(212, 165, 116, 0.2);
-        animation: ringFadeIn 0.2s ease-out forwards;
-        pointer-events: none;
-        z-index: -1;
-      }
-
-      @keyframes ringFadeIn {
-        0% { opacity: 0; }
-        100% { opacity: 1; }
       }
 
       /* Refined slam - smooth lift into place */
@@ -9702,12 +9686,71 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: dominoSlamSuccess 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
       }
 
-      /* Success domino: lands with weight */
+      /* Success domino: lands with weight - realistic physics */
       @keyframes dominoSlamSuccess {
-        0% { transform: rotateX(-90deg) translateY(-50px) scale(0.9); opacity: 0; }
-        50% { transform: rotateX(8deg) scale(1.02); }
-        70% { transform: rotateX(-3deg) scale(0.98); }
-        100% { transform: rotateX(0deg) translateY(0) scale(1); opacity: 1; }
+        0% {
+          transform: rotateX(-75deg) translateY(-80px) scale(0.85);
+          opacity: 0;
+          filter: blur(2px);
+          box-shadow:
+            0 2px 4px rgba(0, 0, 0, 0.1),
+            0 4px 8px rgba(0, 0, 0, 0.1),
+            0 0 20px rgba(212, 165, 116, 0.1),
+            inset 0 2px 0 rgba(255, 255, 255, 0.8);
+        }
+        /* Approaching - accelerating fall */
+        40% {
+          transform: rotateX(-15deg) translateY(-10px) scale(0.98);
+          opacity: 1;
+          filter: blur(0);
+          box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.3),
+            0 12px 24px rgba(0, 0, 0, 0.4),
+            0 0 32px rgba(212, 165, 116, 0.2),
+            inset 0 2px 0 rgba(255, 255, 255, 0.8);
+        }
+        /* IMPACT - compression squash */
+        55% {
+          transform: rotateX(4deg) translateY(2px) scale(1.02, 0.96);
+          box-shadow:
+            0 10px 20px rgba(0, 0, 0, 0.5),
+            0 20px 40px rgba(0, 0, 0, 0.7),
+            0 0 48px rgba(212, 165, 116, 0.4),
+            0 0 64px rgba(255, 215, 0, 0.15),
+            inset 0 2px 0 rgba(255, 255, 255, 0.8);
+        }
+        /* Rebound - slight lift */
+        70% {
+          transform: rotateX(-2deg) translateY(-3px) scale(0.99, 1.01);
+          box-shadow:
+            0 8px 16px rgba(0, 0, 0, 0.4),
+            0 16px 32px rgba(0, 0, 0, 0.5),
+            0 0 48px rgba(212, 165, 116, 0.3),
+            0 0 64px rgba(255, 215, 0, 0.1),
+            inset 0 2px 0 rgba(255, 255, 255, 0.8);
+        }
+        /* Settle wobble */
+        85% {
+          transform: rotateX(1deg) scale(1.005);
+          box-shadow:
+            0 8px 16px rgba(0, 0, 0, 0.4),
+            0 16px 32px rgba(0, 0, 0, 0.6),
+            0 0 48px rgba(212, 165, 116, 0.3),
+            0 0 64px rgba(255, 215, 0, 0.1),
+            inset 0 2px 0 rgba(255, 255, 255, 0.8);
+        }
+        /* Rest - settled */
+        100% {
+          transform: rotateX(0deg) translateY(0) scale(1);
+          opacity: 1;
+          filter: blur(0);
+          box-shadow:
+            0 8px 16px rgba(0, 0, 0, 0.4),
+            0 16px 32px rgba(0, 0, 0, 0.6),
+            0 0 48px rgba(212, 165, 116, 0.3),
+            0 0 64px rgba(255, 215, 0, 0.1),
+            inset 0 2px 0 rgba(255, 255, 255, 0.8);
+        }
       }
 
       .domino::before {
@@ -9798,11 +9841,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Success Headlines */
       .success-headline {
-        font-family: "Bodoni Moda", serif;
+        font-family: "IBM Plex Sans", sans-serif;
         font-size: clamp(2.5rem, 10vw, 3.5rem); /* Compact: was clamp(3rem, 12vw, 4.5rem) */
-        font-weight: 700;
+        font-weight: 600;
         color: var(--cream);
-        letter-spacing: 0.02em;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
         margin-bottom: clamp(8px, 1.6dvh, 14px);
         animation: fadeUp 0.6s ease-out 1.0s both; /* Cinematic: delayed to 1.0s */
         line-height: 1.1;
