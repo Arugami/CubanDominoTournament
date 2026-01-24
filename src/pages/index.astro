@@ -1927,12 +1927,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* THE LINE - "You've sat here before." - LARGEST, emerges from below */
-      /* Typography: UPRIGHT (not italic) = recognition lands harder */
+      /* Typography: IBM PLEX SANS = RECOGNITION VOICE (different instrument) */
+      /* Lin-Manuel: When the room speaks DIRECTLY to YOU, the font shifts */
       /* Visual cohesion: Increased size (~15%) for stronger hierarchy contrast */
       .whisper-line--ancestors {
+        font-family: 'IBM Plex Sans', sans-serif;  /* RECOGNITION VOICE - modern, direct */
         font-size: clamp(2.1rem, 8vw, 3.7rem);  /* Increased ~15% - the payoff dominates */
         font-style: normal;  /* UPRIGHT - statement of fact, not whisper */
-        font-weight: 600;    /* Recognition punch - bolder for mobile readability */
+        font-weight: 700;    /* BOLD - recognition lands with full weight */
         color: #fff;
         letter-spacing: 0.04em;
         padding-left: 6vw;  /* Left offset */
@@ -1959,8 +1961,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Animation for main line - the recognition statement */
       /* Emerges THIRD - smooth fade-up (memory surfacing), lands SOLID */
       /* THE moment: ancestor recognizes YOU. Must emerge from SILENCE. */
+      /* Lin-Manuel: THE BREATH - 1.2s silence before recognition lands */
       .panel--whisper.in-view:not(.has-played) .whisper-line--ancestors {
-        animation: recognitionSlide 1.8s cubic-bezier(0.16, 1, 0.3, 1) 4.8s forwards;  /* 4.8s delay - 1.0s silence after greeting lands */
+        animation: recognitionSlide 1.8s cubic-bezier(0.16, 1, 0.3, 1) 5.0s forwards;  /* 5.0s delay - 1.2s silence after greeting lands */
       }
 
       /* Recognition statement - SMOOTH fade-up from blur (memory surfacing) */
@@ -2045,13 +2048,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
          ← 0.8s SILENCE (room settles)
          2.3s: "Que bola asere" drifts in (1.5s smoke emerge)
          3.8s: Animation complete
-         ← 1.0s SILENCE (greeting lands, pause)
-         4.8s: "You've sat here before." emerges (1.8s memory surface)
-         6.6s: Animation complete
-         ← 1.4s SILENCE (recognition sinks in)
+         ← 1.2s SILENCE (greeting lands, THE BREATH)
+         5.0s: "You've sat here before." emerges (1.8s memory surface)
+         6.8s: Animation complete
+         ← 1.2s SILENCE (recognition sinks in)
          8.0s: Scroll hint fades in
 
-         Total: 8.0s (+2.2s of meaningful silence vs old 5.8s timeline)
+         Total: 8.0s (+2.4s of meaningful silence - THE BREATH before recognition)
       */
 
       .panel--whisper.in-view:not(.has-played) .whisper-setup {
@@ -2501,12 +2504,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* "Te toca." - THE CLIMAX - RISES from below */
       /* Pure Cuban table-talk: "It's your turn." The torch passes. */
-      /* Typography: UPRIGHT + BOLD = the climax lands with full weight */
-      /* Visual cohesion: Increased prominence - this is THE moment */
+      /* Typography: Bodoni Moda = HERITAGE VOICE (cohesive with panel) */
+      /* Visual cohesion: Stays in Bodoni family with heritage text */
       .build-word--torch {
-        font-family: "Bodoni Moda", serif;
+        font-family: "Bodoni Moda", serif;  /* HERITAGE VOICE - cohesive with panel */
         font-size: clamp(2.4rem, 11vw, 4.8rem);  /* Increased ~20% - THE climax */
-        font-weight: 600;    /* BOLDER - the climax */
+        font-weight: 600;    /* Moderate weight - torch moment */
         font-style: normal;  /* UPRIGHT - definitive, final */
         color: #fff;  /* Full white - maximum impact */
         letter-spacing: 0.05em;
@@ -3209,11 +3212,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         text-shadow: 0 2px 25px rgba(0, 0, 0, 0.5);
       }
 
-      /* "ALL" - THE MONEY. Everything on the line. */
-      /* Increased from 4 to 6 layers - THE climax moment needs proper weight */
+      /* "SEAT" - THE MONEY. Everything on the line. */
+      /* Typography: Inherits font-weight: 900 from .slam-word = MAXIMUM SLAM */
+      /* Lin-Manuel: The climax word needs maximum weight to LAND */
       .slam-word--all {
         position: relative;
         font-size: clamp(4.5rem, 22vw, 14rem);
+        /* Inherits font-weight: 900 from .slam-word - maximum slam */
         color: #fff;
         line-height: 0.8;
         text-shadow:
@@ -6440,35 +6445,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow: visible; /* Allow selector to expand */
       }
 
-      /* Edge fades - flags emerge from the void */
-      .avatar-selector-frame::before,
-      .avatar-selector-frame::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 120px; /* Wider fade zone */
-        pointer-events: none;
-        z-index: 3;
-      }
-      .avatar-selector-frame::before {
-        left: 0;
-        background: linear-gradient(90deg,
-          rgba(10, 7, 5, 1) 0%,        /* Full opacity - complete void */
-          rgba(10, 7, 5, 0.95) 20%,
-          rgba(10, 7, 5, 0.6) 50%,
-          rgba(10, 7, 5, 0) 100%
-        );
-      }
-      .avatar-selector-frame::after {
-        right: 0;
-        background: linear-gradient(270deg,
-          rgba(10, 7, 5, 1) 0%,        /* Full opacity - complete void */
-          rgba(10, 7, 5, 0.95) 20%,
-          rgba(10, 7, 5, 0.6) 50%,
-          rgba(10, 7, 5, 0) 100%
-        );
-      }
+      /* Edge fades removed - flags float cleanly without artificial void rectangle */
 
       /* Center seat cue - a faint offering circle */
       .avatar-selector__center-cue {
@@ -6577,16 +6554,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 20;
       }
 
-      /* Selected flag with warm breathing glow */
+      /* Selected flag with defined ring + snap animation */
       .avatar-option.selected::after {
         content: '';
         position: absolute;
-        inset: -3px;
+        inset: -6px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(212, 165, 116, 0.35) 0%, transparent 65%);
-        animation: flagGlowPulse 2.5s ease-in-out infinite;
+        border: 2px solid rgba(212, 165, 116, 0.7);
+        background: radial-gradient(circle, rgba(212, 165, 116, 0.15) 0%, transparent 70%);
+        box-shadow:
+          0 0 12px rgba(212, 165, 116, 0.5),
+          inset 0 0 8px rgba(212, 165, 116, 0.2);
+        animation: ringSnap 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         pointer-events: none;
         z-index: 0;
+      }
+
+      @keyframes ringSnap {
+        0% {
+          transform: scale(1.3);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(0.95);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
       }
 
       /* Refined slam - smooth lift into place */
@@ -6609,17 +6604,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Golden glow pulse - Ochún's candlelight */
-      @keyframes flagGlowPulse {
-        0%, 100% {
-          opacity: 0.5;
-          transform: scale(1);
-        }
-        50% {
-          opacity: 0.85;
-          transform: scale(1.06);
-        }
-      }
+      /* Removed flagGlowPulse - replaced with ringSnap for crisp selection feel */
 
       /* Non-selected flags - smooth fade */
       .avatar-selector:has(.selected) .avatar-option:not(.selected) {
@@ -8539,24 +8524,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .form-scarcity__glow.is-glow { animation: none; }
       }
 
-      /* Stormbeat Edge Shake - room trembles, form stays stable */
-      .panel--form.is-edge-shake::before,
-      .panel--form.is-edge-shake::after {
-        animation: edgeShake 400ms cubic-bezier(0.36, 0.07, 0.19, 0.97) 1;
+      /* Stormbeat Shake - brief jolt when seat claimed */
+      .form-shell.is-shake {
+        animation: stormShake 400ms cubic-bezier(0.36, 0.07, 0.19, 0.97) 1;
       }
 
-      @keyframes edgeShake {
-        0%, 100% { transform: translate(0, 0); }
-        10% { transform: translate(-2px, -1px); }
-        20% { transform: translate(2px, 1px); }
-        30% { transform: translate(-1px, 0); }
-        40% { transform: translate(1px, -1px); }
-        50% { transform: translate(-1px, 1px); }
+      @keyframes stormShake {
+        0%, 100% { transform: translateX(0); }
+        10% { transform: translateX(-3px) rotate(-0.3deg); }
+        20% { transform: translateX(3px) rotate(0.3deg); }
+        30% { transform: translateX(-2px) rotate(-0.2deg); }
+        40% { transform: translateX(2px) rotate(0.2deg); }
+        50% { transform: translateX(-1px); }
+        60% { transform: translateX(1px); }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .panel--form.is-edge-shake::before,
-        .panel--form.is-edge-shake::after { animation: none; }
+        .form-shell.is-shake { animation: none; }
       }
 
       /* Stormbeat Flash - white/warm flash overlay */
@@ -9646,14 +9630,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 0 0 1px rgba(200, 180, 160, 0.3),
           inset 0 2px 0 rgba(255, 255, 255, 0.9),
           inset 0 -1px 0 rgba(0, 0, 0, 0.05);
-        animation: dominoFloat 2s ease-in-out infinite;
+        animation: dominoRock 2s ease-in-out infinite;
         transform-origin: center center;
       }
 
-      /* Waiting state: Domino levitates with anticipation */
-      @keyframes dominoFloat {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-8px); }
+      /* Waiting state: Gentle confident rock */
+      @keyframes dominoRock {
+        0%, 100% { transform: rotate(-1.5deg); }
+        50% { transform: rotate(1.5deg); }
       }
 
       /* Domino divider line - centered horizontal bar */
@@ -9748,135 +9732,27 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         50% { opacity: 1; }
       }
 
-      /* Transition state - domino SLAMS down onto table */
+      /* Transition state - subtle fade out */
       .registration-waiting.is-transitioning .waiting-domino {
-        animation: dominoSlam 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation: dominoFadeOut 0.4s ease-out forwards;
       }
 
-      @keyframes dominoSlam {
-        0% {
-          transform: translateY(0) scale(1);
-          filter: brightness(1);
-        }
-        15% {
-          transform: translateY(-20px) scale(1.02); /* Lift - anticipation */
-        }
-        40% {
-          transform: translateY(0) scale(0.92); /* IMPACT - compression */
-          filter: brightness(1.3);
-        }
-        55% {
-          transform: translateY(-3px) scale(1.01); /* Micro-bounce */
-        }
-        70% {
-          transform: translateY(0) scale(0.98); /* Settle */
-        }
-        100% {
-          transform: translateY(0) scale(1);
-          opacity: 0;
-        }
-      }
-
-      /* Screen shake on slam impact */
-      .registration-waiting.is-slamming {
-        animation: screenShake 150ms ease-out;
-      }
-
-      @keyframes screenShake {
-        0%, 100% { transform: translate(0, 0); }
-        20% { transform: translate(-2px, 1px); }
-        40% { transform: translate(2px, -1px); }
-        60% { transform: translate(-1px, 2px); }
-        80% { transform: translate(1px, -2px); }
+      @keyframes dominoFadeOut {
+        0% { opacity: 1; transform: rotate(0); }
+        100% { opacity: 0; transform: rotate(0) scale(0.95); }
       }
 
       .registration-waiting.is-transitioning .waiting-glow {
-        animation: shadowBurst 0.6s ease-out forwards;
+        animation: glowFadeOut 0.4s ease-out forwards;
       }
 
-      /* Impact shadow burst - dust settling effect */
-      @keyframes shadowBurst {
-        0% {
-          transform: translate(-50%, -50%) scale(1);
-          opacity: 0.9;
-          box-shadow: 0 0 0 rgba(212, 165, 116, 0);
-        }
-        30% {
-          transform: translate(-50%, -50%) scale(1.3);
-          opacity: 1;
-          box-shadow: 0 0 80px rgba(212, 165, 116, 0.6),
-                      0 0 120px rgba(183, 106, 59, 0.4);
-        }
-        100% {
-          transform: translate(-50%, -50%) scale(2.5);
-          opacity: 0;
-          box-shadow: 0 0 0 rgba(212, 165, 116, 0);
-        }
-      }
-
-      /* Impact ripple ring */
-      .waiting-impact-ripple {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 80px;
-        height: 80px;
-        border: 2px solid rgba(212, 165, 116, 0.6);
-        border-radius: 50%;
-        transform: translate(-50%, -50%) scale(0.5);
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      .registration-waiting.is-transitioning .waiting-impact-ripple {
-        animation: impactRipple 0.6s ease-out forwards;
-      }
-
-      @keyframes impactRipple {
-        0% {
-          transform: translate(-50%, -50%) scale(0.5);
-          opacity: 0.8;
-          border-width: 3px;
-        }
-        100% {
-          transform: translate(-50%, -50%) scale(3);
-          opacity: 0;
-          border-width: 1px;
-        }
-      }
-
-      /* Table glow beneath domino - anticipation */
-      .waiting-table-glow {
-        position: absolute;
-        bottom: -20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 30px;
-        background: radial-gradient(ellipse at center,
-          rgba(212, 165, 116, 0.4) 0%,
-          transparent 70%);
-        border-radius: 50%;
-        animation: tableGlowPulse 2s ease-in-out infinite;
-      }
-
-      @keyframes tableGlowPulse {
-        0%, 100% { opacity: 0.3; transform: translateX(-50%) scaleX(1); }
-        50% { opacity: 0.6; transform: translateX(-50%) scaleX(1.1); }
-      }
-
-      .registration-waiting.is-transitioning .waiting-table-glow {
-        animation: tableGlowBurst 0.4s ease-out forwards;
-      }
-
-      @keyframes tableGlowBurst {
-        0% { opacity: 0.6; transform: translateX(-50%) scaleX(1.1); }
-        50% { opacity: 1; transform: translateX(-50%) scaleX(1.5); }
-        100% { opacity: 0; transform: translateX(-50%) scaleX(2); }
+      @keyframes glowFadeOut {
+        from { opacity: 0.7; }
+        to { opacity: 0; }
       }
 
       .registration-waiting.is-transitioning {
-        animation: waitingFadeOut 0.5s ease-out 0.5s forwards;
+        animation: waitingFadeOut 0.5s ease-out 0.3s forwards;
       }
 
       @keyframes waitingFadeOut {
@@ -9897,15 +9773,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           animation: none;
           opacity: 0.9;
         }
-        .waiting-table-glow {
-          animation: none;
-          opacity: 0.4;
-        }
         .registration-waiting.is-transitioning .waiting-domino,
         .registration-waiting.is-transitioning .waiting-glow,
-        .registration-waiting.is-transitioning .waiting-table-glow,
-        .registration-waiting.is-transitioning .waiting-impact-ripple,
-        .registration-waiting.is-slamming,
         .registration-waiting.is-transitioning {
           animation: none;
         }
@@ -11428,8 +11297,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
         </div>
         <div class="waiting-glow"></div>
-        <div class="waiting-table-glow"></div>
-        <div class="waiting-impact-ripple"></div>
       </div>
       <p class="waiting-text">Securing your seat...</p>
     </div>
@@ -12457,11 +12324,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       function triggerFormShake() {
-        const panel = document.querySelector('.panel--form');
-        if (!panel) return;
-        panel.classList.remove('is-edge-shake');
-        requestAnimationFrame(() => panel.classList.add('is-edge-shake'));
-        window.setTimeout(() => panel.classList.remove('is-edge-shake'), 450);
+        const shell = document.getElementById('formShell');
+        if (!shell) return;
+        shell.classList.remove('is-shake');
+        requestAnimationFrame(() => shell.classList.add('is-shake'));
+        window.setTimeout(() => shell.classList.remove('is-shake'), 450);
       }
 
       function triggerFormFlash() {
@@ -12743,20 +12610,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Helper: Transition from waiting to success
       const transitionToSuccess = (playerName) => {
-        // Trigger domino slam animation
+        // Trigger subtle fade transition
         waitingEl.classList.add('is-transitioning');
 
-        // Screen shake at impact moment (40% of 800ms = 320ms)
-        setTimeout(() => {
-          waitingEl.classList.add('is-slamming');
-        }, 320);
-
-        // Remove shake class after animation
-        setTimeout(() => {
-          waitingEl.classList.remove('is-slamming');
-        }, 470);
-
-        // Transition to success (let slam breathe before reveal)
+        // Transition to success (smooth handoff)
         setTimeout(() => {
           waitingEl.classList.remove('is-visible', 'is-transitioning');
           waitingEl.style.display = 'none';
