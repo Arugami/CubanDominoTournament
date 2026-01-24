@@ -2272,34 +2272,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Staggered timing - embers emerge continuously after greeting lands */
-      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(2) {
+      .panel--whisper.in-view .greeting-ember:nth-child(2) {
         animation: greetingEmberA 6.5s linear 3.8s infinite;
       }
-      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(3) {
+      .panel--whisper.in-view .greeting-ember:nth-child(3) {
         animation: greetingEmberB 7.2s linear 4.0s infinite;
       }
-      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(4) {
+      .panel--whisper.in-view .greeting-ember:nth-child(4) {
         animation: greetingEmberC 6.8s linear 4.3s infinite;
       }
-      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(5) {
+      .panel--whisper.in-view .greeting-ember:nth-child(5) {
         animation: greetingEmberA 7.5s linear 4.6s infinite;
       }
-      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(6) {
+      .panel--whisper.in-view .greeting-ember:nth-child(6) {
         animation: greetingEmberB 6.3s linear 4.9s infinite;
       }
-      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(7) {
+      .panel--whisper.in-view .greeting-ember:nth-child(7) {
         animation: greetingEmberC 7.0s linear 5.2s infinite;
       }
-      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(8) {
+      .panel--whisper.in-view .greeting-ember:nth-child(8) {
         animation: greetingEmberA 6.6s linear 5.5s infinite;
       }
-      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(9) {
+      .panel--whisper.in-view .greeting-ember:nth-child(9) {
         animation: greetingEmberB 7.3s linear 5.8s infinite;
       }
-      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(10) {
+      .panel--whisper.in-view .greeting-ember:nth-child(10) {
         animation: greetingEmberC 6.4s linear 6.1s infinite;
       }
-      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(11) {
+      .panel--whisper.in-view .greeting-ember:nth-child(11) {
         animation: greetingEmberA 7.1s linear 6.4s infinite;
       }
 
@@ -2472,34 +2472,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Slower timing for contemplative feel */
-      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(2) {
+      .panel--build.in-view .lineage-dust:nth-child(2) {
         animation: lineageDustA 8s linear 4.2s infinite;
       }
-      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(3) {
+      .panel--build.in-view .lineage-dust:nth-child(3) {
         animation: lineageDustB 9s linear 4.6s infinite;
       }
-      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(4) {
+      .panel--build.in-view .lineage-dust:nth-child(4) {
         animation: lineageDustC 7.5s linear 5.0s infinite;
       }
-      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(5) {
+      .panel--build.in-view .lineage-dust:nth-child(5) {
         animation: lineageDustA 8.5s linear 5.4s infinite;
       }
-      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(6) {
+      .panel--build.in-view .lineage-dust:nth-child(6) {
         animation: lineageDustB 9.2s linear 5.8s infinite;
       }
-      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(7) {
+      .panel--build.in-view .lineage-dust:nth-child(7) {
         animation: lineageDustC 7.8s linear 6.2s infinite;
       }
-      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(8) {
+      .panel--build.in-view .lineage-dust:nth-child(8) {
         animation: lineageDustA 8.8s linear 6.6s infinite;
       }
-      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(9) {
+      .panel--build.in-view .lineage-dust:nth-child(9) {
         animation: lineageDustB 8.2s linear 7.0s infinite;
       }
-      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(10) {
+      .panel--build.in-view .lineage-dust:nth-child(10) {
         animation: lineageDustC 9.5s linear 7.4s infinite;
       }
-      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(11) {
+      .panel--build.in-view .lineage-dust:nth-child(11) {
         animation: lineageDustA 7.2s linear 7.8s infinite;
       }
 
@@ -12917,11 +12917,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const spotsLeftInlineNextEl = document.getElementById("spotsLeftInlineNext");
       const progressFillEl = document.getElementById("progressFill");
       const formScarcityEl = document.getElementById("formScarcity");
-      const spotsLeftLabelEl = formScarcityEl?.querySelector(".form-scarcity__label");
       let seatsRemainingActual = PLAYERS_GOAL - PLAYERS_REGISTERED;
-      let seatsMomentumDelta = 0;
-      let didTriggerSeatMomentum = false;
-      let seatMomentumLabelTimeout = null;
 
       function animateInlineSeatTick(nextValue) {
         if (!spotsLeftInlineEl || !spotsLeftInlineNextEl) return;
@@ -12946,7 +12942,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       function updateSpotsRemaining(actualRemaining, { animate = false, tick = false } = {}) {
         seatsRemainingActual = actualRemaining;
-        const remaining = Math.max(actualRemaining - seatsMomentumDelta, 0);
+        const remaining = Math.max(actualRemaining, 0);
 
         if (spotsLeftEl) spotsLeftEl.textContent = remaining + " seats left";
         if (spotsLeftButtonEl) spotsLeftButtonEl.textContent = remaining;
@@ -12959,7 +12955,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         if (formScarcityEl) {
           formScarcityEl.classList.toggle("is-hot", remaining <= 4);
-          formScarcityEl.classList.toggle("is-held", seatsMomentumDelta > 0);
           if (animate) {
             formScarcityEl.classList.remove("is-pop");
             requestAnimationFrame(() => {
@@ -12970,49 +12965,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             }, 360);
           }
         }
-      }
-
-      function pulseSeatConnection() {
-        if (!formShell) return;
-        formShell.classList.add('is-seat-shift');
-        window.setTimeout(() => {
-          formShell.classList.remove('is-seat-shift');
-        }, 520);
-      }
-
-      function showSeatMomentumLabel(text) {
-        if (!spotsLeftLabelEl) return;
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const nextText = text || (reduceMotion ? 'SEATS UPDATING' : 'SEAT CLAIMED');
-        spotsLeftLabelEl.textContent = nextText;
-        if (seatMomentumLabelTimeout) window.clearTimeout(seatMomentumLabelTimeout);
-        seatMomentumLabelTimeout = window.setTimeout(() => {
-          if (spotsLeftLabelEl) spotsLeftLabelEl.textContent = 'SEATS LEFT';
-        }, 2200);
-      }
-
-      function applyRealSeatClaim(count = 1) {
-        const clamped = Math.max(0, Math.floor(count));
-        if (clamped <= 0) return;
-        if (seatsRemainingActual <= 0) return;
-
-        seatsRemainingActual = Math.max(seatsRemainingActual - clamped, 0);
-        seatsMomentumDelta = Math.max(seatsMomentumDelta - clamped, 0);
-
-        updateSpotsRemaining(seatsRemainingActual, { animate: true, tick: true });
-      }
-
-      function triggerSeatMomentum() {
-        if (didTriggerSeatMomentum) return;
-        didTriggerSeatMomentum = true;
-
-        if (seatsRemainingActual <= 0) return;
-        if (seatsMomentumDelta > 0) return;
-
-        seatsMomentumDelta = 1;
-        showSeatMomentumLabel('SEAT CLAIMED');
-        updateSpotsRemaining(seatsRemainingActual, { animate: true, tick: true });
-        pulseSeatConnection();
       }
 
       function animateCounter(target, duration = 1000) {
@@ -13037,6 +12989,29 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         requestAnimationFrame(update);
       }
 
+      // Track live count (updated by fetch, used by observer)
+      let livePlayerCount = PLAYERS_REGISTERED;
+      let liveFetched = false;
+
+      // Fetch live registration count from Google Sheets BEFORE observer setup
+      fetch('/api/players')
+        .then(r => r.json())
+        .then(data => {
+          livePlayerCount = data.players?.length || 0;
+          liveFetched = true;
+
+          // If observer already fired, update now with live data
+          if (hasAnimated) {
+            const remaining = PLAYERS_GOAL - livePlayerCount;
+            if (playerCountEl) playerCountEl.textContent = livePlayerCount;
+            seatsRemainingActual = remaining;
+            updateSpotsRemaining(remaining, { animate: false });
+            const percentage = (livePlayerCount / PLAYERS_GOAL) * 100;
+            if (progressFillEl) progressFillEl.style.width = percentage + '%';
+          }
+        })
+        .catch(err => console.warn('Could not fetch live count:', err));
+
       // Animate progress bar and counter when panel comes into view
       const formPanel = document.querySelector(".panel--form");
       let hasAnimated = false;
@@ -13046,17 +13021,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (entry.isIntersecting && !hasAnimated) {
             hasAnimated = true;
 
-            // Animate counter
-            animateCounter(PLAYERS_REGISTERED);
+            // Animate counter using live count (or fallback to static)
+            animateCounter(livePlayerCount);
 
             // Animate progress bar
-            const percentage = (PLAYERS_REGISTERED / PLAYERS_GOAL) * 100;
+            const percentage = (livePlayerCount / PLAYERS_GOAL) * 100;
             setTimeout(() => {
               progressFillEl.style.width = percentage + "%";
             }, 100);
 
             // Update spots left (desktop and mobile button)
-            updateSpotsRemaining(PLAYERS_GOAL - PLAYERS_REGISTERED, { animate: true });
+            updateSpotsRemaining(PLAYERS_GOAL - livePlayerCount, { animate: true });
 
             // Mark as played for re-entry animation consistency
             formPanel?.classList.add('has-played');
@@ -13066,27 +13041,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       observer.observe(formPanel);
 
-      // Fetch live registration count from Google Sheets
-      let livePlayerCount = PLAYERS_REGISTERED;
-      fetch('/api/players')
-        .then(r => r.json())
-        .then(data => {
-          livePlayerCount = data.players?.length || 0;
-          const remaining = PLAYERS_GOAL - livePlayerCount;
-
-          // Update counter display
-          if (playerCountEl) playerCountEl.textContent = livePlayerCount;
-
-          // Update seats remaining state and UI
-          seatsRemainingActual = remaining;
-          updateSpotsRemaining(remaining, { animate: false });
-
-          // Update progress bar
-          const percentage = (livePlayerCount / PLAYERS_GOAL) * 100;
-          if (progressFillEl) progressFillEl.style.width = percentage + '%';
-        })
-        .catch(err => console.warn('Could not fetch live count:', err));
-
       // Form submission
       const form = document.getElementById("signup");
       const statusEl = document.getElementById("status");
@@ -13094,20 +13048,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const submitBtn = document.getElementById("submitBtn");
       const waitingEl = document.getElementById("registrationWaiting");
       const formShell = document.getElementById("formShell");
-      const playerNameInput = form?.querySelector('input[name="playerName"]');
-
-      // Momentum micro-moment: once the player starts filling the form,
-      // tick the seats counter down by one (felt urgency, connected to the ledger).
-      playerNameInput?.addEventListener(
-        'input',
-        () => {
-          if (didTriggerSeatMomentum) return;
-          if ((playerNameInput.value || '').trim().length < 2) return;
-          // Small delay so it reads as "the room moved" in response to your action.
-          window.setTimeout(triggerSeatMomentum, 450);
-        },
-        { passive: true }
-      );
 
       // === Form Validation ===
       // Email: RFC-compliant pattern
