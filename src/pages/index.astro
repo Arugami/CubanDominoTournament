@@ -36,6 +36,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         --shadow: 0 18px 45px rgba(20, 10, 6, 0.18);
       }
 
+      @font-face {
+        font-family: 'SF Sports Night';
+        src: url('/FONT/sf-sports-night/TrueType/SFSportsNight.ttf') format('truetype');
+        font-weight: normal;
+        font-style: italic;
+        font-display: swap;
+      }
+
       * {
         box-sizing: border-box;
         margin: 0;
@@ -441,49 +449,53 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transition: transform 0.7s ease-out, opacity 0.6s ease-out;
       }
 
-      /* Shadow grounds the tile - "Physical Digital" */
-      .cdl-tile::after {
-        content: '';
-        position: absolute;
-        bottom: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 120px;
-        height: 20px;
-        background: radial-gradient(
-          ellipse at center,
-          rgba(0, 0, 0, 0.4) 0%,
-          rgba(0, 0, 0, 0.2) 40%,
-          transparent 70%
-        );
-        filter: blur(8px);
-        z-index: -1;
-        opacity: 0.6;  /* Match animation start value - prevents flicker */
-      }
+	      /* Shadow grounds the tile - "Physical Digital" */
+	      .cdl-tile::after {
+	        content: '';
+	        position: absolute;
+	        bottom: -30px;
+	        left: 50%;
+	        transform: translate3d(-50%, 0, 0);
+	        width: 132px;
+	        height: 26px;
+	        background: radial-gradient(
+	          ellipse at center,
+	          rgba(0, 0, 0, 0.38) 0%,
+	          rgba(0, 0, 0, 0.24) 28%,
+	          rgba(0, 0, 0, 0.14) 45%,
+	          rgba(0, 0, 0, 0.06) 62%,
+	          transparent 78%
+	        );
+	        z-index: -1;
+	        opacity: 0.6;  /* Match animation start value - prevents flicker */
+	        will-change: transform, opacity;
+	        -webkit-backface-visibility: hidden;
+	        backface-visibility: hidden;
+	      }
 
       /* Shadow breathes with tile */
       .loading-screen.is-breathing .cdl-tile::after {
         animation: shadowBreath 6s ease-in-out infinite;
       }
 
-      @keyframes shadowBreath {
-        0%, 100% {
-          transform: translateX(-50%) scale(1);
-          opacity: 0.6;
-        }
-        25% {
-          transform: translateX(-50%) scale(0.95);
-          opacity: 0.5;
-        }
-        50% {
-          transform: translateX(-50%) scale(1);
-          opacity: 0.6;
-        }
-        75% {
-          transform: translateX(-50%) scale(1.05);
-          opacity: 0.7;
-        }
-      }
+	      @keyframes shadowBreath {
+	        0%, 100% {
+	          transform: translate3d(-50%, 0, 0) scale3d(1, 1, 1);
+	          opacity: 0.6;
+	        }
+	        25% {
+	          transform: translate3d(-50%, 0, 0) scale3d(0.95, 0.95, 1);
+	          opacity: 0.5;
+	        }
+	        50% {
+	          transform: translate3d(-50%, 0, 0) scale3d(1, 1, 1);
+	          opacity: 0.6;
+	        }
+	        75% {
+	          transform: translate3d(-50%, 0, 0) scale3d(1.05, 1.05, 1);
+	          opacity: 0.7;
+	        }
+	      }
 
       @keyframes tileAppear {
         0% {
@@ -5852,12 +5864,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         padding: 0 16px 0 14px;
         background: linear-gradient(180deg, #d40000 0%, #b30000 50%, #8a0000 100%);
         color: #ffffff;
-        font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', Impact, sans-serif;
-        font-size: 0.85rem;
+        font-family: 'SF Sports Night', 'IBM Plex Sans Condensed', Impact, sans-serif;
+        font-size: 0.95rem; /* Slightly larger - sports fonts render smaller */
         font-weight: 700;
-        font-style: normal; /* CDL refined — no italic */
         text-transform: uppercase;
-        letter-spacing: 0.02em; /* Slight positive tracking — refined, not cramped */
+        letter-spacing: 0.04em; /* Wider tracking for sports font legibility */
         flex-shrink: 0;
         position: relative;
         z-index: 3;
