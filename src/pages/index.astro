@@ -2062,7 +2062,147 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-greeting {
-        animation: greetingDrift 1.5s ease-out 2.3s forwards;  /* 2.3s delay - 0.8s silence after room whispers */
+        animation: greetingDrift 1.5s ease-out 2.3s forwards;
+      }
+
+      /* Shimmer particles - alive, magical presence after greeting lands */
+      .whisper-greeting-wrap {
+        position: relative;
+        display: inline-block;
+      }
+
+      /* ===== GREETING EMBERS - alive, present, welcoming ===== */
+      .greeting-ember {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: var(--ember-color);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        filter: blur(0.5px);
+      }
+
+      .greeting-ember--lg { width: 4px; height: 4px; filter: blur(0.3px); }
+      .greeting-ember--sm { width: 2px; height: 2px; filter: blur(1px); }
+
+      /* Positions around the greeting text */
+      .greeting-ember:nth-child(2) { left: 8%; top: -10px; }
+      .greeting-ember:nth-child(3) { right: 12%; top: -8px; }
+      .greeting-ember:nth-child(4) { left: 30%; bottom: -12px; }
+      .greeting-ember:nth-child(5) { right: 25%; bottom: -10px; }
+      .greeting-ember:nth-child(6) { left: 55%; top: -14px; }
+
+      /* Three organic paths - matching loading screen aesthetic */
+      @keyframes greetingEmberA {
+        0% { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg) scale(0.3); }
+        10% { opacity: 0.7; transform: translateY(-8px) translateX(3px) rotate(25deg) scale(0.9); }
+        30% { opacity: 0.85; transform: translateY(-20px) translateX(8px) rotate(60deg) scale(1); }
+        60% { opacity: 0.6; transform: translateY(-35px) translateX(5px) rotate(120deg) scale(0.8); }
+        100% { opacity: 0; transform: translateY(-50px) translateX(12px) rotate(180deg) scale(0.4); }
+      }
+
+      @keyframes greetingEmberB {
+        0% { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg) scale(0.4); }
+        15% { opacity: 0.75; transform: translateY(-10px) translateX(-4px) rotate(-30deg) scale(1); }
+        40% { opacity: 0.7; transform: translateY(-25px) translateX(-10px) rotate(-80deg) scale(0.85); }
+        70% { opacity: 0.4; transform: translateY(-40px) translateX(-6px) rotate(-140deg) scale(0.6); }
+        100% { opacity: 0; transform: translateY(-55px) translateX(-12px) rotate(-200deg) scale(0.3); }
+      }
+
+      @keyframes greetingEmberC {
+        0% { opacity: 0; transform: translateY(0) translateX(0) rotate(0deg) scale(0.35); }
+        12% { opacity: 0.8; transform: translateY(-12px) translateX(2px) rotate(20deg) scale(0.95); }
+        35% { opacity: 0.65; transform: translateY(-28px) translateX(-3px) rotate(55deg) scale(0.9); }
+        65% { opacity: 0.45; transform: translateY(-42px) translateX(4px) rotate(110deg) scale(0.65); }
+        100% { opacity: 0; transform: translateY(-58px) translateX(-2px) rotate(170deg) scale(0.35); }
+      }
+
+      /* Staggered timing after greeting lands (3.8s = drift complete) */
+      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(2) {
+        animation: greetingEmberA 5.5s ease-out 3.8s infinite;
+      }
+      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(3) {
+        animation: greetingEmberB 6.2s ease-out 4.2s infinite;
+      }
+      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(4) {
+        animation: greetingEmberC 5.8s ease-out 4.6s infinite;
+      }
+      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(5) {
+        animation: greetingEmberA 6.5s ease-out 5.0s infinite;
+      }
+      .panel--whisper.in-view:not(.has-played) .greeting-ember:nth-child(6) {
+        animation: greetingEmberB 5.2s ease-out 5.4s infinite;
+      }
+
+      /* ===== LINEAGE DUST - ancestral memory, dust in afternoon light ===== */
+      /* Different from greeting: slower, horizontal drift, settling not rising */
+
+      .lineage-dust-wrap {
+        position: relative;
+        display: inline-block;
+      }
+
+      .lineage-dust {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: var(--ember-color);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        filter: blur(0.5px);
+      }
+
+      .lineage-dust--lg { width: 4px; height: 4px; filter: blur(0.3px); }
+      .lineage-dust--sm { width: 2px; height: 2px; filter: blur(1px); }
+
+      /* Positioned in the GAP between "tío" and "father" - where generations connect */
+      .lineage-dust:nth-child(2) { left: 40%; top: 35%; }
+      .lineage-dust:nth-child(3) { left: 48%; top: 55%; }
+      .lineage-dust:nth-child(4) { left: 35%; top: 20%; }
+      .lineage-dust:nth-child(5) { left: 58%; top: 45%; }
+      .lineage-dust:nth-child(6) { left: 45%; top: 70%; }
+
+      /* Horizontal drift paths - dust suspended in sunlight */
+      @keyframes lineageDustA {
+        0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.3); }
+        15% { opacity: 0.6; transform: translate(5px, -3px) rotate(15deg) scale(0.9); }
+        50% { opacity: 0.55; transform: translate(12px, 2px) rotate(45deg) scale(1); }
+        85% { opacity: 0.3; transform: translate(18px, 6px) rotate(80deg) scale(0.7); }
+        100% { opacity: 0; transform: translate(22px, 10px) rotate(100deg) scale(0.4); }
+      }
+
+      @keyframes lineageDustB {
+        0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.4); }
+        20% { opacity: 0.55; transform: translate(-6px, -2px) rotate(-20deg) scale(1); }
+        55% { opacity: 0.5; transform: translate(-14px, 4px) rotate(-50deg) scale(0.85); }
+        80% { opacity: 0.25; transform: translate(-20px, 8px) rotate(-85deg) scale(0.55); }
+        100% { opacity: 0; transform: translate(-25px, 12px) rotate(-110deg) scale(0.3); }
+      }
+
+      @keyframes lineageDustC {
+        0% { opacity: 0; transform: translate(0, -4px) rotate(0deg) scale(0.35); }
+        25% { opacity: 0.65; transform: translate(3px, 2px) rotate(25deg) scale(1); }
+        60% { opacity: 0.45; transform: translate(-2px, 10px) rotate(55deg) scale(0.8); }
+        100% { opacity: 0; transform: translate(4px, 18px) rotate(90deg) scale(0.45); }
+      }
+
+      /* Dust appears after text scales in (3.0s + 1.0s duration = 4.0s complete) */
+      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(2) {
+        animation: lineageDustA 7s ease-in-out 4.2s infinite;
+      }
+      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(3) {
+        animation: lineageDustB 8s ease-in-out 4.8s infinite;
+      }
+      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(4) {
+        animation: lineageDustC 6.5s ease-in-out 5.2s infinite;
+      }
+      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(5) {
+        animation: lineageDustA 7.5s ease-in-out 5.8s infinite;
+      }
+      .panel--build.in-view:not(.has-played) .lineage-dust:nth-child(6) {
+        animation: lineageDustB 8.5s ease-in-out 6.4s infinite;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
@@ -2123,6 +2263,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             0 4px 20px rgba(0, 0, 0, 0.8);
         }
       }
+
 
       /* Simple greeting reveal - fallback */
       @keyframes greetingReveal {
@@ -2392,10 +2533,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* "Your abuelo sat here." - DESCENDS from above (ancestors arriving) */
-      /* Typography: UPRIGHT (not italic) = statement of fact, ancestor lands */
+      /* Typography: ITALIC = flows with memory, matches tío/father line */
       .build-word--primary {
 	        font-size: clamp(1.6rem, 7vw, 3.2rem);
-	        font-style: normal;  /* UPRIGHT - definitive statement */
+	        font-style: italic;  /* ITALIC - matches family line, memory flowing */
 	        color: transparent; /* Render fill via animation (prevents Chrome shadow flicker) */
 	        font-weight: 600;    /* Ancestor weight - bolder for mobile readability */
 	        letter-spacing: 0.03em;
@@ -2484,7 +2625,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-top: 2vh;
       }
 
-      /* "Every Sunday. Every celebration. Every goodbye." - Universal, spans time */
+      /* "Every Sunday. Every celebration." - Universal, spans time */
       /* Typography: ITALIC = memory/time passing, different from the family names */
       .build-lifecycle__line {
         font-family: "Bodoni Moda", serif;
@@ -2502,14 +2643,33 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           0 2px 15px rgba(0, 0, 0, 0.6);
       }
 
+      /* "Every goodbye." - The closer, lands 1 second after */
+      .build-lifecycle__closer {
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        font-weight: 500;
+        font-size: clamp(1rem, 4vw, 1.6rem);
+        color: rgba(248, 239, 230, 0.85);
+        letter-spacing: 0.04em;
+        line-height: 1.6;
+        text-align: center;
+        opacity: 0;
+        display: block;
+        margin-top: 0.3em;
+        text-shadow:
+          0 0 20px rgba(248, 239, 230, 0.3),
+          0 0 40px rgba(212, 165, 116, 0.2),
+          0 2px 15px rgba(0, 0, 0, 0.6);
+      }
+
       /* "Te toca." - THE CLIMAX - RISES from below */
       /* Pure Cuban table-talk: "It's your turn." The torch passes. */
-      /* Typography: Bodoni Moda = HERITAGE VOICE (cohesive with panel) */
-      /* Visual cohesion: Stays in Bodoni family with heritage text */
+      /* Typography: IBM Plex Sans = DIRECT ADDRESS voice (matches Panel 2 recognition) */
+      /* Pattern: IBM Plex Sans = "speaking directly to YOU" moments */
       .build-word--torch {
-        font-family: "Bodoni Moda", serif;  /* HERITAGE VOICE - cohesive with panel */
+        font-family: 'IBM Plex Sans', sans-serif;  /* DIRECT ADDRESS - matches "You've sat here before" */
         font-size: clamp(2.4rem, 11vw, 4.8rem);  /* Increased ~20% - THE climax */
-        font-weight: 600;    /* Moderate weight - torch moment */
+        font-weight: 700;    /* Bold weight - torch moment lands hard */
         font-style: normal;  /* UPRIGHT - definitive, final */
         color: #fff;  /* Full white - maximum impact */
         letter-spacing: 0.05em;
@@ -2610,13 +2770,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* "Your abuelo sat here." - DESCENDS from above with emotional glow pulse */
       .panel--build.in-view:not(.has-played) .build-word--primary {
-        animation: ancestorDescendStable 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        animation: ancestorDescendStable 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;  /* +0.2s stall for anticipation */
       }
       .panel--build.in-view:not(.has-played) .build-word--primary::before {
-        animation: ancestorBlurFade 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        animation: ancestorBlurFade 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
       }
       .panel--build.in-view:not(.has-played) .build-word--primary::after {
-        animation: ancestorGlowPulse 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        animation: ancestorGlowPulse 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
       }
 
       /* "Your tío. Your father." - Two generations scale in together */
@@ -2625,17 +2785,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: scaleFromCenter 1.0s ease-out 3.0s forwards;
       }
 
-      /* "Every Sunday. Every celebration. Every goodbye." - Time fades in */
+      /* "Every Sunday. Every celebration." - Time fades in */
       /* Waits for generations to settle (0.8s SILENCE after 4.0s) */
       .panel--build.in-view:not(.has-played) .build-lifecycle__line {
         animation: lifeCycleFade 1.5s ease-out 4.8s forwards;
       }
 
+      /* "Every goodbye." - The closer, lands 3 seconds after for drama */
+      .panel--build.in-view:not(.has-played) .build-lifecycle__closer {
+        animation: lifeCycleFade 1.5s ease-out 7.8s forwards;
+      }
+
       /* "Te toca." - THE CLIMAX - RISES from below */
-      /* RESTORED: Lin-Manuel's timing — THE BREATH (1.2s silence) before torch pass */
-      /* Starts at 7.5s (after lifecycle absorbs), 2.0s duration, lands at 9.5s */
+      /* Starts at 10.0s (after goodbye absorbs), 2.0s duration, lands at 12.0s */
       .panel--build.in-view:not(.has-played) .build-word--torch {
-        animation: torchRise 2.0s cubic-bezier(0.16, 1, 0.3, 1) 7.5s forwards;
+        animation: torchRise 2.0s cubic-bezier(0.16, 1, 0.3, 1) 10.0s forwards;  /* 1s sooner */
       }
 
       /* Legacy: keep inherited animation */
@@ -2644,7 +2808,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .panel--build.in-view:not(.has-played) .build-scroll-hint {
-        animation: scrollHintReveal 1s ease-out 10.0s forwards;  /* Appears at 10.0s (500ms before lock releases at 10.5s) */
+        animation: scrollHintReveal 1s ease-out 12.5s forwards;  /* Appears at 12.5s (after Te toca lands at 12.0s) */
       }
 
       /* ANCESTOR DESCENDS - SMOOTH drop from above (no bounce) */
@@ -2935,6 +3099,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         filter: none;
       }
       .panel--build.has-played .build-lifecycle__line {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+      .panel--build.has-played .build-lifecycle__closer {
         opacity: 1;
         transform: none;
         filter: none;
@@ -3568,6 +3737,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         .build-lifecycle__line {
+          font-size: clamp(1.1rem, 4.5vw, 1.7rem);
+        }
+
+        .build-lifecycle__closer {
           font-size: clamp(1.1rem, 4.5vw, 1.7rem);
         }
 
@@ -10924,7 +11097,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         <!-- TOP LETTERBOX - 3-beat reveal: Setup → Greeting → Recognition -->
         <div class="whisper-top">
           <p class="whisper-setup">This table remembers.</p>
-          <p class="whisper-greeting">Que bola asere</p>
+          <div class="whisper-greeting-wrap">
+            <p class="whisper-greeting">Que bola asere</p>
+            <span class="greeting-ember greeting-ember--sm"></span>
+            <span class="greeting-ember"></span>
+            <span class="greeting-ember greeting-ember--lg"></span>
+            <span class="greeting-ember greeting-ember--sm"></span>
+            <span class="greeting-ember"></span>
+          </div>
         </div>
 
         <!-- BOTTOM LETTERBOX - The recognition -->
@@ -10953,10 +11133,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <div class="build-revelation">
 	            <span class="build-word build-word--primary" data-text="Your abuelo sat here.">Your abuelo sat here.</span>
             <div class="build-family">
-              <span class="build-family__line build-family__line--generations">Your tío. Your father.</span>
+              <div class="lineage-dust-wrap">
+                <span class="build-family__line build-family__line--generations">Your tío. Your father.</span>
+                <span class="lineage-dust lineage-dust--sm"></span>
+                <span class="lineage-dust"></span>
+                <span class="lineage-dust lineage-dust--lg"></span>
+                <span class="lineage-dust lineage-dust--sm"></span>
+                <span class="lineage-dust"></span>
+              </div>
             </div>
             <div class="build-lifecycle">
-              <span class="build-lifecycle__line">Every Sunday. Every celebration. Every goodbye.</span>
+              <span class="build-lifecycle__line">Every Sunday. Every celebration.</span>
+              <span class="build-lifecycle__closer">Every goodbye.</span>
             </div>
           </div>
         </div>
@@ -10993,7 +11181,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
 
           <div class="slam-container">
-            <span class="slam-word slam-word--winner">Take</span>
+            <span class="slam-word slam-word--winner">Claim</span>
             <span class="slam-word slam-word--takes">Your</span>
             <span class="slam-word slam-word--all">SEAT</span>
           </div>
@@ -11069,7 +11257,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <div class="rules-divider">
               <span class="rules-divider__domino">🁣</span>
             </div>
-            <p class="rules-footer">Respect the table.</p>
+            <p class="rules-footer">Respeta la mesa.</p>
             <div class="rules-scroll-hint" aria-hidden="true">
               <div class="rules-scroll-hint__chevron"></div>
             </div>
@@ -11158,14 +11346,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
                   <input type="checkbox" name="termsAccepted" required />
                   <span class="terms-checkbox__box"></span>
                   <span class="terms-checkbox__text">
-                    I accept that <em>hablando mierda</em> (talking trash) is sacred at La Mesa.
-                    I can dish it and I can take it.
+                    I accept that <em>Aquí se habla mierda. El que no aguanta, no juega.</em>
                   </span>
                 </label>
               </div>
 
               <div class="form-cta">
-                <button type="submit" id="submitBtn">Take Your Seat</button>
+                <button type="submit" id="submitBtn">Claim Your Seat</button>
                 <p class="form-cta__hint">Your information stays at the table.</p>
               </div>
               <!-- Mobile scarcity - larger pulsing badge -->
@@ -12146,14 +12333,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         });
       }, { threshold: 0.6 });
 
-      // Panel 3 (Build/Revelation) scroll-lock - 10.5 seconds
-      // Lin-Manuel: "Silence isn't empty. It's where the feeling lives."
+      // Panel 3 (Build/Revelation) scroll-lock - 14 seconds
+      // Maximum drama: 4s pause after "Every goodbye." before torch passes
       const buildObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !buildHasPlayed) {
             buildHasPlayed = true;
             alignPanelAfterSettle(buildPanel);
-            lockScroll(10500, () => buildPanel?.classList.add('has-played'));  // 10.5s - Full restoration of Lin-Manuel's timing: THE BREATH before "Te toca."
+            lockScroll(13000, () => buildPanel?.classList.add('has-played'));  // 13s - Te toca arrives 1s sooner
           }
         });
       }, { threshold: 0.6 });
