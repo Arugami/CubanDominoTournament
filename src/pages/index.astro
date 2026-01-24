@@ -827,17 +827,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: center;
         padding: 24px;
         overflow: hidden; /* Prevent horizontal scroll from parallax bg */
-        /* Camera cut transitions - panels fade in subtly as they enter view */
-        /* Per Tobias: "transitions should feel like camera cuts, never like the browser nudged" */
-        opacity: 0.92;
-        transition: opacity 0.4s ease-out;
+        /* Camera cut transitions - panels fade in as they enter view */
+        /* Per Tobias audit: 8% was too subtle, now 15% + scale + blur for real "camera cut" feel */
+        opacity: 0.85;
+        transform: scale(0.985);
+        filter: blur(0.3px);
+        transition:
+          opacity 0.4s ease-out,
+          transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          filter 0.4s ease-out;
         /* Performance hint for upcoming transition */
-        will-change: opacity;
+        will-change: opacity, transform, filter;
       }
 
       /* Panel fully visible - "camera cut" moment */
       .panel.in-view {
         opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
         /* Clear will-change after transition to free GPU memory */
         will-change: auto;
       }
@@ -2439,35 +2446,51 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Staggered timing - embers emerge continuously after greeting lands */
+      /* Using ease-out for organic "settling warmth" feel */
       .panel--whisper.in-view .greeting-ember:nth-child(2) {
-        animation: greetingEmberA 6.5s linear 3.8s infinite;
+        animation: greetingEmberA 6.5s ease-out 3.8s infinite;
       }
       .panel--whisper.in-view .greeting-ember:nth-child(3) {
-        animation: greetingEmberB 7.2s linear 4.0s infinite;
+        animation: greetingEmberB 7.2s ease-out 4.0s infinite;
       }
       .panel--whisper.in-view .greeting-ember:nth-child(4) {
-        animation: greetingEmberC 6.8s linear 4.3s infinite;
+        animation: greetingEmberC 6.8s ease-out 4.3s infinite;
       }
+      /* Spark variant - brighter recognition flash */
       .panel--whisper.in-view .greeting-ember:nth-child(5) {
-        animation: greetingEmberA 7.5s linear 4.6s infinite;
+        animation: greetingEmberASpark 7.5s ease-out 4.6s infinite;
       }
       .panel--whisper.in-view .greeting-ember:nth-child(6) {
-        animation: greetingEmberB 6.3s linear 4.9s infinite;
+        animation: greetingEmberB 6.3s ease-out 4.9s infinite;
       }
+      /* Warming transition - cool to hot as it rises */
       .panel--whisper.in-view .greeting-ember:nth-child(7) {
-        animation: greetingEmberC 7.0s linear 5.2s infinite;
+        animation: greetingEmberWarming 7.0s ease-out 5.2s infinite;
       }
       .panel--whisper.in-view .greeting-ember:nth-child(8) {
-        animation: greetingEmberA 6.6s linear 5.5s infinite;
+        animation: greetingEmberA 6.6s ease-out 5.5s infinite;
       }
+      /* Another spark variant */
       .panel--whisper.in-view .greeting-ember:nth-child(9) {
-        animation: greetingEmberB 7.3s linear 5.8s infinite;
+        animation: greetingEmberASpark 7.3s ease-out 5.8s infinite;
       }
+      /* Another warming transition */
       .panel--whisper.in-view .greeting-ember:nth-child(10) {
-        animation: greetingEmberC 6.4s linear 6.1s infinite;
+        animation: greetingEmberWarming 6.4s ease-out 6.1s infinite;
       }
       .panel--whisper.in-view .greeting-ember:nth-child(11) {
-        animation: greetingEmberA 7.1s linear 6.4s infinite;
+        animation: greetingEmberA 7.1s ease-out 6.4s infinite;
+      }
+
+      /* Micro-mote animations - atmospheric depth */
+      .panel--whisper.in-view .greeting-mote:nth-child(12) {
+        animation: greetingMote 8.5s ease-out 4.2s infinite;
+      }
+      .panel--whisper.in-view .greeting-mote:nth-child(13) {
+        animation: greetingMote 9.2s ease-out 5.0s infinite;
+      }
+      .panel--whisper.in-view .greeting-mote:nth-child(14) {
+        animation: greetingMote 7.8s ease-out 5.8s infinite;
       }
 
 
@@ -2528,6 +2551,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: var(--ember-cool);
       }
 
+      /* Sepia variant - nostalgic tone for ancestral dust */
+      .lineage-dust--sepia {
+        background: var(--ember-sepia);
+        box-shadow:
+          0 0 4px rgba(195, 160, 110, 0.4),
+          0 0 8px rgba(195, 160, 110, 0.2);
+      }
+
       /* 10 particles in the space between tío and father */
       .lineage-dust:nth-child(2)  { left: 42%; top: 40%; }
       .lineage-dust:nth-child(3)  { left: 48%; top: 50%; }
@@ -2541,8 +2572,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .lineage-dust:nth-child(11) { left: 51%; top: 48%; }
 
       /* ===== LINEAGE DUST PATHS - Horizontal drift like dust in sunlight ===== */
+      /* Reduced rotation (max 45-60deg) - dust tumbles gently, doesn't spin */
+      /* Extended fade-out (25% tail) - memories linger, don't vanish suddenly */
 
-      /* Path A: Drifts right, settling slowly */
+      /* Path A: Drifts right, settling slowly - reduced rotation */
       @keyframes lineageDustA {
         0% {
           opacity: 0;
@@ -2550,31 +2583,44 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
         8% {
           opacity: 0.7; /* Gentle spark */
-          transform: translate(8px, -4px) rotate(15deg) scale(0.9);
+          transform: translate(8px, -4px) rotate(8deg) scale(0.9);
         }
         25% {
           opacity: 0.6;
-          transform: translate(25px, 2px) rotate(35deg) scale(1);
+          transform: translate(25px, 2px) rotate(18deg) scale(1);
         }
-        45% {
+        42% {
           opacity: 0.55;
-          transform: translate(45px, 8px) rotate(60deg) scale(1.1); /* Breathing */
+          transform: translate(42px, 6px) rotate(28deg) scale(1.08); /* Lub */
         }
-        65% {
-          opacity: 0.4;
-          transform: translate(65px, 15px) rotate(90deg) scale(0.85);
+        48% {
+          opacity: 0.52;
+          transform: translate(48px, 10px) rotate(32deg) scale(0.95); /* Dub */
+        }
+        54% {
+          opacity: 0.48;
+          transform: translate(55px, 12px) rotate(36deg) scale(1.03); /* Settle */
+        }
+        70% {
+          opacity: 0.35;
+          transform: translate(70px, 18px) rotate(45deg) scale(0.82);
         }
         85% {
-          opacity: 0.2;
-          transform: translate(80px, 25px) rotate(120deg) scale(0.5);
+          opacity: 0.18;
+          transform: translate(82px, 26px) rotate(52deg) scale(0.55);
+        }
+        /* Extended 25% fade tail */
+        92% {
+          opacity: 0.08;
+          transform: translate(88px, 30px) rotate(56deg) scale(0.38);
         }
         100% {
           opacity: 0;
-          transform: translate(95px, 35px) rotate(150deg) scale(0.25);
+          transform: translate(95px, 35px) rotate(60deg) scale(0.22);
         }
       }
 
-      /* Path B: Drifts left, slightly rising */
+      /* Path B: Drifts left, slightly rising - reduced rotation */
       @keyframes lineageDustB {
         0% {
           opacity: 0;
@@ -2582,31 +2628,44 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
         10% {
           opacity: 0.65; /* Gentle spark */
-          transform: translate(-10px, -6px) rotate(-20deg) scale(0.95);
+          transform: translate(-10px, -6px) rotate(-10deg) scale(0.95);
         }
         28% {
           opacity: 0.55;
-          transform: translate(-30px, -2px) rotate(-45deg) scale(1);
+          transform: translate(-30px, -2px) rotate(-22deg) scale(1);
         }
-        48% {
+        44% {
           opacity: 0.5;
-          transform: translate(-50px, 5px) rotate(-75deg) scale(1.1); /* Breathing */
+          transform: translate(-48px, 3px) rotate(-32deg) scale(1.08); /* Lub */
         }
-        68% {
-          opacity: 0.35;
-          transform: translate(-70px, 12px) rotate(-110deg) scale(0.75);
+        50% {
+          opacity: 0.46;
+          transform: translate(-55px, 6px) rotate(-36deg) scale(0.94); /* Dub */
+        }
+        56% {
+          opacity: 0.42;
+          transform: translate(-62px, 8px) rotate(-40deg) scale(1.02); /* Settle */
+        }
+        72% {
+          opacity: 0.3;
+          transform: translate(-75px, 14px) rotate(-48deg) scale(0.72);
         }
         88% {
-          opacity: 0.15;
-          transform: translate(-85px, 22px) rotate(-145deg) scale(0.45);
+          opacity: 0.14;
+          transform: translate(-88px, 22px) rotate(-54deg) scale(0.42);
+        }
+        /* Extended 25% fade tail */
+        94% {
+          opacity: 0.06;
+          transform: translate(-94px, 26px) rotate(-57deg) scale(0.3);
         }
         100% {
           opacity: 0;
-          transform: translate(-100px, 30px) rotate(-180deg) scale(0.2);
+          transform: translate(-100px, 30px) rotate(-60deg) scale(0.18);
         }
       }
 
-      /* Path C: Gentle downward float with sway */
+      /* Path C: Gentle downward float with sway - reduced rotation */
       @keyframes lineageDustC {
         0% {
           opacity: 0;
@@ -2614,60 +2673,124 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
         12% {
           opacity: 0.6; /* Gentle spark */
-          transform: translate(5px, 8px) rotate(12deg) scale(0.9);
+          transform: translate(5px, 8px) rotate(6deg) scale(0.9);
         }
         30% {
           opacity: 0.55;
-          transform: translate(-8px, 25px) rotate(30deg) scale(1);
+          transform: translate(-8px, 25px) rotate(15deg) scale(1);
         }
-        50% {
-          opacity: 0.45;
-          transform: translate(10px, 45px) rotate(55deg) scale(1.05); /* Breathing */
+        46% {
+          opacity: 0.48;
+          transform: translate(8px, 42px) rotate(26deg) scale(1.05); /* Lub */
         }
-        70% {
-          opacity: 0.3;
-          transform: translate(-5px, 65px) rotate(85deg) scale(0.7);
+        52% {
+          opacity: 0.44;
+          transform: translate(10px, 48px) rotate(30deg) scale(0.92); /* Dub */
         }
-        90% {
+        58% {
+          opacity: 0.4;
+          transform: translate(6px, 54px) rotate(34deg) scale(1.02); /* Settle */
+        }
+        74% {
+          opacity: 0.28;
+          transform: translate(-4px, 70px) rotate(42deg) scale(0.68);
+        }
+        88% {
           opacity: 0.12;
-          transform: translate(8px, 85px) rotate(115deg) scale(0.4);
+          transform: translate(6px, 85px) rotate(50deg) scale(0.4);
+        }
+        /* Extended 25% fade tail */
+        94% {
+          opacity: 0.05;
+          transform: translate(3px, 92px) rotate(54deg) scale(0.28);
         }
         100% {
           opacity: 0;
-          transform: translate(0px, 100px) rotate(140deg) scale(0.2);
+          transform: translate(0px, 100px) rotate(58deg) scale(0.18);
+        }
+      }
+
+      /* Path D: Settle path - horizontal drift then gentle parabolic fall */
+      /* Like memories surfacing, catching light, then settling */
+      @keyframes lineageDustSettle {
+        0% {
+          opacity: 0;
+          transform: translate(0, 0) rotate(0deg) scale(0.25);
+        }
+        10% {
+          opacity: 0.62;
+          transform: translate(15px, -8px) rotate(5deg) scale(0.92); /* Rise */
+        }
+        25% {
+          opacity: 0.58;
+          transform: translate(35px, -12px) rotate(12deg) scale(1); /* Peak drift */
+        }
+        40% {
+          opacity: 0.52;
+          transform: translate(50px, -6px) rotate(20deg) scale(1.06); /* Lub */
+        }
+        46% {
+          opacity: 0.48;
+          transform: translate(55px, 0px) rotate(24deg) scale(0.94); /* Dub - apex */
+        }
+        52% {
+          opacity: 0.44;
+          transform: translate(58px, 8px) rotate(28deg) scale(1.02); /* Settle start */
+        }
+        68% {
+          opacity: 0.32;
+          transform: translate(62px, 28px) rotate(36deg) scale(0.78); /* Parabolic fall */
+        }
+        82% {
+          opacity: 0.18;
+          transform: translate(64px, 52px) rotate(44deg) scale(0.52);
+        }
+        92% {
+          opacity: 0.08;
+          transform: translate(65px, 72px) rotate(50deg) scale(0.35);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(65px, 90px) rotate(55deg) scale(0.2);
         }
       }
 
       /* Slower timing for contemplative feel */
+      /* Using ease-out for organic movement, paired emergence (memories surface together) */
+      /* Pair 1: emerge together at 4.2s */
       .panel--build.in-view .lineage-dust:nth-child(2) {
-        animation: lineageDustA 8s linear 4.2s infinite;
+        animation: lineageDustA 8s ease-out 4.2s infinite;
       }
       .panel--build.in-view .lineage-dust:nth-child(3) {
-        animation: lineageDustB 9s linear 4.6s infinite;
+        animation: lineageDustB 8.8s ease-out 4.25s infinite;
       }
+      /* Pair 2: emerge together at 5.0s */
       .panel--build.in-view .lineage-dust:nth-child(4) {
-        animation: lineageDustC 7.5s linear 5.0s infinite;
+        animation: lineageDustSettle 7.5s ease-out 5.0s infinite;
       }
       .panel--build.in-view .lineage-dust:nth-child(5) {
-        animation: lineageDustA 8.5s linear 5.4s infinite;
+        animation: lineageDustC 8.5s ease-out 5.05s infinite;
       }
+      /* Pair 3: emerge together at 5.8s */
       .panel--build.in-view .lineage-dust:nth-child(6) {
-        animation: lineageDustB 9.2s linear 5.8s infinite;
+        animation: lineageDustB 9.2s ease-out 5.8s infinite;
       }
       .panel--build.in-view .lineage-dust:nth-child(7) {
-        animation: lineageDustC 7.8s linear 6.2s infinite;
+        animation: lineageDustA 7.8s ease-out 5.85s infinite;
       }
+      /* Pair 4: emerge together at 6.6s */
       .panel--build.in-view .lineage-dust:nth-child(8) {
-        animation: lineageDustA 8.8s linear 6.6s infinite;
+        animation: lineageDustSettle 8.8s ease-out 6.6s infinite;
       }
       .panel--build.in-view .lineage-dust:nth-child(9) {
-        animation: lineageDustB 8.2s linear 7.0s infinite;
+        animation: lineageDustC 8.2s ease-out 6.65s infinite;
       }
+      /* Pair 5: emerge together at 7.4s */
       .panel--build.in-view .lineage-dust:nth-child(10) {
-        animation: lineageDustC 9.5s linear 7.4s infinite;
+        animation: lineageDustB 9.5s ease-out 7.4s infinite;
       }
       .panel--build.in-view .lineage-dust:nth-child(11) {
-        animation: lineageDustA 7.2s linear 7.8s infinite;
+        animation: lineageDustSettle 7.2s ease-out 7.45s infinite;
       }
 
       /* ===== MESA EMBERS - the table beckons ===== */
@@ -2735,6 +2858,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .mesa-ember--hot { background: var(--ember-hot); }
       .mesa-ember--cool { background: var(--ember-cool); }
 
+      /* Pulse particle - stationary heartbeat at center */
+      .mesa-ember--pulse {
+        width: 6px;
+        height: 6px;
+        background: var(--ember-hot);
+        filter: blur(0.4px);
+        box-shadow:
+          0 0 8px var(--ember-hot),
+          0 0 16px rgba(255, 180, 100, 0.5);
+      }
+
       /* 10 embers spread across the slogan text */
       .mesa-ember:nth-child(2)  { left: 20%; top: 50%; }
       .mesa-ember:nth-child(3)  { left: 35%; top: 45%; }
@@ -2746,148 +2880,289 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .mesa-ember:nth-child(9)  { left: 58%; top: 52%; }
       .mesa-ember:nth-child(10) { left: 72%; top: 47%; }
       .mesa-ember:nth-child(11) { left: 45%; top: 53%; }
+      /* Pulse particle - center of slogan */
+      .mesa-ember--pulse { left: 50%; top: 50%; transform: translate(-50%, -50%); }
 
-      /* ===== MESA EMBER PATHS - Rising invitation ===== */
+      /* ===== MESA EMBER PATHS - The Beckoning Fire ===== */
+      /* Faster tempo (4.5-6s), ease-in curves (acceleration = urgency) */
 
-      /* Path A: Rises with gentle rightward drift */
+      /* Path A: Rises with rightward drift - faster, urgent */
       @keyframes mesaEmberA {
         0% {
           opacity: 0;
           transform: translateY(0) translateX(0) rotate(0deg) scale(0.2);
         }
-        6% {
-          opacity: 0.85; /* Spark flash */
-          transform: translateY(-10px) translateX(3px) rotate(18deg) scale(0.85);
+        8% {
+          opacity: 0.9; /* Strong spark */
+          transform: translateY(-12px) translateX(4px) rotate(20deg) scale(0.88);
         }
-        18% {
-          opacity: 0.75;
-          transform: translateY(-28px) translateX(8px) rotate(45deg) scale(1);
+        22% {
+          opacity: 0.78;
+          transform: translateY(-32px) translateX(10px) rotate(50deg) scale(1);
         }
-        35% {
-          opacity: 0.65;
-          transform: translateY(-52px) translateX(6px) rotate(80deg) scale(0.9);
+        38% {
+          opacity: 0.68;
+          transform: translateY(-55px) translateX(7px) rotate(85deg) scale(1.08); /* Lub */
+        }
+        44% {
+          opacity: 0.62;
+          transform: translateY(-65px) translateX(10px) rotate(100deg) scale(0.94); /* Dub */
         }
         50% {
-          opacity: 0.55;
-          transform: translateY(-72px) translateX(12px) rotate(115deg) scale(1.1); /* Breathing pulse */
+          opacity: 0.56;
+          transform: translateY(-75px) translateX(12px) rotate(118deg) scale(1.04); /* Settle */
         }
-        65% {
-          opacity: 0.4;
-          transform: translateY(-88px) translateX(10px) rotate(155deg) scale(0.75);
+        68% {
+          opacity: 0.38;
+          transform: translateY(-92px) translateX(10px) rotate(160deg) scale(0.72);
         }
-        82% {
-          opacity: 0.2;
-          transform: translateY(-105px) translateX(16px) rotate(200deg) scale(0.45);
+        85% {
+          opacity: 0.18;
+          transform: translateY(-108px) translateX(16px) rotate(208deg) scale(0.42);
         }
         100% {
           opacity: 0;
-          transform: translateY(-120px) translateX(20px) rotate(250deg) scale(0.2);
+          transform: translateY(-125px) translateX(20px) rotate(255deg) scale(0.18);
         }
       }
 
-      /* Path B: Rises with leftward drift */
+      /* Path B: Rises with leftward drift - faster, urgent */
       @keyframes mesaEmberB {
         0% {
           opacity: 0;
           transform: translateY(0) translateX(0) rotate(0deg) scale(0.25);
         }
-        5% {
-          opacity: 0.9; /* Spark flash */
-          transform: translateY(-12px) translateX(-4px) rotate(-22deg) scale(0.9);
+        7% {
+          opacity: 0.92; /* Strong spark */
+          transform: translateY(-14px) translateX(-5px) rotate(-25deg) scale(0.9);
         }
-        16% {
+        20% {
           opacity: 0.8;
-          transform: translateY(-32px) translateX(-10px) rotate(-55deg) scale(1);
+          transform: translateY(-36px) translateX(-12px) rotate(-60deg) scale(1);
         }
-        32% {
-          opacity: 0.65;
-          transform: translateY(-55px) translateX(-8px) rotate(-95deg) scale(0.95);
+        36% {
+          opacity: 0.68;
+          transform: translateY(-58px) translateX(-9px) rotate(-100deg) scale(1.08); /* Lub */
+        }
+        42% {
+          opacity: 0.62;
+          transform: translateY(-68px) translateX(-14px) rotate(-118deg) scale(0.94); /* Dub */
         }
         48% {
           opacity: 0.55;
-          transform: translateY(-75px) translateX(-15px) rotate(-135deg) scale(1.15); /* Breathing pulse */
+          transform: translateY(-78px) translateX(-12px) rotate(-138deg) scale(1.04); /* Settle */
         }
-        64% {
-          opacity: 0.4;
-          transform: translateY(-92px) translateX(-12px) rotate(-180deg) scale(0.7);
+        65% {
+          opacity: 0.38;
+          transform: translateY(-95px) translateX(-11px) rotate(-185deg) scale(0.68);
         }
         84% {
-          opacity: 0.18;
-          transform: translateY(-108px) translateX(-18px) rotate(-225deg) scale(0.4);
+          opacity: 0.16;
+          transform: translateY(-112px) translateX(-18px) rotate(-232deg) scale(0.38);
         }
         100% {
           opacity: 0;
-          transform: translateY(-125px) translateX(-22px) rotate(-275deg) scale(0.15);
+          transform: translateY(-128px) translateX(-22px) rotate(-280deg) scale(0.15);
         }
       }
 
-      /* Path C: Rises mostly straight with subtle sway */
+      /* Path C: Rises mostly straight - faster, urgent */
       @keyframes mesaEmberC {
         0% {
           opacity: 0;
           transform: translateY(0) translateX(0) rotate(0deg) scale(0.3);
         }
-        7% {
-          opacity: 0.8; /* Spark flash */
-          transform: translateY(-14px) translateX(2px) rotate(12deg) scale(0.9);
+        9% {
+          opacity: 0.85; /* Strong spark */
+          transform: translateY(-16px) translateX(3px) rotate(15deg) scale(0.92);
         }
-        20% {
-          opacity: 0.7;
-          transform: translateY(-38px) translateX(-2px) rotate(38deg) scale(1);
+        24% {
+          opacity: 0.72;
+          transform: translateY(-42px) translateX(-2px) rotate(42deg) scale(1);
         }
-        38% {
-          opacity: 0.6;
-          transform: translateY(-62px) translateX(4px) rotate(72deg) scale(0.85);
+        40% {
+          opacity: 0.62;
+          transform: translateY(-68px) translateX(5px) rotate(78deg) scale(1.08); /* Lub */
+        }
+        46% {
+          opacity: 0.55;
+          transform: translateY(-78px) translateX(2px) rotate(95deg) scale(0.94); /* Dub */
         }
         52% {
-          opacity: 0.5;
-          transform: translateY(-82px) translateX(-1px) rotate(110deg) scale(1.08); /* Breathing pulse */
+          opacity: 0.48;
+          transform: translateY(-88px) translateX(-1px) rotate(115deg) scale(1.05); /* Settle */
         }
-        68% {
-          opacity: 0.35;
-          transform: translateY(-98px) translateX(5px) rotate(152deg) scale(0.65);
+        70% {
+          opacity: 0.32;
+          transform: translateY(-102px) translateX(6px) rotate(158deg) scale(0.62);
         }
-        86% {
-          opacity: 0.15;
-          transform: translateY(-112px) translateX(0px) rotate(198deg) scale(0.4);
+        88% {
+          opacity: 0.12;
+          transform: translateY(-118px) translateX(0px) rotate(205deg) scale(0.35);
         }
         100% {
           opacity: 0;
-          transform: translateY(-128px) translateX(4px) rotate(248deg) scale(0.2);
+          transform: translateY(-132px) translateX(4px) rotate(252deg) scale(0.16);
         }
       }
 
-      /* Staggered timing - embers emerge after slogan lands (5.6s complete) */
+      /* Burst path - short 70px impatient rise */
+      @keyframes mesaEmberBurst {
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.3);
+        }
+        10% {
+          opacity: 0.95; /* Intense spark */
+          transform: translateY(-15px) translateX(2px) rotate(18deg) scale(1);
+        }
+        30% {
+          opacity: 0.82;
+          transform: translateY(-38px) translateX(-3px) rotate(45deg) scale(1.1); /* Lub */
+        }
+        38% {
+          opacity: 0.72;
+          transform: translateY(-48px) translateX(1px) rotate(58deg) scale(0.92); /* Dub */
+        }
+        46% {
+          opacity: 0.62;
+          transform: translateY(-55px) translateX(-2px) rotate(72deg) scale(1.02); /* Settle */
+        }
+        65% {
+          opacity: 0.4;
+          transform: translateY(-62px) translateX(3px) rotate(95deg) scale(0.72);
+        }
+        85% {
+          opacity: 0.18;
+          transform: translateY(-68px) translateX(0px) rotate(118deg) scale(0.45);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-72px) translateX(2px) rotate(140deg) scale(0.25);
+        }
+      }
+
+      /* Pulse animation - heartbeat at center (2s cycle) */
+      @keyframes mesaPulse {
+        0%, 100% {
+          opacity: 0.6;
+          transform: translate(-50%, -50%) scale(1);
+          box-shadow:
+            0 0 8px var(--ember-hot),
+            0 0 16px rgba(255, 180, 100, 0.5);
+        }
+        25% {
+          opacity: 0.85;
+          transform: translate(-50%, -50%) scale(1.15);
+          box-shadow:
+            0 0 12px var(--ember-hot),
+            0 0 24px rgba(255, 180, 100, 0.65);
+        }
+        35% {
+          opacity: 0.7;
+          transform: translate(-50%, -50%) scale(0.95);
+          box-shadow:
+            0 0 6px var(--ember-hot),
+            0 0 14px rgba(255, 180, 100, 0.45);
+        }
+        50% {
+          opacity: 0.78;
+          transform: translate(-50%, -50%) scale(1.08);
+          box-shadow:
+            0 0 10px var(--ember-hot),
+            0 0 20px rgba(255, 180, 100, 0.55);
+        }
+        65% {
+          opacity: 0.65;
+          transform: translate(-50%, -50%) scale(1);
+          box-shadow:
+            0 0 8px var(--ember-hot),
+            0 0 16px rgba(255, 180, 100, 0.5);
+        }
+      }
+
+      /* Flare animation - occasional brightness boost */
+      @keyframes mesaEmberFlare {
+        0% {
+          opacity: 0;
+          transform: translateY(0) translateX(0) rotate(0deg) scale(0.25);
+          filter: blur(0.5px);
+        }
+        8% {
+          opacity: 1.0; /* FLARE - maximum brightness */
+          transform: translateY(-14px) translateX(3px) rotate(22deg) scale(1.2);
+          filter: blur(0.2px);
+        }
+        18% {
+          opacity: 0.78;
+          transform: translateY(-32px) translateX(-5px) rotate(48deg) scale(1);
+          filter: blur(0.5px);
+        }
+        35% {
+          opacity: 0.65;
+          transform: translateY(-55px) translateX(6px) rotate(82deg) scale(1.06);
+        }
+        42% {
+          opacity: 0.58;
+          transform: translateY(-65px) translateX(2px) rotate(98deg) scale(0.92);
+        }
+        55% {
+          opacity: 0.45;
+          transform: translateY(-82px) translateX(-4px) rotate(128deg) scale(1.02);
+        }
+        72% {
+          opacity: 0.28;
+          transform: translateY(-98px) translateX(5px) rotate(168deg) scale(0.65);
+        }
+        90% {
+          opacity: 0.1;
+          transform: translateY(-115px) translateX(1px) rotate(212deg) scale(0.35);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-128px) translateX(3px) rotate(255deg) scale(0.15);
+        }
+      }
+
+      /* Staggered timing - faster 4.5-6s range with ease-in (urgency) */
       /* Note: Removed :not(.has-played) so embers persist as ambient effect */
       .panel--slam.in-view .mesa-ember:nth-child(2) {
-        animation: mesaEmberA 6s linear 5.8s infinite;
+        animation: mesaEmberA 5.2s ease-in 5.8s infinite;
       }
       .panel--slam.in-view .mesa-ember:nth-child(3) {
-        animation: mesaEmberB 6.8s linear 6.0s infinite;
+        animation: mesaEmberB 5.8s ease-in 6.0s infinite;
       }
+      /* Burst paths - short impatient rises */
       .panel--slam.in-view .mesa-ember:nth-child(4) {
-        animation: mesaEmberC 6.3s linear 6.3s infinite;
+        animation: mesaEmberBurst 4.5s ease-in 6.2s infinite;
       }
       .panel--slam.in-view .mesa-ember:nth-child(5) {
-        animation: mesaEmberA 7s linear 6.6s infinite;
+        animation: mesaEmberA 5.5s ease-in 6.5s infinite;
       }
+      /* Flare particle - occasional brightness boost */
       .panel--slam.in-view .mesa-ember:nth-child(6) {
-        animation: mesaEmberB 5.8s linear 6.9s infinite;
+        animation: mesaEmberFlare 5.0s ease-in 6.8s infinite;
       }
       .panel--slam.in-view .mesa-ember:nth-child(7) {
-        animation: mesaEmberC 6.5s linear 7.2s infinite;
+        animation: mesaEmberC 5.3s ease-in 7.0s infinite;
       }
+      /* Another burst path */
       .panel--slam.in-view .mesa-ember:nth-child(8) {
-        animation: mesaEmberA 6.2s linear 7.5s infinite;
+        animation: mesaEmberBurst 4.8s ease-in 7.3s infinite;
       }
       .panel--slam.in-view .mesa-ember:nth-child(9) {
-        animation: mesaEmberB 7.2s linear 7.8s infinite;
+        animation: mesaEmberB 5.6s ease-in 7.5s infinite;
       }
       .panel--slam.in-view .mesa-ember:nth-child(10) {
-        animation: mesaEmberC 5.9s linear 8.1s infinite;
+        animation: mesaEmberC 4.9s ease-in 7.8s infinite;
       }
       .panel--slam.in-view .mesa-ember:nth-child(11) {
-        animation: mesaEmberA 6.7s linear 8.4s infinite;
+        animation: mesaEmberA 5.4s ease-in 8.0s infinite;
+      }
+
+      /* Pulse particle animation - heartbeat at center */
+      .panel--slam.in-view .mesa-ember--pulse {
+        animation: mesaPulse 2s ease-in-out 5.8s infinite;
       }
 
       .panel--whisper.in-view:not(.has-played) .whisper-line--mystery {
@@ -10179,7 +10454,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin: 10px 0;
         width: 100%;
         max-width: 180px;
-        animation: fadeUp 0.5s ease-out 3.3s both; /* Cinematic: after card */
+        animation: fadeUp 0.5s ease-out 2.0s both; /* Cinematic: after card */
       }
 
       .success-divider::before,
@@ -10271,7 +10546,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Taller phones: restore a touch of ritual to avoid "empty black" */
-      @media (max-width: 1023px) and (min-height: 740px) {
+      @media (max-width: 1023px) and (min-height: 640px) {
         .success-divider {
           display: flex;
         }
@@ -11031,6 +11306,37 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           margin-bottom: 24px; /* Clean ending - footer is its own panel */
         }
 
+        /* Form scroll indicator - shows there's more content below */
+        /* Per Tobias audit: visual cue that form is scrollable */
+        .panel--form::before {
+          content: "";
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 46px; /* Above ticker */
+          height: 60px;
+          background: linear-gradient(
+            to top,
+            rgba(10, 7, 5, 0.95) 0%,
+            rgba(10, 7, 5, 0.6) 40%,
+            transparent 100%
+          );
+          pointer-events: none;
+          z-index: 10;
+          opacity: 0;
+          transition: opacity 0.3s ease-out;
+        }
+
+        /* Show indicator when form has scrollable content */
+        .panel--form.has-scroll-content::before {
+          opacity: 1;
+        }
+
+        /* Hide when user has scrolled to bottom */
+        .panel--form.scrolled-to-bottom::before {
+          opacity: 0;
+        }
+
 	        .footer-contact {
 	          margin-top: 0;
 	          gap: 28px;
@@ -11662,6 +11968,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             0 4px 30px rgba(0, 0, 0, 0.8);
         }
       }
+
+      /* ===== REDUCED MOTION - Accessibility ===== */
+      /* Disable all particle animations for users who prefer reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .greeting-ember,
+        .greeting-mote,
+        .lineage-dust,
+        .mesa-ember,
+        .mesa-ember--pulse {
+          animation: none !important;
+          opacity: 0 !important;
+        }
+        .panel--whisper.in-view .whisper-greeting,
+        .panel--build.in-view .build-family__line--generations,
+        .panel--slam.in-view .slam-slogan {
+          animation: none !important;
+        }
+      }
     </style>
   </head>
   <body class="is-loading">
@@ -11753,13 +12077,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <span class="greeting-ember greeting-ember--sm greeting-ember--cool"></span>
             <span class="greeting-ember greeting-ember--md"></span>
             <span class="greeting-ember greeting-ember--lg greeting-ember--hot"></span>
-            <span class="greeting-ember greeting-ember--sm"></span>
+            <span class="greeting-ember greeting-ember--sm greeting-ember--spark"></span>
             <span class="greeting-ember greeting-ember--md greeting-ember--hot"></span>
             <span class="greeting-ember greeting-ember--sm greeting-ember--cool"></span>
             <span class="greeting-ember greeting-ember--lg"></span>
-            <span class="greeting-ember greeting-ember--md greeting-ember--cool"></span>
+            <span class="greeting-ember greeting-ember--md greeting-ember--spark"></span>
             <span class="greeting-ember greeting-ember--sm greeting-ember--hot"></span>
             <span class="greeting-ember greeting-ember--md"></span>
+            <!-- Micro-motes for atmospheric depth -->
+            <span class="greeting-mote"></span>
+            <span class="greeting-mote"></span>
+            <span class="greeting-mote"></span>
           </div>
         </div>
 
@@ -11791,14 +12119,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <div class="build-family">
               <div class="lineage-dust-wrap">
                 <span class="build-family__line build-family__line--generations">Your tío. Your father.</span>
-                <span class="lineage-dust lineage-dust--sm"></span>
+                <span class="lineage-dust lineage-dust--sm lineage-dust--sepia"></span>
                 <span class="lineage-dust lineage-dust--md"></span>
+                <span class="lineage-dust lineage-dust--lg lineage-dust--sepia"></span>
+                <span class="lineage-dust lineage-dust--sm"></span>
+                <span class="lineage-dust lineage-dust--md lineage-dust--sepia"></span>
+                <span class="lineage-dust lineage-dust--sm"></span>
                 <span class="lineage-dust lineage-dust--lg"></span>
-                <span class="lineage-dust lineage-dust--sm"></span>
-                <span class="lineage-dust lineage-dust--md"></span>
-                <span class="lineage-dust lineage-dust--sm"></span>
-                <span class="lineage-dust lineage-dust--lg"></span>
-                <span class="lineage-dust lineage-dust--md"></span>
+                <span class="lineage-dust lineage-dust--md lineage-dust--sepia"></span>
                 <span class="lineage-dust lineage-dust--sm"></span>
                 <span class="lineage-dust lineage-dust--md"></span>
               </div>
@@ -11858,6 +12186,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <span class="mesa-ember mesa-ember--md mesa-ember--cool"></span>
             <span class="mesa-ember mesa-ember--sm mesa-ember--hot"></span>
             <span class="mesa-ember mesa-ember--md"></span>
+            <!-- Pulse particle - heartbeat at center -->
+            <span class="mesa-ember mesa-ember--pulse"></span>
           </div>
         </div>
 
@@ -12099,7 +12429,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       </div>
 
       <!-- Headlines -->
-      <h2 class="success-headline">You're <span>In</span>.</h2>
+      <h2 class="success-headline">You're <span>In</span></h2>
       <p class="success-subheadline">Check your email for confirmation details</p>
 
       <!-- Event Details -->
@@ -12262,79 +12592,79 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <div class="avatar-selector">
               <!-- Priority: Cuba, USA, then Caribbean & Latin America -->
 	              <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
-	                <img class="avatar-flag-img" src="/flags/circle/cuba.svg" alt="Cuba" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/cu.svg" alt="Cuba" width="32" height="32" decoding="async" loading="eager" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="usa" title="USA">
-	                <img class="avatar-flag-img" src="/flags/circle/usa.svg" alt="USA" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/us.svg" alt="USA" width="32" height="32" decoding="async" loading="eager" draggable="false" />
 	              </div>
               <!-- Caribbean -->
 	              <div class="avatar-option" data-avatar="pr" title="Puerto Rico">
-	                <img class="avatar-flag-img" src="/flags/circle/pr.svg" alt="Puerto Rico" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/pr.svg" alt="Puerto Rico" width="32" height="32" decoding="async" loading="eager" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="dr" title="Dominican Republic">
-	                <img class="avatar-flag-img" src="/flags/circle/dr.svg" alt="Dominican Republic" width="32" height="32" decoding="async" loading="eager" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/do.svg" alt="Dominican Republic" width="32" height="32" decoding="async" loading="eager" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="jamaica" title="Jamaica">
-	                <img class="avatar-flag-img" src="/flags/circle/jamaica.svg" alt="Jamaica" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/jm.svg" alt="Jamaica" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="haiti" title="Haiti">
-	                <img class="avatar-flag-img" src="/flags/circle/haiti.svg" alt="Haiti" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/ht.svg" alt="Haiti" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
               <!-- Central & South America -->
 	              <div class="avatar-option" data-avatar="mexico" title="Mexico">
-	                <img class="avatar-flag-img" src="/flags/circle/mexico.svg" alt="Mexico" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/mx.svg" alt="Mexico" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="venezuela" title="Venezuela">
-	                <img class="avatar-flag-img" src="/flags/circle/venezuela.svg" alt="Venezuela" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/ve.svg" alt="Venezuela" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="colombia" title="Colombia">
-	                <img class="avatar-flag-img" src="/flags/circle/colombia.svg" alt="Colombia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/co.svg" alt="Colombia" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="panama" title="Panama">
-	                <img class="avatar-flag-img" src="/flags/circle/panama.svg" alt="Panama" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/pa.svg" alt="Panama" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="nicaragua" title="Nicaragua">
-	                <img class="avatar-flag-img" src="/flags/circle/nicaragua.svg" alt="Nicaragua" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/ni.svg" alt="Nicaragua" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="honduras" title="Honduras">
-	                <img class="avatar-flag-img" src="/flags/circle/honduras.svg" alt="Honduras" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/hn.svg" alt="Honduras" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="brazil" title="Brazil">
-	                <img class="avatar-flag-img" src="/flags/circle/brazil.svg" alt="Brazil" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/br.svg" alt="Brazil" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="argentina" title="Argentina">
-	                <img class="avatar-flag-img" src="/flags/circle/argentina.svg" alt="Argentina" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/ar.svg" alt="Argentina" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="peru" title="Peru">
-	                <img class="avatar-flag-img" src="/flags/circle/peru.svg" alt="Peru" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/pe.svg" alt="Peru" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="ecuador" title="Ecuador">
-	                <img class="avatar-flag-img" src="/flags/circle/ecuador.svg" alt="Ecuador" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/ec.svg" alt="Ecuador" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="chile" title="Chile">
-	                <img class="avatar-flag-img" src="/flags/circle/chile.svg" alt="Chile" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/cl.svg" alt="Chile" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
               <!-- North America & Europe -->
 	              <div class="avatar-option" data-avatar="canada" title="Canada">
-	                <img class="avatar-flag-img" src="/flags/circle/canada.svg" alt="Canada" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/ca.svg" alt="Canada" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="spain" title="Spain">
-	                <img class="avatar-flag-img" src="/flags/circle/spain.svg" alt="Spain" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/es.svg" alt="Spain" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="italy" title="Italy">
-	                <img class="avatar-flag-img" src="/flags/circle/italy.svg" alt="Italy" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/it.svg" alt="Italy" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="france" title="France">
-	                <img class="avatar-flag-img" src="/flags/circle/france.svg" alt="France" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/fr.svg" alt="France" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="germany" title="Germany">
-	                <img class="avatar-flag-img" src="/flags/circle/germany.svg" alt="Germany" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/de.svg" alt="Germany" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="uk" title="United Kingdom">
-	                <img class="avatar-flag-img" src="/flags/circle/uk.svg" alt="United Kingdom" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/gb.svg" alt="United Kingdom" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
 	              <div class="avatar-option" data-avatar="portugal" title="Portugal">
-	                <img class="avatar-flag-img" src="/flags/circle/portugal.svg" alt="Portugal" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
+	                <img class="avatar-flag-img" src="https://flagcdn.com/pt.svg" alt="Portugal" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
 	              </div>
             </div>
           </div>
@@ -12835,25 +13165,55 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }, 80);
       }
 
+      // Track form interaction state - prevents snap re-engaging while user is filling form
+      let formIsBeingInteracted = false;
+      let formInteractionTimeout = null;
+
+      // Mark form as being interacted with when user touches/focuses form elements
+      const formShellEl = document.getElementById('formShell');
+      if (formShellEl) {
+        formShellEl.addEventListener('focusin', () => {
+          formIsBeingInteracted = true;
+          if (formInteractionTimeout) clearTimeout(formInteractionTimeout);
+        });
+        formShellEl.addEventListener('focusout', () => {
+          formInteractionTimeout = setTimeout(() => { formIsBeingInteracted = false; }, 1500);
+        });
+        formShellEl.addEventListener('touchstart', () => {
+          formIsBeingInteracted = true;
+          if (formInteractionTimeout) clearTimeout(formInteractionTimeout);
+        }, { passive: true });
+      }
+
       // Re-enable scroll-snap when user scrolls away from form panel
-      // This fixes the issue where scroll-snap stays disabled after visiting the form
+      // Per Tobias audit: Only re-enable on explicit "back" gesture (not while interacting)
       storyEl?.addEventListener('scroll', () => {
         if (!scrollSnapDisabledForForm) return;
 
         const formPanel = document.querySelector('.panel--form');
         if (!formPanel) return;
 
+        // Don't re-enable snap while user is actively filling out the form
+        if (formIsBeingInteracted) return;
+
         const formRect = formPanel.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
 
+        // Update scroll indicator visibility
+        const formContent = formPanel.querySelector('.panel-content');
+        if (formContent) {
+          const contentBottom = formContent.getBoundingClientRect().bottom;
+          formPanel.classList.toggle('has-scroll-content', contentBottom > viewportHeight - 46);
+          formPanel.classList.toggle('scrolled-to-bottom', contentBottom <= viewportHeight);
+        }
+
         // If form panel is mostly out of view (less than 30% visible), re-enable snap
         if (formRect.top > viewportHeight * 0.7 || formRect.bottom < viewportHeight * 0.3) {
-          // Enable smooth scroll so snap correction feels like a camera cut
           storyEl.style.scrollBehavior = 'smooth';
           storyEl.style.scrollSnapType = '';
           scrollSnapDisabledForForm = false;
+          formPanel.classList.remove('has-scroll-content', 'scrolled-to-bottom');
 
-          // Reset scroll behavior after snap settles
           setTimeout(() => {
             if (storyEl) storyEl.style.scrollBehavior = '';
           }, 500);
@@ -12964,15 +13324,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           scrollBlockTarget.removeEventListener('wheel', preventScroll);
           scrollBlockTarget.removeEventListener('touchmove', preventScroll);
 
-          // Opacity dip during snap correction - creates "camera cut" feel
+          // Opacity + blur dip during snap correction - creates "camera cut" feel
           // Masks any positional micro-jerk when scroll-snap kicks in
           // Extended to 120ms with ease-in-out for smoother masking (brain perceives ~16ms shifts)
+          // Subtle blur (0.5px) further softens edges during correction
           if (storyEl) {
             storyEl.style.opacity = '0.92';
-            storyEl.style.transition = 'opacity 120ms ease-in-out';
+            storyEl.style.filter = 'blur(0.5px)';
+            storyEl.style.transition = 'opacity 120ms ease-in-out, filter 120ms ease-in-out';
             setTimeout(() => {
               if (storyEl) {
                 storyEl.style.opacity = '1';
+                storyEl.style.filter = '';
                 // Clear transition after settling
                 setTimeout(() => {
                   if (storyEl) storyEl.style.transition = '';

@@ -299,7 +299,12 @@
 - [x] **Registration flow: La Mesa teaming** — Players register solo, team up in La Mesa chat (replaced Commissioner pairing)
 - [x] **Email time updated** — Event time changed from 7PM to 6PM
 - [x] **Success + Footer polish** — Success layout fills screen evenly; form→footer dissolve; footer darkened for readability
-- [x] **Terms copy tweak** — “hablando mierda (talking trash)” phrasing
+- [x] **Terms copy tweak** — "hablando mierda (talking trash)" phrasing
+- [x] **Tobias Scroll Audit: Hint Timing** — Standardized all scroll hints to 2.5s delay for consistent rhythm
+- [x] **Tobias Scroll Audit: Lock Durations** — Reduced panel locks (Whisper 8.5→6.5s, Build 13→8s, Slam 6→5s, Rules 3→2.5s) for "room" feel not "trapped"
+- [x] **Tobias Scroll Audit: Micro-Jerk Mask** — Extended opacity dip to 120ms + added 0.5px blur for smoother camera-cut transitions
+- [x] **Tobias Scroll Audit: Panel Transitions** — Enhanced opacity (0.85→1.0) + scale (0.985→1) + blur (0.3px→0) for real "camera cut" feel
+- [x] **Tobias Scroll Audit: Form Panel** — Added scroll indicator gradient + form interaction tracking to prevent snap re-engaging while filling form
 
 ---
 
@@ -353,7 +358,7 @@ Since Git cannot be added to direct-upload projects, we created a new Git-connec
 
 ---
 
-**Last Updated:** January 23, 2026 (UI Polish: Flag Scroll + Success/Footer + La Ley Plaque)
+**Last Updated:** January 24, 2026 (Tobias Scroll Audit: All remaining fixes implemented)
 
 *"La mesa te espera."*
 
