@@ -7716,8 +7716,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Use viewport width since percentage doesn't work in scroll context */
 	      .avatar-selector__spacer {
 	        flex-shrink: 0;
-	        width: calc(50vw - 24px); /* Half viewport minus half avatar-option width (48px / 2) */
-	        max-width: calc(250px - 24px); /* Cap at half of max-width (500px) */
+	        width: calc(50vw - 36px); /* Half viewport minus (half option width + gap) */
+	        max-width: calc(250px - 36px); /* Cap at half of max-width (500px) */
 	        height: 1px;
 	        pointer-events: none;
 	      }
@@ -8413,13 +8413,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           margin: 12px 0 16px 0;
         }
 
-        .avatar-selector {
-          gap: 10px;
-          /* Mobile needs extra headroom for glow + slam */
-          padding: 26px 0; /* Vertical only - spacers handle horizontal */
-          flex-grow: 0;
-          scroll-padding-inline: 0;
-        }
+	        .avatar-selector {
+	          gap: 10px;
+	          /* Mobile needs extra headroom for glow + slam */
+	          padding: 26px 0; /* Vertical only - spacers handle horizontal */
+	          flex-grow: 0;
+	          scroll-padding-inline: 0;
+	        }
+	        .avatar-selector__spacer {
+	          width: calc(50vw - 32px); /* Half viewport minus (half option width + gap) */
+	          max-width: calc(250px - 32px);
+	        }
 
         .chat-identity__input {
           max-width: 240px;
@@ -15249,12 +15253,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           }
           vibrate(10);
 
-          // Re-initialize spacers now that panel is visible
-          setTimeout(() => {
-            if (window.updateSpacerWidth) window.updateSpacerWidth();
-            const cubaFlag = document.querySelector('[data-avatar="cuba"]');
-            if (cubaFlag) cubaFlag.scrollIntoView({ behavior: 'instant', inline: 'center', block: 'nearest' });
-          }, 50);
+	          // Re-initialize spacers now that panel is visible
+	          setTimeout(() => {
+	            if (window.updateSpacerWidth) window.updateSpacerWidth();
+	            const cubaFlag = document.querySelector('[data-avatar="cuba"]');
+	            if (cubaFlag) centerAvatarOption(cubaFlag, 'instant');
+	          }, 50);
 
           // Focus input if joined
           if (chatBodyContainer && chatBodyContainer.style.display !== 'none') {
@@ -15484,9 +15488,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       // Identity State (Continued)
 
-      // Avatar selection - Tobias: "Does picking your seat feel like pulling up a chair?"
-      const avatarOptions = document.querySelectorAll('.avatar-option');
-      const avatarSelector = document.querySelector('.avatar-selector');
+	      // Avatar selection - Tobias: "Does picking your seat feel like pulling up a chair?"
+	      const avatarOptions = document.querySelectorAll('.avatar-option');
+	      const avatarSelector = document.querySelector('.avatar-selector');
+	      const avatarSelectorFrame = document.querySelector('.avatar-selector-frame');
 
       // Country display elements - Olympic ceremony style
       const countryDisplay = document.getElementById('countryDisplay');
@@ -15502,8 +15507,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       let suppressSettleHapticUntil = 0;
 
       // Update country name display
-      function updateCountryDisplay(countryName, isConfirmed = false) {
-        if (!countryNameEl || !countryHintEl) return;
+	      function updateCountryDisplay(countryName, isConfirmed = false) {
+	        if (!countryNameEl || !countryHintEl) return;
 
         countryNameEl.textContent = countryName || '';
         countryNameEl.classList.toggle('is-visible', !!countryName);
@@ -15516,12 +15521,44 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           setTimeout(() => countryDisplay?.classList.remove('is-confirmed'), 400);
         } else {
           countryHintEl.textContent = 'Tap to represent';
-        }
-      }
+	        }
+	      }
 
-      avatarOptions.forEach(opt => {
-        opt.addEventListener('click', () => {
-          if (opt.dataset.avatar === selectedAvatar && opt.classList.contains('selected')) return;
+	      function getAvatarRingCenterX() {
+	        const frameRect = avatarSelectorFrame?.getBoundingClientRect();
+	        if (frameRect) return frameRect.left + (frameRect.width / 2);
+
+	        const containerRect = avatarSelector?.getBoundingClientRect();
+	        if (containerRect) return containerRect.left + (containerRect.width / 2);
+
+	        return null;
+	      }
+
+	      function getAvatarOptionCenterDeltaFromRing(opt) {
+	        if (!opt) return 0;
+	        const ringCenterX = getAvatarRingCenterX();
+	        if (ringCenterX == null) return 0;
+	        const rect = opt.getBoundingClientRect();
+	        const centerX = rect.left + (rect.width / 2);
+	        return centerX - ringCenterX;
+	      }
+
+	      function centerAvatarOption(opt, behavior = 'smooth') {
+	        if (!avatarSelector || !opt) return;
+	        const delta = getAvatarOptionCenterDeltaFromRing(opt);
+	        if (!Number.isFinite(delta)) return;
+	        if (Math.abs(delta) < 0.5) return;
+
+	        const normalizedBehavior = behavior === 'instant' ? 'auto' : behavior;
+	        avatarSelector.scrollTo({
+	          left: avatarSelector.scrollLeft + delta,
+	          behavior: normalizedBehavior,
+	        });
+	      }
+
+	      avatarOptions.forEach(opt => {
+	        opt.addEventListener('click', () => {
+	          if (opt.dataset.avatar === selectedAvatar && opt.classList.contains('selected')) return;
 
           // Remove selected from others (keep the chosen one stable)
           avatarOptions.forEach(o => {
@@ -15543,35 +15580,32 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
           // Olympic stamp effect - confirm country selection
           const countryName = opt.getAttribute('title') || selectedAvatar;
-          updateCountryDisplay(countryName, true);
+	          updateCountryDisplay(countryName, true);
 
-          // Center the selected flag - this is a deliberate user action, not scroll-end
-          // The jitter was caused by settleAvatarScroll(), not this click handler
-          try {
-            opt.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-          } catch {}
+	          // Center the selected flag precisely to the golden ring (Safari can be off by a few px with scrollIntoView)
+	          centerAvatarOption(opt, 'smooth');
 
-          suppressSettleHapticUntil = Date.now() + 400;
-        });
-      });
+	          suppressSettleHapticUntil = Date.now() + 400;
+	        });
+	      });
 
-      function getClosestAvatarOptionToCenter() {
-        if (!avatarSelector || !avatarOptions.length) return null;
-        const containerRect = avatarSelector.getBoundingClientRect();
-        const containerCenterX = containerRect.left + (containerRect.width / 2);
-        let closest = null;
-        let closestDistance = Infinity;
-        avatarOptions.forEach((opt) => {
-          const rect = opt.getBoundingClientRect();
-          const centerX = rect.left + (rect.width / 2);
-          const distance = Math.abs(centerX - containerCenterX);
-          if (distance < closestDistance) {
-            closestDistance = distance;
-            closest = opt;
-          }
-        });
-        return closest;
-      }
+	      function getClosestAvatarOptionToCenter() {
+	        if (!avatarSelector || !avatarOptions.length) return null;
+	        const ringCenterX = getAvatarRingCenterX();
+	        if (ringCenterX == null) return null;
+	        let closest = null;
+	        let closestDistance = Infinity;
+	        avatarOptions.forEach((opt) => {
+	          const rect = opt.getBoundingClientRect();
+	          const centerX = rect.left + (rect.width / 2);
+	          const distance = Math.abs(centerX - ringCenterX);
+	          if (distance < closestDistance) {
+	            closestDistance = distance;
+	            closest = opt;
+	          }
+	        });
+	        return closest;
+	      }
 
       function setCenteredAvatarOption(opt) {
         if (!opt) return;
@@ -15603,11 +15637,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         setCenteredAvatarOption(closest);
       }
 
-      function settleAvatarScroll() {
-        if (!avatarSelector) return;
-        if (avatarPointerDown) return;
-        const closest = getClosestAvatarOptionToCenter();
-        if (!closest) return;
+	      function settleAvatarScroll() {
+	        if (!avatarSelector) return;
+	        if (avatarPointerDown) return;
+	        const closest = getClosestAvatarOptionToCenter();
+	        if (!closest) return;
 
         const nextCentered = closest.dataset.avatar || null;
         const shouldHaptic =
@@ -15615,13 +15649,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           && centeredAvatar
           && nextCentered
           && nextCentered !== centeredAvatar;
-        setCenteredAvatarOption(closest);
+	        setCenteredAvatarOption(closest);
 
-        // CSS scroll-snap handles positioning - we only update visual state here
-        // Removing scrollIntoView eliminates the CSS/JS snap conflict that caused jitter
+	        // Safari can land a pixel or two off the ring even after scroll-snap; nudge to perfection.
+	        centerAvatarOption(closest, 'instant');
 
-        if (shouldHaptic) vibrate(6);
-      }
+	        if (shouldHaptic) vibrate(6);
+	      }
 
       if (avatarSelector) {
         const scheduleScrollEnd = () => {
@@ -15687,16 +15721,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         window.addEventListener('resize', window.updateSpacerWidth);
 
         // Runway animation: center Cuba then peek to hint more flags exist
-        function initializeAvatarRunway() {
-          const cubaFlag = avatarSelector.querySelector('[data-avatar="cuba"]');
-          if (!cubaFlag) return;
+	        function initializeAvatarRunway() {
+	          const cubaFlag = avatarSelector.querySelector('[data-avatar="cuba"]');
+	          if (!cubaFlag) return;
+	          const usaFlag = avatarSelector.querySelector('[data-avatar="usa"]');
 
-          // Ensure spacers are sized before centering
-          updateSpacerWidth();
+	          // Ensure spacers are sized before centering
+	          updateSpacerWidth();
 
-          // Center Cuba first (instant, no animation)
-          cubaFlag.scrollIntoView({ behavior: 'instant', inline: 'center', block: 'nearest' });
-          setCenteredAvatarOption(cubaFlag);
+	          // Center Cuba first (instant, no animation)
+	          centerAvatarOption(cubaFlag, 'instant');
+	          setCenteredAvatarOption(cubaFlag);
 
           // Cuba starts selected - show as confirmed
           if (cubaFlag.classList.contains('selected')) {
@@ -15704,14 +15739,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             updateCountryDisplay('Cuba', true);
           }
 
-          // After entrance animation completes, peek right to hint more flags exist
-          setTimeout(() => {
-            avatarSelector.scrollBy({ left: 60, behavior: 'smooth' });
-            setTimeout(() => {
-              cubaFlag.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-            }, 400);
-          }, 900);
-        }
+	          // After entrance animation completes, peek right to hint more flags exist
+	          setTimeout(() => {
+	            const peekStep = usaFlag && cubaFlag ? (usaFlag.offsetLeft - cubaFlag.offsetLeft) : 60;
+	            avatarSelector.scrollBy({ left: peekStep, behavior: 'smooth' });
+	            setTimeout(() => {
+	              centerAvatarOption(cubaFlag, 'smooth');
+	            }, 400);
+	          }, 900);
+	        }
 
         // Run runway when identity screen is visible
         requestAnimationFrame(initializeAvatarRunway);
