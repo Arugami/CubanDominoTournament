@@ -475,7 +475,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	          transparent 78%
 	        );
 	        z-index: -1;
-	        opacity: 0.6;  /* Match animation start value - prevents flicker */
+	        opacity: 0;  /* Start invisible, animate in with tile */
+        animation: shadowAppear 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
 	        will-change: transform, opacity;
 	        -webkit-backface-visibility: hidden;
 	        backface-visibility: hidden;
@@ -483,6 +484,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Shadow breathes with tile */
       .loading-screen.is-breathing .cdl-tile::after {
+        opacity: 0.6;  /* Reset base state for breathing phase */
         animation: shadowBreath 6s ease-in-out infinite;
       }
 
@@ -500,6 +502,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 		          opacity: 0.7;
 		        }
 		      }
+
+      @keyframes shadowAppear {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 0.6;
+        }
+      }
 
       @keyframes tileAppear {
         0% {
@@ -5313,12 +5324,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .chat-header__title {
-        font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
-        font-weight: 700;
-        font-size: 1.1rem;
+        font-family: "SF Sports Night", "Bodoni Moda", serif;
+        font-weight: 400;
+        font-size: 1.3rem;
         color: var(--brass);
         text-transform: uppercase;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.15em;
         text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         position: relative;
         padding-bottom: 8px;
@@ -5607,8 +5618,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	      /* Circular flag assets (for selector) */
 	      .avatar-flag-img {
-	        width: 32px;
-	        height: 32px;
+	        width: 40px;
+	        height: 40px;
 	        display: block;
 	        border-radius: 50%;
 	        object-fit: cover;
@@ -5617,7 +5628,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        -webkit-user-drag: none;
 	        pointer-events: none;
 	        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
-	        transition: transform 0.15s ease, box-shadow 0.15s ease;
+	        transition: transform 0.2s ease, box-shadow 0.2s ease;
 	      }
 
 	      /* Country name label above flag - HIDDEN */
@@ -5631,11 +5642,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        }
 	      }
 
+	      /* Selected flag - no ring, just subtle enhancement (ring is on center cue) */
 	      .avatar-option.selected .avatar-flag-img {
-	        box-shadow:
-	          0 0 0 2px rgba(212, 165, 116, 0.8),
-	          0 2px 8px rgba(0, 0, 0, 0.55),
-	          0 0 16px rgba(212, 165, 116, 0.5);
+	        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
 	      }
 
       /* Flag in chat messages - inline with name */
@@ -7626,24 +7635,59 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow: visible; /* Allow selector to expand */
       }
 
-      /* Edge fades removed - flags float cleanly without artificial void rectangle */
+      /* Subtle edge fades to hint more content exists */
+      .avatar-selector-frame::before,
+      .avatar-selector-frame::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+        pointer-events: none;
+        z-index: 10;
+        opacity: 0.85;
+      }
+      .avatar-selector-frame::before {
+        left: 0;
+        background: linear-gradient(to right, rgba(20, 14, 11, 1) 0%, transparent 100%);
+      }
+      .avatar-selector-frame::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(20, 14, 11, 1) 0%, transparent 100%);
+      }
 
-      /* Center seat cue - a faint offering circle */
+      /* Center selector ring - THE golden ring that indicates current choice */
       .avatar-selector__center-cue {
         position: absolute;
         left: 50%;
         top: 50%;
-        width: 54px;
-        height: 54px;
+        width: 52px;
+        height: 52px;
         transform: translate(-50%, -50%);
         border-radius: 999px;
-        background: radial-gradient(circle, rgba(212, 165, 116, 0.09) 0%, transparent 62%);
+        background: transparent;
         box-shadow:
-          0 0 0 1px rgba(212, 165, 116, 0.12),
-          0 0 28px rgba(212, 165, 116, 0.12);
-        opacity: 0.7;
+          0 0 0 2.5px rgba(212, 165, 116, 0.85),
+          0 0 16px rgba(212, 165, 116, 0.4),
+          inset 0 0 12px rgba(212, 165, 116, 0.15);
         pointer-events: none;
-        z-index: 0;
+        z-index: 10;
+        animation: selectorRingPulse 2.5s ease-in-out infinite;
+      }
+
+      @keyframes selectorRingPulse {
+        0%, 100% {
+          box-shadow:
+            0 0 0 2.5px rgba(212, 165, 116, 0.85),
+            0 0 16px rgba(212, 165, 116, 0.4),
+            inset 0 0 12px rgba(212, 165, 116, 0.15);
+        }
+        50% {
+          box-shadow:
+            0 0 0 3px rgba(212, 165, 116, 1),
+            0 0 24px rgba(212, 165, 116, 0.55),
+            inset 0 0 12px rgba(212, 165, 116, 0.2);
+        }
       }
 
       .avatar-selector {
@@ -7662,18 +7706,69 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 1;
         flex-grow: 0;
         scroll-snap-type: x mandatory;
-        scroll-padding-inline: 32px;
+        scroll-padding-inline: 0; /* Spacers handle centering */
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
       }
       .avatar-selector::-webkit-scrollbar { display: none; }
 
-      /* Scrollable spacers so edge flags are reachable */
-      .avatar-selector::before,
-      .avatar-selector::after {
-        content: '';
-        flex-shrink: 0;
-        width: 80px; /* Same as original padding */
+      /* Scrollable spacers so edge flags can reach center */
+      /* Use viewport width since percentage doesn't work in scroll context */
+	      .avatar-selector__spacer {
+	        flex-shrink: 0;
+	        width: calc(50vw - 24px); /* Half viewport minus half avatar-option width (48px / 2) */
+	        max-width: calc(250px - 24px); /* Cap at half of max-width (500px) */
+	        height: 1px;
+	        pointer-events: none;
+	      }
+
+      /* Country name display - Olympic ceremony style */
+      .country-display {
+        text-align: center;
+        margin: 8px 0 20px 0;
+        min-height: 48px;
+      }
+
+      .country-display__name {
+        font-family: "SF Sports Night", "Bodoni Moda", serif;
+        font-size: 1.4rem;
+        color: var(--brass);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin: 0;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+
+      .country-display__name.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .country-display__hint {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.4);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-top: 6px;
+        opacity: 0;
+        transition: opacity 0.3s ease 0.1s;
+      }
+
+      .country-display__hint.is-visible {
+        opacity: 1;
+      }
+
+      .country-display.is-confirmed .country-display__name {
+        animation: countryStamp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes countryStamp {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.15); }
+        100% { transform: scale(1); }
       }
 
       .avatar-hint {
@@ -7792,8 +7887,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: translateY(-2px) scale(0.98);
         filter: grayscale(0.08) contrast(1.2) saturate(1.25);
       }
+	      /* Centered flag - just scale up, no ring (ring is on center cue) */
 	      .avatar-option.is-centered:not(.selected) .avatar-flag-img {
-	        transform: scale(1.04);
+	        transform: scale(1.08);
+	        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 	      }
 
       /* Snap animation when flag enters center - tactile "click" feel */
@@ -8319,9 +8416,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .avatar-selector {
           gap: 10px;
           /* Mobile needs extra headroom for glow + slam */
-          padding: 26px 60px; /* Proportional mobile padding */
+          padding: 26px 0; /* Vertical only - spacers handle horizontal */
           flex-grow: 0;
-          scroll-padding-inline: 20px;
+          scroll-padding-inline: 0;
         }
 
         .chat-identity__input {
@@ -12633,6 +12730,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <div class="avatar-selector-frame">
             <span class="avatar-selector__center-cue" aria-hidden="true"></span>
             <div class="avatar-selector">
+              <!-- Spacer for scroll centering -->
+              <div class="avatar-selector__spacer" aria-hidden="true"></div>
               <!-- 1. PRIORITY: Cuba & USA -->
               <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
                 <img class="avatar-flag-img" src="https://flagcdn.com/cu.svg" alt="Cuba" width="32" height="32" decoding="async" loading="eager" draggable="false" />
@@ -13308,9 +13407,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <div class="avatar-option" data-avatar="tokelau" title="Tokelau">
                 <img class="avatar-flag-img" src="https://flagcdn.com/tk.svg" alt="Tokelau" width="32" height="32" decoding="async" loading="lazy" draggable="false" />
               </div>
+              <!-- Spacer for scroll centering -->
+              <div class="avatar-selector__spacer" aria-hidden="true"></div>
             </div>
           </div>
-          <p class="avatar-hint">Scroll to find your flag</p>
+
+          <!-- Country Name Display - Olympic ceremony style -->
+          <div class="country-display" id="countryDisplay">
+            <p class="country-display__name" id="countryName">Cuba</p>
+            <p class="country-display__hint" id="countryHint">Tap to represent</p>
+          </div>
 
           <!-- Custom Dropdown -->
           <div class="custom-select" id="customSelect">
@@ -15143,6 +15249,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           }
           vibrate(10);
 
+          // Re-initialize spacers now that panel is visible
+          setTimeout(() => {
+            if (window.updateSpacerWidth) window.updateSpacerWidth();
+            const cubaFlag = document.querySelector('[data-avatar="cuba"]');
+            if (cubaFlag) cubaFlag.scrollIntoView({ behavior: 'instant', inline: 'center', block: 'nearest' });
+          }, 50);
+
           // Focus input if joined
           if (chatBodyContainer && chatBodyContainer.style.display !== 'none') {
              setTimeout(() => chatInput.focus(), 100);
@@ -15375,12 +15488,36 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const avatarOptions = document.querySelectorAll('.avatar-option');
       const avatarSelector = document.querySelector('.avatar-selector');
 
+      // Country display elements - Olympic ceremony style
+      const countryDisplay = document.getElementById('countryDisplay');
+      const countryNameEl = document.getElementById('countryName');
+      const countryHintEl = document.getElementById('countryHint');
+      let isCountryConfirmed = false;
+
       // Scroll polish: subtle "magnetic" settle + centered focus (minimal, no UI chrome)
       let avatarScrollEndTimer = null;
       let avatarScrollRaf = null;
       let avatarPointerDown = false;
       let centeredAvatar = null;
       let suppressSettleHapticUntil = 0;
+
+      // Update country name display
+      function updateCountryDisplay(countryName, isConfirmed = false) {
+        if (!countryNameEl || !countryHintEl) return;
+
+        countryNameEl.textContent = countryName || '';
+        countryNameEl.classList.toggle('is-visible', !!countryName);
+        countryHintEl.classList.toggle('is-visible', !!countryName && !isConfirmed);
+
+        if (isConfirmed) {
+          countryDisplay?.classList.add('is-confirmed');
+          countryHintEl.textContent = 'Representing';
+          countryHintEl.classList.add('is-visible');
+          setTimeout(() => countryDisplay?.classList.remove('is-confirmed'), 400);
+        } else {
+          countryHintEl.textContent = 'Tap to represent';
+        }
+      }
 
       avatarOptions.forEach(opt => {
         opt.addEventListener('click', () => {
@@ -15399,8 +15536,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           opt.classList.add('selected');
           opt.classList.add('is-slamming');
           vibrate([8, 20, 8]); // Tobias: Flag selection haptic burst
+          playTick(); // Audio feedback for iOS
 
           selectedAvatar = opt.dataset.avatar;
+          isCountryConfirmed = true;
+
+          // Olympic stamp effect - confirm country selection
+          const countryName = opt.getAttribute('title') || selectedAvatar;
+          updateCountryDisplay(countryName, true);
 
           // Center the selected flag - this is a deliberate user action, not scroll-end
           // The jitter was caused by settleAvatarScroll(), not this click handler
@@ -15447,6 +15590,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
 
         centeredAvatar = opt.dataset.avatar || null;
+
+        // Update country name display (use title attribute for display name)
+        const countryName = opt.getAttribute('title') || centeredAvatar;
+        const isSelected = opt.classList.contains('selected');
+        updateCountryDisplay(countryName, isSelected);
       }
 
       function updateAvatarCenteredState() {
@@ -15518,14 +15666,43 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         // Initial centered state once the layout is ready.
         requestAnimationFrame(updateAvatarCenteredState);
 
+        // Set spacer width dynamically based on container width
+        // Make global so it can be called when chat panel opens
+        window.updateSpacerWidth = function() {
+          const frame = document.querySelector('.avatar-selector-frame');
+          const spacers = document.querySelectorAll('.avatar-selector__spacer');
+          if (!frame || !spacers.length) return;
+
+          const frameWidth = frame.offsetWidth;
+          if (frameWidth === 0) return; // Panel not visible yet
+
+          // Calculate: half frame - half option width - gap
+          const isMobile = window.innerWidth <= 768;
+          const optionWidth = isMobile ? 44 : 48;
+          const gap = isMobile ? 10 : 12;
+          const spacerWidth = (frameWidth / 2) - (optionWidth / 2) - gap;
+          spacers.forEach(s => s.style.width = Math.max(0, spacerWidth) + 'px');
+        };
+        window.updateSpacerWidth();
+        window.addEventListener('resize', window.updateSpacerWidth);
+
         // Runway animation: center Cuba then peek to hint more flags exist
         function initializeAvatarRunway() {
           const cubaFlag = avatarSelector.querySelector('[data-avatar="cuba"]');
           if (!cubaFlag) return;
 
+          // Ensure spacers are sized before centering
+          updateSpacerWidth();
+
           // Center Cuba first (instant, no animation)
           cubaFlag.scrollIntoView({ behavior: 'instant', inline: 'center', block: 'nearest' });
           setCenteredAvatarOption(cubaFlag);
+
+          // Cuba starts selected - show as confirmed
+          if (cubaFlag.classList.contains('selected')) {
+            isCountryConfirmed = true;
+            updateCountryDisplay('Cuba', true);
+          }
 
           // After entrance animation completes, peek right to hint more flags exist
           setTimeout(() => {
