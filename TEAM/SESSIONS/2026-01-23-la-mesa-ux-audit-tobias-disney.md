@@ -1004,3 +1004,25 @@ Minimum viable live-match behavior (no game integration required yet):
 - Identity count reframed to **“active today”** (honest signal before presence exists).
 - Chat message cards now render **above** the smoke/texture layer for legibility (room stays atmospheric without killing contrast).
 - Dock/peek affordance tightened: button flips between **Dock ↔ Expand**, peek mode hides heavy ritual controls to keep the second screen clean.
+
+### Jan 26, 2026 — Agent Browser Walkthrough (Flow Verification)
+
+**Goal:** Validate the real user flow (end-to-end) and confirm the **second-screen** behavior works in practice.
+
+**Flow (what a player does):**
+1. **Sees ticker** → taps **Open La Mesa** from the bottom bar.
+2. **Claim your seat** appears (flag row + “active today” + name picker).
+3. Taps **Take your seat** → transitions into the chat room.
+4. Uses the room in two modes:
+   - **Full (in the room):** Ritual strip + messages + composer.
+   - **Peek (second screen):** Docked state stays open while you keep doing other things.
+
+**Verified behaviors (works):**
+- **Dock ↔ Expand** reliably swaps Full/Peek. Peek hides the “heavy” controls so the panel feels like a live-match companion.
+- **Who’s here** opens a presence sheet; tapping a person auto-inserts an `@Name` mention into the input.
+- **Looking for partner** toggle reflects in the presence sheet as an `LFG` badge.
+- **Quick talk** chips append into the input; sending a message clears the composer and adds to the transcript.
+
+**Friction / notes to address next:**
+- Presence sheet close triggers an accessibility warning (`aria-hidden` while focus remains) → needs focus management or `inert`.
+- Static build (served from `dist/`) falls back to mock roster when `/api/players` isn’t available (expected in this mode).
