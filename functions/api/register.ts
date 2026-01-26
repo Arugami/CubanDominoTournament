@@ -60,6 +60,41 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const secret = env.APP_SCRIPT_SECRET;
   if (!appScriptUrl || !secret) return json({ ok: false, error: "missing_server_env" }, { status: 500 });
 
+  const supabaseUrl = clean(env.SUPABASE_URL);
+  const serviceKey = clean(env.SUPABASE_SERVICE_ROLE_KEY);
+  const origin = new URL(request.url).origin;
+
+  // Optional: create a one-click "door key" link for La Mesa that can be embedded in the registration confirmation email.
+  // This keeps the flow to a single email: register -> receive confirmation (with key) -> enter La Mesa.
+  let mesaLoginLink = "";
+  if (supabaseUrl && serviceKey) {
+    try {
+      const url = new URL("/auth/v1/admin/generate_link", supabaseUrl);
+      const redirectTo = `${origin}/mesa/callback`;
+      const res = await fetch(url.toString(), {
+        method: "POST",
+        headers: {
+          apikey: serviceKey,
+          authorization: `Bearer ${serviceKey}`,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "magiclink",
+          email: email.toLowerCase(),
+          options: { redirectTo },
+        }),
+      });
+
+      const linkJson = await res.json().catch(() => null);
+      mesaLoginLink =
+        (linkJson && typeof linkJson === "object" && (linkJson as any).action_link)
+          ? String((linkJson as any).action_link)
+          : "";
+    } catch {
+      mesaLoginLink = "";
+    }
+  }
+
   // Individual player registration payload
   const payload = {
     secret,
@@ -69,6 +104,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     notes: clean(body.notes),
     ruleConfirm: clean(body.ruleConfirm),
     venueUrl: env.VENUE_URL || "https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ",
+    mesaLoginLink,
   };
 
   let upstreamResponse: Response;
@@ -88,8 +124,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (ok) {
     // Best-effort: sync the player into Supabase so La Mesa login can verify seats cross-device.
     // Never block registration success on this sync (Sheets is the primary source for now).
-    const supabaseUrl = clean(env.SUPABASE_URL);
-    const serviceKey = clean(env.SUPABASE_SERVICE_ROLE_KEY);
     let supabaseSynced = false;
 
     if (supabaseUrl && serviceKey) {
@@ -122,7 +156,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       }
     }
 
-    return json({ ok: true, supabaseSynced });
+    return json({ ok: true, supabaseSynced, mesaLoginLinkIncluded: !!mesaLoginLink });
   }
 
   return json(

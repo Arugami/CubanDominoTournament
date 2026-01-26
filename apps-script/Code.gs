@@ -341,6 +341,9 @@ function sendEmailViaResend({ apiKey, from, to, subject, html }) {
 }
 
 function buildConfirmationEmailHTML(body) {
+  const venueUrl = body.venueUrl || "https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ";
+  const mesaLoginLink = String(body.mesaLoginLink || "").trim();
+
   return `
 <!DOCTYPE html>
 <html>
@@ -382,16 +385,26 @@ function buildConfirmationEmailHTML(body) {
     <div style="background: rgba(212, 165, 116, 0.1); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
       <p style="margin: 0 0 8px 0; font-size: 14px; color: #d4a574;"><strong>How it works:</strong></p>
       <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">1. Register solo</p>
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">2. Team up in La Mesa (the group chat)</p>
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">3. Play to 150 points</p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">2. Enter La Mesa (the table)</p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">3. Team up in La Mesa</p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">4. Play to 150 points</p>
       <p style="margin: 0; font-size: 14px; color: #d4a574;"><strong>🏆 Winning team takes the pot!</strong></p>
     </div>
 
     ${body.notes ? `<p style="font-size: 14px; color: #888;">Notes: ${body.notes}</p>` : ''}
 
+    ${mesaLoginLink ? `
+      <div style="text-align: center; margin: 0 0 22px 0;">
+        <a href="${mesaLoginLink}" style="display: inline-block; background: linear-gradient(135deg, #b76a3b 0%, #d4a574 100%); color: #1c130f; text-decoration: none; padding: 14px 22px; border-radius: 10px; font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;">
+          Enter La Mesa
+        </a>
+        <p style="margin: 10px 0 0 0; font-size: 12px; color: #888;">This link is your door key.</p>
+      </div>
+    ` : ''}
+
     <div style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid #3d2e26;">
       <p style="margin: 0 0 16px 0; color: #888; font-size: 14px;">Questions? Email us at <a href="mailto:Erik@cubandominoleague.com" style="color: #d4a574;">Erik@cubandominoleague.com</a></p>
-      <a href="https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ" style="display: inline-block; background: linear-gradient(135deg, #b76a3b 0%, #d4a574 100%); color: #1c130f; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">View Venue</a>
+      <a href="${venueUrl}" style="display: inline-block; background: linear-gradient(135deg, #b76a3b 0%, #d4a574 100%); color: #1c130f; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;">View Venue</a>
     </div>
 
     <p style="text-align: center; margin-top: 32px; font-size: 20px;">La mesa te espera. 🌴</p>

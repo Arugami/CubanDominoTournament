@@ -13633,7 +13633,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       <!-- Headlines -->
       <h2 class="success-headline">You're <span>In</span></h2>
-      <p class="success-subheadline">Check your email for confirmation details</p>
+      <p class="success-subheadline">Your door key is in your email</p>
 
       <!-- Event Details -->
       <div class="event-details">
@@ -16732,7 +16732,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       if (successMesaCta) {
         successMesaCta.addEventListener('click', () => {
           successEl.classList.remove('is-visible');
-          openMesa();
+          void openMesa();
+          // The "success" email is the primary door key. Don't spam more OTP emails here.
+          showMesaAuthGate({ message: 'Check your email for your door key.' });
         });
       }
 

@@ -213,6 +213,40 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     align-items: center;
   }
 
+  /* Sync button - micro-moment (Tobias: felt, not loud) */
+  #syncSheetBtn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 12px;
+  }
+
+  #syncSheetBtn svg {
+    transition: transform 0.2s ease;
+  }
+
+  #syncSheetBtn.is-syncing {
+    border-color: rgba(212, 165, 116, 0.45);
+    box-shadow:
+      0 0 0 2px rgba(212, 165, 116, 0.08),
+      0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  #syncSheetBtn.is-syncing svg {
+    animation: syncSpin 0.9s linear infinite;
+    transform-origin: 50% 50%;
+  }
+
+  #syncSheetBtn:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  @keyframes syncSpin {
+    to { transform: rotate(360deg); }
+  }
+
   .search-box {
     position: relative;
     flex: 1;
@@ -288,8 +322,11 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: 12px;
-    padding: 16px;
+    padding: 18px 16px;
     -webkit-tap-highlight-color: transparent;
+    box-shadow:
+      inset 0 1px 0 rgba(212, 165, 116, 0.06),
+      0 10px 30px rgba(0, 0, 0, 0.25);
   }
 
   .player-card__header {
@@ -312,6 +349,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     font-size: 1.1rem;
     color: var(--ink);
     flex-shrink: 0;
+    border: 1px solid rgba(212, 165, 116, 0.35);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 10px 26px rgba(0, 0, 0, 0.35);
   }
 
   .player-card__info {
@@ -320,15 +361,18 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   }
 
   .player-card__name {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     color: #fff;
     margin-bottom: 2px;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
   }
 
   .player-card__email {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.55);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -339,6 +383,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 12px;
+    align-items: center;
   }
 
   .player-card__actions {
@@ -351,8 +396,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   .action-btn {
     flex: 1;
     padding: 10px 16px;
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-subtle);
     border-radius: 8px;
@@ -380,7 +427,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   .team-badge {
     display: inline-block;
     padding: 4px 10px;
+    font-family: "IBM Plex Sans Condensed", sans-serif;
     font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
     background: rgba(33, 150, 243, 0.1);
     color: #64b5f6;
     border-radius: 4px;
@@ -892,7 +942,12 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
     try {
       if (contextEl) contextEl.textContent = 'syncing from google sheet...';
-      if (syncBtn) syncBtn.setAttribute('disabled', 'true');
+      if (syncBtn) {
+        syncBtn.setAttribute('disabled', 'true');
+        syncBtn.classList.add('is-syncing');
+        syncBtn.setAttribute('aria-busy', 'true');
+        syncBtn.setAttribute('title', 'Syncing…');
+      }
 
       const sheetPlayers = await fetchSheetPlayers(supabase);
       if (sheetPlayers.length === 0) {
@@ -959,7 +1014,12 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       if (window.showToast) window.showToast('Sync failed (check env + auth)');
     } finally {
       isSyncing = false;
-      if (syncBtn) syncBtn.removeAttribute('disabled');
+      if (syncBtn) {
+        syncBtn.removeAttribute('disabled');
+        syncBtn.classList.remove('is-syncing');
+        syncBtn.removeAttribute('aria-busy');
+        syncBtn.setAttribute('title', 'Sync from Google Sheet');
+      }
       if (contextEl && prevContext) contextEl.textContent = prevContext;
     }
   }

@@ -136,6 +136,10 @@
 - [x] BUG-009: La Mesa hub visibility after Claim Seat — fixed scroll-container jump + documented in `DOCS/BUGS/009-la-mesa-hub-visibility-scroll-container.md`
 - [x] La Mesa pre-merge regression checklist added to `DOCS/PLANS/la-mesa-plan.md` (prevents hub hiding regressions)
 - [x] BUG-011: Loader stuck on page load (inline script SyntaxError) — fixed and documented in `DOCS/BUGS/011-loading-screen-stuck-inline-script-syntax-error.md`
+- [ ] La Mesa auth rollout: set Cloudflare env vars `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (server-side)
+- [ ] La Mesa auth rollout: allow redirect URL `/mesa/callback` in Supabase Auth settings
+- [ ] La Mesa auth rollout: apply migration `supabase/migrations/20260126_mesa_player_auth.sql`
+- [ ] La Mesa auth UX: confirmation email includes one-click “Enter La Mesa” door key (ADR-003)
 
 ---
 
