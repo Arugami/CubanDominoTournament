@@ -5997,6 +5997,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	      /* Circular flag assets (for selector) */
 	      .avatar-flag-img {
+	        position: relative;
 	        width: 40px;
 	        height: 40px;
 	        display: block;
@@ -8200,24 +8201,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: linear-gradient(to left, rgba(20, 14, 11, 1) 0%, transparent 100%);
       }
 
-	      /* Center selector ring - THE golden ring that indicates current choice */
-	      .avatar-selector__center-cue {
-	        position: -webkit-sticky;
-	        position: sticky;
-	        left: 50%;
-	        width: 0;
-	        height: 0;
-	        flex: 0 0 0;
-	        align-self: center;
-	        pointer-events: none;
-	        z-index: 30;
-	      }
-
-	      .avatar-selector__center-cue::before {
+	      /* Golden ring tied directly to the flag IMAGE for pixel-perfect centering */
+	      .avatar-option.is-centered .avatar-flag-img::before {
 	        content: '';
 	        position: absolute;
-	        left: 0;
-	        top: 0;
+	        left: 50%;
+	        top: 50%;
 	        width: 52px;
 	        height: 52px;
 	        transform: translate(-50%, -50%);
@@ -8227,16 +8216,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	          0 0 0 2.5px rgba(212, 165, 116, 0.85),
 	          0 0 16px rgba(212, 165, 116, 0.4),
 	          inset 0 0 12px rgba(212, 165, 116, 0.15);
+	        pointer-events: none;
+	        z-index: 5;
 	        animation: selectorRingPulse 2.5s ease-in-out infinite;
-	        transition: transform 180ms cubic-bezier(0.2, 0.9, 0.2, 1);
 	      }
-
-	      /* Make the ring follow ONLY the centered item (never the off-center selection). */
-	      .avatar-selector:has(.avatar-option.selected.is-centered) .avatar-selector__center-cue::before {
-	        transform: translate(-50%, -50%) translateY(-6px) scale(1.12);
-	      }
-	      .avatar-selector:has(.avatar-option.is-centered:not(.selected)) .avatar-selector__center-cue::before {
-	        transform: translate(-50%, -50%) translateY(-3px) scale(1.06);
+	      /* When selected + centered, ring inherits the flag's transform automatically */
+	      .avatar-option.selected.is-centered .avatar-flag-img::before {
+	        /* Ring now moves with the image - no separate adjustment needed */
 	      }
 
       @keyframes selectorRingPulse {
@@ -13350,9 +13336,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <span class="mesa-live-text"><span id="mesaPlayerCount">0</span> active today</span>
           </div>
 
-	          <div class="avatar-selector-frame">
-	            <div class="avatar-selector">
-	              <span class="avatar-selector__center-cue" aria-hidden="true"></span>
+          <div class="avatar-selector-frame">
+            <div class="avatar-selector">
 	              <!-- Spacer for scroll centering -->
 	              <div class="avatar-selector__spacer" aria-hidden="true"></div>
               <!-- 1. PRIORITY: Cuba & USA -->
@@ -16382,7 +16367,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	      // Avatar selection - Tobias: "Does picking your seat feel like pulling up a chair?"
 	      const avatarOptions = document.querySelectorAll('.avatar-option');
 	      const avatarSelector = document.querySelector('.avatar-selector');
-	      const avatarSelectorFrame = document.querySelector('.avatar-selector-frame');
 
       // Country display elements - Olympic ceremony style
       const countryDisplay = document.getElementById('countryDisplay');
@@ -16416,22 +16400,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	      }
 
 	      function getAvatarRingCenterX() {
-	        // Prefer the actual ring anchor element (sticky) so we match what the user sees.
-	        const cue = avatarSelector?.querySelector?.('.avatar-selector__center-cue')
-	          || document.querySelector('.avatar-selector__center-cue');
-	        const cueRect = cue?.getBoundingClientRect?.();
-	        if (cueRect) return cueRect.left + (cueRect.width / 2);
-
-	        // Fallback: ring is intended to be pinned to the scroll container's center.
 	        const selectorRect = avatarSelector?.getBoundingClientRect();
 	        if (selectorRect) return selectorRect.left + (selectorRect.width / 2);
-
-	        const frameRect = avatarSelectorFrame?.getBoundingClientRect();
-	        if (frameRect) return frameRect.left + (frameRect.width / 2);
-
-	        const containerRect = avatarSelector?.getBoundingClientRect();
-	        if (containerRect) return containerRect.left + (containerRect.width / 2);
-
 	        return null;
 	      }
 
@@ -16553,6 +16523,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         const countryName = opt.getAttribute('title') || centeredAvatar;
         const isSelected = opt.classList.contains('selected');
         updateCountryDisplay(countryName, isSelected);
+
       }
 
       function updateAvatarCenteredState() {
@@ -16629,17 +16600,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         // Make global so it can be called when chat panel opens
         window.updateSpacerWidth = function() {
           const frame = document.querySelector('.avatar-selector-frame');
-          const spacers = document.querySelectorAll('.avatar-selector__spacer');
-          if (!frame || !spacers.length) return;
+          const selector = frame?.querySelector('.avatar-selector');
+          const spacers = frame?.querySelectorAll('.avatar-selector__spacer');
+          if (!frame || !selector || !spacers?.length) return;
 
-          const frameWidth = frame.offsetWidth;
-          if (frameWidth === 0) return; // Panel not visible yet
+          const containerWidth = selector.clientWidth || selector.getBoundingClientRect().width;
+          if (!containerWidth) return; // Panel not visible yet
 
-          // Calculate: half frame - half option width - gap
-          const isMobile = window.innerWidth <= 768;
-          const optionWidth = isMobile ? 44 : 48;
-          const gap = isMobile ? 10 : 12;
-          const spacerWidth = (frameWidth / 2) - (optionWidth / 2) - gap;
+          const option = selector.querySelector('.avatar-option');
+          const optionWidth = option?.offsetWidth || 44;
+          const styles = getComputedStyle(selector);
+          const rawGap = styles.columnGap || styles.gap || '0';
+          const gap = Number.parseFloat(rawGap) || 0;
+
+          // Calculate: half container - half option width - gap
+          const spacerWidth = (containerWidth / 2) - (optionWidth / 2) - gap;
           spacers.forEach(s => s.style.width = Math.max(0, spacerWidth) + 'px');
         };
         window.updateSpacerWidth();
