@@ -1,4 +1,7 @@
 ---
+import { TOURNAMENT_I } from '../lib/event';
+const EVENT = TOURNAMENT_I;
+
 // Update this number manually when players sign up
 const PLAYERS_REGISTERED = 0;
 const PLAYERS_GOAL = 16; // 8 teams × 2 players
@@ -15,8 +18,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     <title>La Salida | Cuban Domino League</title>
     <meta
       name="description"
-      content="La Salida — The first Cuban Domino League tournament at Stefan's Lounge. January 31, 2026. They taught you for this moment. Make them proud."
+      content={`La Salida — The first Cuban Domino League tournament at ${EVENT.venueName}. ${EVENT.dateLong}. They taught you for this moment. Make them proud.`}
     />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -65,6 +69,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: #0a0705;
         color: #fff;
       }
+
 
       /* ============================================
          LOADING SCREEN - HYPNOTIC CDL
@@ -4986,7 +4991,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .whos-in__player {
         background: rgba(183, 106, 59, 0.12);
         border: 1px solid rgba(183, 106, 59, 0.25);
-        border-radius: 20px;
+        border-radius: 12px;
         padding: 8px 14px;
         display: inline-flex;
         align-items: center;
@@ -5014,7 +5019,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         letter-spacing: 0.05em;
         color: var(--copper);
         background: rgba(183, 106, 59, 0.2);
-        border-radius: 4px;
+        border-radius: 12px;
         padding: 2px 6px;
       }
 
@@ -5053,7 +5058,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           #ddd5c5 100%
         );
         border: none;
-        border-radius: 14px;
+        border-radius: 12px;
         padding: 0;
         cursor: pointer;
         box-shadow:
@@ -5189,7 +5194,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-radius: 12px 12px 0 0;
         display: flex;
         flex-direction: column;
+        /*
+         * Clip overflow without creating a scroll container.
+         * Otherwise focus/scroll can move the entire panel (header + hub) out of view.
+         */
         overflow: hidden;
+        overflow: clip;
         box-shadow: 0 -12px 48px rgba(0,0,0,0.6);
         z-index: 10003; /* Above ticker (10002) */
         transform: translateY(100%) scale(0.96);
@@ -5242,12 +5252,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         max-height: 56vh;
       }
 
+      /* Hide hub in peek mode - only show in full mode */
       .chat-panel.is-open.is-peek .mesa-hub-stack {
         display: none;
       }
 
+      /* Identity Mode: Hide header and seats when showing "Claim Your Seat" */
+      .chat-panel.is-identity-mode .chat-header,
+      .chat-panel.is-identity-mode .mesa-seats {
+        display: none !important;
+      }
+
       /* Tobias: "Breath Spacing" - staggered content reveal after panel slides in */
-      .chat-panel .chat-header,
       .chat-panel .chat-identity,
       .chat-panel .chat-body-container {
         opacity: 0;
@@ -5498,8 +5514,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         position: relative;
         border-bottom: 1px solid rgba(212, 165, 116, 0.1);
         flex-shrink: 0;
-        z-index: 10;
-        background: inherit;
+        z-index: 100;
+        background: rgba(20, 14, 11, 0.98);
+        min-height: 60px;
       }
 
       /* Drag handle for mobile (visual affordance) */
@@ -5588,7 +5605,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .chat-header__status:focus-visible {
         outline: 2px solid rgba(212, 165, 116, 0.45);
         outline-offset: 6px;
-        border-radius: 10px;
+        border-radius: 12px;
       }
 
       .chat-header__status-dot {
@@ -5677,7 +5694,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-size: 0.7rem;
         letter-spacing: 0.08em;
         padding: 6px 10px;
-        border-radius: 10px;
+        border-radius: 12px;
         cursor: pointer;
         flex-shrink: 0;
       }
@@ -5798,6 +5815,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         flex-direction: column;
         position: relative;
+        overflow-y: auto; /* Allow scrolling when content exceeds height */
+        overflow-x: hidden;
+        min-height: 0; /* Required for nested flex scrolling */
       }
 
       /* Ritual strip - the room’s small “weenie” (presence + intent) */
@@ -5870,6 +5890,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .chat-messages {
         flex: 1;
+        min-height: 200px; /* Ensure messages area has minimum height */
         overflow-y: auto;
         padding: 20px;
         display: flex;
@@ -6195,7 +6216,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         color: var(--brass);
         background: rgba(28, 19, 15, 0.95);
         padding: 4px 10px;
-        border-radius: 6px;
+        border-radius: 12px;
         border: 1px solid rgba(212, 165, 116, 0.3);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
@@ -6261,7 +6282,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         flex-direction: column;
         background: rgba(20, 14, 11, 0.98);
         border: 1px solid rgba(212, 165, 116, 0.18);
-        border-radius: 18px;
+        border-radius: 12px;
         box-shadow: 0 18px 60px rgba(0,0,0,0.7);
         overflow: hidden;
       }
@@ -6314,7 +6335,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         justify-content: space-between;
         gap: 10px;
         padding: 10px 12px;
-        border-radius: 14px;
+        border-radius: 12px;
         border: 1px solid rgba(212, 165, 116, 0.12);
         background: rgba(255, 255, 255, 0.03);
       }
@@ -6331,7 +6352,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         height: 28px;
         display: grid;
         place-items: center;
-        border-radius: 9px;
+        border-radius: 12px;
         background: rgba(212, 165, 116, 0.08);
         border: 1px solid rgba(212, 165, 116, 0.18);
         flex-shrink: 0;
@@ -6367,22 +6388,28 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .mesa-presence__invite {
-        background: linear-gradient(135deg, rgba(212, 165, 116, 0.22), rgba(183, 106, 59, 0.22));
-        border: 1px solid rgba(212, 165, 116, 0.25);
-        color: rgba(255, 255, 255, 0.92);
-        font-family: "IBM Plex Sans", sans-serif;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-size: 0.62rem;
-        padding: 10px 12px;
+        width: 34px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        background: rgba(212, 165, 116, 0.12);
+        border: 1px solid rgba(212, 165, 116, 0.22);
+        color: rgba(212, 165, 116, 0.95);
         border-radius: 12px;
         cursor: pointer;
         flex-shrink: 0;
+        opacity: 0.65;
+        transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      }
+
+      .mesa-presence__row:hover .mesa-presence__invite {
+        opacity: 1;
       }
 
       .mesa-presence__invite:active {
-        transform: scale(0.98);
+        transform: scale(0.96);
       }
 
       .mesa-presence__empty {
@@ -6454,7 +6481,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* "LAMESA" badge on left - refined ESPN energy for CDL */
+      /* "LA MESA" badge on left - refined ESPN energy for CDL */
       .mesa-ticker__badge {
         display: flex;
         align-items: center;
@@ -6822,7 +6849,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         -webkit-backdrop-filter: blur(20px);
         /* Warm brass border */
         border: 1px solid rgba(183, 106, 59, 0.4);
-        border-radius: 6px;
+        border-radius: 12px;
         padding: 0;
         overflow: visible;
         box-shadow:
@@ -6861,7 +6888,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       :root[data-mesa-tooltip="broadcast"] .mesa-help {
         background: linear-gradient(135deg, rgba(8, 6, 5, 0.98) 0%, rgba(5, 4, 3, 0.98) 100%);
         border-color: rgba(212, 165, 116, 0.28);
-        border-radius: 4px;
+        border-radius: 12px;
         box-shadow:
           0 14px 44px rgba(0, 0, 0, 0.72),
           0 0 40px rgba(212, 165, 116, 0.06),
@@ -6915,7 +6942,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       :root[data-mesa-tooltip="whisper"] .mesa-help {
         background: rgba(28, 19, 15, 0.72);
         border-color: rgba(212, 165, 116, 0.18);
-        border-radius: 14px;
+        border-radius: 12px;
         box-shadow:
           0 10px 32px rgba(0, 0, 0, 0.45),
           0 0 50px rgba(212, 165, 116, 0.05),
@@ -7136,7 +7163,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-size: 16px; /* Must be 16px+ to prevent iOS Safari auto-zoom on focus */
         outline: none;
         transition: all 0.3s ease;
-        border-radius: 8px 8px 0 0;
+        border-radius: 12px 12px 0 0;
       }
 
       .chat-input::placeholder {
@@ -7368,7 +7395,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           rgba(20, 14, 10, 0.98) 100%
         );
         border: 1px solid rgba(212, 165, 116, 0.2);
-        border-radius: 16px;
+        border-radius: 12px;
         padding: 32px 28px;
         max-width: 320px;
         width: calc(100% - 48px);
@@ -7410,7 +7437,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .leave-modal__btn {
         flex: 1;
         padding: 14px 20px;
-        border-radius: 10px;
+        border-radius: 12px;
         font-family: "IBM Plex Sans", sans-serif;
         font-size: 0.85rem;
         font-weight: 600;
@@ -7493,7 +7520,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           rgba(20, 14, 10, 0.98) 100%
         );
         border: 1px solid rgba(212, 165, 116, 0.3);
-        border-radius: 16px;
+        border-radius: 12px;
         box-shadow:
           0 16px 48px rgba(0, 0, 0, 0.5),
           0 0 0 1px rgba(0, 0, 0, 0.3),
@@ -7612,7 +7639,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           rgba(18, 12, 9, 0.99) 100%
         );
         border: 1px solid rgba(212, 165, 116, 0.25);
-        border-radius: 20px;
+        border-radius: 12px;
         padding: 32px 28px;
         max-width: 420px;
         width: calc(100% - 32px);
@@ -7754,7 +7781,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         height: 32px;
         margin-bottom: 8px;
         background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
-        border-radius: 8px;
+        border-radius: 12px;
         opacity: 0.7;
         transition: opacity 0.2s ease;
       }
@@ -7849,7 +7876,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         padding: 3px 8px;
         background: rgba(212, 165, 116, 0.15);
         border: 1px solid rgba(212, 165, 116, 0.25);
-        border-radius: 6px;
+        border-radius: 12px;
         font-family: "IBM Plex Sans", sans-serif;
         font-size: 0.65rem;
         font-weight: 600;
@@ -7864,7 +7891,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         width: 10px;
         height: 10px;
         background: var(--brass);
-        border-radius: 2px;
+        border-radius: 50%;
         opacity: 0.7;
       }
 
@@ -7876,7 +7903,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         padding: 8px 12px;
         background: rgba(212, 165, 116, 0.1);
         border: 1px solid rgba(212, 165, 116, 0.2);
-        border-radius: 8px;
+        border-radius: 12px;
         margin-right: 12px;
         cursor: pointer;
         transition: all 0.2s ease;
@@ -8071,11 +8098,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         overflow: hidden;
         width: 100%;
         box-sizing: border-box;
-        position: relative;
-        /* Warm vignette atmosphere */
+        position: absolute; /* Cover entire chat-main */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10; /* Above header and seats */
+        /* Solid base + Warm vignette atmosphere */
         background:
           radial-gradient(ellipse at 50% 30%, rgba(212, 165, 116, 0.06) 0%, transparent 50%),
-          radial-gradient(ellipse at center, transparent 0%, rgba(10, 7, 5, 0.8) 100%);
+          radial-gradient(ellipse at center, transparent 0%, rgba(10, 7, 5, 0.8) 100%),
+          rgb(20, 14, 11); /* Solid base to prevent bleed-through */
       }
 
       /* Subtle grain texture overlay */
@@ -8110,7 +8143,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .chat-identity > * {
         opacity: 0;
         transform: translateY(16px);
-        animation: identityFadeUp 0.5s ease-out forwards;
+        animation: identityFadeUp 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
       }
 
       @keyframes identityFadeUp {
@@ -8120,15 +8153,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      /* Tobias: Slower stagger for ritual weight (0ms → 720ms spread) */
+      /* Staggered, but fast: per design system guardrails */
       .chat-identity__title { animation-delay: 0ms; }
-      .chat-identity__subtitle { animation-delay: 100ms; }
-      .mesa-live-indicator { animation-delay: 200ms; }
-      .avatar-selector-frame { animation-delay: 340ms; }
-      .chat-identity__select { animation-delay: 480ms; }
-      .chat-identity__input { animation-delay: 480ms; }
-      .chat-identity__register-hint { animation-delay: 600ms; }
-      .chat-identity__btn { animation-delay: 720ms; }
+      .chat-identity__subtitle { animation-delay: 60ms; }
+      .mesa-live-indicator { animation-delay: 120ms; }
+      .avatar-selector-frame { animation-delay: 180ms; }
+      .country-display { animation-delay: 180ms; }
+      .custom-select { animation-delay: 180ms; }
+      .chat-identity__select { animation-delay: 180ms; }
+      .chat-identity__input { animation-delay: 180ms; }
+      .chat-identity__register-hint { animation-delay: 180ms; }
+      .chat-identity__btn { animation-delay: 180ms; }
 
       .identity-header {
         font-family: "Bodoni Moda", serif;
@@ -8527,8 +8562,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         width: 100%;
         max-width: 280px;
         margin: 0 auto 16px;
-        animation: identityFadeUp 0.5s ease-out 320ms forwards;
-        opacity: 0;
         z-index: 100;
       }
 
@@ -8549,6 +8582,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-size: 0.95rem;
         cursor: pointer;
         transition: all 0.25s ease;
+      }
+
+      .custom-select__trigger:focus-visible {
+        outline: 2px solid rgba(212, 165, 116, 0.35);
+        outline-offset: 3px;
       }
 
       .custom-select__trigger:hover {
@@ -8639,6 +8677,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-color: rgba(212, 165, 116, 0.4);
       }
 
+      .custom-select__search-input:focus-visible {
+        outline: 2px solid rgba(212, 165, 116, 0.25);
+        outline-offset: 2px;
+      }
+
       .custom-select__options {
         list-style: none;
         margin: 0;
@@ -8678,6 +8721,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         color: #ffffff !important;
         border-left-color: #d4a574 !important;
         padding-left: 28px;
+      }
+
+      .custom-select__option.is-focused {
+        background: rgba(212, 165, 116, 0.18);
+        color: rgba(255, 255, 255, 0.92);
+        border-left-color: rgba(212, 165, 116, 0.7);
       }
 
       .custom-select__option.is-selected {
@@ -8764,11 +8813,148 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-style: italic;
       }
 
+      /* La Mesa Auth Gate (login required) */
+      .mesa-auth {
+        width: 100%;
+        max-width: 360px;
+        margin: 10px auto 18px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .mesa-auth__copy {
+        margin: 0 0 10px 0;
+        font-size: 0.8rem;
+        letter-spacing: 0.03em;
+        color: rgba(255, 255, 255, 0.62);
+        font-family: "IBM Plex Sans", sans-serif;
+        text-align: center;
+      }
+
+      .mesa-auth__row {
+        display: flex;
+        gap: 10px;
+        align-items: stretch;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .mesa-auth__input {
+        flex: 1 1 220px;
+        min-width: 200px;
+        background: rgba(0, 0, 0, 0.28);
+        border: 1px solid rgba(212, 165, 116, 0.18);
+        border-radius: 12px;
+        color: var(--cream);
+        padding: 12px 14px;
+        outline: none;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 14px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .mesa-auth__input:focus {
+        border-color: rgba(212, 165, 116, 0.45);
+        box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.12);
+        background: rgba(0, 0, 0, 0.35);
+      }
+
+      .mesa-auth__btn {
+        flex: 0 0 auto;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #0d0906;
+        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
+        box-shadow:
+          0 10px 24px rgba(0, 0, 0, 0.34),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        cursor: pointer;
+        transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .mesa-auth__btn:disabled {
+        opacity: 0.45;
+        filter: grayscale(0.2);
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .mesa-auth__btn:active {
+        transform: translateY(1px) scale(0.98);
+      }
+
+      .mesa-auth__status {
+        margin: 10px 0 0 0;
+        font-size: 0.78rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.58);
+        min-height: 1.1em;
+      }
+
+      .mesa-auth__email {
+        color: var(--brass);
+        font-weight: 650;
+      }
+
+      .mesa-auth__signout {
+        width: 100%;
+        margin-top: 10px;
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: rgba(0, 0, 0, 0.26);
+        border: 1px solid rgba(212, 165, 116, 0.18);
+        color: rgba(255, 255, 255, 0.85);
+        cursor: pointer;
+        font-family: "IBM Plex Sans", sans-serif;
+        transition: border-color 0.2s ease, background 0.2s ease;
+      }
+
+      .mesa-auth__signout:hover {
+        border-color: rgba(212, 165, 116, 0.35);
+        background: rgba(0, 0, 0, 0.32);
+      }
+
+      .mesa-identity-locked {
+        width: 100%;
+        max-width: 360px;
+        margin: 14px auto 0;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(212, 165, 116, 0.18);
+        background: rgba(0, 0, 0, 0.22);
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .mesa-identity-locked__label {
+        margin: 0 0 6px 0;
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.55);
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+      }
+
+      .mesa-identity-locked__name {
+        margin: 0;
+        color: var(--cream);
+        font-family: "IBM Plex Serif", "IBM Plex Sans", serif;
+        font-size: 18px;
+        font-style: italic;
+      }
+
       /* Helper/hint text */
       .chat-identity__register-hint {
         font-size: 0.75rem;
-        color: rgba(255, 255, 255, 0.35);
-        margin-bottom: 20px;
+        color: rgba(255, 255, 255, 0.45);
+        margin-top: 12px;
+        margin-bottom: 18px;
         font-family: "IBM Plex Sans", sans-serif;
         letter-spacing: 0.03em;
         position: relative;
@@ -8788,7 +8974,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-family: "IBM Plex Sans Condensed", sans-serif;
         font-size: 0.85rem;
         font-weight: 700;
-        letter-spacing: 0.2em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         cursor: pointer;
         transition: all 0.25s ease;
@@ -8876,13 +9062,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      .chat-identity__register-hint {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.5);
-        margin-top: 12px;
-        font-family: "IBM Plex Sans", sans-serif;
-      }
-
       .chat-identity__register-link {
         color: var(--brass);
         text-decoration: none;
@@ -8923,6 +9102,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           border: none;
           box-shadow: none;
           overflow: hidden;
+          background: rgba(30, 20, 15, 1);
         }
 
         .chat-panel.is-open {
@@ -8951,8 +9131,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .chat-header {
           /* Safe area for notch/Dynamic Island - generous padding */
           padding: max(28px, calc(env(safe-area-inset-top) + 20px)) 20px 14px;
-          min-height: 56px;
-          background: rgba(20, 14, 11, 0.98); /* Solid dark background for visibility */
+          min-height: 70px;
+          background: rgba(20, 14, 11, 0.98);
           border-bottom: 1px solid rgba(212, 165, 116, 0.15);
         }
 
@@ -11871,6 +12051,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         flex-direction: column;
         min-width: 0;
+        min-height: 0; /* Allow inner areas to scroll instead of forcing the panel to scroll */
         position: relative;
       }
 
@@ -11885,7 +12066,52 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .mesa-hub-stack {
         display: grid;
         gap: 16px;
-        padding: 0 18px 18px;
+        padding: 18px;
+        flex-shrink: 0;
+        background: rgba(40, 20, 15, 0.95);
+      }
+
+      /* Hub -> transcript cue (discoverability without feeling "app-y") */
+      .mesa-chat-cue {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 18px 6px;
+        color: rgba(212, 165, 116, 0.7);
+      }
+
+      .mesa-chat-cue__line {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.25), transparent);
+      }
+
+      .mesa-chat-cue__text {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .mesa-chat-cue__pip {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: rgba(212, 165, 116, 0.85);
+        box-shadow: 0 0 10px rgba(212, 165, 116, 0.25);
+      }
+
+      .mesa-chat-cue__chevron {
+        opacity: 0.85;
+        transform: translateY(1px);
+      }
+
+      .chat-panel.is-open.is-peek .mesa-chat-cue {
+        display: none;
       }
 
       /* Hub Modules - stacked cards */
@@ -12012,7 +12238,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .mesa-ritual-card__countdown {
         font-family: "SF Sports Night", "IBM Plex Sans Condensed", sans-serif;
-        font-size: 3.5rem;
+        font-size: clamp(2.3rem, 7.2vw, 3.5rem);
         color: var(--brass);
         letter-spacing: 0.05em;
         text-shadow: 0 0 30px rgba(212, 165, 116, 0.4);
@@ -13033,7 +13259,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="hero-tagline">The First Cuban Domino League Championship</p>
 
           <!-- Date/Venue -->
-	          <p class="hero-subtitle">January 31, 2026<span class="dot">•</span><a href="https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ" target="_blank" rel="noreferrer">Stefan's Lounge</a></p>
+	          <p class="hero-subtitle">{EVENT.dateLong}<span class="dot">•</span><a href={EVENT.venueMapUrl} target="_blank" rel="noreferrer">{EVENT.venueName}</a></p>
         </div>
         <div class="hero-scroll-hint" id="heroScrollHint" aria-hidden="true">
           <div class="hero-scroll-hint__chevron"></div>
@@ -13134,7 +13360,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         <!-- TOP LETTERBOX - Event context sets the stage -->
         <div class="slam-top">
-          <p class="slam-context">January 31<span class="dot">•</span>Stefan's Lounge</p>
+          <p class="slam-context">{EVENT.dateMonthDay}<span class="dot">•</span>{EVENT.venueName}</p>
         </div>
 
         <!-- CENTER - The call to action -->
@@ -13360,7 +13586,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <div class="footer-contact__divider"></div>
             <div class="footer-contact__item">
               <span class="footer-contact__label">Venue</span>
-              <a href="https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ" target="_blank" rel="noreferrer" class="footer-contact__link">Stefan's Lounge</a>
+              <a href={EVENT.venueMapUrl} target="_blank" rel="noreferrer" class="footer-contact__link">{EVENT.venueName}</a>
             </div>
           </div>
           <footer class="brand-footer">
@@ -13411,9 +13637,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       <!-- Event Details -->
       <div class="event-details">
-        <div class="event-date">January 31, 2026</div>
-        <div class="event-venue">Stefan's Lounge</div>
-        <div class="event-time">Doors open at 6PM</div>
+        <div class="event-date">{EVENT.dateLong}</div>
+        <div class="event-venue">{EVENT.venueName}</div>
+        <div class="event-time">{EVENT.doorsOpenLabel}</div>
         <div class="event-payment">$25 cash on arrival</div>
       </div>
 
@@ -13543,24 +13769,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       </div>
 
         <div class="chat-panel" id="chatPanel">
-        <div class="chat-main">
-          <div class="chat-header">
-            <div class="chat-header__drag-handle"></div>
-            <div class="chat-header__title-group">
-              <span class="chat-header__title">La Mesa</span>
-              <button class="chat-header__status" id="mesaPresenceBtn" type="button" aria-label="Who's at the table">
-                <span class="chat-header__status-dot" aria-hidden="true"></span>
-                <span class="chat-header__status-text" id="mesaHeaderStatusText">Who’s here</span>
-              </button>
-            </div>
-            <button class="chat-header__dock" id="chatDock" type="button" aria-label="Dock La Mesa (second screen)" aria-pressed="false">
-              <span class="chat-header__dock-label">Dock</span>
-            </button>
-            <button class="chat-header__close" id="chatClose" type="button" aria-label="Leave table">
-              <span class="chat-header__close-label">Leave Table</span>
+        <!-- Header as direct child of chat-panel for proper flex layout -->
+        <div class="chat-header" id="chatHeader">
+          <div class="chat-header__drag-handle"></div>
+          <div class="chat-header__title-group">
+            <span class="chat-header__title">La Mesa</span>
+            <button class="chat-header__status" id="mesaPresenceBtn" type="button" aria-label="Who's at the table">
+              <span class="chat-header__status-dot" aria-hidden="true"></span>
+              <span class="chat-header__status-text" id="mesaHeaderStatusText">Who's here</span>
             </button>
           </div>
-
+          <button class="chat-header__dock" id="chatDock" type="button" aria-label="Dock La Mesa (second screen)" aria-pressed="false">
+            <span class="chat-header__dock-label">Dock</span>
+          </button>
+          <button class="chat-header__close" id="chatClose" type="button" aria-label="Leave table">
+            <span class="chat-header__close-label">Leave Table</span>
+          </button>
+        </div>
+        
+        <div class="chat-main">
           <!-- Seat strip: people-first, not channel-first -->
           <div class="mesa-seats" id="mesaSeatStrip">
             <span class="mesa-seats__label">Seats</span>
@@ -13588,6 +13815,30 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        <div class="chat-identity" id="chatIdentity">
 	          <p class="chat-identity__title">Claim Your Seat</p>
 	          <p class="chat-identity__subtitle">Show them where you're from.</p>
+
+            <!-- Auth gate: La Mesa is login-required -->
+            <div class="mesa-auth" id="mesaAuthGate">
+              <p class="mesa-auth__copy">Enter the email you registered with.</p>
+              <div class="mesa-auth__row">
+                <input
+                  class="mesa-auth__input"
+                  id="mesaLoginEmail"
+                  type="email"
+                  inputmode="email"
+                  autocomplete="email"
+                  placeholder="you@example.com"
+                />
+                <button class="mesa-auth__btn" id="mesaLoginBtn" type="button">Send link</button>
+              </div>
+              <p class="mesa-auth__status" id="mesaLoginStatus"></p>
+            </div>
+
+            <div class="mesa-auth mesa-auth--signed" id="mesaAuthSigned" style="display: none;">
+              <p class="mesa-auth__copy">
+                Signed in as <span class="mesa-auth__email" id="mesaAuthedEmail">—</span>
+              </p>
+              <button class="mesa-auth__signout" id="mesaSignOutBtn" type="button">Sign out</button>
+            </div>
 
           <!-- Live player count for FOMO -->
           <div class="mesa-live-indicator" id="mesaLiveIndicator">
@@ -14285,6 +14536,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <p class="country-display__hint" id="countryHint">Tap to represent</p>
           </div>
 
+          <!-- Locked identity: after login we show your registered name (no list-picking / no impersonation) -->
+          <div class="mesa-identity-locked" id="mesaIdentityLocked" style="display: none;">
+            <p class="mesa-identity-locked__label">Representing</p>
+            <p class="mesa-identity-locked__name" id="mesaLockedName">—</p>
+          </div>
+
           <!-- Custom Dropdown -->
           <div class="custom-select" id="customSelect">
             <button class="custom-select__trigger" id="selectTrigger" type="button">
@@ -14310,7 +14567,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </select>
           <input type="text" class="chat-identity__input" id="chatNameInput" placeholder="Your name..." style="display: none;" />
           <p class="chat-identity__register-hint" id="chatRegisterHint">
-            Don't see your name? <a href="#signup" class="chat-identity__register-link" id="chatRegisterLink">Register first</a>
+            Not registered yet? <a href="#signup" class="chat-identity__register-link" id="chatRegisterLink">Register first</a>
           </p>
           <button class="chat-identity__btn" id="chatJoinBtn" disabled>CLAIM YOUR SEAT</button>
         </div>
@@ -14351,20 +14608,34 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <h3 class="mesa-hub-module__title">Tonight</h3>
               <div class="mesa-hub-module__content">
                  <div class="mesa-ritual-card">
-                   <div class="mesa-ritual-card__countdown" id="mesaHubCountdown">00:00:00</div>
+                   <div class="mesa-ritual-card__countdown" id="mesaHubCountdown" data-first-slam-at={EVENT.firstSlamAt}>00:00:00</div>
                    <div class="mesa-ritual-card__label">UNTIL FIRST SLAM</div>
                    <div class="mesa-ritual-divider"></div>
                    <div class="mesa-ritual-detail">
                      <span class="mesa-ritual-detail__label">VENUE</span>
-                     <span class="mesa-ritual-detail__value">Stefan's Lounge, Miami</span>
+                     <span class="mesa-ritual-detail__value">{EVENT.venueName}, {EVENT.venueCityState}</span>
                    </div>
                    <div class="mesa-ritual-detail">
                      <span class="mesa-ritual-detail__label">CALL TIME</span>
-                     <span class="mesa-ritual-detail__value">Friday, Jan 31 @ 7:00 PM</span>
+                     <span class="mesa-ritual-detail__value">{EVENT.callTimeLabel}</span>
                    </div>
                  </div>
               </div>
             </div>
+          </div>
+
+          <div class="mesa-chat-cue" aria-hidden="true">
+            <span class="mesa-chat-cue__line"></span>
+            <span class="mesa-chat-cue__text">
+              <span class="mesa-chat-cue__pip"></span>
+              CHAT
+              <span class="mesa-chat-cue__chevron" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </span>
+            <span class="mesa-chat-cue__line"></span>
           </div>
 
           <div class="chat-messages" id="chatMessages">
@@ -14387,22 +14658,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <div class="mesa-presence__backdrop" id="mesaPresenceBackdrop"></div>
           <div class="mesa-presence__sheet" role="dialog" aria-label="Who's at the table">
             <div class="mesa-presence__header">
-              <div class="mesa-presence__title">Who’s here</div>
+              <div class="mesa-presence__title">Who's here</div>
               <button class="mesa-presence__close" id="mesaPresenceClose" type="button" aria-label="Close list">Close</button>
             </div>
             <div class="mesa-presence__list" id="mesaPresenceList"></div>
           </div>
-            </div>
-          </div>
         </div>
-      </div>
+        </div> <!-- closes .chat-content -->
+      </div> <!-- closes .chat-main -->
+    </div> <!-- closes .chat-panel -->
 
       <!-- Leave Table Confirmation Modal - Tobias: "The room should never feel like a browser" -->
       <div class="leave-modal" id="leaveModal">
         <div class="leave-modal__backdrop"></div>
-        <div class="leave-modal__dialog">
+      <div class="leave-modal__dialog">
           <h3 class="leave-modal__title">Leave the Table?</h3>
-          <p class="leave-modal__message">You'll need to pick your name again to re-enter.</p>
+          <p class="leave-modal__message">You'll need to claim your seat again to re-enter.</p>
           <div class="leave-modal__actions">
             <button class="leave-modal__btn leave-modal__btn--stay" id="leaveModalStay" type="button">Stay</button>
             <button class="leave-modal__btn leave-modal__btn--leave" id="leaveModalLeave" type="button">Leave</button>
@@ -15422,7 +15693,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       };
 
       // Helper: Transition from waiting to success
-	      const transitionToSuccess = (playerName) => {
+	      const transitionToSuccess = (playerName, playerEmail = '') => {
 	        // Flag to prevent back-to-top pip from activating during success screen
 	        document.body.dataset.successActive = 'true';
 
@@ -15438,6 +15709,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	          // Mark user as registered
 	          localStorage.setItem('cdl_registered', 'true');
+	          if (playerEmail) {
+	            try {
+	              localStorage.setItem('cdl_mesa_last_email', String(playerEmail).trim().toLowerCase());
+	            } catch {}
+	          }
 
 	          // Let the ticker react immediately on this device (even if Supabase isn't configured).
 	          window.dispatchEvent(new CustomEvent('cdl:new-registration', {
@@ -15530,7 +15806,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             const remainingWait = Math.max(0, MIN_WAIT_TIME - elapsed);
 
             setTimeout(() => {
-              transitionToSuccess(payload.playerName);
+              transitionToSuccess(payload.playerName, payload.email);
             }, remainingWait);
           } else {
             // Error - return to form
@@ -15647,7 +15923,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             if (customSelect) customSelect.style.display = 'block';
             if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
             if (chatNameInput) chatNameInput.style.display = 'none';
-            if (chatRegisterHint) chatRegisterHint.innerHTML = 'Don\'t see your name? <a href="#signup" class="chat-identity__register-link">Register first</a>';
+            if (chatRegisterHint) chatRegisterHint.innerHTML = 'Not registered yet? <a href="#signup" class="chat-identity__register-link">Register first</a>';
           } else {
             // No players - show text input instead
             if (customSelect) customSelect.style.display = 'none';
@@ -15667,7 +15943,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (customSelect) customSelect.style.display = 'block';
           if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
           if (chatNameInput) chatNameInput.style.display = 'none';
-          if (chatRegisterHint) chatRegisterHint.innerHTML = 'Don\'t see your name? <a href="#signup" class="chat-identity__register-link">Register first</a>';
+          if (chatRegisterHint) chatRegisterHint.innerHTML = 'Not registered yet? <a href="#signup" class="chat-identity__register-link">Register first</a>';
         }
       }
 
@@ -15748,26 +16024,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           `<li class="custom-select__option" data-value="${escapeHtml(player.name)}">${escapeHtml(player.name)}</li>`
         ).join('');
 
-        // Add click and hover handlers to options
+        // Add click handlers to options
         selectOptions.querySelectorAll('.custom-select__option').forEach(option => {
           option.addEventListener('click', () => {
             const value = option.dataset.value;
             selectPlayer(value);
-          });
-          // JS-based hover for reliable highlighting
-          option.addEventListener('mouseenter', () => {
-            option.style.background = 'rgba(212, 165, 116, 0.4)';
-            option.style.color = '#ffffff';
-            option.style.borderLeftColor = '#d4a574';
-            option.style.paddingLeft = '28px';
-            option.style.cursor = 'pointer';
-          });
-          option.addEventListener('mouseleave', () => {
-            option.style.background = 'transparent';
-            option.style.color = 'rgba(255, 255, 255, 0.6)';
-            option.style.borderLeftColor = 'transparent';
-            option.style.paddingLeft = '20px';
-            option.style.cursor = 'pointer';
           });
         });
 
@@ -16005,12 +16266,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const tutorialMesaCta = document.getElementById('tutorialMesaCta');
       const tutorialDismiss = document.getElementById('tutorialDismiss');
 
-      // Check if user is already registered → show chat button
-      const isRegistered = localStorage.getItem('cdl_registered') === 'true';
       const tickerChatBtn = document.getElementById('tickerChatBtn');
       const chatDockBtn = document.getElementById('chatDock');
-      let chatDocked = localStorage.getItem('cdl_mesa_docked') === 'true';
+      const MESA_DOCKED_KEY = 'cdl_mesa_docked_v2';
+      let chatDocked = localStorage.getItem(MESA_DOCKED_KEY) === 'true';
       let mesaLookingForPartner = localStorage.getItem('cdl_mesa_lfg') === 'true';
+      const MESA_LAST_EMAIL_KEY = 'cdl_mesa_last_email';
+
+      // Mesa Auth (login required)
+      let mesaAuthVerified = false;
+      let mesaAuthUserId = null;
+      let mesaAuthEmail = null;
+      let mesaAuthPlayer = null;
+
+      const mesaAuthGate = document.getElementById('mesaAuthGate');
+      const mesaLoginEmail = document.getElementById('mesaLoginEmail');
+      const mesaLoginBtn = document.getElementById('mesaLoginBtn');
+      const mesaLoginStatus = document.getElementById('mesaLoginStatus');
+      const mesaAuthSigned = document.getElementById('mesaAuthSigned');
+      const mesaAuthedEmailEl = document.getElementById('mesaAuthedEmail');
+      const mesaSignOutBtn = document.getElementById('mesaSignOutBtn');
+      const mesaIdentityLocked = document.getElementById('mesaIdentityLocked');
+      const mesaLockedName = document.getElementById('mesaLockedName');
+
+      if (!localStorage.getItem(MESA_DOCKED_KEY)) {
+        // Reset legacy docked preference so the hub opens full by default after the redesign.
+        localStorage.removeItem('cdl_mesa_docked');
+        localStorage.setItem(MESA_DOCKED_KEY, 'false');
+        chatDocked = false;
+      }
 
       function applyMesaLfgUI() {
         mesaLfgToggle?.setAttribute('aria-pressed', mesaLookingForPartner ? 'true' : 'false');
@@ -16080,15 +16364,169 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      if (isRegistered && tickerChatBtn) {
-        // Already registered on page load - no animation needed
-        tickerChatBtn.classList.remove('mesa-ticker__chat-btn--hidden');
+      try {
+        const lastEmail = localStorage.getItem(MESA_LAST_EMAIL_KEY);
+        if (mesaLoginEmail && lastEmail && !mesaLoginEmail.value) mesaLoginEmail.value = lastEmail;
+      } catch {}
+
+      function setMesaLoginStatus(text = '') {
+        if (mesaLoginStatus) mesaLoginStatus.textContent = text;
       }
+
+      function showMesaAuthGate({ message = '' } = {}) {
+        mesaAuthVerified = false;
+        mesaAuthUserId = null;
+        mesaAuthEmail = null;
+        mesaAuthPlayer = null;
+
+        if (mesaAuthGate) mesaAuthGate.style.display = 'block';
+        if (mesaAuthSigned) mesaAuthSigned.style.display = 'none';
+        if (mesaIdentityLocked) mesaIdentityLocked.style.display = 'none';
+
+        // Keep legacy name pickers hidden by default (La Mesa is login-required now).
+        if (customSelect) customSelect.style.display = 'none';
+        const chatPlayerSelect = document.getElementById('chatPlayerSelect');
+        const chatNameInput = document.getElementById('chatNameInput');
+        if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
+        if (chatNameInput) chatNameInput.style.display = 'none';
+
+        setMesaLoginStatus(message);
+        try {
+          if (typeof updateJoinReadyState === 'function') updateJoinReadyState();
+        } catch {}
+      }
+
+      function showMesaAuthed({ email, playerName } = {}) {
+        if (mesaAuthGate) mesaAuthGate.style.display = 'none';
+        if (mesaAuthSigned) mesaAuthSigned.style.display = 'block';
+        if (mesaAuthedEmailEl) mesaAuthedEmailEl.textContent = email || '—';
+
+        if (mesaIdentityLocked) mesaIdentityLocked.style.display = 'block';
+        if (mesaLockedName) mesaLockedName.textContent = playerName || '—';
+
+        // No name list once authenticated (prevents impersonation).
+        if (customSelect) customSelect.style.display = 'none';
+        const chatPlayerSelect = document.getElementById('chatPlayerSelect');
+        const chatNameInput = document.getElementById('chatNameInput');
+        if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
+        if (chatNameInput) chatNameInput.style.display = 'none';
+
+        try {
+          if (typeof updateJoinReadyState === 'function') updateJoinReadyState();
+        } catch {}
+      }
+
+      async function ensureMesaAuth({ silent = false } = {}) {
+        mesaAuthVerified = false;
+        mesaAuthUserId = null;
+        mesaAuthEmail = null;
+        mesaAuthPlayer = null;
+
+        const supabaseOk = await supabaseReady;
+        if (!supabaseOk || !supabase) {
+          if (!silent) showMesaAuthGate({ message: 'La Mesa is offline right now.' });
+          return false;
+        }
+
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          if (!silent) showMesaAuthGate();
+          return false;
+        }
+
+        mesaAuthUserId = session.user?.id || null;
+        mesaAuthEmail = String(session.user?.email || '').trim().toLowerCase();
+        if (!mesaAuthEmail) {
+          try { await supabase.auth.signOut(); } catch {}
+          if (!silent) showMesaAuthGate({ message: 'No email found for this session.' });
+          return false;
+        }
+
+        const { data: player, error } = await supabase
+          .from('players')
+          .select('id, name, email, status')
+          .eq('email', mesaAuthEmail)
+          .in('status', ['registered', 'confirmed'])
+          .maybeSingle();
+
+        if (error || !player) {
+          try { await supabase.auth.signOut(); } catch {}
+          if (!silent) showMesaAuthGate({ message: 'Seat not found. Register first.' });
+          return false;
+        }
+
+        mesaAuthPlayer = player;
+        mesaAuthVerified = true;
+        showMesaAuthed({ email: mesaAuthEmail, playerName: player.name });
+
+        // Defensive: prevent stale/impersonated local identity from bypassing auth.
+        if (chatIdentity && chatIdentity.playerName && chatIdentity.playerName !== player.name) {
+          chatIdentity = null;
+          try { localStorage.removeItem('cdl_chat_identity'); } catch {}
+        }
+
+        try {
+          if (typeof updateJoinReadyState === 'function') updateJoinReadyState();
+        } catch {}
+
+        return true;
+      }
+
+      async function startMesaLogin(email) {
+        const cleaned = String(email || '').trim().toLowerCase();
+        if (!cleaned) return;
+
+        const supabaseOk = await supabaseReady;
+        if (!supabaseOk || !supabase) {
+          showMesaAuthGate({ message: 'La Mesa is offline right now.' });
+          return;
+        }
+
+        if (mesaLoginBtn) mesaLoginBtn.disabled = true;
+        setMesaLoginStatus('Sending link…');
+
+        try {
+          try { localStorage.setItem(MESA_LAST_EMAIL_KEY, cleaned); } catch {}
+          const redirectTo = `${window.location.origin}/mesa/callback`;
+          const { error } = await supabase.auth.signInWithOtp({
+            email: cleaned,
+            options: { emailRedirectTo: redirectTo },
+          });
+          if (error) {
+            setMesaLoginStatus(error.message || 'Could not send link.');
+          } else {
+            setMesaLoginStatus('Check your email to finish.');
+          }
+        } catch (err) {
+          console.error('[MESA_AUTH] signInWithOtp error:', err);
+          setMesaLoginStatus('Could not send link. Try again.');
+        } finally {
+          if (mesaLoginBtn) mesaLoginBtn.disabled = false;
+        }
+      }
+
+      mesaLoginBtn?.addEventListener('click', async () => {
+        await startMesaLogin(mesaLoginEmail?.value);
+      });
+
+      mesaLoginEmail?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          void startMesaLogin(mesaLoginEmail?.value);
+        }
+      });
+
+      mesaSignOutBtn?.addEventListener('click', async () => {
+        try {
+          if (supabase) await supabase.auth.signOut();
+        } catch {}
+        showMesaAuthGate({ message: 'Signed out.' });
+      });
 
       function applyChatPresentation(mode) {
         const isPeek = mode === 'peek';
         chatDocked = isPeek;
-        localStorage.setItem('cdl_mesa_docked', isPeek ? 'true' : 'false');
+        localStorage.setItem(MESA_DOCKED_KEY, isPeek ? 'true' : 'false');
         chatDockBtn?.setAttribute('aria-pressed', isPeek ? 'true' : 'false');
         if (chatDockBtn) {
           chatDockBtn.setAttribute('aria-label', isPeek ? 'Expand La Mesa' : 'Dock La Mesa (second screen)');
@@ -16123,11 +16561,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         } catch {}
       }
 
-      function openMesa(mode = (chatDocked ? 'peek' : 'full')) {
-        // DEFENSIVE CHECK: Never open La Mesa for unregistered users
-        const isRegistered = localStorage.getItem('cdl_registered') === 'true';
-        if (!isRegistered) {
-          routeUnregisteredToRegistration();
+      async function openMesa(mode = (chatDocked ? 'peek' : 'full')) {
+        console.log('[OPEN_MESA] Opening La Mesa, mode:', mode, 'chatIdentity:', chatIdentity);
+        // Auth gate: La Mesa is login-required
+        const authed = await ensureMesaAuth({ silent: false });
+        if (!authed) {
+          console.log('[OPEN_MESA] Not authenticated/verified, showing auth gate');
+          chatPanel.style.display = 'flex';
+          void chatPanel.offsetWidth;
+          chatPanel.classList.add('is-open', 'is-identity-mode');
+          chatPanel.scrollTop = 0;
+          if (chatIdentityScreen) chatIdentityScreen.style.display = 'flex';
+          if (chatBodyContainer) chatBodyContainer.style.display = 'none';
+          applyChatPresentation('full');
           return;
         }
 
@@ -16135,11 +16581,46 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         chatPanel.style.display = 'flex';
         void chatPanel.offsetWidth;
         chatPanel.classList.add('is-open');
-        applyChatPresentation(mode);
+        // The panel itself should never scroll (header/hub must stay pinned).
+        chatPanel.scrollTop = 0;
+        
+        // Show identity mode (hide header/seats) if user hasn't claimed seat yet
+        if (!chatIdentity) {
+          console.log('[OPEN_MESA] No identity, adding is-identity-mode');
+          chatPanel.classList.add('is-identity-mode');
+          if (chatIdentityScreen) chatIdentityScreen.style.display = 'flex';
+          if (chatBodyContainer) chatBodyContainer.style.display = 'none';
+        } else {
+          console.log('[OPEN_MESA] Has identity, removing is-identity-mode');
+          chatPanel.classList.remove('is-identity-mode');
+          if (chatIdentityScreen) chatIdentityScreen.style.display = 'none';
+          if (chatBodyContainer) chatBodyContainer.style.display = 'flex';
+        }
+        console.log('[OPEN_MESA] Panel classes:', chatPanel.className);
+        
+        const params = new URLSearchParams(window.location.search);
+        const forcePeek = params.has('mesaPeek');
+        const resolvedMode = (!forcePeek && window.innerWidth <= 768) ? 'full' : mode;
+        applyChatPresentation(resolvedMode);
+
+        // For returning users with saved identity, load messages and join presence
+        if (chatIdentity && supabase) {
+          loadMessages();
+          subscribeToMessages();
+          joinMesaPresence();
+        }
+
+        // Optional: force the entry ritual for debugging via ?mesaRitual=1
+        if (params.has('mesaRitual')) {
+          setTimeout(() => {
+            if (chatIdentity) enterLaMesaRitual();
+          }, 80);
+        }
       }
 
       function closeMesa() {
         chatPanel.classList.remove('is-open', 'is-peek');
+        chatPanel.scrollTop = 0;
         chatBackdrop?.classList.remove('is-visible');
         mesaTicker?.classList.remove('ticker-dimmed');
         document.body.classList.remove('chat-open');
@@ -16192,7 +16673,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               </div>
               <div class="mesa-presence__badges">
                 ${lfg}
-                ${(!isSelf && playerName) ? `<button class="mesa-presence__invite" type="button" data-invite="${escapeHtml(playerName)}">Invite</button>` : ''}
+                ${(!isSelf && playerName) ? `
+                  <button class="mesa-presence__invite" type="button" data-invite="${escapeHtml(playerName)}" aria-label="Invite ${escapeHtml(playerName)}">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <path d="M12 5v14"/>
+                      <path d="M5 12h14"/>
+                    </svg>
+                  </button>
+                ` : ''}
               </div>
             </div>
           `;
@@ -16381,20 +16869,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         { passive: true }
       );
 
-      // DEBUG: Track ticker class changes
-      if (mesaTicker) {
-        const tickerObserver = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            if (mutation.attributeName === 'class') {
-              console.log('[TICKER DEBUG] Class changed:', mesaTicker.className);
-              console.log('[TICKER DEBUG] Has ticker-dimmed:', mesaTicker.classList.contains('ticker-dimmed'));
-            }
-          });
-        });
-        tickerObserver.observe(mesaTicker, { attributes: true });
-        console.log('[TICKER DEBUG] Initial class:', mesaTicker.className);
-      }
-
       // Toggle Chat & Scroll Lock
       function toggleChat() {
         const isOpen = chatPanel.classList.contains('is-open');
@@ -16403,15 +16877,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           closeMesa();
           vibrate(5);
         } else {
-          // DEFENSIVE CHECK: Never open La Mesa for unregistered users
-          const isRegistered = localStorage.getItem('cdl_registered') === 'true';
-          if (!isRegistered) {
-            routeUnregisteredToRegistration();
-            return;
-          }
-
           // Open (honor last mode)
-          openMesa(chatDocked ? 'peek' : 'full');
+          void openMesa(chatDocked ? 'peek' : 'full');
 
           // Tobias: Clear unread state when entering the room
           tickerChatBtn.classList.remove('has-unread');
@@ -16426,33 +16893,59 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	            if (cubaFlag) centerAvatarOption(cubaFlag, 'instant');
 	          }, 50);
 
-          // Focus input if joined
-          if (chatBodyContainer && chatBodyContainer.style.display !== 'none') {
+          // Peek mode is "chat-first"; full mode is "hub-first" (don't auto-scroll the panel).
+          if (chatBodyContainer && chatBodyContainer.style.display !== 'none' && chatPanel.classList.contains('is-peek')) {
              setTimeout(() => chatInput.focus(), 100);
           }
         }
       }
 
       function updateHubCountdown() {
-        if (!hubCountdownEl) return;
-        const targetDate = new Date('2026-01-31T19:00:00-05:00'); // Fixed tournament date
-        const now = new Date();
-        const diff = targetDate - now;
+        if (!hubCountdownEl) return 60000;
+
+        const targetISO = hubCountdownEl.getAttribute('data-first-slam-at') || '';
+        const targetDate = new Date(targetISO || '2026-01-31T19:00:00-05:00');
+        const diff = targetDate.getTime() - Date.now();
 
         if (diff <= 0) {
-          hubCountdownEl.textContent = '00:00:00';
-          return;
+          hubCountdownEl.textContent = '0M';
+          return 60000;
         }
 
-        const h = Math.floor(diff / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
+        const totalSeconds = Math.floor(diff / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
 
-        hubCountdownEl.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        // Calm, human-readable countdown (avoid HH exceeding 99 like a "timer bug").
+        if (days > 0) {
+          hubCountdownEl.textContent = `${days}D ${String(hours).padStart(2, '0')}H ${String(minutes).padStart(2, '0')}M`;
+          return 30000;
+        }
+
+        if (hours > 0) {
+          hubCountdownEl.textContent = `${hours}H ${String(minutes).padStart(2, '0')}M`;
+          return 30000;
+        }
+
+        if (minutes > 10) {
+          hubCountdownEl.textContent = `${minutes}M`;
+          return 10000;
+        }
+
+        hubCountdownEl.textContent = `${minutes}M ${String(seconds).padStart(2, '0')}S`;
+        return 1000;
       }
 
-      setInterval(updateHubCountdown, 1000);
-      updateHubCountdown();
+      let hubCountdownTimer = null;
+      function scheduleHubCountdown() {
+        if (hubCountdownTimer) window.clearTimeout(hubCountdownTimer);
+        const next = updateHubCountdown();
+        hubCountdownTimer = window.setTimeout(scheduleHubCountdown, next);
+      }
+      scheduleHubCountdown();
+
 
       function renderMesaHubWhoList() {
         const hubWhoList = document.getElementById('mesaHubWhoList');
@@ -16480,7 +16973,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               </div>
               <div class="mesa-presence__badges">
                 ${lfg}
-                ${(!isSelf && playerName) ? `<button class="mesa-presence__invite" type="button" data-invite="${escapeHtml(playerName)}">Invite</button>` : ''}
+                ${(!isSelf && playerName) ? `
+                  <button class="mesa-presence__invite" type="button" data-invite="${escapeHtml(playerName)}" aria-label="Invite ${escapeHtml(playerName)}">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <path d="M12 5v14"/>
+                      <path d="M5 12h14"/>
+                    </svg>
+                  </button>
+                ` : ''}
               </div>
             </div>
           `;
@@ -16570,12 +17070,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         // Reduced debounce: 100ms prevents accidental double-taps while staying snappy
         if (now - lastTickerActivateAt < 100) return;
         lastTickerActivateAt = now;
-
-        const isRegistered = localStorage.getItem('cdl_registered') === 'true';
-        if (!isRegistered) {
-          routeUnregisteredToRegistration();
-          return;
-        }
         toggleChat();
       }
 
@@ -16602,6 +17096,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       tickerChatBtn?.addEventListener('click', (e) => {
         handleTickerActivate();
       });
+
+      // Auto-open La Mesa after auth redirect (/mesa/callback -> /?mesa=1)
+      try {
+        const autoParams = new URLSearchParams(window.location.search);
+        if (autoParams.get('mesa') === '1') {
+          setTimeout(() => {
+            void openMesa('full');
+            // Clean the URL so refresh doesn't keep forcing entry.
+            try {
+              const url = new URL(window.location.href);
+              url.searchParams.delete('mesa');
+              window.history.replaceState({}, '', url.toString());
+            } catch {}
+          }, 120);
+        }
+      } catch {}
 
       // Visual feedback for mouse (iOS :active is unreliable, so we handle this manually)
       tickerChatBtn?.addEventListener('pointerdown', (e) => {
@@ -16656,6 +17166,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           chatBodyContainer.style.display = 'none';
           chatBodyContainer.style.opacity = '1';
           chatIdentityScreen.style.display = 'flex';
+          chatPanel.classList.add('is-identity-mode');
           chatSend.disabled = true;
           chatInput.value = '';
 
@@ -16861,6 +17372,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
           selectedAvatar = opt.dataset.avatar;
           isCountryConfirmed = true;
+          try { updateJoinReadyState(); } catch {}
 
           // Olympic stamp effect - confirm country selection
           const countryName = opt.getAttribute('title') || selectedAvatar;
@@ -17030,6 +17542,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           if (cubaFlag.classList.contains('selected')) {
             isCountryConfirmed = true;
             updateCountryDisplay('Cuba', true);
+            try { updateJoinReadyState(); } catch {}
           }
 
 	          // After entrance animation completes, peek right to hint more flags exist
@@ -17046,46 +17559,59 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         requestAnimationFrame(initializeAvatarRunway);
       }
 
-      // Player selection handler (individual sign-ups, no teams until draft)
-      const chatPlayerSelect = document.getElementById('chatPlayerSelect');
-      const chatNameInput = document.getElementById('chatNameInput');
+      // Player identity (La Mesa is login-required; name is derived from verified registration)
       const chatJoinBtn = document.getElementById('chatJoinBtn');
 
-      // Enable button when select changes - Tobias: Add ready state for declaration moment
-      chatPlayerSelect.addEventListener('change', (e) => {
-        const isReady = !!e.target.value;
-        chatJoinBtn.disabled = !isReady;
-        chatJoinBtn.classList.toggle('is-ready', isReady);
-      });
+      function updateJoinReadyState() {
+        const isReady = !!(mesaAuthVerified && mesaAuthPlayer && isCountryConfirmed);
+        if (chatJoinBtn) {
+          chatJoinBtn.disabled = !isReady;
+          chatJoinBtn.classList.toggle('is-ready', isReady);
+        }
+      }
 
-      // Enable button when typing in text input
-      chatNameInput.addEventListener('input', (e) => {
-        const isReady = !!e.target.value.trim();
-        chatJoinBtn.disabled = !isReady;
-        chatJoinBtn.classList.toggle('is-ready', isReady);
-      });
+      updateJoinReadyState();
 
 	      // Join chat handler - Free Agent status until team assignment
-	      chatJoinBtn.addEventListener('click', () => {
-	        // Get name from custom dropdown, native select, or text input
-	        const playerName = selectedPlayer
-	          || (chatPlayerSelect.style.display !== 'none' ? chatPlayerSelect.value : null)
-	          || chatNameInput.value.trim();
-	        // Using selectedAvatar from global state
-	
-	        if (playerName) {
-	          // All players are Free Agents until the team assignment
-	          chatIdentity = { teamName: null, playerName, avatar: selectedAvatar, status: 'free_agent' };
+	      chatJoinBtn?.addEventListener('click', async () => {
+	        const authed = await ensureMesaAuth({ silent: false });
+	        if (!authed) return;
+	        const playerName = mesaAuthPlayer?.name ? String(mesaAuthPlayer.name).trim() : '';
+	        if (!playerName) return;
+
+	        // All players are Free Agents until the team assignment
+	        chatIdentity = {
+	          teamName: null,
+	          playerId: mesaAuthPlayer.id,
+	          playerName,
+	          avatar: selectedAvatar,
+	          status: 'free_agent'
+	        };
+
+	        try {
 	          localStorage.setItem('cdl_chat_identity', JSON.stringify(chatIdentity));
-	          enterLaMesaRitual();
-	        }
+	        } catch {}
+	        enterLaMesaRitual();
 	      });
 
 	      function enterLaMesaRitual() {
-	        if (!chatIdentity) {
-	          showChatInterface();
-	          return;
-	        }
+        console.log('[RITUAL] Starting entry ritual, chatIdentity:', chatIdentity);
+        if (!chatIdentity) {
+          console.log('[RITUAL] No identity, calling showChatInterface');
+          showChatInterface();
+          return;
+        }
+
+        // ALWAYS open in full mode when entering for the first time (hub should be visible)
+        console.log('[RITUAL] Applying full presentation mode');
+        applyChatPresentation('full');
+        // Ensure panel is marked as open and NOT in peek mode
+        chatPanel.classList.add('is-open');
+        // Force remove peek mode - applyChatPresentation might re-add it based on saved state
+        chatPanel.classList.remove('is-peek');
+        // Keep the panel pinned at the top so the hub modules are visible after entry.
+        chatPanel.scrollTop = 0;
+        chatBodyContainer.scrollTop = 0;
 
 	        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 	        if (reduceMotion || !chatPanel || !mesaEntry) {
@@ -17116,31 +17642,54 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        // Tobias: The slam should be felt, not heard.
 	        vibrate([12, 28, 10]);
 
-        // When the veil is up, swap the room underneath (no hard cut).
-        showChatInterface({ silent: true, hideIdentity: false });
+        // Wait for ritual overlay to fully cover before swapping content underneath
+        // Don't remove is-identity-mode yet - the entry overlay doesn't cover the header
         setTimeout(() => {
-          if (chatIdentityScreen) chatIdentityScreen.style.display = 'none';
-        }, 210);
+          console.log('[RITUAL @180ms] Switching to chat interface, hiding identity screen');
+          // Hide identity first
+          chatIdentityScreen.style.display = 'none';
+          // Show body container and force reflow for smooth transition
+          chatBodyContainer.style.display = 'flex';
+          void chatBodyContainer.offsetWidth; // Force reflow
+          showChatInterface({ silent: true, hideIdentity: false });
+          // Some browsers will try to scroll the nearest scroll container to reveal the input.
+          // The hub lives at the top, so explicitly pin the panel there during this transition.
+          chatPanel.scrollTop = 0;
+          chatBodyContainer.scrollTop = 0;
+        }, 180);
 
 	        // Let the room breathe before the announcement lands.
 	        setTimeout(() => {
+	          console.log('[RITUAL @880ms] Showing entrance announcement for:', firstName);
 	          if (firstName) showEntranceAnnouncement(firstName);
 	        }, 880);
 
-	        // Fade ritual away.
+	        // Fade ritual away
 	        setTimeout(() => {
+	          console.log('[RITUAL @980ms] Removing is-entering (overlay starts fading)');
 	          chatPanel.classList.remove('is-entering');
+	          console.log('[RITUAL @980ms] Panel classes now:', chatPanel.className);
 	        }, 980);
+	        
+	        // Show header/seats AFTER overlay is fully gone
 	        setTimeout(() => {
 	          mesaEntry.setAttribute('aria-hidden', 'true');
 	          mesaEntry.classList.remove('is-live');
-	          if (chatInput) chatInput.focus();
+	          chatPanel.classList.remove('is-identity-mode');
+	          // Land at the top so the user sees the hub modules first (not the empty chat well).
+	          chatPanel.scrollTop = 0;
+	          chatBodyContainer.scrollTop = 0;
 	        }, 1320);
 	      }
 
 	      function showChatInterface({ silent = false, hideIdentity = true } = {}) {
-	        if (hideIdentity) chatIdentityScreen.style.display = 'none';
+	        if (hideIdentity) {
+	          chatIdentityScreen.style.display = 'none';
+	          chatPanel.classList.remove('is-identity-mode');
+	        }
 	        chatBodyContainer.style.display = 'flex'; // Use flex for the container
+	        chatPanel.scrollTop = 0;
+	        chatBodyContainer.scrollTop = 0;
 	        chatSend.disabled = false;
 	
 	        // Only load if supabase is ready, otherwise the interval will handle it
@@ -17154,14 +17703,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        if (!silent && chatIdentity?.playerName) showEntranceAnnouncement(chatIdentity.playerName);
 	      }
 
-      // Entrance announcement - brass pip + "[Name] has joined the table"
+      // Entrance announcement - brass pip + "[Name] pulled up a chair"
       function showEntranceAnnouncement(playerName) {
         const announcement = document.createElement('div');
         announcement.className = 'chat-announcement';
         announcement.innerHTML = `
           <span class="chat-announcement__icon"></span>
           <span class="chat-announcement__name">${escapeHtml(playerName)}</span>
-          <span> has joined the table</span>
+          <span> pulled up a chair</span>
         `;
         chatMessages.appendChild(announcement);
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -17183,11 +17732,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         return div.innerHTML;
       }
 
-	      // If already have identity, show chat interface
+	      // If already have identity, prepare for direct entry (but don't show yet - wait for panel open)
 	      if (chatIdentity) {
 	        // Restore selected avatar if saved, otherwise default
 	        if(chatIdentity.avatar) selectedAvatar = chatIdentity.avatar;
-	        showChatInterface({ silent: true });
+	        // Pre-hide identity screen so when panel opens, user goes directly to chat
+	        chatIdentityScreen.style.display = 'none';
+	        chatBodyContainer.style.display = 'flex';
 	      }
 
       // Load existing messages
@@ -17745,7 +18296,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         presenceChannel = supabase.channel('mesa-presence', {
           config: {
             presence: {
-              key: chatIdentity.playerName,
+              key: mesaAuthUserId || chatIdentity.playerId || chatIdentity.playerName,
             },
           },
         });

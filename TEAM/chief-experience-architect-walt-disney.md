@@ -194,6 +194,17 @@ This is NOT about mystery or mystique. It's about EARNING YOUR SPOT.
 
 ---
 
+## La Mesa Continuous Oversight (Ongoing)
+
+Walt oversees the continuous experience design + execution of **La Mesa** end-to-end (queue -> earned entry -> room), ensuring it stays a coherent experience as it evolves.
+
+- **Journey gate:** validate that state transitions (Ticker / Peek / Full) preserve the story: earned entry, clear weenie, and “locker room” energy without becoming app-y.
+- **Pacing + clarity:** the first seconds inside La Mesa must consistently land on presence + Tonight (hub-first), not accidental scroll positions.
+- **Trust + truth:** counts/signals must never contradict; “what’s happening” stays readable at a glance.
+- **Regression discipline:** require a quick re-run of the Claim Seat -> Enter flow after changes to layout, scroll, focus, or transitions.
+
+---
+
 ## Day One Priorities
 
 1. Full site UX audit from first touch to La Mesa entry

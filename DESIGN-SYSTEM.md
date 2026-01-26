@@ -85,6 +85,7 @@ The domino tile ("la ficha" / "the bone") is the foundational shape of all CDL U
 ### Core Shape Properties
 ```css
 --radius-bone: 12px;     /* Primary radius for all components */
+--radius-carved: 8px;    /* Inner carved/inlaid surfaces inside a bone */
 --radius-pip: 50%;       /* Circular pips/dots only */
 ```
 
@@ -166,6 +167,29 @@ Use this ratio for:
 | **IBM Plex Sans** | Body, UI | 400, 500, 600 | Regular + Italic |
 | **IBM Plex Sans Condensed** | Labels, Stats | 600, 700 | Regular only |
 | **IBM Plex Serif** | Pull quotes, Editorial | 400, 500 | Regular only |
+
+### Scoped Exception: SF Sports Night (Broadcast Display)
+
+`SF Sports Night` is allowed **only** for short, high-impact broadcast labels inside La Mesa (e.g. ticker badge, compact display labels like the country name). It is not a general-purpose font.
+
+Rules:
+- Never use it for body text, long sentences, or UI chrome.
+- Always include design-system fallbacks: `IBM Plex Sans Condensed` then `IBM Plex Sans`.
+- Keep tracking modest: `letter-spacing: 0.04em` to `0.12em` (avoid wide-spaced "tech startup" vibes).
+- If it appears outside La Mesa surfaces, it must be explicitly justified (and documented).
+
+Suggested load (local asset):
+```css
+@font-face {
+  font-family: "SF Sports Night";
+  src:
+    url("/FONT/sf-sports-night/TrueType/SFSportsNight.woff2") format("woff2"),
+    url("/FONT/sf-sports-night/TrueType/SFSportsNight.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+```
 
 ### Google Fonts Import (Standard)
 
@@ -339,6 +363,30 @@ This isn't inconsistency — it's **semantic hierarchy**. Different contexts des
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+}
+```
+
+**La Mesa Threshold — Claim Seat / Enter The Room**
+
+Use when the action is "earned entry" into La Mesa (identity claim / threshold). This should feel like a warm brass plaque with weight.
+
+```css
+.btn-threshold {
+  background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
+  color: #0d0906; /* Ink on brass */
+  border: none;
+  border-radius: 12px;
+  padding: 18px 44px;
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 ```
 

@@ -1,11 +1,12 @@
 ---
 // Admin Dashboard - The Tobias Way: Let the content be the interface
 import AdminLayout from '../../components/admin/AdminLayout.astro';
+import { TOURNAMENT_I } from '../../lib/event';
 
 // Event details (hardcoded for simplicity)
-const EVENT_DATE = new Date('2026-01-31T14:00:00');
-const EVENT_VENUE = 'Stefan\'s Lounge';
-const VENUE_URL = import.meta.env.VENUE_URL || '#';
+const EVENT = TOURNAMENT_I;
+const EVENT_DATE = new Date(EVENT.doorsOpenAt);
+const VENUE_URL = import.meta.env.VENUE_URL || EVENT.venueMapUrl;
 ---
 
 <AdminLayout title="Dashboard" activeNav="dashboard">
@@ -21,7 +22,7 @@ const VENUE_URL = import.meta.env.VENUE_URL || '#';
 
       <!-- Event Details -->
       <div class="event-details">
-        <time class="event-date" datetime="2026-01-31">
+        <time class="event-date" datetime={EVENT.dateISO}>
           <span class="event-date__day">31</span>
           <span class="event-date__month">JAN</span>
           <span class="event-date__year">2026</span>
@@ -30,7 +31,7 @@ const VENUE_URL = import.meta.env.VENUE_URL || '#';
         <div class="event-divider"></div>
 
         <a href={VENUE_URL} class="event-venue" target="_blank" rel="noopener">
-          <span class="event-venue__name">Stefan's Lounge</span>
+          <span class="event-venue__name">{EVENT.venueName}</span>
           <span class="event-venue__label">venue</span>
         </a>
       </div>
@@ -557,10 +558,10 @@ const VENUE_URL = import.meta.env.VENUE_URL || '#';
   }
 </style>
 
-<script>
+<script define:vars={{ doorsOpenAt: EVENT.doorsOpenAt }}>
   // Countdown Timer
   function updateCountdown() {
-    const eventDate = new Date('2026-01-31T14:00:00');
+    const eventDate = new Date(doorsOpenAt);
     const now = new Date();
     const diff = eventDate - now;
 

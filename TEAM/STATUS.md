@@ -8,14 +8,14 @@
 
 ## The Reality Check
 
-**Date:** January 2025
+**Date:** January 2026
 **Status:** Pre-Launch / Ground Zero
 
 We have:
 - ✅ A dream team of 10 legends
 - ✅ **cubandominoleague.com** — LIVE
 - ✅ One tournament scheduled (Tournament I)
-- ✅ A venue (Mr Garcia Cigars)
+- ✅ A venue (Stefan's Lounge)
 - ✅ A registration form that works
 
 We don't have:
@@ -37,9 +37,9 @@ We don't have:
 | Item | Status |
 |------|--------|
 | **Event** | Cuban Domino League — Tournament I |
-| **Date** | Friday, January 31, 2025 |
-| **Time** | 7:00 PM |
-| **Venue** | Mr Garcia Cigars (74th & Broadway, NYC) |
+| **Date** | Saturday, January 31, 2026 |
+| **Time** | 6:00 PM (doors open) |
+| **Venue** | Stefan's Lounge (333 Bergenline Blvd, Fairview, NJ) |
 | **Entry** | $50 per team ($25/person) |
 | **Format** | Play to 150 points |
 | **Teams** | Target: 10 teams (0 registered) |
@@ -134,7 +134,7 @@ This is a cigar shop tournament with $500 on the line. We treat it like the Worl
 
 ## Last Updated
 
-**January 2025** — Initial status document created
+**January 2026** — Updated status document for Tournament I
 
 ---
 

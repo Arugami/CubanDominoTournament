@@ -15,7 +15,7 @@
 - [ ] Confirm all registered teams 48 hours before
 
 ### Venue & Logistics
-- [ ] Confirm Mr Garcia Cigars booking
+- [ ] Confirm Stefan's Lounge booking
 - [ ] Site visit — measure space, plan layout
 - [ ] Determine table setup (how many games simultaneously?)
 - [ ] Plan bracket/tournament flow
@@ -196,8 +196,8 @@
 - [x] Assemble dream team (10 legends)
 - [x] **cubandominoleague.com LIVE**
 - [x] Registration system working
-- [x] Venue identified (Mr Garcia Cigars)
-- [x] Date set (January 31, 2025)
+- [x] Venue identified (Stefan's Lounge, 333 Bergenline Blvd, Fairview, NJ)
+- [x] Date set (January 31, 2026)
 - [x] Visual assets created (4 panels)
 - [x] Team documentation complete
 - [x] Domain secured and pointing
@@ -246,7 +246,7 @@ Every `git push` to `main` automatically deploys to cubandominoleague.com.
 ```
 APP_SCRIPT_URL=https://script.google.com/macros/s/XXXXX/exec
 APP_SCRIPT_SECRET=your-shared-secret
-VENUE_URL=https://share.google/Bd3ZofPsvccfdT7EC
+VENUE_URL=https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ
 ```
 
 ### Deploy Workflow

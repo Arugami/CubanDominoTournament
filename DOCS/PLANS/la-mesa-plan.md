@@ -4,6 +4,8 @@
 **Owner(s):** Product: Tobias (craft) + Walt (journey)  
 **Design System Anchor:** `DESIGN-SYSTEM.md` (Bone Language + Club 33 + ticker/broadcast energy)
 **Vision Anchor:** `TEAM/SESSIONS/2026-01-19-la-mesa-vision.md` (Three Pillars + Phase 1 “Community Pulse”)
+**Worklog / Execution Log:** `TEAM/SESSIONS/2026-01-26-la-mesa-worklog.md` (append-only notes + implementation status)
+**Admin Console Anchor:** `DOCS/PLANS/la-oficina-plan.md` (how admins keep the room truthful)
 
 ---
 
@@ -21,6 +23,58 @@ La Mesa should feel like a **hub/lobby** you arrive at (and linger in) — not �
   3) **Tonight / Next up** (Tournament I source of truth for now)
 - **Primary CTA language:** `CLAIM YOUR SEAT` (align with Panel 4)
 - **Second-screen is first-class:** La Mesa must work while playing/watching (Peek mode must stay clean)
+
+---
+
+## P0 Before Tournament I (Jan 31, 2026)
+
+These are "trust and readability" fixes. If La Mesa lies (venue/day/time) or reads like a timer bug, the room breaks.
+
+### 1) Tonight card truth (source of truth + consistency)
+
+- Lock the Tonight module venue + call time to the canonical event record.
+- Canonical event details live in `src/lib/event.ts` and must be used everywhere (Hero / Registration success / La Mesa hub / Admin dashboard).
+- Guardrail: **Jan 31, 2026 is Saturday** (never label it Friday).
+
+Acceptance:
+- Venue string, city/state, day-of-week, date, and time match across Hero / Registration / La Mesa.
+Status:
+- Implemented (2026-01-26).
+
+### 2) Countdown readability (no "timer bug" look)
+
+- Replace `HH:MM:SS` that can exceed 99 hours (e.g. `122:09:47`) with a human format:
+  - Preferred: `5D 02H 09M` (optionally small seconds).
+- Countdown code lives in `src/pages/index.astro:16486`.
+- Update rate: minute-by-minute is calm; seconds only if it adds tension without noise.
+
+Acceptance:
+- Countdown never shows hours > 99 in a sports-clock format.
+- The display is immediately readable at a glance.
+Status:
+- Implemented (2026-01-26).
+
+### 3) Hub-to-chat cue (discoverability without "app UI")
+
+- Add a subtle cue between the hub stack and the transcript that communicates "chat continues below":
+  - Brass divider + small "CHAT" label + pip/arrow (no bouncy motion).
+- Insert point is just before `#chatMessages` in `src/pages/index.astro:14408`.
+
+Acceptance:
+- First-time users discover chat without accidentally "falling" into the empty chat well.
+Status:
+- Implemented (2026-01-26).
+
+### 4) Who's Here actions (scannable first, actions second)
+
+- "Invite" currently reads a bit noisy/UI-ish in the hub list.
+- Shift primary action to row-tap = prefill `@Name`; keep "Invite" as a quieter secondary action (icon-only or contextual).
+- Hub Who row markup is generated in `src/pages/index.astro:16526` (hub list) and `src/pages/index.astro:16287` (presence list click handler).
+
+Acceptance:
+- Who’s Here stays fast to scan; actions don't compete with names.
+Status:
+- Implemented (2026-01-26).
 
 ---
 
@@ -113,7 +167,7 @@ We satisfy personas mostly via **ordering, copy, and restraint** (not new featur
 
 ---
 
-## Phased Plan (No Build Yet)
+## Phased Plan (Spec -> Implementation -> Polish)
 
 ### Phase 0: Spec Lock (1 doc pass)
 - Define exact behaviors for the 3 states (Ticker/Peek/Full) and transitions.
@@ -122,12 +176,16 @@ We satisfy personas mostly via **ordering, copy, and restraint** (not new featur
 
 **Deliverable:** this plan + a 1-page UX spec addendum (can live in `DOCS/PLANS/la-mesa-plan.md`).
 
+**Status (2026-01-26):** State model + hub IA are implemented; copy + "first 5 seconds" pacing still needs polish.
+
 ### Phase 1: Hub UX Flows
 - Presence interactions: open list, tap user, LFG toggle rules (peek-safe).
 - Board interactions: read-only vs expand; what “official” means.
 - Tonight interactions: what is tappable (map link? add-to-calendar later?).
 
 **Deliverable:** flow notes + acceptance criteria per module.
+
+**Status (2026-01-26):** Baseline hub stack is implemented; polish tracked in "Claim Your Seat (Identity) - Polish Backlog".
 
 ### Phase 2: Content & Ownership
 - Decide who publishes Board items (source + cadence).
@@ -141,10 +199,60 @@ We satisfy personas mostly via **ordering, copy, and restraint** (not new featur
 - “Second screen” test: Peek mode never blocks core tasks; Full mode feels earned.
 - “Trust” test: counts never contradict (in-room vs active today vs ticker).
 - “Vision tests” pass: Room Test + Abuela Test + Broadcast Test + Volume Test.
+- **Regression test:** after tapping **CLAIM YOUR SEAT**, hub modules are visible immediately and `document.getElementById('chatPanel').scrollTop === 0`.
 
 **Deliverable:** checklist + test scenarios.
 
 ---
+
+## Pre-Merge Checklist (La Mesa)
+
+Run these any time you touch: layout, scroll/focus, ritual timing, Peek/Full state logic, or hub visibility.
+
+### 0) Boot safety (no console-killing errors)
+
+- Reload `/` with DevTools console open.
+- Expected:
+  - No `SyntaxError` on load.
+  - Loader dismisses and Hero renders normally.
+  - Avoid shipping literal `${...}` placeholders inside raw `<script>` text (use `data-*` or supported Astro patterns).
+
+### 1) First-time entry (no identity)
+
+In DevTools console:
+
+```js
+localStorage.setItem('cdl_registered', 'true');
+localStorage.removeItem('cdl_chat_identity');
+localStorage.setItem('cdl_mesa_docked_v2', 'false');
+location.reload();
+```
+
+- Open La Mesa -> pick a name -> **CLAIM YOUR SEAT**
+- Expected after ritual:
+  - Hub stack visible immediately (Who's Here / The Board / Tonight)
+  - `document.getElementById('chatPanel').scrollTop === 0`
+  - `getComputedStyle(document.getElementById('mesaHubStack')).display !== 'none'`
+
+### 2) Peek/second-screen behavior
+
+- Tap Dock (Peek)
+- Expected:
+  - Hub stack hidden (Peek is chat-first)
+  - Dock button reads “Expand”
+  - Composer focus is allowed
+
+### 3) Close/reopen
+
+- Close La Mesa, reopen
+- Expected:
+  - Full mode remains hub-first (no surprise scroll to composer)
+  - `#chatPanel` does not become a scroll container (header/hub never “scroll away”)
+
+### 4) Truth + readability (Tonight / countdown)
+
+- Tonight card matches canonical venue + call time (and correct day-of-week for Jan 31, 2026).
+- Countdown format is human readable (no `122:..` style hours).
 
 ## MVP Specs (So We Don’t Overcomplicate)
 
@@ -168,10 +276,12 @@ Performance rules (second-screen protection)
 - No heavy animations inside the hub; collapses/expands must feel instant.
 - Lists and counters never jank; prefer fewer items over more “features.”
 - No emoji-driven UI (use bone/pip language + typography instead).
+- **Never scroll the shell:** `#chatPanel` is a fixed vessel (header + seats + hub pinned). Only `.chat-body-container` / `.chat-messages` may scroll.
+- **No forced focus on Full entry:** Full mode is hub-first; avoid auto-focusing the composer on entry (it can trigger scroll jumps that hide the hub).
 
 ---
 
-## Open Questions (Answer Before Building)
+## Open Questions (Answer Before Next Polish Pass)
 
 - What is Tournament I’s canonical “Tonight” data (final time/call time/venue address string)?
 - Does the Board support multiple items or a single pinned item at launch?
@@ -194,7 +304,67 @@ These are promising, but they will complicate the hub if we do them now:
 
 ---
 
-## Docs To Update After We Decide + Build
+## Docs To Update After We Decide + Polish
 
 - `DOCS/DECISION RECORDS/ADR-002-la-mesa-features.md` (reflect hub-first IA + CTA language)
 - `TEAM/SESSIONS/2026-01-26-la-mesa-worklog.md` (append-only execution log)
+
+---
+
+## Current Implementation Notes (Reality Check)
+
+As of **2026-01-26**, the hub-first IA is implemented in `src/pages/index.astro` (La Mesa panel + hub modules + claim-seat flow).
+
+This plan now focuses on **polish + consistency** (design-system alignment, copy discipline, and second-screen performance guardrails).
+
+---
+
+## Claim Your Seat (Identity) - Polish Backlog
+
+Goal: the "Claim Your Seat" screen should feel like a **threshold ritual** (earned entry) while staying consistent with `DESIGN-SYSTEM.md` (Bone Language + broadcast DNA).
+
+### 1) Design System Alignment (Must Fix)
+
+- **CTA styling decision:** align the "CLAIM YOUR SEAT" button with either:
+  - `DESIGN-SYSTEM.md` **Public site CTA punch** (`.btn-primary`), or
+  - a documented **La Mesa threshold CTA** variant (explicitly added to `DESIGN-SYSTEM.md`).
+- **Motion guardrails:** bring the identity stagger + sequence back into system timing:
+  - Stagger: 60-80ms steps
+  - Total: < 400ms
+  - Default transitions: 150-300ms
+- **Bone radius consistency:** ensure key controls stay on `--radius-bone: 12px` and avoid one-off corners.
+  - If we keep an **inner carved radius** (e.g., 8px) for nested inputs/options, document it as an allowed exception in `DESIGN-SYSTEM.md`.
+- **Font policy:** decide whether "SF Sports Night" is:
+  - a blessed exception (ticker-only / La Mesa-only), or
+  - removed in favor of design-system fonts (IBM Plex / Bodoni).
+
+### 2) UX/Craft Cleanup (Should Fix)
+
+- **Dropdown keyboard focus:** keyboard navigation exists; add a visible `.is-focused` state so it feels intentional (and accessible).
+- **Remove JS-based hover styling** in dropdown options; prefer CSS-only states to prevent drift.
+- **Deduplicate styles** (avoid multiple competing definitions for the same class).
+
+**Implemented (2026-01-26):**
+- Added `.is-focused` styling and focus-visible outlines for the custom dropdown.
+- Removed JS-driven hover styling for dropdown options (CSS-only).
+- Removed the custom dropdown's separate animation/opacity so it follows the identity stagger.
+- Deduped competing `.chat-identity__register-hint` style definitions.
+
+### 3) Copy Discipline (Pick + Commit)
+
+- Replace app-y microcopy where it shows up ("Tap to represent") with room/ritual language and standardize:
+  - Representing / Plant your flag / Pull up a chair (choose a single dialect and apply everywhere).
+- Empty/quiet copy should build anticipation, not absence:
+  - Use a consistent line across seat strip, hub, and empty chat states (e.g., "Quiet right now. Pull up a chair." or "The calm before the storm.").
+
+---
+
+## Acceptance Criteria (Claim Your Seat)
+
+- The screen reads as **one scene** (threshold) with consistent typography, spacing, and bone geometry.
+- The CTA feels like an **object with weight** (press/hover/disabled states) and matches documented button semantics.
+- No count/copy contradictions between:
+  - "active today"
+  - "who's here" / presence
+  - seat strip / occupancy hints
+- Second-screen safety holds: no heavy effects, no jank, no unnecessary motion while docked.

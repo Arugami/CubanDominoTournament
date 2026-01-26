@@ -1,0 +1,232 @@
+---
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CDL • La Mesa</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #1c130f;
+        --brass: #d4a574;
+        --copper: #b76a3b;
+        --cream: #f8efe6;
+        --border: #3d2e26;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: radial-gradient(1200px 700px at 50% 20%, #2a1f1a 0%, var(--ink) 60%, #0a0705 100%);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: var(--cream);
+      }
+
+      .card {
+        width: 100%;
+        max-width: 520px;
+        border-radius: 16px;
+        padding: 34px;
+        border: 1px solid var(--border);
+        background: linear-gradient(135deg, rgba(42, 31, 26, 0.92) 0%, rgba(28, 19, 15, 0.92) 100%);
+        box-shadow: 0 18px 45px rgba(20, 10, 6, 0.38);
+      }
+
+      .kicker {
+        margin: 0 0 10px 0;
+        font-size: 12px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--copper);
+      }
+
+      .title {
+        margin: 0 0 10px 0;
+        font-size: 28px;
+        line-height: 1.1;
+        color: var(--brass);
+        font-style: italic;
+      }
+
+      .sub {
+        margin: 0 0 26px 0;
+        opacity: 0.9;
+        color: var(--cream);
+      }
+
+      .state {
+        border: 1px solid rgba(212, 165, 116, 0.18);
+        border-radius: 12px;
+        padding: 18px;
+        background: rgba(212, 165, 116, 0.06);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #4ade80;
+        box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.12);
+        flex: 0 0 auto;
+      }
+
+      .btn {
+        display: inline-block;
+        margin-top: 18px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 650;
+        background: linear-gradient(135deg, var(--copper) 0%, var(--brass) 100%);
+        color: #1c130f;
+      }
+
+      .btn--ghost {
+        background: transparent;
+        border: 1px solid rgba(212, 165, 116, 0.22);
+        color: var(--cream);
+        font-weight: 600;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <p class="kicker">CDL</p>
+      <h1 class="title">La Mesa</h1>
+      <p class="sub">Verifying your seat…</p>
+
+      <div class="state" id="loadingState">
+        <div class="row">
+          <span class="dot" aria-hidden="true"></span>
+          <div>Authenticating</div>
+        </div>
+      </div>
+
+      <div class="state hidden" id="deniedState">
+        <div style="color: var(--brass); font-weight: 700; margin-bottom: 6px;">Seat not found</div>
+        <div style="opacity: 0.9;">
+          This email isn’t registered for the tournament yet. Register first, then come back.
+        </div>
+        <div class="actions">
+          <a class="btn" href="/#signup">Register</a>
+          <a class="btn btn--ghost" href="/">Back</a>
+        </div>
+      </div>
+
+      <div class="state hidden" id="errorState">
+        <div style="color: var(--brass); font-weight: 700; margin-bottom: 6px;">Authentication failed</div>
+        <div id="errorMessage" style="opacity: 0.9;"></div>
+        <div class="actions">
+          <a class="btn" href="/?mesa=1">Try again</a>
+          <a class="btn btn--ghost" href="/">Back</a>
+        </div>
+      </div>
+    </div>
+
+    <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
+      const loadingState = document.getElementById('loadingState');
+      const deniedState = document.getElementById('deniedState');
+      const errorState = document.getElementById('errorState');
+      const errorMessage = document.getElementById('errorMessage');
+
+      function showDenied() {
+        loadingState.classList.add('hidden');
+        deniedState.classList.remove('hidden');
+      }
+
+      function showError(message) {
+        loadingState.classList.add('hidden');
+        errorMessage.textContent = message;
+        errorState.classList.remove('hidden');
+      }
+
+      async function handleCallback() {
+        try {
+          const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+          const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+          const { data: { session } } = await supabase.auth.getSession();
+
+          if (!session) {
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            const accessToken = hashParams.get('access_token');
+            const refreshToken = hashParams.get('refresh_token');
+
+            if (accessToken && refreshToken) {
+              const { data, error } = await supabase.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken,
+              });
+              if (error) return showError(error.message);
+              if (data.session) return await verifyPlayer(supabase, data.session);
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            if (code) {
+              const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+              if (error) return showError(error.message);
+              if (data.session) return await verifyPlayer(supabase, data.session);
+            }
+
+            return showError('No authentication tokens found. Please try again.');
+          }
+
+          await verifyPlayer(supabase, session);
+        } catch (err) {
+          console.error('[MESA_CALLBACK] Error:', err);
+          showError('Something went wrong. Please try again.');
+        }
+      }
+
+      async function verifyPlayer(supabase, session) {
+        const userEmail = String(session?.user?.email || '').toLowerCase();
+        if (!userEmail) {
+          await supabase.auth.signOut();
+          return showDenied();
+        }
+
+        const { data: player, error } = await supabase
+          .from('players')
+          .select('id, status')
+          .eq('email', userEmail)
+          .in('status', ['registered', 'confirmed'])
+          .maybeSingle();
+
+        if (error || !player) {
+          await supabase.auth.signOut();
+          return showDenied();
+        }
+
+        window.location.href = '/?mesa=1';
+      }
+
+      handleCallback();
+    </script>
+  </body>
+</html>
+

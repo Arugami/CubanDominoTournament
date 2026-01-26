@@ -2,6 +2,8 @@ interface Env {
   APP_SCRIPT_URL?: string;
   APP_SCRIPT_SECRET?: string;
   VENUE_URL?: string;
+  SUPABASE_URL?: string;
+  SUPABASE_SERVICE_ROLE_KEY?: string;
 }
 
 type RegistrationPayload = {
@@ -83,7 +85,45 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const upstreamJson = await upstreamResponse.json().catch(() => null);
   const ok = !!(upstreamJson && typeof upstreamJson === "object" && (upstreamJson as any).ok === true);
 
-  if (ok) return json({ ok: true });
+  if (ok) {
+    // Best-effort: sync the player into Supabase so La Mesa login can verify seats cross-device.
+    // Never block registration success on this sync (Sheets is the primary source for now).
+    const supabaseUrl = clean(env.SUPABASE_URL);
+    const serviceKey = clean(env.SUPABASE_SERVICE_ROLE_KEY);
+    let supabaseSynced = false;
+
+    if (supabaseUrl && serviceKey) {
+      try {
+        const restUrl = new URL("/rest/v1/players", supabaseUrl);
+        restUrl.searchParams.set("on_conflict", "email");
+
+        const player = {
+          email: email.toLowerCase(),
+          name: clean(body.playerName),
+          phone: clean(body.phone),
+          notes: clean(body.notes),
+          status: "registered",
+        };
+
+        const res = await fetch(restUrl.toString(), {
+          method: "POST",
+          headers: {
+            apikey: serviceKey,
+            authorization: `Bearer ${serviceKey}`,
+            "content-type": "application/json",
+            prefer: "resolution=merge-duplicates,return=minimal",
+          },
+          body: JSON.stringify(player),
+        });
+
+        supabaseSynced = res.ok;
+      } catch {
+        supabaseSynced = false;
+      }
+    }
+
+    return json({ ok: true, supabaseSynced });
+  }
 
   return json(
     { ok: false, error: "upstream_error", upstream: upstreamJson },

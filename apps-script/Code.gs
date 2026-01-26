@@ -205,6 +205,44 @@ function doPost(e) {
       return json({ ok: true }, 200);
     }
 
+    // Admin actions (server-to-server only; protected by shared secret)
+    if (body.action === "admin_list_players") {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const sheetName = getSheetName();
+      const sh = ss.getSheetByName(sheetName);
+
+      if (!sh || sh.getLastRow() < 2) {
+        return json({ ok: true, players: [] }, 200);
+      }
+
+      const headers = ensureSheetHeaders(sh);
+      const createdAtIdx = headers.indexOf("createdAt");
+      const playerNameIdx = headers.indexOf("playerName");
+      const emailIdx = headers.indexOf("email");
+      const phoneIdx = headers.indexOf("phone");
+      const notesIdx = headers.indexOf("notes");
+      const statusIdx = headers.indexOf("status");
+      const sourceIdx = headers.indexOf("source");
+
+      const dataRange = sh.getRange(2, 1, sh.getLastRow() - 1, headers.length);
+      const rows = dataRange.getValues();
+
+      const players = rows
+        .map((row, idx) => ({
+          rowNumber: idx + 2,
+          createdAt: createdAtIdx >= 0 ? String(row[createdAtIdx] || "").trim() : "",
+          playerName: playerNameIdx >= 0 ? String(row[playerNameIdx] || "").trim() : "",
+          email: emailIdx >= 0 ? String(row[emailIdx] || "").trim().toLowerCase() : "",
+          phone: phoneIdx >= 0 ? String(row[phoneIdx] || "").trim() : "",
+          notes: notesIdx >= 0 ? String(row[notesIdx] || "").trim() : "",
+          status: statusIdx >= 0 ? String(row[statusIdx] || "").trim().toLowerCase() : "registered",
+          source: sourceIdx >= 0 ? String(row[sourceIdx] || "").trim() : "",
+        }))
+        .filter((p) => p.email && p.playerName);
+
+      return json({ ok: true, players: players }, 200);
+    }
+
     // Validate required fields - individual player registration
     const required = ["playerName", "email", "phone", "ruleConfirm"];
     for (const k of required) {
@@ -321,7 +359,7 @@ function buildConfirmationEmailHTML(body) {
 
     <div style="background: rgba(183, 106, 59, 0.1); border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid rgba(183, 106, 59, 0.2);">
       <p style="margin: 0 0 12px 0; font-size: 16px;">
-        <strong style="color: #d4a574;">📅 Date:</strong> Friday, January 31st, 2025 @ 6PM
+        <strong style="color: #d4a574;">📅 Date:</strong> Saturday, January 31st, 2026 @ 6PM
       </p>
       <p style="margin: 0 0 12px 0; font-size: 16px;">
         <strong style="color: #d4a574;">📍 Location:</strong> Stefan's Lounge (333 Bergenline Blvd, Fairview)

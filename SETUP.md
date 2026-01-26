@@ -47,7 +47,7 @@ The browser submits to a Cloudflare Pages Function (`/api/register`), which forw
 ```
 APP_SCRIPT_URL="https://script.google.com/macros/s/REPLACE/exec"
 APP_SCRIPT_SECRET="REPLACE_WITH_SAME_LONG_RANDOM"
-VENUE_URL="https://share.google/Bd3ZofPsvccfdT7EC"
+VENUE_URL="https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ"
 ```
 
 ### Optional: realtime chat

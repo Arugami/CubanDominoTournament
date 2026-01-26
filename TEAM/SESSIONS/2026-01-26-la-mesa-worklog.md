@@ -2,7 +2,7 @@
 ## La Mesa Experience Audit + Worklog Kickoff (Ticker Vibes Protected)
 
 **Session Lead:** Tobias van Schneider (Chief Product Designer) + Walt Disney (Chief Experience Architect)  
-**Session Type:** Audit + planning (no build)  
+**Session Type:** Audit + planning + worklog (implementation tracked explicitly below)  
 **Core Constraint:** Keep La Mesa "ticker" vibes (broadcast energy + cigar-lounge depth) per `DESIGN-SYSTEM.md`
 
 ---
@@ -34,8 +34,8 @@
 
 - **Join CTA copy drift:**
   - Docs repeatedly call for **"DEAL ME IN"** (Jan 12/23).
-  - Current UI uses **"TAKE YOUR SEAT"** (`src/pages/index.astro`).
-  - Decision needs to be made and then reflected in ADR/session docs.
+  - Current UI uses **"CLAIM YOUR SEAT"** (`src/pages/index.astro`).
+  - Keep **"CLAIM YOUR SEAT"** as the standard (aligns Panel 4 + hub plan); update older docs that still reference "DEAL ME IN".
 - **Entrance announcement copy drift:**
   - Desired tone in docs: **"pulled up a chair"** (invitation + room acknowledgement).
   - Current announcement copy reads: **"[Name] has joined the table"**.
@@ -81,9 +81,8 @@
 
 ## Decisions Needed (Pick One, Then Update ADR-002 + UI Copy Everywhere)
 
-1. **Join button copy:** "DEAL ME IN" vs "TAKE YOUR SEAT" vs "CLAIM YOUR SEAT"
-2. **Entrance announcement tone:** "pulled up a chair" vs "joined the table" (or a third option)
-3. **Ticker font policy:** strict design-system fonts only vs explicit ticker-only exception
+1. **Entrance announcement tone:** "pulled up a chair" vs "joined the table" (or a third option)
+2. **Ticker font policy:** strict design-system fonts only vs explicit ticker-only exception
 
 ---
 
@@ -108,6 +107,10 @@ Add new entries as we go:
 - **Decision:** Entry/join CTA language standardizes to **"CLAIM YOUR SEAT"** (match Panel 4), not "Deal me in" or "Take your seat."
 - **Discord reference review:** Adapt scannable sections + badges + collapsible groups; do not copy channel sprawl/roles. Keep hub minimal (presence, board, tonight) and second-screen fast.
 - **UI direction:** Remove split-screen + Discord channel list. Replace with a horizontal seat strip and stacked hub modules. Strip emojis from navigation/quick talk.
+- **Implementation pass:** Aligned La Mesa typography to design-system fonts (removed "SF Sports Night"), standardized ticker badge to **"LA MESA"**, updated entrance announcement to "**pulled up a chair**", and normalized key chat radii to the 12px bone radius.
+- **Implementation pass:** Expanded 12px bone radius enforcement across La Mesa surfaces (domino toggle, presence sheet/rows, tooltips, modals, badges, and whisper toggle). Pips remain circular.
+- **Decision:** Restored the ESPN-style "SF Sports Night" font for La Mesa badge + header + ritual countdown to reinforce the broadcast layer.
+- **Experience fix:** Reset docked state storage so the hub opens in Full mode by default after the redesign (`cdl_mesa_docked_v2`).
 
 ### Hub Stack (Planning Spec - No Build Yet)
 
@@ -136,18 +139,82 @@ Add new entries as we go:
 - Broadcast labels (IBM Plex Sans Condensed), bone corners (12px), warm depth, restrained pulses (no bouncy motion).
 - Modules must feel like part of the ticker ecosystem (lower-third logic), not a separate product.
 
+### Implementation Status (Observed in `src/pages/index.astro` as of 2026-01-26)
 
-### Execution: Completion
-- [x] **Core Hub Infrastructure**: Implemented two-column Discord-style layout with scannable `mesa-sidebar`.
-- [x] **Module 1 (Who's Here)**: Integrated real-time presence with synchronized LFG toggles.
-- [x] **Module 2 (The Board)**: Populated scannable broadcast announcements with lower-third styling.
-- [x] **Module 3 (Tonight)**: Built event ritual module with live countdown and venue details.
-- [x] **Transition**: Polished the "enter table" ritual to seamlessly reveal the Hub layout.
-
-### Verification: Success
-- **Steve Broadcast Test**: Passed. Modules are scannable at a glance with high-contrast condensed typography.
-- **Abuela Test**: Passed. The color palette (tobacco/brass/cream) and flag icons maintain cultural warmth.
-- **George Volume Test**: Passed. Transitions are smooth (<400ms) without aggressive bouncy motion.
+- **State model is implemented:** Ticker (closed), Peek (docked), Full (in-room). Peek hides the hub stack to protect second-screen use.
+- **Full mode layout matches the hub plan:** header ("La Mesa" + Who's here), horizontal seats strip, hub stack modules (Who's Here / The Board / Tonight), then chat transcript + composer.
+- **Known remaining drift:** entrance announcement copy still uses "**has joined the table**" (plan wants "**pulled up a chair**").
+- **Font policy still needs a decision:** "SF Sports Night" is used in some La Mesa surfaces; either bless as ticker-only/La Mesa-only exception or replace with design-system fonts everywhere.
 
 ---
 *Worklog finalized by Antigravity at 11:15 AM EST.*
+
+---
+
+## Worklog (Append-Only)
+
+### 2026-01-26 (Later) - Claim Your Seat Review (Tobias + Walt)
+
+- Reviewed the "Claim Your Seat" screen for design-system alignment (Bone radius, typography rules, motion guardrails) against `DESIGN-SYSTEM.md`.
+- Logged plan updates in `DOCS/PLANS/la-mesa-plan.md` (added "Current Implementation Notes" + a concrete polish backlog for Claim Your Seat).
+- Identified the key polish items to schedule next:
+  - CTA semantics: either align to `.btn-primary` spec or document a La Mesa threshold CTA variant and use it consistently.
+  - Motion: reduce identity stagger/sequence timing to match design-system guardrails (<400ms total; 60-80ms stagger steps).
+  - Shape: normalize radii back to 12px on key controls; document any allowed inner-radius exception.
+  - Typography: decide/record the "SF Sports Night" policy (ticker-only/La Mesa-only exception vs remove).
+  - Dropdown craft: add visible keyboard focus styling; remove JS-driven hover styling; dedupe duplicate class definitions.
+
+### 2026-01-26 (Later) - Claim Your Seat Consistency Pass (Docs + Code)
+
+- Updated `DESIGN-SYSTEM.md` to document:
+  - `--radius-carved: 8px` for inner carved/inlaid surfaces (inside a bone).
+  - A scoped, explicit `SF Sports Night` exception (broadcast labels only, with IBM Plex fallbacks).
+  - A `btn-threshold` semantic button spec for La Mesa earned entry (claim seat / threshold moments).
+- Updated `src/pages/index.astro` (Claim Your Seat):
+  - Tightened identity-screen animation timing + stagger (faster, consistent with guardrails).
+  - Removed the custom dropdown's separate animation/opacity so it follows the same stagger system.
+  - Added keyboard-visible focus styles and a `.is-focused` visual state for dropdown options.
+  - Removed JS-driven hover styling for dropdown options (CSS-only to prevent drift).
+  - Removed duplicate `.chat-identity__register-hint` style definition and normalized spacing.
+
+### 2026-01-26 (Later) - Bug Fix: Hub Not Visible After Claim Seat
+
+- Root cause: `#chatPanel` became the scroll container; a post-ritual focus/scroll jump pushed the **hub stack above the viewport**, making it look "missing".
+- Fix in `src/pages/index.astro`:
+  - CSS: prevented the panel from becoming a scroll container (`overflow: clip`) and fixed nested flex scrolling (`min-height: 0` on `.chat-main` / `.chat-body-container`).
+  - JS: pinned scroll to the top during open/close/ritual (`chatPanel.scrollTop = 0`, `chatBodyContainer.scrollTop = 0`) and avoided auto-focus in Full mode (hub-first).
+- Verification: repeated full flow (open -> pick name -> CLAIM YOUR SEAT) lands on hub modules immediately; Peek mode remains chat-first.
+- Documentation: wrote regression + prevention notes in `DOCS/BUGS/009-la-mesa-hub-visibility-scroll-container.md`.
+
+### 2026-01-26 (Later) - Tobias + Walt Review (Post-Fix, Next P0 Improvements)
+
+- Tobias (craft): fix Tonight card truth (venue/day/time), fix countdown readability (no `122:..` hours), add subtle hub-to-chat cue, reduce "Invite" UI noise in Who's Here.
+- Walt (journey): single source of truth across Hero / Registration / La Mesa; first 5 seconds in-room stays hub-first; treat focus/scroll changes as ride-safety regressions.
+- Action plan captured in `DOCS/PLANS/la-mesa-plan.md` under "P0 Before Tournament I (Jan 31, 2026)" and added as tasks in `MASTERTODO.md`.
+
+### 2026-01-26 (Later) - P0 Trust + Readability Pass Implemented (Tobias + Walt)
+
+- Canonical event details centralized in `src/lib/event.ts` and wired through Hero / Success / La Mesa (venue, city/state, day-of-week, call time).
+- Tonight countdown updated to a human format (no `122:..` hours) with a calmer update cadence in `src/pages/index.astro`.
+- Added a subtle hub-to-chat cue between the hub stack and transcript (brass divider + "CHAT" label).
+- Reduced "Invite" UI noise by turning it into a quieter icon action; row-tap remains the primary @mention behavior.
+- Documented the full-page screenshot “repeating UI” as a stitching artifact (QA false-positive) in `DOCS/BUGS/010-full-page-screenshot-repeats-fixed-ui.md`.
+
+### 2026-01-26 (Later) - Boot Safety Fix: Loader Stuck (SyntaxError)
+
+- Fixed a boot-blocking inline script SyntaxError that prevented the loading screen from dismissing.
+- Root cause: attempted to inject a server-side value into raw `<script>` text via `${...}`; Astro shipped it literally into `dist/index.html`.
+- Fix: moved the value into `data-first-slam-at` on `#mesaHubCountdown` and read it at runtime.
+- Documented as `DOCS/BUGS/011-loading-screen-stuck-inline-script-syntax-error.md`.
+
+### 2026-01-26 (Later) - Identity Decision: Login Required (Player Verification)
+
+- Decision: La Mesa becomes **login-required** (prevents impersonation; supports cross-device returns).
+- Implementation (website):
+  - Added player auth callback page at `src/pages/mesa/callback.astro` (magic link return → verifies player is registered/confirmed → routes back to the site).
+  - Updated Claim Your Seat identity UI to gate entry by **email magic link** (name is pulled from the registered player record; no name-picking list).
+  - Updated presence keying to avoid name collisions (presence uses auth user id when available).
+- Implementation (registration pipeline):
+  - `/api/register` now best-effort upserts the registering player into Supabase `players` (Sheets remains the primary source of truth).
+- Security:
+  - Added a migration to require authenticated + registered players for message inserts (and tightened team invite writes where applicable).

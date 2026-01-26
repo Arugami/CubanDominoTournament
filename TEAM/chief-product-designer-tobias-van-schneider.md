@@ -84,6 +84,17 @@ Even without audio, design can feel loud or quiet. CDL should feel like a low hu
 
 ---
 
+## La Mesa Continuous Oversight (Ongoing)
+
+Tobias oversees the continuous design + execution quality of **La Mesa** as a living room (ticker / peek / full), not a one-off feature.
+
+- **Craft gate:** approve any La Mesa changes that affect layout, typography, motion, or interaction weight.
+- **Invariants:** keep the room pinned and readable (e.g., `#chatPanel` is a fixed vessel; hub-first in Full; no forced focus that scroll-jumps the room).
+- **Second-screen protection:** Peek stays chat-first and minimal; Full stays hub-first and “arrived”.
+- **Docs discipline:** ensure changes are reflected in `DOCS/PLANS/la-mesa-plan.md`, `TEAM/SESSIONS/2026-01-26-la-mesa-worklog.md`, and relevant `DOCS/BUGS/*` notes.
+
+---
+
 ## Key Deliverables
 
 1. Full website UX audit with prioritized recommendations

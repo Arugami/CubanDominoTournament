@@ -26,6 +26,14 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
           placeholder="Search..."
         />
       </div>
+      <button class="btn btn--secondary btn--sm" id="syncSheetBtn" title="Sync from Google Sheet" aria-label="Sync from Google Sheet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+          <path d="M21 12a9 9 0 0 1-15.36 6.36" />
+          <path d="M3 12a9 9 0 0 1 15.36-6.36" />
+          <polyline points="3 16 3 21 8 21" />
+          <polyline points="21 8 21 3 16 3" />
+        </svg>
+      </button>
       <button class="btn btn--primary" id="addPlayerBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
           <line x1="12" y1="5" x2="12" y2="19" />
@@ -841,11 +849,90 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   let searchQuery = '';
   let editingPlayerId = null;
   let assigningPlayerId = null;
+  let isSyncing = false;
 
   window.addEventListener('adminReady', async ({ detail: { supabase } }) => {
+    await syncFromGoogleSheet(supabase, { silentIfNoNew: true });
     await loadData(supabase);
     setupEventListeners(supabase);
   });
+
+  async function getAccessToken(supabase) {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token || '';
+  }
+
+  async function fetchSheetPlayers(supabase) {
+    const token = await getAccessToken(supabase);
+    if (!token) throw new Error('missing_session');
+
+    const res = await fetch('/api/admin/roster', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data || data.ok !== true) {
+      const err = data?.error || `http_${res.status}`;
+      throw new Error(err);
+    }
+
+    return Array.isArray(data.players) ? data.players : [];
+  }
+
+  async function syncFromGoogleSheet(supabase, { silentIfNoNew } = { silentIfNoNew: false }) {
+    if (isSyncing) return;
+    isSyncing = true;
+
+    const contextEl = document.getElementById('playerContext');
+    const syncBtn = document.getElementById('syncSheetBtn');
+    const prevContext = contextEl?.textContent || '';
+
+    try {
+      if (contextEl) contextEl.textContent = 'syncing from google sheet...';
+      if (syncBtn) syncBtn.setAttribute('disabled', 'true');
+
+      const sheetPlayers = await fetchSheetPlayers(supabase);
+      if (sheetPlayers.length === 0) {
+        if (!silentIfNoNew && window.showToast) window.showToast('No registrations found in sheet');
+        return;
+      }
+
+      const { data: existing, error: existingErr } = await supabase.from('players').select('email');
+      if (existingErr) throw existingErr;
+
+      const existingEmails = new Set((existing || []).map(r => String(r.email || '').toLowerCase()));
+      const toInsert = sheetPlayers
+        .map(p => ({
+          created_at: p.createdAt || null,
+          name: String(p.playerName || '').trim(),
+          email: String(p.email || '').trim().toLowerCase(),
+          phone: String(p.phone || '').trim() || null,
+          notes: String(p.notes || '').trim() || null,
+          status: String(p.status || 'registered').trim().toLowerCase(),
+        }))
+        .filter(p => p.name && p.email && !existingEmails.has(p.email));
+
+      if (toInsert.length === 0) {
+        if (!silentIfNoNew && window.showToast) window.showToast('Roster already up to date');
+        return;
+      }
+
+      const { error: insertErr } = await supabase.from('players').insert(toInsert);
+      if (insertErr) throw insertErr;
+
+      if (window.showToast) window.showToast(`Synced ${toInsert.length} player${toInsert.length === 1 ? '' : 's'} from Google Sheet`, 'success');
+    } catch (err) {
+      console.error('Sheet sync error:', err);
+      if (window.showToast) window.showToast('Sync failed (check env + auth)');
+    } finally {
+      isSyncing = false;
+      if (syncBtn) syncBtn.removeAttribute('disabled');
+      if (contextEl && prevContext) contextEl.textContent = prevContext;
+    }
+  }
 
   async function loadData(supabase) {
     const [playersRes, teamsRes] = await Promise.all([
@@ -977,6 +1064,12 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     const deleteModal = document.getElementById('deleteModal');
     const form = document.getElementById('playerForm');
     const searchInput = document.getElementById('searchInput');
+
+    // Sync button
+    document.getElementById('syncSheetBtn').addEventListener('click', async () => {
+      await syncFromGoogleSheet(supabase);
+      await loadData(supabase);
+    });
 
     // Search
     searchInput.addEventListener('input', (e) => {

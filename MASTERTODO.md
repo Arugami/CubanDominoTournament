@@ -52,6 +52,10 @@
 - [ ] Winner trophy/prize presentation
 - [ ] Tobias cohesion pass: La Mesa tooltip + “seats left” urgency
 - [x] Merch concepts brainstormed — **See `TEAM/SESSIONS/2026-01-14-merch-brainstorm.md`**
+- [x] P0 La Mesa (Tobias + Walt): unify "Tonight" venue + call time across site (Hero / Registration / La Mesa) and fix day-of-week for Jan 31, 2026 (Saturday)
+- [x] P0 La Mesa (Tobias): countdown display format (no `122:..` hours); prefer `XD YH ZM` readability + calm update rate
+- [x] P0 La Mesa (Tobias): add subtle hub-to-chat cue (divider + "CHAT" label + pip) so chat is discoverable without feeling app-y
+- [x] P0 La Mesa (Tobias): reduce "Invite" visual noise in Who's Here; row-tap = @mention, invite becomes secondary
 
 ---
 
@@ -129,6 +133,9 @@
 - [x] La Mesa tooltip: broadcast default + preview variants
 - [x] “Seats left” counter: broadcast plaque + single tickdown momentum + stormbeat on live registration
 - [ ] Tune stormbeat intensity (urgent, not distracting)
+- [x] BUG-009: La Mesa hub visibility after Claim Seat — fixed scroll-container jump + documented in `DOCS/BUGS/009-la-mesa-hub-visibility-scroll-container.md`
+- [x] La Mesa pre-merge regression checklist added to `DOCS/PLANS/la-mesa-plan.md` (prevents hub hiding regressions)
+- [x] BUG-011: Loader stuck on page load (inline script SyntaxError) — fixed and documented in `DOCS/BUGS/011-loading-screen-stuck-inline-script-syntax-error.md`
 
 ---
 
@@ -205,7 +212,7 @@
 - [x] **cubandominoleague.com LIVE**
 - [x] Registration system working
 - [x] Venue identified (Stefan's Lounge, 333 Bergenline Blvd, Fairview)
-- [x] Date set (January 31, 2025)
+- [x] Date set (January 31, 2026)
 - [x] Visual assets created (4 panels)
 - [x] Team documentation complete
 - [x] Domain secured and pointing
@@ -238,6 +245,7 @@
 - [x] **"The Bone Language" design system** — Unified 12px border-radius, domino tile shape language
 - [x] **La Mesa domino tile button** — Vertical domino with pip pattern replaces generic pill
 - [x] **Hired Tobias van Schneider** — Chief Product Designer (Spotify dark UI, micro-interactions)
+- [x] Tobias + Walt: continuous oversight defined for La Mesa execution (`TEAM/chief-product-designer-tobias-van-schneider.md`, `TEAM/chief-experience-architect-walt-disney.md`)
 - [x] **Design Team Site Review** — Full audit with Wifredo, George, Wes, Herb
 - [x] **Domino button 50% larger** — Now 84×135px with heartbeat pulse animation
 - [x] **Free Agent single pip** — Brass pip icon replaces text badge (Bone Language)
