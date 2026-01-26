@@ -5186,7 +5186,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           linear-gradient(180deg, rgb(28, 19, 15) 0%, rgb(20, 14, 11) 100%);
         background-blend-mode: normal, overlay, normal;
         border: 1px solid rgba(212, 165, 116, 0.2);
-        border-radius: 16px 16px 0 0;
+        border-radius: 12px 12px 0 0;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -5206,7 +5206,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           width: 100%;
           bottom: 0;
           height: 80vh;
-          border-radius: 20px 20px 0 0;
+          border-radius: 12px 12px 0 0;
 
         }
       }
@@ -5242,15 +5242,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         max-height: 56vh;
       }
 
-      .chat-panel.is-open.is-peek .mesa-ritual__pill {
+      .chat-panel.is-open.is-peek .mesa-hub-stack {
         display: none;
-      }
-      .chat-panel.is-open.is-peek .mesa-ritual__chips {
-        margin-left: 0;
-      }
-      .chat-panel.is-open.is-peek .mesa-ritual {
-        padding: 8px 12px;
-        gap: 8px;
       }
 
       /* Tobias: "Breath Spacing" - staggered content reveal after panel slides in */
@@ -5623,6 +5616,70 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin: 10px auto 0;
         opacity: 0.4;
         border-radius: 50%;
+      }
+
+      /* Seats strip - horizontal presence (no split screen) */
+      .mesa-seats {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 18px 12px;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.08);
+        background: linear-gradient(180deg, rgba(20, 14, 11, 0.65) 0%, rgba(20, 14, 11, 0) 100%);
+      }
+
+      .mesa-seats__label {
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.65rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .mesa-seats__row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .mesa-seat {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid rgba(212, 165, 116, 0.25);
+        background: rgba(28, 19, 15, 0.6);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        color: var(--brass);
+        flex-shrink: 0;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.35);
+      }
+
+      .mesa-seats__empty {
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.35);
+        font-style: italic;
+        white-space: nowrap;
+      }
+
+      .mesa-seats__more {
+        background: rgba(212, 165, 116, 0.12);
+        border: 1px solid rgba(212, 165, 116, 0.25);
+        color: var(--brass);
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-weight: 700;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        padding: 6px 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        flex-shrink: 0;
       }
 
       .chat-header__close {
@@ -11774,10 +11831,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         /* Panel becomes centered modal */
         .chat-panel {
-          width: 520px;
-          height: auto;
+          width: 640px;
+          height: 680px;
           max-height: 75vh;
-          min-height: 500px;
+          min-height: 540px;
           right: auto;
           left: 50%;
           bottom: auto;
@@ -11806,6 +11863,199 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .chat-header__title {
           font-size: 1.2rem;
         }
+      }
+
+      /* Hub Main Structure */
+      .chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        position: relative;
+      }
+
+      .chat-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        position: relative;
+      }
+
+      .mesa-hub-stack {
+        display: grid;
+        gap: 16px;
+        padding: 0 18px 18px;
+      }
+
+      /* Hub Modules - stacked cards */
+      .mesa-hub-module {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        border: 1px solid rgba(212, 165, 116, 0.18);
+        background:
+          radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%),
+          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
+          linear-gradient(180deg, rgba(28, 19, 15, 0.88) 0%, rgba(20, 14, 11, 0.95) 100%);
+        background-blend-mode: normal, overlay, normal;
+        padding: 16px;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .mesa-hub-module__title {
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--brass);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 12px;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.18);
+        padding-bottom: 10px;
+      }
+
+      .mesa-hub-module__content {
+        flex: 1;
+      }
+
+      .mesa-hub-more {
+        margin-top: 12px;
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(212, 165, 116, 0.7);
+      }
+
+      .mesa-hub-empty {
+        text-align: center;
+        margin-top: 40px;
+        color: rgba(255, 255, 255, 0.4);
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+      }
+
+      /* Module Content Styling */
+      .mesa-hub-module__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.18);
+        padding-bottom: 10px;
+      }
+
+      .mesa-hub-module__header .mesa-hub-module__title {
+        margin-bottom: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      /* The Board Items - Broadcast Style */
+      .mesa-board-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .mesa-board-item {
+        background: rgba(28, 19, 15, 0.5);
+        border: 1px solid rgba(212, 165, 116, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+      }
+
+      .mesa-board-item--priority {
+        border-left: 4px solid var(--brass);
+        background: rgba(183, 106, 59, 0.08);
+      }
+
+      .mesa-board-item__kicker {
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--brass);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-bottom: 4px;
+      }
+
+      .mesa-board-item__title {
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--cream);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+        line-height: 1.1;
+      }
+
+      .mesa-board-item__body {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.5;
+      }
+
+      /* Tonight Module Card */
+      .mesa-ritual-card {
+        background: radial-gradient(circle at top center, rgba(183, 106, 59, 0.15) 0%, rgba(20, 14, 11, 0.4) 100%);
+        border: 1px solid rgba(212, 165, 116, 0.25);
+        border-radius: 12px;
+        padding: 32px 24px;
+        text-align: center;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      .mesa-ritual-card__countdown {
+        font-family: "SF Sports Night", "IBM Plex Sans Condensed", sans-serif;
+        font-size: 3.5rem;
+        color: var(--brass);
+        letter-spacing: 0.05em;
+        text-shadow: 0 0 30px rgba(212, 165, 116, 0.4);
+        margin-bottom: 4px;
+      }
+
+      .mesa-ritual-card__label {
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-bottom: 24px;
+      }
+
+      .mesa-ritual-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(212, 165, 116, 0.3), transparent);
+        margin: 24px 0;
+      }
+
+      .mesa-ritual-detail {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 16px;
+      }
+
+      .mesa-ritual-detail__label {
+        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--brass);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .mesa-ritual-detail__value {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 1rem;
+        color: var(--cream);
+        font-weight: 500;
       }
 
       /* ========================================
@@ -13292,23 +13542,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         </div>
       </div>
 
-      <div class="chat-panel" id="chatPanel">
-	        <div class="chat-header">
-	          <div class="chat-header__drag-handle"></div>
-	          <div class="chat-header__title-group">
-	            <span class="chat-header__title">La Mesa</span>
-	            <button class="chat-header__status" id="mesaPresenceBtn" type="button" aria-label="Who's at the table">
-	              <span class="chat-header__status-dot" aria-hidden="true"></span>
-	              <span class="chat-header__status-text" id="mesaHeaderStatusText">Who’s here</span>
-	            </button>
-	          </div>
-	          <button class="chat-header__dock" id="chatDock" type="button" aria-label="Dock La Mesa (second screen)" aria-pressed="false">
-	            <span class="chat-header__dock-label">Dock</span>
-	          </button>
-	          <button class="chat-header__close" id="chatClose" type="button" aria-label="Leave table">
-	            <span class="chat-header__close-label">Leave Table</span>
-	          </button>
-	        </div>
+        <div class="chat-panel" id="chatPanel">
+        <div class="chat-main">
+          <div class="chat-header">
+            <div class="chat-header__drag-handle"></div>
+            <div class="chat-header__title-group">
+              <span class="chat-header__title">La Mesa</span>
+              <button class="chat-header__status" id="mesaPresenceBtn" type="button" aria-label="Who's at the table">
+                <span class="chat-header__status-dot" aria-hidden="true"></span>
+                <span class="chat-header__status-text" id="mesaHeaderStatusText">Who’s here</span>
+              </button>
+            </div>
+            <button class="chat-header__dock" id="chatDock" type="button" aria-label="Dock La Mesa (second screen)" aria-pressed="false">
+              <span class="chat-header__dock-label">Dock</span>
+            </button>
+            <button class="chat-header__close" id="chatClose" type="button" aria-label="Leave table">
+              <span class="chat-header__close-label">Leave Table</span>
+            </button>
+          </div>
+
+          <!-- Seat strip: people-first, not channel-first -->
+          <div class="mesa-seats" id="mesaSeatStrip">
+            <span class="mesa-seats__label">Seats</span>
+            <div class="mesa-seats__row" id="mesaSeatRow"></div>
+            <button class="mesa-seats__more" id="mesaSeatMore" type="button" aria-label="View who's here">+0</button>
+          </div>
 
 	        <!-- La Mesa Entry Ritual (covers identity → chat transition) -->
 	        <div class="mesa-entry" id="mesaEntry" aria-hidden="true">
@@ -13325,6 +13583,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	          </div>
 	        </div>
 	
+          <div class="chat-content">
 	        <!-- Identity selection -->
 	        <div class="chat-identity" id="chatIdentity">
 	          <p class="chat-identity__title">Claim Your Seat</p>
@@ -14053,24 +14312,61 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="chat-identity__register-hint" id="chatRegisterHint">
             Don't see your name? <a href="#signup" class="chat-identity__register-link" id="chatRegisterLink">Register first</a>
           </p>
-          <button class="chat-identity__btn" id="chatJoinBtn" disabled>TAKE YOUR SEAT</button>
+          <button class="chat-identity__btn" id="chatJoinBtn" disabled>CLAIM YOUR SEAT</button>
         </div>
 
         <!-- Chat Screen Area -->
         <div class="chat-body-container" id="chatBodyContainer" style="display: none;">
-          <!-- Ritual Strip - small, optional, always human -->
-          <div class="mesa-ritual" id="mesaRitual">
-            <button class="mesa-ritual__pill" id="mesaRitualWho" type="button">Who’s here</button>
-            <button class="mesa-ritual__pill mesa-ritual__pill--toggle" id="mesaLfgToggle" type="button" aria-pressed="false">Looking for partner</button>
-            <div class="mesa-ritual__chips" id="mesaQuickTalk" aria-label="Quick talk">
-              <button class="mesa-chip" type="button" data-chip="🀱" aria-label="Domino slam">🀱</button>
-              <button class="mesa-chip" type="button" data-chip="🔥" aria-label="Fuego">🔥</button>
-              <button class="mesa-chip" type="button" data-chip="😂" aria-label="Jaja">😂</button>
-              <button class="mesa-chip" type="button" data-chip="👏" aria-label="Respeto">👏</button>
-              <button class="mesa-chip" type="button" data-chip="💪" aria-label="Fuerza">💪</button>
-              <button class="mesa-chip" type="button" data-chip="🌴" aria-label="Cuba">🌴</button>
+          <!-- Hub Stack (Full mode) -->
+          <div class="mesa-hub-stack" id="mesaHubStack">
+            <div class="mesa-hub-module" id="mesaHubWho">
+              <div class="mesa-hub-module__header">
+                <h3 class="mesa-hub-module__title">Who's Here</h3>
+                <button class="mesa-ritual__pill mesa-ritual__pill--toggle" id="mesaHubLfgToggle" type="button" aria-pressed="false">Looking for partner</button>
+              </div>
+              <div class="mesa-hub-module__content" id="mesaHubWhoList">
+                 <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <div class="mesa-hub-module" id="mesaHubBoard">
+              <h3 class="mesa-hub-module__title">The Board</h3>
+              <div class="mesa-hub-module__content">
+                 <div class="mesa-board-feed">
+                   <div class="mesa-board-item mesa-board-item--priority">
+                     <div class="mesa-board-item__kicker">Tournament Update</div>
+                     <div class="mesa-board-item__title">REGISTRATION 75% COMPLETE</div>
+                     <div class="mesa-board-item__body">Claim your seat before they're gone. The table is filling up fast.</div>
+                   </div>
+                   <div class="mesa-board-item">
+                     <div class="mesa-board-item__kicker">Tonight's Stakes</div>
+                     <div class="mesa-board-item__title">OCHÚN'S GOLD TROPHY + $200 POT</div>
+                     <div class="mesa-board-item__body">Winner takes the prestige and the pot. Respect the game.</div>
+                   </div>
+                 </div>
+              </div>
+            </div>
+
+            <div class="mesa-hub-module" id="mesaHubTonight">
+              <h3 class="mesa-hub-module__title">Tonight</h3>
+              <div class="mesa-hub-module__content">
+                 <div class="mesa-ritual-card">
+                   <div class="mesa-ritual-card__countdown" id="mesaHubCountdown">00:00:00</div>
+                   <div class="mesa-ritual-card__label">UNTIL FIRST SLAM</div>
+                   <div class="mesa-ritual-divider"></div>
+                   <div class="mesa-ritual-detail">
+                     <span class="mesa-ritual-detail__label">VENUE</span>
+                     <span class="mesa-ritual-detail__value">Stefan's Lounge, Miami</span>
+                   </div>
+                   <div class="mesa-ritual-detail">
+                     <span class="mesa-ritual-detail__label">CALL TIME</span>
+                     <span class="mesa-ritual-detail__value">Friday, Jan 31 @ 7:00 PM</span>
+                   </div>
+                 </div>
+              </div>
             </div>
           </div>
+
           <div class="chat-messages" id="chatMessages">
             <div class="chat-empty">The calm before the storm.</div>
           </div>
@@ -14095,6 +14391,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <button class="mesa-presence__close" id="mesaPresenceClose" type="button" aria-label="Close list">Close</button>
             </div>
             <div class="mesa-presence__list" id="mesaPresenceList"></div>
+          </div>
+            </div>
           </div>
         </div>
       </div>
@@ -14519,6 +14817,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           tickerChatBtn?.addEventListener('touchstart', showChatTooltip, { passive: true, once: true });
         }
       }
+
 
       // Scroll-lock system for cinematic panels
       // Prevents scrolling until animations complete
@@ -15688,6 +15987,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const mesaRitualWho = document.getElementById('mesaRitualWho');
       const mesaLfgToggle = document.getElementById('mesaLfgToggle');
       const mesaQuickTalk = document.getElementById('mesaQuickTalk');
+      // Hub-only controls (must be defined before any functions reference them).
+      const mesaHubLfgToggle = document.getElementById('mesaHubLfgToggle');
+      const hubCountdownEl = document.getElementById('mesaHubCountdown');
+      const mesaSeatStrip = document.getElementById('mesaSeatStrip');
+      const mesaSeatRow = document.getElementById('mesaSeatRow');
+      const mesaSeatMore = document.getElementById('mesaSeatMore');
 
       // Leave modal elements - Tobias: Custom modal replaces browser confirm()
       const leaveModal = document.getElementById('leaveModal');
@@ -15709,15 +16014,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       function applyMesaLfgUI() {
         mesaLfgToggle?.setAttribute('aria-pressed', mesaLookingForPartner ? 'true' : 'false');
+        mesaHubLfgToggle?.setAttribute('aria-pressed', mesaLookingForPartner ? 'true' : 'false');
       }
       applyMesaLfgUI();
 
-      mesaRitualWho?.addEventListener('click', () => {
-        if (mesaPresenceEl?.classList.contains('is-open')) closeMesaPresence();
-        else openMesaPresence();
-      });
-
-      mesaLfgToggle?.addEventListener('click', async () => {
+      async function handleMesaLfgToggle() {
         mesaLookingForPartner = !mesaLookingForPartner;
         localStorage.setItem('cdl_mesa_lfg', mesaLookingForPartner ? 'true' : 'false');
         applyMesaLfgUI();
@@ -15736,7 +16037,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             });
           }
         } catch {}
+      }
+
+      mesaHubLfgToggle?.addEventListener('click', handleMesaLfgToggle);
+
+      mesaRitualWho?.addEventListener('click', () => {
+        if (mesaPresenceEl?.classList.contains('is-open')) closeMesaPresence();
+        else openMesaPresence();
       });
+
+      mesaLfgToggle?.addEventListener('click', handleMesaLfgToggle);
 
       mesaQuickTalk?.addEventListener('click', (e) => {
         const btn = e.target.closest('[data-chip]');
@@ -16122,6 +16432,89 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           }
         }
       }
+
+      function updateHubCountdown() {
+        if (!hubCountdownEl) return;
+        const targetDate = new Date('2026-01-31T19:00:00-05:00'); // Fixed tournament date
+        const now = new Date();
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+          hubCountdownEl.textContent = '00:00:00';
+          return;
+        }
+
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+
+        hubCountdownEl.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }
+
+      setInterval(updateHubCountdown, 1000);
+      updateHubCountdown();
+
+      function renderMesaHubWhoList() {
+        const hubWhoList = document.getElementById('mesaHubWhoList');
+        if (!hubWhoList) return;
+
+        const users = getMesaPresenceUsers(lastMesaPresenceState);
+        if (users.length === 0) {
+          hubWhoList.innerHTML = '<div class="mesa-hub-empty">Pull up a chair. You\'re among friends.</div>';
+          return;
+        }
+
+        // Reuse the presence list row template (limit to keep the hub scannable)
+        const visible = users.slice(0, 8);
+        hubWhoList.innerHTML = visible.map((user) => {
+          const playerName = user.playerName || '';
+          const isSelf = chatIdentity && playerName === chatIdentity.playerName;
+          const emoji = (typeof FLAG_MAP !== 'undefined' && FLAG_MAP[user.avatar]) ? FLAG_MAP[user.avatar] : '🇨🇺';
+          const lfg = user.lookingForPartner ? '<span class="mesa-presence__badge">LFG</span>' : '';
+
+          return `
+            <div class="mesa-presence__row" data-player="${escapeHtml(playerName)}">
+              <div class="mesa-presence__who">
+                <div class="mesa-presence__flag">${emoji}</div>
+                <div class="mesa-presence__name">${escapeHtml(playerName || '—')}</div>
+              </div>
+              <div class="mesa-presence__badges">
+                ${lfg}
+                ${(!isSelf && playerName) ? `<button class="mesa-presence__invite" type="button" data-invite="${escapeHtml(playerName)}">Invite</button>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        if (users.length > visible.length) {
+          hubWhoList.innerHTML += `<div class="mesa-hub-more">+${users.length - visible.length} more in the room</div>`;
+        }
+      }
+
+      function renderMesaSeatStrip() {
+        if (!mesaSeatRow) return;
+        const users = getMesaPresenceUsers(lastMesaPresenceState);
+        if (users.length === 0) {
+          mesaSeatRow.innerHTML = '<span class="mesa-seats__empty">Quiet right now.</span>';
+          if (mesaSeatMore) mesaSeatMore.textContent = '0';
+          return;
+        }
+        const visible = users.slice(0, 10);
+        mesaSeatRow.innerHTML = visible.map((user) => {
+          const emoji = (typeof FLAG_MAP !== 'undefined' && FLAG_MAP[user.avatar]) ? FLAG_MAP[user.avatar] : '🇨🇺';
+          return `<span class="mesa-seat" aria-hidden="true">${emoji}</span>`;
+        }).join('');
+        if (mesaSeatMore) {
+          const extra = users.length - visible.length;
+          mesaSeatMore.textContent = extra > 0 ? `+${extra}` : `${users.length}`;
+        }
+      }
+
+      mesaSeatStrip?.addEventListener('click', () => {
+        openMesaPresence();
+      });
+
+      renderMesaSeatStrip();
 
       chatDockBtn?.addEventListener('click', () => {
         if (!chatPanel.classList.contains('is-open')) return;
@@ -16723,11 +17116,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        // Tobias: The slam should be felt, not heard.
 	        vibrate([12, 28, 10]);
 
-	        // When the veil is up, swap the room underneath (no hard cut).
-	        showChatInterface({ silent: true, hideIdentity: false });
-	        setTimeout(() => {
-	          if (chatIdentityScreen) chatIdentityScreen.style.display = 'none';
-	        }, 210);
+        // When the veil is up, swap the room underneath (no hard cut).
+        showChatInterface({ silent: true, hideIdentity: false });
+        setTimeout(() => {
+          if (chatIdentityScreen) chatIdentityScreen.style.display = 'none';
+        }, 210);
 
 	        // Let the room breathe before the announcement lands.
 	        setTimeout(() => {
@@ -17363,6 +17756,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             lastMesaPresenceState = state;
             updateMesaHeaderPresence(state);
             if (mesaPresenceEl?.classList.contains('is-open')) renderMesaPresenceList();
+            renderMesaHubWhoList(); // Keep hub list in sync
+            renderMesaSeatStrip(); // Update seat strip
             updateTicker(state);
           })
           .on('presence', { event: 'join' }, ({ key, newPresences }) => {
@@ -17373,6 +17768,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               lastMesaPresenceState = state;
               updateMesaHeaderPresence(state);
               if (mesaPresenceEl?.classList.contains('is-open')) renderMesaPresenceList();
+              renderMesaHubWhoList(); // Keep hub list in sync
+              renderMesaSeatStrip();
               updateTicker(state);
             }
           })
@@ -17382,6 +17779,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             lastMesaPresenceState = state;
             updateMesaHeaderPresence(state);
             if (mesaPresenceEl?.classList.contains('is-open')) renderMesaPresenceList();
+            renderMesaHubWhoList(); // Keep hub list in sync
+            renderMesaSeatStrip();
           })
           .subscribe(async (status) => {
             if (status === 'SUBSCRIBED') {
@@ -17476,6 +17875,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         lastMesaPresenceState = {};
         if (mesaHeaderStatusTextEl) mesaHeaderStatusTextEl.textContent = 'Who’s here';
         if (mesaPresenceEl?.classList.contains('is-open')) renderMesaPresenceList();
+        renderMesaHubWhoList(); // Clear hub list
+        renderMesaSeatStrip(); // Clear seats
       }
 
       // Leave presence when tab closes
