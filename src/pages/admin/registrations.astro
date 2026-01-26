@@ -904,7 +904,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       if (existingErr) throw existingErr;
 
       const existingEmails = new Set((existing || []).map(r => String(r.email || '').toLowerCase()));
-      const toInsert = sheetPlayers
+      const toInsertRaw = sheetPlayers
         .map(p => ({
           created_at: p.createdAt || null,
           name: String(p.playerName || '').trim(),
@@ -915,15 +915,45 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         }))
         .filter(p => p.name && p.email && !existingEmails.has(p.email));
 
-      if (toInsert.length === 0) {
+      if (toInsertRaw.length === 0) {
         if (!silentIfNoNew && window.showToast) window.showToast('Roster already up to date');
         return;
       }
 
-      const { error: insertErr } = await supabase.from('players').insert(toInsert);
-      if (insertErr) throw insertErr;
+      // De-dupe within this sync batch (same email can appear multiple times in the sheet).
+      // Keep the most recent created_at when possible.
+      const deduped = new Map();
+      for (const p of toInsertRaw) {
+        const prev = deduped.get(p.email);
+        if (!prev) {
+          deduped.set(p.email, p);
+          continue;
+        }
+        const prevCreated = String(prev.created_at || '');
+        const nextCreated = String(p.created_at || '');
+        if (!prevCreated) {
+          deduped.set(p.email, p);
+          continue;
+        }
+        if (nextCreated && nextCreated > prevCreated) {
+          deduped.set(p.email, p);
+        }
+      }
 
-      if (window.showToast) window.showToast(`Synced ${toInsert.length} player${toInsert.length === 1 ? '' : 's'} from Google Sheet`, 'success');
+      const toInsert = Array.from(deduped.values());
+      const duplicateRowsIgnored = Math.max(0, toInsertRaw.length - toInsert.length);
+
+      // Use upsert to avoid hard-failing on rare duplicate races (email is UNIQUE).
+      // We ignore duplicates so existing admin edits in Supabase remain the source of truth.
+      const { error: upsertErr } = await supabase
+        .from('players')
+        .upsert(toInsert, { onConflict: 'email', ignoreDuplicates: true });
+      if (upsertErr) throw upsertErr;
+
+      if (window.showToast) {
+        const dupNote = duplicateRowsIgnored > 0 ? ` (ignored ${duplicateRowsIgnored} duplicate row${duplicateRowsIgnored === 1 ? '' : 's'})` : '';
+        window.showToast(`Synced ${toInsert.length} player${toInsert.length === 1 ? '' : 's'} from Google Sheet${dupNote}`, 'success');
+      }
     } catch (err) {
       console.error('Sheet sync error:', err);
       if (window.showToast) window.showToast('Sync failed (check env + auth)');
