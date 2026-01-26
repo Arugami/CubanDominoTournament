@@ -936,3 +936,71 @@ The personas agree on what matters:
 *The personas taught us: you can't manufacture Cuban culture with emoji buttons. You create the space and let the people bring the life.*
 
 *La mesa te espera. And the people will handle the rest.*
+
+---
+
+## Addendum (Jan 25, 2026) — La Mesa As Second Screen (Live Matches)
+
+**New decision:** La Mesa should be usable **during live matches** as a *second screen* — the place you keep open while you play/watch.
+
+This changes the product constraint:
+- La Mesa can’t assume full-screen focus.
+- La Mesa must support a **docked “peek” state** (a room you can keep open) and a **full “in the room” state** (when you want to lock in).
+
+### The Three States (Room Mechanics)
+
+| State | Purpose | Behavior |
+|------|---------|----------|
+| **Ticker (Closed)** | Broadcast + FOMO | ESPN-style activity stays alive |
+| **Peek (Docked)** | Second screen | No backdrop, no scroll-lock; you can keep playing/scrolling while the room stays open |
+| **Full (In the Room)** | Immersion | Backdrop on, ticker recedes, focus locks in |
+
+### The Weenie *Inside* The Room
+
+Walt: The room needs its own “castle” — a visual draw that makes you speak.
+
+**In-room weenie candidates (ship in this order):**
+1. **Who’s here** (live presence list) — real humans, not empty space
+2. **Looking for partner** — a visible status that creates interaction
+3. **Simple callouts** — fast, ritualized ways to challenge / invite without turning La Mesa into Discord
+
+### Ritual Strip (Small, Optional, Never Corny)
+
+Tobias: “Don’t add features. Add rituals.”
+
+The strip lives above messages and can collapse:
+- **Who’s here** (tap opens presence list; tap a person to invite)
+- **Looking for partner** (toggle broadcasts status via presence)
+- **Quick talk** (lightweight, not Duolingo; no “phrase of the day”)
+
+### During Live Matches: What La Mesa Should Feel Like
+
+Steve (Broadcast): “La Mesa is a broadcast.”
+
+Minimum viable live-match behavior (no game integration required yet):
+- Docked by default is allowed (Peek state is first-class)
+- Presence stays accurate and visible (count + list)
+- System beats are restrained: join/leave, team invites, team formed
+
+### Guardrails (Persona-Proof)
+
+- No default lingo tooltips, no daily “lesson” mechanics
+- No corny emoji-lingo buttons as the *primary* interaction surface
+- Keep it human-first: presence + invites + simple announcements
+
+---
+
+## Iteration Log — Tournament Focus (Jan 29)
+
+### Jan 26, 2026 — UI Readability + Second Screen Clarity
+
+**Observed (screenshots):**
+- Header showed `0 at the table` while identity showed `1 at the table` → confused “live vs recent” truth.
+- Chat transcript looked flatter than intended (message cards visually washed out by atmosphere layer).
+- Dock needed clearer meaning in a tournament context (peek = second screen, full = “in the room”).
+
+**Shipped:**
+- Header status now defaults to **“Who’s here”** (no fake live count before you join).
+- Identity count reframed to **“active today”** (honest signal before presence exists).
+- Chat message cards now render **above** the smoke/texture layer for legibility (room stays atmospheric without killing contrast).
+- Dock/peek affordance tightened: button flips between **Dock ↔ Expand**, peek mode hides heavy ritual controls to keep the second screen clean.

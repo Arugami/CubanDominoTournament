@@ -5236,6 +5236,23 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         pointer-events: auto; /* Enable interaction when open */
       }
 
+      /* Second-screen peek: keep the room open without taking over */
+      .chat-panel.is-open.is-peek {
+        height: 420px;
+        max-height: 56vh;
+      }
+
+      .chat-panel.is-open.is-peek .mesa-ritual__pill {
+        display: none;
+      }
+      .chat-panel.is-open.is-peek .mesa-ritual__chips {
+        margin-left: 0;
+      }
+      .chat-panel.is-open.is-peek .mesa-ritual {
+        padding: 8px 12px;
+        gap: 8px;
+      }
+
       /* Tobias: "Breath Spacing" - staggered content reveal after panel slides in */
       .chat-panel .chat-header,
       .chat-panel .chat-identity,
@@ -5366,6 +5383,48 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         margin-top: 6px;
       }
 
+      .chat-header__status {
+        margin-top: 8px;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.55);
+        letter-spacing: 0.02em;
+        font-weight: 500;
+        transition: color 0.25s ease;
+      }
+
+      .chat-header__status:hover {
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .chat-header__status:focus-visible {
+        outline: 2px solid rgba(212, 165, 116, 0.45);
+        outline-offset: 6px;
+        border-radius: 10px;
+      }
+
+      .chat-header__status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.55);
+        flex-shrink: 0;
+        animation: mesaStatusPulse 1.6s ease-in-out infinite;
+      }
+
+      @keyframes mesaStatusPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.85); }
+      }
+
       /* Decorative accent below subtitle */
       .chat-header__title-group::after {
         content: "";
@@ -5429,6 +5488,65 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         transform: translateY(0) scale(0.96);
       }
 
+      .chat-header__dock {
+        position: absolute;
+        right: 132px; /* Leaves room for close button */
+        top: 16px;
+        background: rgba(20, 14, 11, 0.55);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(212, 165, 116, 0.18);
+        color: rgba(212, 165, 116, 0.8);
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        padding: 10px 14px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        z-index: 20;
+      }
+
+      .chat-header__dock[aria-pressed="true"] {
+        background: rgba(28, 19, 15, 0.85);
+        border-color: rgba(212, 165, 116, 0.35);
+        color: #fff;
+        box-shadow: 0 0 0 1px rgba(212, 165, 116, 0.15), 0 0 18px rgba(212, 165, 116, 0.12);
+      }
+
+      .chat-header__dock:hover {
+        background: rgba(28, 19, 15, 0.75);
+        color: #fff;
+        border-color: rgba(212, 165, 116, 0.35);
+        transform: translateY(-1px);
+      }
+
+      .chat-header__dock:active {
+        transform: translateY(0) scale(0.96);
+      }
+
+      .chat-header__dock-label {
+        display: inline-block;
+        line-height: 1;
+      }
+
+      .chat-header__dock::before {
+        content: "⧉";
+        font-size: 0.9rem;
+        line-height: 1;
+        transform: translateY(-0.5px);
+      }
+
+      .chat-header__dock[aria-pressed="true"]::before {
+        content: "⤢";
+      }
+
       /* Content Area */
       .chat-body-container {
         flex: 1;
@@ -5437,13 +5555,81 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         position: relative;
       }
 
+      /* Ritual strip - the room’s small “weenie” (presence + intent) */
+      .mesa-ritual {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.12);
+        background: rgba(20, 14, 11, 0.92);
+      }
+
+      .mesa-ritual__pill {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(212, 165, 116, 0.14);
+        color: rgba(255, 255, 255, 0.82);
+        font-family: "IBM Plex Sans", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 0.62rem;
+        padding: 10px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .mesa-ritual__pill:active {
+        transform: scale(0.98);
+      }
+
+      .mesa-ritual__pill--toggle[aria-pressed="true"] {
+        background: rgba(212, 165, 116, 0.12);
+        border-color: rgba(212, 165, 116, 0.3);
+        color: rgba(212, 165, 116, 0.95);
+        box-shadow: 0 0 0 1px rgba(212, 165, 116, 0.12), 0 0 18px rgba(212, 165, 116, 0.12);
+      }
+
+      .mesa-ritual__chips {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        margin-left: auto;
+        padding-bottom: 2px;
+      }
+
+      .mesa-ritual__chips::-webkit-scrollbar { display: none; }
+
+      .mesa-chip {
+        min-width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        border: 1px solid rgba(212, 165, 116, 0.16);
+        background: rgba(255, 255, 255, 0.03);
+        cursor: pointer;
+        transition: transform 0.08s ease-out, background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .mesa-chip:active {
+        transform: translateY(1px) scale(0.96);
+        background: rgba(212, 165, 116, 0.08);
+        border-color: rgba(212, 165, 116, 0.28);
+      }
+
       .chat-messages {
         flex: 1;
         overflow-y: auto;
         padding: 20px;
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 12px;
         scrollbar-width: thin;
         scrollbar-color: var(--muted) transparent;
         position: relative;
@@ -5467,6 +5653,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 0.5;
         pointer-events: none;
         z-index: 1;
+      }
+
+      /* Ensure message cards render ABOVE the smoke texture layer */
+      .chat-messages > * {
+        position: relative;
+        z-index: 2;
       }
 
       .chat-messages::-webkit-scrollbar { width: 4px; }
@@ -5534,10 +5726,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       .chat-message {
         padding: 14px 16px;
-        margin: 6px 0;
         border-radius: 12px;
-        background: rgba(28, 19, 15, 0.5);
-        border: 1px solid rgba(212, 165, 116, 0.06);
+        background: rgba(28, 19, 15, 0.62);
+        border: 1px solid rgba(212, 165, 116, 0.09);
         animation: weightedArrival 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
         transition: all 0.2s ease;
         position: relative;
@@ -5790,6 +5981,171 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-style: italic;
         font-size: 0.9rem;
         letter-spacing: 0.05em;
+      }
+
+      /* ===========================================
+         MESA PRESENCE - Who’s Here (The Heartbeat)
+         =========================================== */
+      .mesa-presence {
+        position: absolute;
+        inset: 0;
+        z-index: 40;
+        display: none;
+      }
+
+      .mesa-presence.is-open {
+        display: block;
+      }
+
+      .mesa-presence__backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .mesa-presence__sheet {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        max-height: min(70%, 520px);
+        display: flex;
+        flex-direction: column;
+        background: rgba(20, 14, 11, 0.98);
+        border: 1px solid rgba(212, 165, 116, 0.18);
+        border-radius: 18px;
+        box-shadow: 0 18px 60px rgba(0,0,0,0.7);
+        overflow: hidden;
+      }
+
+      .mesa-presence__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 14px 12px;
+        border-bottom: 1px solid rgba(212, 165, 116, 0.12);
+      }
+
+      .mesa-presence__title {
+        font-family: "Bodoni Moda", serif;
+        font-size: 0.9rem;
+        color: var(--brass);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .mesa-presence__close {
+        background: rgba(28, 19, 15, 0.75);
+        border: 1px solid rgba(212, 165, 116, 0.22);
+        color: rgba(255, 255, 255, 0.8);
+        font-family: "IBM Plex Sans", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.62rem;
+        padding: 10px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+      }
+
+      .mesa-presence__close:active {
+        transform: scale(0.98);
+      }
+
+      .mesa-presence__list {
+        padding: 10px;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .mesa-presence__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(212, 165, 116, 0.12);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .mesa-presence__who {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .mesa-presence__flag {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        border-radius: 9px;
+        background: rgba(212, 165, 116, 0.08);
+        border: 1px solid rgba(212, 165, 116, 0.18);
+        flex-shrink: 0;
+      }
+
+      .mesa-presence__name {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.92);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .mesa-presence__badges {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .mesa-presence__badge {
+        font-family: "IBM Plex Sans", sans-serif;
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 6px 8px;
+        border-radius: 10px;
+        border: 1px solid rgba(212, 165, 116, 0.22);
+        background: rgba(212, 165, 116, 0.08);
+        color: rgba(212, 165, 116, 0.95);
+      }
+
+      .mesa-presence__invite {
+        background: linear-gradient(135deg, rgba(212, 165, 116, 0.22), rgba(183, 106, 59, 0.22));
+        border: 1px solid rgba(212, 165, 116, 0.25);
+        color: rgba(255, 255, 255, 0.92);
+        font-family: "IBM Plex Sans", sans-serif;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.62rem;
+        padding: 10px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .mesa-presence__invite:active {
+        transform: scale(0.98);
+      }
+
+      .mesa-presence__empty {
+        padding: 18px 12px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.45);
+        font-family: "Bodoni Moda", serif;
+        font-style: italic;
+        letter-spacing: 0.04em;
       }
 
       /* ===========================================
@@ -7656,24 +8012,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: linear-gradient(to left, rgba(20, 14, 11, 1) 0%, transparent 100%);
       }
 
-      /* Center selector ring - THE golden ring that indicates current choice */
-      .avatar-selector__center-cue {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 52px;
-        height: 52px;
-        transform: translate(-50%, -50%);
-        border-radius: 999px;
-        background: transparent;
-        box-shadow:
-          0 0 0 2.5px rgba(212, 165, 116, 0.85),
-          0 0 16px rgba(212, 165, 116, 0.4),
-          inset 0 0 12px rgba(212, 165, 116, 0.15);
-        pointer-events: none;
-        z-index: 10;
-        animation: selectorRingPulse 2.5s ease-in-out infinite;
-      }
+	      /* Center selector ring - THE golden ring that indicates current choice */
+	      .avatar-selector__center-cue {
+	        position: -webkit-sticky;
+	        position: sticky;
+	        left: 50%;
+	        width: 0;
+	        height: 0;
+	        flex: 0 0 0;
+	        align-self: center;
+	        pointer-events: none;
+	        z-index: 30;
+	      }
+
+	      .avatar-selector__center-cue::before {
+	        content: '';
+	        position: absolute;
+	        left: 0;
+	        top: 0;
+	        width: 52px;
+	        height: 52px;
+	        transform: translate(-50%, -50%);
+	        border-radius: 999px;
+	        background: transparent;
+	        box-shadow:
+	          0 0 0 2.5px rgba(212, 165, 116, 0.85),
+	          0 0 16px rgba(212, 165, 116, 0.4),
+	          inset 0 0 12px rgba(212, 165, 116, 0.15);
+	        animation: selectorRingPulse 2.5s ease-in-out infinite;
+	      }
 
       @keyframes selectorRingPulse {
         0%, 100% {
@@ -8306,12 +8673,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .chat-panel {
           position: fixed;
           top: 0;
-          bottom: 34px; /* Leave room for ticker (34px on mobile) */
+          bottom: 40px; /* Leave room for ticker (40px on mobile) */
           left: 0;
           right: 0;
           width: 100%;
-          height: calc(100dvh - 34px); /* Full height minus ticker */
-          max-height: calc(100dvh - 34px);
+          height: calc(100dvh - 40px); /* Full height minus ticker */
+          max-height: calc(100dvh - 40px);
           border-radius: 0;
           border: none;
           box-shadow: none;
@@ -8320,6 +8687,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         .chat-panel.is-open {
           animation: sheetOpen 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+
+        .chat-panel.is-peek {
+          top: auto;
+          height: min(46dvh, 520px);
+          max-height: min(46dvh, 520px);
+          border-radius: 20px 20px 0 0;
+          border: 1px solid rgba(212, 165, 116, 0.22);
+          box-shadow: 0 -12px 48px rgba(0,0,0,0.7);
         }
 
         @keyframes sheetOpen {
@@ -8357,6 +8733,30 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         .chat-header__close-label {
           display: none;
+        }
+
+        .chat-header__dock {
+          top: max(24px, calc(env(safe-area-inset-top) + 16px));
+          right: 64px;
+          width: 44px;
+          height: 44px;
+          padding: 0;
+        }
+
+        .chat-header__dock-label {
+          display: none;
+        }
+
+        .chat-panel.is-peek .chat-header {
+          padding: 18px 20px 12px;
+        }
+
+        .chat-panel.is-peek .chat-header__close {
+          top: 12px;
+        }
+
+        .chat-panel.is-peek .chat-header__dock {
+          top: 12px;
         }
 
         /* Adjust input area for safe areas (iPhone Home Bar) */
@@ -12714,7 +13114,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <div class="chat-header__drag-handle"></div>
           <div class="chat-header__title-group">
             <span class="chat-header__title">La Mesa</span>
+            <button class="chat-header__status" id="mesaPresenceBtn" type="button" aria-label="Who's at the table">
+              <span class="chat-header__status-dot" aria-hidden="true"></span>
+              <span class="chat-header__status-text" id="mesaHeaderStatusText">Who’s here</span>
+            </button>
           </div>
+          <button class="chat-header__dock" id="chatDock" type="button" aria-label="Dock La Mesa (second screen)" aria-pressed="false">
+            <span class="chat-header__dock-label">Dock</span>
+          </button>
           <button class="chat-header__close" id="chatClose" type="button" aria-label="Leave table">
             <span class="chat-header__close-label">Leave Table</span>
           </button>
@@ -12728,14 +13135,14 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <!-- Live player count for FOMO -->
           <div class="mesa-live-indicator" id="mesaLiveIndicator">
             <span class="mesa-live-dot"></span>
-            <span class="mesa-live-text"><span id="mesaPlayerCount">0</span> at the table</span>
+            <span class="mesa-live-text"><span id="mesaPlayerCount">0</span> active today</span>
           </div>
 
-          <div class="avatar-selector-frame">
-            <span class="avatar-selector__center-cue" aria-hidden="true"></span>
-            <div class="avatar-selector">
-              <!-- Spacer for scroll centering -->
-              <div class="avatar-selector__spacer" aria-hidden="true"></div>
+	          <div class="avatar-selector-frame">
+	            <div class="avatar-selector">
+	              <span class="avatar-selector__center-cue" aria-hidden="true"></span>
+	              <!-- Spacer for scroll centering -->
+	              <div class="avatar-selector__spacer" aria-hidden="true"></div>
               <!-- 1. PRIORITY: Cuba & USA -->
               <div class="avatar-option selected" data-avatar="cuba" title="Cuba">
                 <img class="avatar-flag-img" src="https://flagcdn.com/cu.svg" alt="Cuba" width="32" height="32" decoding="async" loading="eager" draggable="false" />
@@ -13454,6 +13861,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
         <!-- Chat Screen Area -->
         <div class="chat-body-container" id="chatBodyContainer" style="display: none;">
+          <!-- Ritual Strip - small, optional, always human -->
+          <div class="mesa-ritual" id="mesaRitual">
+            <button class="mesa-ritual__pill" id="mesaRitualWho" type="button">Who’s here</button>
+            <button class="mesa-ritual__pill mesa-ritual__pill--toggle" id="mesaLfgToggle" type="button" aria-pressed="false">Looking for partner</button>
+            <div class="mesa-ritual__chips" id="mesaQuickTalk" aria-label="Quick talk">
+              <button class="mesa-chip" type="button" data-chip="🀱" aria-label="Domino slam">🀱</button>
+              <button class="mesa-chip" type="button" data-chip="🔥" aria-label="Fuego">🔥</button>
+              <button class="mesa-chip" type="button" data-chip="😂" aria-label="Jaja">😂</button>
+              <button class="mesa-chip" type="button" data-chip="👏" aria-label="Respeto">👏</button>
+              <button class="mesa-chip" type="button" data-chip="💪" aria-label="Fuerza">💪</button>
+              <button class="mesa-chip" type="button" data-chip="🌴" aria-label="Cuba">🌴</button>
+            </div>
+          </div>
           <div class="chat-messages" id="chatMessages">
             <div class="chat-empty">The calm before the storm.</div>
           </div>
@@ -13466,6 +13886,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
               </svg>
             </button>
+          </div>
+        </div>
+
+        <!-- Presence List - "Who's here" (second screen + room heartbeat) -->
+        <div class="mesa-presence" id="mesaPresence" aria-hidden="true">
+          <div class="mesa-presence__backdrop" id="mesaPresenceBackdrop"></div>
+          <div class="mesa-presence__sheet" role="dialog" aria-label="Who's at the table">
+            <div class="mesa-presence__header">
+              <div class="mesa-presence__title">Who’s here</div>
+              <button class="mesa-presence__close" id="mesaPresenceClose" type="button" aria-label="Close list">Close</button>
+            </div>
+            <div class="mesa-presence__list" id="mesaPresenceList"></div>
           </div>
         </div>
       </div>
@@ -14317,14 +14749,29 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         requestAnimationFrame(update);
       }
 
-      // Track live count (updated by fetch, used by observer)
-      let livePlayerCount = PLAYERS_REGISTERED;
-      let liveFetched = false;
+	      // Track live count (updated by fetch, used by observer)
+	      let livePlayerCount = PLAYERS_REGISTERED;
+	      let liveFetched = false;
 
-      // Fetch live registration count from Google Sheets BEFORE observer setup
-      fetch('/api/players')
-        .then(r => r.json())
-        .then(data => {
+	      function applyRealSeatClaim(delta) {
+	        const nextCount = Number(livePlayerCount) + Number(delta);
+	        if (!Number.isFinite(nextCount)) return;
+
+	        livePlayerCount = Math.max(0, nextCount);
+	        const remaining = PLAYERS_GOAL - livePlayerCount;
+
+	        if (playerCountEl) playerCountEl.textContent = livePlayerCount;
+	        seatsRemainingActual = remaining;
+	        updateSpotsRemaining(remaining, { animate: false, tick: true });
+
+	        const percentage = (livePlayerCount / PLAYERS_GOAL) * 100;
+	        if (progressFillEl) progressFillEl.style.width = percentage + '%';
+	      }
+
+	      // Fetch live registration count from Google Sheets BEFORE observer setup
+	      fetch('/api/players')
+	        .then(r => r.json())
+	        .then(data => {
           livePlayerCount = data.players?.length || 0;
           liveFetched = true;
 
@@ -14479,9 +14926,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       };
 
       // Helper: Transition from waiting to success
-      const transitionToSuccess = (playerName) => {
-        // Flag to prevent back-to-top pip from activating during success screen
-        document.body.dataset.successActive = 'true';
+	      const transitionToSuccess = (playerName) => {
+	        // Flag to prevent back-to-top pip from activating during success screen
+	        document.body.dataset.successActive = 'true';
 
         // Trigger subtle fade transition
         waitingEl.classList.add('is-transitioning');
@@ -14493,17 +14940,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           successEl.classList.add('is-visible');
           statusEl.textContent = '';
 
-          // Mark user as registered
-          localStorage.setItem('cdl_registered', 'true');
+	          // Mark user as registered
+	          localStorage.setItem('cdl_registered', 'true');
 
-          // Broadcast to ticker
-          if (supabase && playerName) {
-            supabase.channel('registrations').send({
-              type: 'broadcast',
-              event: 'new-registration',
-              payload: { playerName }
-            });
-          }
+	          // Let the ticker react immediately on this device (even if Supabase isn't configured).
+	          window.dispatchEvent(new CustomEvent('cdl:new-registration', {
+	            detail: { playerName, clientId: CLIENT_ID }
+	          }));
+
+	          // Broadcast to ticker
+	          if (supabase && playerName) {
+	            supabase.channel('registrations').send({
+	              type: 'broadcast',
+	              event: 'new-registration',
+	              payload: { playerName, clientId: CLIENT_ID }
+	            });
+	          }
 
           // Hide everything for clean full-screen takeover
           document.querySelector(".panel--form .panel-headline").style.display = "none";
@@ -14673,16 +15125,17 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       async function loadPlayers() {
         const chatPlayerSelect = document.getElementById('chatPlayerSelect');
 
-        try {
-          const response = await fetch('/api/players');
-          const data = await response.json();
-          // Use mock data if API returns empty or errors
-          registeredPlayers = (data.players && data.players.length > 0) ? data.players : MOCK_PLAYERS;
+	        try {
+	          const response = await fetch('/api/players');
+	          const data = await response.json();
+	          // Use mock data if API returns empty or errors
+	          registeredPlayers = (data.players && data.players.length > 0) ? data.players : MOCK_PLAYERS;
+	          livePlayerCount = registeredPlayers.length;
 
-          // Update progress counter
-          const playerCount = document.getElementById('playerCount');
-          const spotsLeft = document.getElementById('spotsLeft');
-          const spotsLeftButton = document.getElementById('spotsLeftButton');
+	          // Update progress counter
+	          const playerCount = document.getElementById('playerCount');
+	          const spotsLeft = document.getElementById('spotsLeft');
+	          const spotsLeftButton = document.getElementById('spotsLeftButton');
           const progressFill = document.getElementById('progressFill');
           if (playerCount) playerCount.textContent = registeredPlayers.length;
           updateSpotsRemaining(PLAYERS_GOAL - registeredPlayers.length);
@@ -14706,14 +15159,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             if (chatNameInput) chatNameInput.style.display = 'block';
             if (chatRegisterHint) chatRegisterHint.textContent = 'Enter the name you registered with';
           }
-        } catch (err) {
-          console.error('Failed to load players, using mock data:', err);
-          // On error, use mock data for local dev testing
-          registeredPlayers = MOCK_PLAYERS;
-          const chatNameInput = document.getElementById('chatNameInput');
-          const chatRegisterHint = document.getElementById('chatRegisterHint');
-          // Show custom dropdown with mock players
-          populateCustomDropdown(registeredPlayers);
+	        } catch (err) {
+	          console.error('Failed to load players, using mock data:', err);
+	          // On error, use mock data for local dev testing
+	          registeredPlayers = MOCK_PLAYERS;
+	          livePlayerCount = registeredPlayers.length;
+	          const chatNameInput = document.getElementById('chatNameInput');
+	          const chatRegisterHint = document.getElementById('chatRegisterHint');
+	          // Show custom dropdown with mock players
+	          populateCustomDropdown(registeredPlayers);
           if (customSelect) customSelect.style.display = 'block';
           if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
           if (chatNameInput) chatNameInput.style.display = 'none';
@@ -14889,8 +15343,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         return text.replace(/@([A-Za-z0-9\s]+?)(?=\s|$|[.,!?])/g, '<span class="mention">@$1</span>');
       }
 
-      // Load players on page load
-      loadPlayers();
+	      // Load players on page load
+	      const playersReady = loadPlayers();
 
       // ========================================
       // MESA LIVE COUNT & CLAIMED SEATS
@@ -14944,14 +15398,30 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       // ========================================
       // CHAT - Supabase real-time chat
       // ========================================
-      // Chat state (declare early so it's available)
-      let chatIdentity = JSON.parse(localStorage.getItem('cdl_chat_identity') || 'null');
-      let unreadCount = 0;
-      let chatOpen = false;
-      let selectedAvatar = 'cuba'; // Default
-      let messagesChannel = null;
-      let registrationsChannel = null;
-      let lastSpeakerId = null; // Tobias: Track for "new voice" arrivals
+	      // Chat state (declare early so it's available)
+	      let chatIdentity = JSON.parse(localStorage.getItem('cdl_chat_identity') || 'null');
+	      const CLIENT_ID = (() => {
+	        try {
+	          const key = 'cdl_client_id';
+	          let id = localStorage.getItem(key);
+	          if (!id) {
+	            id = (typeof crypto !== 'undefined' && crypto.randomUUID)
+	              ? crypto.randomUUID()
+	              : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+	            localStorage.setItem(key, id);
+	          }
+	          return id;
+	        } catch {
+	          return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+	        }
+	      })();
+	      let unreadCount = 0;
+	      let chatOpen = false;
+	      let selectedAvatar = 'cuba'; // Default
+	      let messagesChannel = null;
+	      let registrationsChannel = null;
+	      let announcementsChannel = null;
+	      let lastSpeakerId = null; // Tobias: Track for "new voice" arrivals
 
       // Initialize Supabase
       let supabase = null;
@@ -14967,28 +15437,33 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         });
       }
 
-      function initSupabase() {
-        if (window.supabase && !supabase) {
-          supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          return true;
-        }
-        return !!supabase;
-      }
+	      function initSupabase() {
+	        if (window.supabase && !supabase) {
+	          supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+	          return true;
+	        }
+	        return !!supabase;
+	      }
 
-      // Load Supabase and initialize (only if configured)
-      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-        loadSupabaseScript().then(() => {
-          if (!initSupabase()) return;
-          // Always listen for new registrations so the form + ticker can react in real-time.
-          subscribeToRegistrations();
-          if (chatIdentity) {
-            loadMessages();
-            subscribeToMessages();
-          }
-        }).catch(err => {
-          console.error('Failed to load Supabase:', err);
-        });
-      }
+	      // Load Supabase and initialize (only if configured)
+	      let supabaseReady = Promise.resolve(false);
+	      if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+	        supabaseReady = loadSupabaseScript()
+	          .then(() => {
+	            if (!initSupabase()) return false;
+	            // Always listen for new registrations so the form + ticker can react in real-time.
+	            subscribeToRegistrations();
+	            if (chatIdentity) {
+	              loadMessages();
+	              subscribeToMessages();
+	            }
+	            return true;
+	          })
+	          .catch(err => {
+	            console.error('Failed to load Supabase:', err);
+	            return false;
+	          });
+	      }
 
       // ========================================
       // CHAT WIDGET LOGIC
@@ -15003,6 +15478,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const chatIdentityScreen = document.getElementById('chatIdentity');
       const chatBodyContainer = document.getElementById('chatBodyContainer');
       const chatBadge = document.getElementById('chatBadge');
+      const mesaPresenceBtn = document.getElementById('mesaPresenceBtn');
+      const mesaHeaderStatusTextEl = document.getElementById('mesaHeaderStatusText');
+      const mesaPresenceEl = document.getElementById('mesaPresence');
+      const mesaPresenceBackdrop = document.getElementById('mesaPresenceBackdrop');
+      const mesaPresenceClose = document.getElementById('mesaPresenceClose');
+      const mesaPresenceList = document.getElementById('mesaPresenceList');
+      const mesaRitualWho = document.getElementById('mesaRitualWho');
+      const mesaLfgToggle = document.getElementById('mesaLfgToggle');
+      const mesaQuickTalk = document.getElementById('mesaQuickTalk');
 
       // Leave modal elements - Tobias: Custom modal replaces browser confirm()
       const leaveModal = document.getElementById('leaveModal');
@@ -15018,6 +15502,54 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       // Check if user is already registered → show chat button
       const isRegistered = localStorage.getItem('cdl_registered') === 'true';
       const tickerChatBtn = document.getElementById('tickerChatBtn');
+      const chatDockBtn = document.getElementById('chatDock');
+      let chatDocked = localStorage.getItem('cdl_mesa_docked') === 'true';
+      let mesaLookingForPartner = localStorage.getItem('cdl_mesa_lfg') === 'true';
+
+      function applyMesaLfgUI() {
+        mesaLfgToggle?.setAttribute('aria-pressed', mesaLookingForPartner ? 'true' : 'false');
+      }
+      applyMesaLfgUI();
+
+      mesaRitualWho?.addEventListener('click', () => {
+        if (mesaPresenceEl?.classList.contains('is-open')) closeMesaPresence();
+        else openMesaPresence();
+      });
+
+      mesaLfgToggle?.addEventListener('click', async () => {
+        mesaLookingForPartner = !mesaLookingForPartner;
+        localStorage.setItem('cdl_mesa_lfg', mesaLookingForPartner ? 'true' : 'false');
+        applyMesaLfgUI();
+        vibrate(8);
+
+        // Broadcast state via presence so the room can respond.
+        try {
+          if (presenceChannel && chatIdentity) {
+            await presenceChannel.track({
+              playerName: chatIdentity.playerName,
+              teamName: chatIdentity.teamName,
+              avatar: chatIdentity.avatar,
+              joinedAt: new Date().toISOString(),
+              docked: chatDocked,
+              lookingForPartner: mesaLookingForPartner,
+            });
+          }
+        } catch {}
+      });
+
+      mesaQuickTalk?.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-chip]');
+        if (!btn || !chatInput) return;
+        const chip = btn.getAttribute('data-chip');
+        if (!chip) return;
+
+        const current = chatInput.value;
+        const needsSpace = current && !current.endsWith(' ') && !current.endsWith('\n');
+        chatInput.value = current + (needsSpace ? ' ' : '') + chip + ' ';
+        chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+        chatInput.focus();
+        vibrate(5);
+      });
 
       // Helper to reveal chat button with animation - Tobias: "No hard cuts"
       function revealChatButton(animate = true) {
@@ -15042,8 +15574,45 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         tickerChatBtn.classList.remove('mesa-ticker__chat-btn--hidden');
       }
 
-      // Helper to open chat
-      function openChat() {
+      function applyChatPresentation(mode) {
+        const isPeek = mode === 'peek';
+        chatDocked = isPeek;
+        localStorage.setItem('cdl_mesa_docked', isPeek ? 'true' : 'false');
+        chatDockBtn?.setAttribute('aria-pressed', isPeek ? 'true' : 'false');
+        if (chatDockBtn) {
+          chatDockBtn.setAttribute('aria-label', isPeek ? 'Expand La Mesa' : 'Dock La Mesa (second screen)');
+          const labelEl = chatDockBtn.querySelector('.chat-header__dock-label');
+          if (labelEl) labelEl.textContent = isPeek ? 'Expand' : 'Dock';
+        }
+
+        chatPanel.classList.toggle('is-peek', isPeek);
+
+        if (isPeek) {
+          chatBackdrop?.classList.remove('is-visible');
+          mesaTicker?.classList.remove('ticker-dimmed');
+          document.body.classList.remove('chat-open');
+        } else {
+          chatBackdrop?.classList.add('is-visible');
+          mesaTicker?.classList.add('ticker-dimmed');
+          if (window.innerWidth <= 768) document.body.classList.add('chat-open');
+        }
+
+        // Keep presence metadata honest for second-screen mode.
+        try {
+          if (presenceChannel && chatIdentity) {
+            presenceChannel.track({
+              playerName: chatIdentity.playerName,
+              teamName: chatIdentity.teamName,
+              avatar: chatIdentity.avatar,
+              joinedAt: new Date().toISOString(),
+              docked: chatDocked,
+              lookingForPartner: mesaLookingForPartner,
+            });
+          }
+        } catch {}
+      }
+
+      function openMesa(mode = (chatDocked ? 'peek' : 'full')) {
         // DEFENSIVE CHECK: Never open La Mesa for unregistered users
         const isRegistered = localStorage.getItem('cdl_registered') === 'true';
         if (!isRegistered) {
@@ -15051,21 +15620,120 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           return;
         }
 
-        // Show chat button if hidden (with reveal animation)
         revealChatButton(true);
         chatPanel.style.display = 'flex';
         void chatPanel.offsetWidth;
         chatPanel.classList.add('is-open');
-        document.body.classList.add('chat-open'); // Lock scroll via CSS class
-        // Dim ticker when chat is open
-        if (mesaTicker) mesaTicker.classList.add('ticker-dimmed');
+        applyChatPresentation(mode);
       }
+
+      function closeMesa() {
+        chatPanel.classList.remove('is-open', 'is-peek');
+        chatBackdrop?.classList.remove('is-visible');
+        mesaTicker?.classList.remove('ticker-dimmed');
+        document.body.classList.remove('chat-open');
+        closeMesaPresence();
+      }
+
+      // ========================================
+      // PRESENCE LIST UI — "Who’s here"
+      // ========================================
+      let lastMesaPresenceState = {};
+
+      function getMesaPresenceUsers(state) {
+        const users = [];
+        if (!state) return users;
+        for (const presences of Object.values(state)) {
+          if (Array.isArray(presences) && presences[0]) users.push(presences[0]);
+        }
+        users.sort((a, b) => String(a.playerName || '').localeCompare(String(b.playerName || '')));
+        return users;
+      }
+
+      function updateMesaHeaderPresence(state) {
+        const liveCount = getMesaPresenceUsers(state).length;
+        if (mesaHeaderStatusTextEl) mesaHeaderStatusTextEl.textContent = `${liveCount} at the table`;
+      }
+
+      function renderMesaPresenceList() {
+        if (!mesaPresenceList) return;
+        const users = getMesaPresenceUsers(lastMesaPresenceState);
+
+        if (users.length === 0) {
+          const copy = (!presenceChannel || !chatIdentity)
+            ? 'Join La Mesa to see who’s here.'
+            : 'No one’s in the room yet.';
+          mesaPresenceList.innerHTML = `<div class="mesa-presence__empty">${copy}</div>`;
+          return;
+        }
+
+        mesaPresenceList.innerHTML = users.map((user) => {
+          const playerName = user.playerName || '';
+          const isSelf = chatIdentity && playerName === chatIdentity.playerName;
+          const emoji = (typeof FLAG_MAP !== 'undefined' && FLAG_MAP[user.avatar]) ? FLAG_MAP[user.avatar] : '🇨🇺';
+          const lfg = user.lookingForPartner ? '<span class="mesa-presence__badge">LFG</span>' : '';
+
+          return `
+            <div class="mesa-presence__row" data-player="${escapeHtml(playerName)}">
+              <div class="mesa-presence__who">
+                <div class="mesa-presence__flag">${emoji}</div>
+                <div class="mesa-presence__name">${escapeHtml(playerName || '—')}</div>
+              </div>
+              <div class="mesa-presence__badges">
+                ${lfg}
+                ${(!isSelf && playerName) ? `<button class="mesa-presence__invite" type="button" data-invite="${escapeHtml(playerName)}">Invite</button>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function openMesaPresence() {
+        if (!mesaPresenceEl) return;
+        mesaPresenceEl.classList.add('is-open');
+        mesaPresenceEl.setAttribute('aria-hidden', 'false');
+        renderMesaPresenceList();
+        vibrate(5);
+      }
+
+      function closeMesaPresence() {
+        if (!mesaPresenceEl) return;
+        mesaPresenceEl.classList.remove('is-open');
+        mesaPresenceEl.setAttribute('aria-hidden', 'true');
+      }
+
+      mesaPresenceBtn?.addEventListener('click', () => {
+        if (mesaPresenceEl?.classList.contains('is-open')) closeMesaPresence();
+        else openMesaPresence();
+      });
+      mesaPresenceBackdrop?.addEventListener('click', closeMesaPresence);
+      mesaPresenceClose?.addEventListener('click', closeMesaPresence);
+
+      // Click actions in list: tap row to @mention, tap Invite to send invite
+      mesaPresenceList?.addEventListener('click', (e) => {
+        const inviteBtn = e.target.closest('[data-invite]');
+        if (inviteBtn) {
+          const toPlayer = inviteBtn.getAttribute('data-invite');
+          if (toPlayer) {
+            if (typeof window.sendTeamInvite === 'function') window.sendTeamInvite(toPlayer);
+            else if (typeof sendTeamInvite === 'function') sendTeamInvite(toPlayer);
+          }
+          return;
+        }
+
+        const row = e.target.closest('[data-player]');
+        const player = row?.getAttribute('data-player');
+        if (!player || !chatInput) return;
+        const trimmed = chatInput.value.trim();
+        chatInput.value = (trimmed ? `${trimmed} ` : '') + `@${player} `;
+        chatInput.focus();
+      });
 
       // Success CTA: Close success overlay, open chat
       if (successMesaCta) {
         successMesaCta.addEventListener('click', () => {
           successEl.classList.remove('is-visible');
-          openChat();
+          openMesa();
         });
       }
 
@@ -15098,7 +15766,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       if (tutorialMesaCta) {
         tutorialMesaCta.addEventListener('click', () => {
           mesaTutorial.classList.remove('is-visible');
-          openChat();
+          openMesa();
         });
       }
 
@@ -15221,11 +15889,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         const isOpen = chatPanel.classList.contains('is-open');
 
         if (isOpen) {
-          // Close
-          chatPanel.classList.remove('is-open');
-          chatBackdrop.classList.remove('is-visible');
-          mesaTicker.classList.remove('ticker-dimmed'); // JS fallback for :has()
-          document.body.classList.remove('chat-open'); // Unlock scroll via CSS class
+          closeMesa();
           vibrate(5);
         } else {
           // DEFENSIVE CHECK: Never open La Mesa for unregistered users
@@ -15235,22 +15899,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             return;
           }
 
-          // Open
-          chatBackdrop.classList.add('is-visible');
-          mesaTicker.classList.add('ticker-dimmed'); // JS fallback for :has()
+          // Open (honor last mode)
+          openMesa(chatDocked ? 'peek' : 'full');
 
           // Tobias: Clear unread state when entering the room
           tickerChatBtn.classList.remove('has-unread');
           if (chatBadge) chatBadge.style.display = 'none';
           unreadCount = 0;
-
-          // Force reflow for animation
-          void chatPanel.offsetWidth;
-          chatPanel.classList.add('is-open');
-
-          if (window.innerWidth <= 768) {
-            document.body.classList.add('chat-open'); // Lock scroll via CSS class
-          }
           vibrate(10);
 
 	          // Re-initialize spacers now that panel is visible
@@ -15266,6 +15921,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           }
         }
       }
+
+      chatDockBtn?.addEventListener('click', () => {
+        if (!chatPanel.classList.contains('is-open')) return;
+        const nextMode = chatPanel.classList.contains('is-peek') ? 'full' : 'peek';
+        applyChatPresentation(nextMode);
+        vibrate(8);
+      });
 
 	      function routeUnregisteredToRegistration() {
 	        // Ensure nothing can "fight" the teleport.
@@ -15409,7 +16071,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           }
 
           hideLeaveModal();
-          toggleChat();
+          closeMesa();
         }, 200);
       }
 
@@ -15433,7 +16095,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       chatClose.addEventListener('click', () => {
         // If user never joined, treat as a normal close
         if (!chatIdentity) {
-          toggleChat();
+          closeMesa();
           return;
         }
 
@@ -15444,7 +16106,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       const chatRegisterLink = document.getElementById('chatRegisterLink');
       chatRegisterLink.addEventListener('click', (e) => {
         e.preventDefault();
-        toggleChat(); // Close the chat
+        closeMesa();
         // Scroll to registration form
         const signupForm = document.getElementById('signup');
         if (signupForm) {
@@ -15472,7 +16134,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         
         // If swiped down more than 100px (and not scrolling messages)
         if (swipeDistance > 100 && (!chatMessages.contains(e.target) || chatMessages.scrollTop <= 0)) {
-           toggleChat(); // Close
+          // Full → Peek (second screen) before closing
+          if (chatPanel.classList.contains('is-open') && !chatPanel.classList.contains('is-peek')) {
+            applyChatPresentation('peek');
+            vibrate(8);
+            return;
+          }
+          closeMesa();
+          vibrate(5);
+        }
+
+        // Swipe up in peek to expand
+        if (swipeDistance < -80 && chatPanel.classList.contains('is-open') && chatPanel.classList.contains('is-peek')) {
+          applyChatPresentation('full');
+          vibrate(10);
         }
       });
       
@@ -15525,6 +16200,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	      }
 
 	      function getAvatarRingCenterX() {
+	        // The ring is pinned to the scroll container's center (sticky), so match that.
+	        const selectorRect = avatarSelector?.getBoundingClientRect();
+	        if (selectorRect) return selectorRect.left + (selectorRect.width / 2);
+
 	        const frameRect = avatarSelectorFrame?.getBoundingClientRect();
 	        if (frameRect) return frameRect.left + (frameRect.width / 2);
 
@@ -15534,26 +16213,46 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        return null;
 	      }
 
+	      function getAvatarOptionCenterX(opt) {
+	        if (!opt) return null;
+	        const img = opt.querySelector?.('.avatar-flag-img');
+	        const rect = (img || opt).getBoundingClientRect?.();
+	        if (!rect) return null;
+	        return rect.left + (rect.width / 2);
+	      }
+
 	      function getAvatarOptionCenterDeltaFromRing(opt) {
 	        if (!opt) return 0;
 	        const ringCenterX = getAvatarRingCenterX();
 	        if (ringCenterX == null) return 0;
-	        const rect = opt.getBoundingClientRect();
-	        const centerX = rect.left + (rect.width / 2);
+	        const centerX = getAvatarOptionCenterX(opt);
+	        if (centerX == null) return 0;
 	        return centerX - ringCenterX;
 	      }
 
 	      function centerAvatarOption(opt, behavior = 'smooth') {
 	        if (!avatarSelector || !opt) return;
-	        const delta = getAvatarOptionCenterDeltaFromRing(opt);
-	        if (!Number.isFinite(delta)) return;
-	        if (Math.abs(delta) < 0.5) return;
-
+	        // First ask the browser to center the item (Safari tends to respect this more reliably),
+	        // then do a tiny pixel correction so the flag image center matches the ring center.
 	        const normalizedBehavior = behavior === 'instant' ? 'auto' : behavior;
-	        avatarSelector.scrollTo({
-	          left: avatarSelector.scrollLeft + delta,
-	          behavior: normalizedBehavior,
-	        });
+	        if (behavior !== 'instant') {
+	          try {
+	            opt.scrollIntoView({ behavior: normalizedBehavior, inline: 'center', block: 'nearest' });
+	          } catch {}
+	        }
+
+	        const correct = () => {
+	          const delta = getAvatarOptionCenterDeltaFromRing(opt);
+	          if (!Number.isFinite(delta)) return;
+	          if (Math.abs(delta) < 0.5) return;
+	          avatarSelector.scrollTo({
+	            left: avatarSelector.scrollLeft + delta,
+	            behavior: 'auto',
+	          });
+	        };
+
+	        requestAnimationFrame(correct);
+	        if (behavior !== 'instant') setTimeout(correct, 120);
 	      }
 
 	      avatarOptions.forEach(opt => {
@@ -15570,10 +16269,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           opt.classList.remove('is-slamming');
           // Force reflow so the animation reliably restarts
           void opt.offsetWidth;
-          opt.classList.add('selected');
-          opt.classList.add('is-slamming');
-          vibrate([8, 20, 8]); // Tobias: Flag selection haptic burst
-          playTick(); // Audio feedback for iOS
+	          opt.classList.add('selected');
+	          opt.classList.add('is-slamming');
+	          vibrate([8, 20, 8]); // Tobias: Flag selection haptic burst
+	          if (typeof playTick === 'function') playTick(); // Audio feedback for iOS (guarded)
 
           selectedAvatar = opt.dataset.avatar;
           isCountryConfirmed = true;
@@ -15584,6 +16283,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	          // Center the selected flag precisely to the golden ring (Safari can be off by a few px with scrollIntoView)
 	          centerAvatarOption(opt, 'smooth');
+	          // Re-run after the slam/scale applies to avoid any transient fractional layout drift.
+	          requestAnimationFrame(() => centerAvatarOption(opt, 'instant'));
+	          setTimeout(() => centerAvatarOption(opt, 'instant'), 120);
 
 	          suppressSettleHapticUntil = Date.now() + 400;
 	        });
@@ -15596,8 +16298,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        let closest = null;
 	        let closestDistance = Infinity;
 	        avatarOptions.forEach((opt) => {
-	          const rect = opt.getBoundingClientRect();
-	          const centerX = rect.left + (rect.width / 2);
+	          const centerX = getAvatarOptionCenterX(opt);
+	          if (centerX == null) return;
 	          const distance = Math.abs(centerX - ringCenterX);
 	          if (distance < closestDistance) {
 	            closestDistance = distance;
@@ -15653,6 +16355,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	        // Safari can land a pixel or two off the ring even after scroll-snap; nudge to perfection.
 	        centerAvatarOption(closest, 'instant');
+	        setTimeout(() => centerAvatarOption(closest, 'instant'), 80);
 
 	        if (shouldHaptic) vibrate(6);
 	      }
@@ -16232,58 +16935,164 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       // Subscribe to real-time registrations
-      function subscribeToRegistrations() {
-        if (!supabase) return;
-        if (registrationsChannel) return;
+	      function subscribeToRegistrations() {
+	        if (!supabase) return;
+	        if (registrationsChannel) return;
 
-        registrationsChannel = supabase
-          .channel('registrations')
-          .on('broadcast', { event: 'new-registration' }, (payload) => {
-            addTickerEvent('register', payload.payload.playerName);
-            updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
+	        registrationsChannel = supabase
+	          .channel('registrations')
+	          .on('broadcast', { event: 'new-registration' }, (payload) => {
+	            const playerName = payload?.payload?.playerName;
+	            const clientId = payload?.payload?.clientId;
+	            if (!playerName) return;
+	            if (clientId && clientId === CLIENT_ID) return;
 
-            // Update the seats remaining counter
-            applyRealSeatClaim(1);
-          })
-          .subscribe();
-      }
+	            addTickerEvent('register', playerName);
+	            updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
 
-      // ========================================
-      // MESA TICKER - ESPN-style activity feed
-      // ========================================
-      const tickerTrack = document.getElementById('tickerTrack');
-      let presenceChannel = null;
-      let tickerEvents = []; // Store recent events for the ticker
-      let tickerInitialized = false; // Prevent resets after initial load
-      let lastTickerContent = ''; // Track content changes to skip unnecessary updates
+	            // Update the seats remaining counter
+	            applyRealSeatClaim(1);
+	          })
+	          .subscribe();
+	      }
 
-      // Initialize ticker with mock data for preview
-      function initTickerMock() {
-        console.log('[Ticker] initTickerMock called');
-        const mockEvents = [
-          { type: 'register', playerName: 'Alex Torres' },
-          { type: 'register', playerName: 'Carmen Ruiz' },
-          { type: 'update', playerName: 'Registration closes Friday' },
-          { type: 'register', playerName: 'Danny Rodriguez' },
-          { type: 'register', playerName: 'Maria Elena' },
-          { type: 'update', playerName: '$500 prize pool' },
-          { type: 'register', playerName: 'Jorge Mendez' },
-          { type: 'register', playerName: 'Sofia Vega' }
-        ];
+	      // ========================================
+	      // MESA TICKER - ESPN-style activity feed
+	      // ========================================
+	      const tickerTrack = document.getElementById('tickerTrack');
+	      let presenceChannel = null;
+	      let tickerAnnouncements = []; // Admin-controlled messages (Supabase)
+	      let tickerRegistrations = []; // Recent signups (Google Sheets via /api/players)
+	      let tickerRendered = false;
+	      let lastTickerContent = ''; // Track content changes to skip unnecessary updates
 
-        tickerEvents = mockEvents;
-        console.log('[Ticker] Calling updateTicker with', tickerEvents.length, 'events');
-        updateTicker({}, true); // true = force update
-        console.log('[Ticker] tickerTrack innerHTML length:', tickerTrack?.innerHTML?.length || 0);
-      }
+	      function normalizeTickerName(name) {
+	        return String(name ?? '').trim().split(' ')[0];
+	      }
 
-      // Show mock data initially
-      console.log('[Ticker] About to call initTickerMock, tickerTrack exists:', !!tickerTrack);
-      initTickerMock();
+		      function seedTickerRegistrations() {
+		        const roster = Array.isArray(registeredPlayers) ? registeredPlayers : [];
+		        const names = roster
+		          .map((p) => normalizeTickerName(p?.name))
+		          .filter(Boolean);
 
-      // Note: ticker should never pause/stop on touch; keep it continuously scrolling.
+		        // Google Sheets comes back in signup order; take the most recent.
+		        tickerRegistrations = names.slice(-8).reverse();
+		      }
 
-      function joinMesaPresence() {
+		      async function refreshTickerRoster() {
+		        try {
+		          const response = await fetch('/api/players');
+		          const data = await response.json();
+		          const roster = Array.isArray(data?.players) ? data.players : [];
+		          const names = roster
+		            .map((p) => normalizeTickerName(p?.name))
+		            .filter(Boolean);
+
+		          const nextRegistrations = names.slice(-8).reverse();
+		          const nextCount = names.length;
+
+		          const didRegistrationsChange = nextRegistrations.join('|') !== tickerRegistrations.join('|');
+		          const didCountChange = Number.isFinite(nextCount) && nextCount !== livePlayerCount;
+
+		          if (didRegistrationsChange) {
+		            tickerRegistrations = nextRegistrations;
+		          }
+
+		          if (didCountChange) {
+		            livePlayerCount = nextCount;
+		            const remaining = PLAYERS_GOAL - livePlayerCount;
+		            seatsRemainingActual = remaining;
+		            updateSpotsRemaining(remaining, { animate: false, tick: true });
+		            if (playerCountEl) playerCountEl.textContent = livePlayerCount;
+		            const percentage = (livePlayerCount / PLAYERS_GOAL) * 100;
+		            if (progressFillEl) progressFillEl.style.width = percentage + '%';
+		          }
+
+		          if (didRegistrationsChange || didCountChange) {
+		            updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
+		          }
+		        } catch {}
+		      }
+
+		      async function refreshTickerAnnouncements() {
+		        if (!supabase) return;
+		        const { data } = await supabase
+		          .from('announcements')
+	          .select('content, priority, is_active, expires_at, created_at')
+	          .order('priority', { ascending: false })
+	          .order('created_at', { ascending: false });
+
+	        const now = new Date().toISOString();
+	        const active = (data || []).filter((a) =>
+	          a.is_active && (!a.expires_at || a.expires_at > now)
+	        );
+
+	        tickerAnnouncements = active
+	          .map((a) => String(a.content || '').trim())
+	          .filter(Boolean)
+	          .slice(0, 6);
+	      }
+
+	      function subscribeToTickerAnnouncements() {
+	        if (!supabase) return;
+	        if (announcementsChannel) return;
+
+	        announcementsChannel = supabase
+	          .channel('announcements-changes')
+	          .on('postgres_changes', { event: '*', schema: 'public', table: 'announcements' }, async () => {
+	            await refreshTickerAnnouncements();
+	            updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
+	          })
+	          .subscribe();
+	      }
+
+		      async function initTicker() {
+		        if (!tickerTrack) return;
+
+		        await Promise.resolve(playersReady).catch(() => null);
+		        seedTickerRegistrations();
+		        void refreshTickerRoster();
+
+		        const supabaseOk = await supabaseReady;
+		        if (supabaseOk && supabase) {
+		          await refreshTickerAnnouncements();
+		          subscribeToTickerAnnouncements();
+		        }
+
+		        // Polling fallback so ticker stays accurate even if realtime is unavailable (or RLS hides some changes).
+		        const rosterPoll = window.setInterval(refreshTickerRoster, 35_000);
+		        const announcementsPoll = supabaseOk && supabase
+		          ? window.setInterval(async () => {
+		              await refreshTickerAnnouncements();
+		              updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
+		            }, 60_000)
+		          : null;
+
+		        window.addEventListener('beforeunload', () => {
+		          window.clearInterval(rosterPoll);
+		          if (announcementsPoll) window.clearInterval(announcementsPoll);
+		        }, { once: true });
+
+		        window.addEventListener('cdl:new-registration', (event) => {
+		          const playerName = normalizeTickerName(event?.detail?.playerName);
+		          const clientId = event?.detail?.clientId;
+		          if (!playerName) return;
+	          if (clientId && clientId !== CLIENT_ID) return;
+
+	          addTickerEvent('register', playerName);
+	          updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
+	          applyRealSeatClaim(1);
+	        }, { passive: true });
+
+	        updateTicker(presenceChannel ? presenceChannel.presenceState() : {});
+	      }
+
+	      void initTicker();
+
+	      // Note: ticker should never pause/stop on touch; keep it continuously scrolling.
+
+	      function joinMesaPresence() {
         if (!supabase || !chatIdentity) return;
 
         presenceChannel = supabase.channel('mesa-presence', {
@@ -16297,17 +17106,28 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         presenceChannel
           .on('presence', { event: 'sync' }, () => {
             const state = presenceChannel.presenceState();
+            lastMesaPresenceState = state;
+            updateMesaHeaderPresence(state);
+            if (mesaPresenceEl?.classList.contains('is-open')) renderMesaPresenceList();
             updateTicker(state);
           })
           .on('presence', { event: 'join' }, ({ key, newPresences }) => {
             // Add join event to ticker
             if (newPresences[0] && (!chatIdentity || newPresences[0].playerName !== chatIdentity.playerName)) {
               addTickerEvent('join', newPresences[0].playerName);
-              updateTicker(presenceChannel.presenceState());
+              const state = presenceChannel.presenceState();
+              lastMesaPresenceState = state;
+              updateMesaHeaderPresence(state);
+              if (mesaPresenceEl?.classList.contains('is-open')) renderMesaPresenceList();
+              updateTicker(state);
             }
           })
           .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
             // Could add leave events if desired
+            const state = presenceChannel.presenceState();
+            lastMesaPresenceState = state;
+            updateMesaHeaderPresence(state);
+            if (mesaPresenceEl?.classList.contains('is-open')) renderMesaPresenceList();
           })
           .subscribe(async (status) => {
             if (status === 'SUBSCRIBED') {
@@ -16316,32 +17136,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
                 teamName: chatIdentity.teamName,
                 avatar: chatIdentity.avatar,
                 joinedAt: new Date().toISOString(),
+                docked: chatDocked,
+                lookingForPartner: mesaLookingForPartner,
               });
             }
-          });
-      }
+	          });
+	      }
 
-      function addTickerEvent(type, playerName) {
-        tickerEvents.unshift({ type, playerName, time: Date.now() });
-        // Keep only last 10 events
-        tickerEvents = tickerEvents.slice(0, 10);
+	      function addTickerEvent(type, playerName) {
+	        if (type === 'register') {
+	          tickerRegistrations.unshift(normalizeTickerName(playerName));
+	          tickerRegistrations = tickerRegistrations.filter(Boolean).slice(0, 8);
+	        } else if (type === 'update') {
+	          tickerAnnouncements.unshift(String(playerName || '').trim());
+	          tickerAnnouncements = tickerAnnouncements.filter(Boolean).slice(0, 6);
+	        }
 
-        // Tobias: Add micro-moment feel with subtle vibration for registrations
-        if (type === 'register' || type === 'update') {
-          vibrate([10, 30, 20]);
-          // Note: Removed dynamic animationDuration changes - they caused visible jerks on mobile
+	        // Tobias: Add micro-moment feel with subtle vibration for registrations
+	        if (type === 'register' || type === 'update') {
+	          vibrate([10, 30, 20]);
+	          // Note: Removed dynamic animationDuration changes - they caused visible jerks on mobile
         }
       }
 
-      function updateTicker(state, forceUpdate = false) {
-        // Skip if already initialized (prevents animation reset) unless forced
-        if (tickerInitialized && !forceUpdate) return;
+	      function updateTicker(state, forceUpdate = false) {
+	        const users = [];
 
-        const users = [];
-
-        // Collect all users from presence state
-        for (const [key, presences] of Object.entries(state)) {
-          if (presences.length > 0) {
+	        // Collect all users from presence state
+	        for (const [key, presences] of Object.entries(state)) {
+	          if (presences.length > 0) {
             users.push(presences[0]);
           }
         }
@@ -16351,55 +17174,54 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         // Build ticker - simple, clean
         let items = [];
 
-        // Live count
-        items.push(`<span class="ticker-item ticker-live"><span class="ticker-live-dot"></span>${liveCount} at the table</span>`);
+	        // Live count
+	        items.push(`<span class="ticker-item ticker-live"><span class="ticker-live-dot"></span>${liveCount} at the table</span>`);
 
-        // Spots remaining
-        const spotsRemaining = PLAYERS_GOAL - PLAYERS_REGISTERED;
-        items.push(`<span class="ticker-item ticker-spots">${spotsRemaining} seats left</span>`);
+	        // Spots remaining
+	        const spotsRemaining = Number.isFinite(seatsRemainingActual)
+	          ? Math.max(seatsRemainingActual, 0)
+	          : Math.max(PLAYERS_GOAL - (Number.isFinite(livePlayerCount) ? livePlayerCount : 0), 0);
+	        items.push(`<span class="ticker-item ticker-spots">${spotsRemaining} seats left</span>`);
 
-        // Tournament updates (copper, important)
-        tickerEvents
-          .filter(event => event.type === 'update')
-          .slice(0, 2)
-          .forEach(event => {
-            items.push(`<span class="ticker-item ticker-update">${escapeHtml(event.playerName)}</span>`);
-          });
+	        // Tournament updates (copper, important)
+	        tickerAnnouncements.slice(0, 2).forEach((message) => {
+	          items.push(`<span class="ticker-item ticker-update">${escapeHtml(message)}</span>`);
+	        });
 
-        // Recent registrations with action
-        tickerEvents
-          .filter(event => event.type === 'register')
-          .slice(0, 4)
-          .forEach(event => {
-            items.push(`<span class="ticker-item ticker-name">${escapeHtml(event.playerName)}<span class="ticker-action">just joined</span></span>`);
-          });
+	        // Recent registrations with action
+	        tickerRegistrations.slice(0, 4).forEach((name) => {
+	          items.push(`<span class="ticker-item ticker-name">${escapeHtml(name)}<span class="ticker-action">just joined</span></span>`);
+	        });
 
-        // If no registrations yet
-        if (items.length === 2) {
-          items.push(`<span class="ticker-item ticker-waiting">Be the first to join</span>`);
-        }
+	        // If no registrations yet
+	        if (items.length === 2) {
+	          items.push(`<span class="ticker-item ticker-waiting">Be the first to join</span>`);
+	        }
 
         const content = items.join('');
 
-        // Skip if content hasn't changed (prevents unnecessary animation resets)
-        if (content === lastTickerContent && tickerInitialized) {
-          return;
-        }
-        lastTickerContent = content;
+	        // Skip if content hasn't changed (prevents unnecessary animation resets)
+	        if (!forceUpdate && tickerRendered && content === lastTickerContent) {
+	          return;
+	        }
+	        lastTickerContent = content;
 
-        // Duplicate for seamless infinite scroll - add spacer for clean loop
-        const newHTML = content + '<span class="ticker-spacer"></span>' + content + '<span class="ticker-spacer"></span>';
+	        // Duplicate for seamless infinite scroll - add spacer for clean loop
+	        const newHTML = content + '<span class="ticker-spacer"></span>' + content + '<span class="ticker-spacer"></span>';
 
-        // Update DOM - guards above prevent unnecessary updates
-        tickerTrack.innerHTML = newHTML;
-        tickerInitialized = true;
-      }
+	        // Update DOM - guards above prevent unnecessary updates
+	        tickerTrack.innerHTML = newHTML;
+	        tickerRendered = true;
+	      }
 
       function leaveMesaPresence() {
         if (presenceChannel) {
           presenceChannel.unsubscribe();
           presenceChannel = null;
         }
+        lastMesaPresenceState = {};
+        if (mesaHeaderStatusTextEl) mesaHeaderStatusTextEl.textContent = 'Who’s here';
+        if (mesaPresenceEl?.classList.contains('is-open')) renderMesaPresenceList();
       }
 
       // Leave presence when tab closes
