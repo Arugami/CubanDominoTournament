@@ -6087,6 +6087,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        pointer-events: none;
 	        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
 	        transition: transform 0.2s ease, box-shadow 0.2s ease;
+	        z-index: 2;
 	      }
 
 	      /* Country name label above flag - HIDDEN */
@@ -8181,12 +8182,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       .chat-identity__title {
-        font-family: "IBM Plex Sans Condensed", sans-serif;
+        font-family: "SF Sports Night", "IBM Plex Sans Condensed", system-ui, sans-serif;
         font-size: 1.8rem;
         color: var(--brass);
         margin-bottom: 0;
-        font-weight: 700;
-        letter-spacing: 0.02em;
+        font-weight: 400;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
         text-shadow:
           0 0 40px rgba(212, 165, 116, 0.2),
@@ -8296,28 +8297,32 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         background: linear-gradient(to left, rgba(20, 14, 11, 1) 0%, transparent 100%);
       }
 
-	      /* Golden ring tied directly to the flag IMAGE for pixel-perfect centering */
-	      .avatar-option.is-centered .avatar-flag-img::before {
+	      /* Golden ring (center cue) */
+	      /* Note: pseudo-elements do not reliably render on <img>, so attach to the option. */
+	      .avatar-option.is-centered::after {
 	        content: '';
 	        position: absolute;
 	        left: 50%;
 	        top: 50%;
-	        width: 52px;
-	        height: 52px;
+	        width: 54px;
+	        height: 54px;
 	        transform: translate(-50%, -50%);
 	        border-radius: 999px;
 	        background: transparent;
 	        box-shadow:
-	          0 0 0 2.5px rgba(212, 165, 116, 0.85),
-	          0 0 16px rgba(212, 165, 116, 0.4),
-	          inset 0 0 12px rgba(212, 165, 116, 0.15);
+	          0 0 0 2.5px rgba(212, 165, 116, 0.9),
+	          0 0 18px rgba(212, 165, 116, 0.45),
+	          inset 0 0 12px rgba(212, 165, 116, 0.14);
 	        pointer-events: none;
-	        z-index: 5;
+	        z-index: 0;
 	        animation: selectorRingPulse 2.5s ease-in-out infinite;
 	      }
-	      /* When selected + centered, ring inherits the flag's transform automatically */
-	      .avatar-option.selected.is-centered .avatar-flag-img::before {
-	        /* Ring now moves with the image - no separate adjustment needed */
+
+	      .avatar-option.selected.is-centered::after {
+	        box-shadow:
+	          0 0 0 3px rgba(212, 165, 116, 1),
+	          0 0 26px rgba(212, 165, 116, 0.6),
+	          inset 0 0 14px rgba(212, 165, 116, 0.2);
 	      }
 
       @keyframes selectorRingPulse {
@@ -13882,7 +13887,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        <!-- Identity selection -->
 		        <div class="chat-identity" id="chatIdentity">
 		          <p class="chat-identity__title">Claim Your Seat</p>
-		          <p class="chat-identity__subtitle" id="chatIdentitySubtitle" style="display:none;">Show them where you're from.</p>
 
             <!-- Auth gate: La Mesa is login-required -->
 		            <div class="mesa-auth" id="mesaAuthGate">
@@ -13911,6 +13915,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               </p>
               <button class="mesa-auth__signout" id="mesaSignOutBtn" type="button">Sign out</button>
             </div>
+
+		          <p class="chat-identity__subtitle" id="chatIdentitySubtitle" style="display:none;">Show them where you're from.</p>
 
           <!-- Live player count for FOMO -->
           <div class="mesa-live-indicator" id="mesaLiveIndicator">
@@ -16513,7 +16519,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        if (mesaFlagPickerFrame) mesaFlagPickerFrame.style.display = '';
 	        if (countryDisplay) countryDisplay.style.display = '';
 	        const joinBtn = document.getElementById('chatJoinBtn');
-	        if (joinBtn) joinBtn.style.display = '';
+	        if (joinBtn) joinBtn.style.display = 'block';
 
 	        const chatRegisterHint = document.getElementById('chatRegisterHint');
 	        if (chatRegisterHint) {
