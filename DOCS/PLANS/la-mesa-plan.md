@@ -234,6 +234,31 @@ location.reload();
   - `document.getElementById('chatPanel').scrollTop === 0`
   - `getComputedStyle(document.getElementById('mesaHubStack')).display !== 'none'`
 
+### 1b) Login-required entry (Table Key → Claim Seat)
+
+- Use a Table Key (magic link) to sign in, then open La Mesa.
+- Expected on the Claim Seat screen:
+  - Flag runway is usable (scroll settles + selection confirms).
+  - The primary CTA **CLAIM YOUR SEAT** is visible **above** the ticker (no “missing button”).
+  - The CTA is not invisible due to the identity stagger system (`opacity: 0`).
+
+Quick verify in DevTools console:
+
+```js
+(() => {
+  const btn = document.getElementById('chatJoinBtn');
+  if (!btn) return console.log('no #chatJoinBtn');
+  const cs = getComputedStyle(btn);
+  console.log({
+    display: cs.display,
+    opacity: cs.opacity,
+    visibility: cs.visibility,
+    zIndex: cs.zIndex,
+    rect: btn.getBoundingClientRect(),
+  });
+})();
+```
+
 ### 2) Peek/second-screen behavior
 
 - Tap Dock (Peek)

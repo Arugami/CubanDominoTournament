@@ -142,8 +142,8 @@
 - [x] La Mesa auth rollout: set Cloudflare env vars `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (server-side)
 - [x] La Mesa auth rollout: allow redirect URLs `/mesa/callback` + `/admin/callback` in Supabase Auth settings
 - [ ] La Mesa auth rollout: apply migration `supabase/migrations/20260126_mesa_player_auth.sql`
-- [ ] La Mesa auth UX: confirmation email includes one-click “Claim Your Seat” Table Key (ADR-003)
-- [ ] Deploy latest La Mesa flow patches (domino button first-time teleport + Table Key/verify sheet lookup fallback)
+- [x] La Mesa auth UX: confirmation email includes one-click “Claim Your Seat” Table Key (ADR-003)
+- [ ] Deploy BUG-015: Claim Seat CTA visible above ticker (no opacity/z-index regressions) + verify on mobile + desktop
 - [ ] Enable Supabase MCP/CLI auth (`SUPABASE_ACCESS_TOKEN`) so we can run admin ops without the local CLI login issue
 
 ---
