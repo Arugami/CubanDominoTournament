@@ -137,10 +137,12 @@
 - [x] BUG-009: La Mesa hub visibility after Claim Seat — fixed scroll-container jump + documented in `DOCS/BUGS/009-la-mesa-hub-visibility-scroll-container.md`
 - [x] La Mesa pre-merge regression checklist added to `DOCS/PLANS/la-mesa-plan.md` (prevents hub hiding regressions)
 - [x] BUG-011: Loader stuck on page load (inline script SyntaxError) — fixed and documented in `DOCS/BUGS/011-loading-screen-stuck-inline-script-syntax-error.md`
-- [ ] La Mesa auth rollout: set Cloudflare env vars `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (server-side)
-- [ ] La Mesa auth rollout: allow redirect URL `/mesa/callback` in Supabase Auth settings
+- [x] La Mesa auth rollout: set Cloudflare env vars `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (server-side)
+- [x] La Mesa auth rollout: allow redirect URLs `/mesa/callback` + `/admin/callback` in Supabase Auth settings
 - [ ] La Mesa auth rollout: apply migration `supabase/migrations/20260126_mesa_player_auth.sql`
 - [ ] La Mesa auth UX: confirmation email includes one-click “Claim Your Seat” Table Key (ADR-003)
+- [ ] Deploy latest La Mesa flow patches (domino button first-time teleport + Table Key/verify sheet lookup fallback)
+- [ ] Enable Supabase MCP/CLI auth (`SUPABASE_ACCESS_TOKEN`) so we can run admin ops without the local CLI login issue
 
 ---
 
@@ -222,7 +224,8 @@
 - [x] Team documentation complete
 - [x] Domain secured and pointing
 - [x] Git-connected Cloudflare Pages deployment configured
-- [x] Environment variables set in Cloudflare (APP_SCRIPT_URL, APP_SCRIPT_SECRET, VENUE_URL)
+- [x] Environment variables set in Cloudflare (APP_SCRIPT_URL, APP_SCRIPT_SECRET, VENUE_URL, PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+- [x] Supabase Auth URL configuration set (Site URL + Redirect URLs for `/mesa/callback` and `/admin/callback`)
 - [x] Custom domain migrated to new Git-connected project
 - [x] Old direct-upload project deleted
 - [x] **First team registered!** (proof of concept verified)
@@ -275,7 +278,7 @@
 - [x] **Ticker infinite scroll fix** — `tickerInitialized` flag prevents animation resets, GPU-optimized with `will-change`
 - [x] **Tournament updates in ticker** — Copper color for alerts ("Registration closes Friday", "$500 prize pool")
 - [x] **Chat events removed from ticker** — Focus on key moments (registrations + updates only)
-- [x] **La Mesa button registration gate** — Unregistered users scroll to signup form on click
+- [x] **La Mesa button registration gate** — First-time visitors route to signup + tooltip (returning players can use Table Key)
 - [x] **Loading screen immersive enhancements** — Film grain, vignette edges, staggered letter reveal
 - [x] **Letters ARE the light source** — 6-layer stacked text-shadow bloom, divider glow, subtle ambient fog
 - [x] **Mobile form panel redesign** — Single viewport experience, everything visible on first snap

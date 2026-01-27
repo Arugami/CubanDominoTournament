@@ -4,6 +4,7 @@ interface Env {
   VENUE_URL?: string;
   SUPABASE_URL?: string;
   SUPABASE_SERVICE_ROLE_KEY?: string;
+  SITE_URL?: string;
 }
 
 type TableKeyPayload = {
@@ -24,6 +25,8 @@ function clean(value: unknown) {
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
+
+import { getCanonicalSiteUrl } from "../../lib/site-url";
 
 type SheetLookupResult =
   | { ok: true; found: true; playerName: string; status: string }
@@ -146,8 +149,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   let mesaLoginLink = "";
   try {
     const url = new URL("/auth/v1/admin/generate_link", supabaseUrl);
-    const origin = new URL(request.url).origin;
-    const redirectTo = `${origin}/mesa/callback`;
+    const siteUrl = getCanonicalSiteUrl(request, env);
+    const redirectTo = `${siteUrl}/mesa/callback`;
     const res = await fetch(url.toString(), {
       method: "POST",
       headers: {

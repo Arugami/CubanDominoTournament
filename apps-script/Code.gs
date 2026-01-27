@@ -41,6 +41,16 @@ function getSheetName() {
   return getScriptProp("SHEET_NAME", DEFAULT_SHEET_NAME);
 }
 
+function getSpreadsheet() {
+  const spreadsheetId = getScriptProp("SPREADSHEET_ID", "");
+  if (spreadsheetId) return SpreadsheetApp.openById(spreadsheetId);
+
+  const active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) return active;
+
+  throw new Error("missing_spreadsheet");
+}
+
 function getFromEmail() {
   return getScriptProp("FROM_EMAIL", DEFAULT_FROM_EMAIL);
 }
@@ -104,7 +114,7 @@ function doGet(e) {
   try {
     const action = e.parameter.action || "teams"; // Default to teams for backward compatibility
 
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const ss = getSpreadsheet();
     const sheetName = getSheetName();
     const sh = ss.getSheetByName(sheetName);
 
@@ -207,7 +217,7 @@ function doPost(e) {
 
     // Admin actions (server-to-server only; protected by shared secret)
     if (body.action === "admin_list_players") {
-      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const ss = getSpreadsheet();
       const sheetName = getSheetName();
       const sh = ss.getSheetByName(sheetName);
 
@@ -248,7 +258,7 @@ function doPost(e) {
       const email = String(body.email || "").trim().toLowerCase();
       if (!email) return json({ ok: false, error: "missing_email" }, 400);
 
-      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const ss = getSpreadsheet();
       const sheetName = getSheetName();
       const sh = ss.getSheetByName(sheetName);
       if (!sh || sh.getLastRow() < 2) return json({ ok: true, found: false }, 200);
@@ -284,7 +294,7 @@ function doPost(e) {
       if (!mesaLoginLink) return json({ ok: false, error: "missing_key" }, 400);
 
       // Verify registration (Sheets is the source of truth).
-      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const ss = getSpreadsheet();
       const sheetName = getSheetName();
       const sh = ss.getSheetByName(sheetName);
       if (!sh || sh.getLastRow() < 2) return json({ ok: false, error: "not_registered" }, 404);
@@ -343,7 +353,7 @@ function doPost(e) {
     }
 
     // Append to sheet FIRST (most important - don't lose the registration!)
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const ss = getSpreadsheet();
     const sheetName = getSheetName();
     const sh = ss.getSheetByName(sheetName) || ss.insertSheet(sheetName);
     const createdAt = new Date();
@@ -582,7 +592,7 @@ function sendHostNotification(body, timestamp) {
     ${body.notes ? `<p style="color: #666;">Notes: ${body.notes}</p>` : ''}
 
     <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;">
-    <a href="${SpreadsheetApp.getActiveSpreadsheet().getUrl()}" style="color: #b76a3b;">View All Registrations →</a>
+    <a href="${getSpreadsheet().getUrl()}" style="color: #b76a3b;">View All Registrations →</a>
   </div>
 </body>
 </html>`;
@@ -605,7 +615,7 @@ function json(obj, code) {
 
 // Run this to test sheet access
 function testSheetAccess() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const sheetName = getSheetName();
   const sh = ss.getSheetByName(sheetName) || ss.insertSheet(sheetName);
   ensureSheetHeaders(sh);
@@ -652,7 +662,7 @@ function checkResendConfig() {
 // MIGRATION: Run this ONCE to convert team headers to solo player format
 // ============================================
 function migrateHeadersToSoloPlayer() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const sheetName = getSheetName();
   const sh = ss.getSheetByName(sheetName);
 

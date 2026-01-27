@@ -15,10 +15,12 @@
 - [ ] Create waitlist system if we exceed capacity
 - [ ] Confirm all registered teams 48 hours before
 - [ ] La Mesa login-required rollout (Table Key): set Cloudflare env vars `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (server-side)
-- [ ] La Mesa login-required rollout (Table Key): allow redirect URL `/mesa/callback` in Supabase Auth settings
+- [ ] La Mesa login-required rollout (Table Key): set Cloudflare env var `SITE_URL=https://cubandominoleague.com` (ensures Table Keys always redirect to the canonical domain, not `.pages.dev`)
+- [ ] La Mesa login-required rollout (Table Key): allow redirect URLs in Supabase Auth settings (`https://cubandominoleague.com/mesa/callback`, `http://localhost:3005/mesa/callback`)
 - [ ] La Mesa login-required rollout (Table Key): apply migration `supabase/migrations/20260126_mesa_player_auth.sql`
-- [ ] Confirmation email: include one-click **“Claim Your Seat”** Table Key button (ADR-003)
-- [ ] Apps Script deploy: enable `mesa_lookup_player` + `mesa_send_table_key` actions and updated confirmation email CTA (ADR-003)
+- [ ] Apps Script config: set Script Property `SPREADSHEET_ID` to the CDL registrations spreadsheet (prevents “seats left” lying if the script is bound to the wrong sheet)
+- [x] Confirmation email: include one-click **“Claim Your Seat”** Table Key button (ADR-003)
+- [x] Apps Script deploy: enable `mesa_lookup_player` + `mesa_send_table_key` actions and updated confirmation email CTA (ADR-003)
 - [ ] Local full-stack test: run Pages Functions via Wrangler (Astro dev alone won’t serve `/functions/*`)
 - [ ] Email deliverability: stop Supabase bouncebacks (configure custom SMTP like Resend/Postmark; use valid test emails only)
 

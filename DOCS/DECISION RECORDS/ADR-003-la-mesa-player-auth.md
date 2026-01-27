@@ -72,9 +72,11 @@ Passwordless magic link is:
 - Seat verification (preferred): `functions/api/mesa/verify.ts` (checks Sheets via Apps Script action `mesa_lookup_player`)
 - Registration sync: `functions/api/register.ts` best-effort upserts into Supabase `players`
 - Confirmation email includes **Claim Your Seat**; includes the **Table Key** link when server env is configured (`SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`)
+- Canonical redirect hardening: set Pages env `SITE_URL=https://cubandominoleague.com` so generated Table Keys always use the canonical domain (prevents `.pages.dev` origin mismatches)
 - Resend Table Key (preferred): `functions/api/mesa/table-key.ts` (Apps Script action `mesa_send_table_key` + Supabase admin link)
 - La Mesa gate: `src/pages/index.astro` requires verified auth session before “Claim Your Seat” can complete
 - RLS hardening: `supabase/migrations/20260126_mesa_player_auth.sql` restricts chat/team writes to registered players
+- Sheets targeting: Apps Script should use Script Property `SPREADSHEET_ID` (so “seats left” and lookups always read the intended sheet)
 
 ---
 

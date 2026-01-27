@@ -4,6 +4,7 @@ interface Env {
   VENUE_URL?: string;
   SUPABASE_URL?: string;
   SUPABASE_SERVICE_ROLE_KEY?: string;
+  SITE_URL?: string;
 }
 
 type RegistrationPayload = {
@@ -29,6 +30,8 @@ function clean(value: unknown) {
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
+
+import { getCanonicalSiteUrl } from "../lib/site-url";
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   let body: RegistrationPayload;
@@ -62,7 +65,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   const supabaseUrl = clean(env.SUPABASE_URL);
   const serviceKey = clean(env.SUPABASE_SERVICE_ROLE_KEY);
-  const origin = new URL(request.url).origin;
+  const siteUrl = getCanonicalSiteUrl(request, env);
 
   // Optional: create a one-click "Table Key" link for La Mesa that can be embedded in the registration confirmation email.
   // This keeps the flow to a single email: register -> receive confirmation (with key) -> enter La Mesa.
@@ -70,7 +73,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (supabaseUrl && serviceKey) {
     try {
       const url = new URL("/auth/v1/admin/generate_link", supabaseUrl);
-      const redirectTo = `${origin}/mesa/callback`;
+      const redirectTo = `${siteUrl}/mesa/callback`;
       const res = await fetch(url.toString(), {
         method: "POST",
         headers: {
@@ -108,7 +111,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     notes: clean(body.notes),
     ruleConfirm: clean(body.ruleConfirm),
     venueUrl: env.VENUE_URL || "https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ",
-    siteUrl: origin,
+    siteUrl,
     mesaLoginLink,
   };
 
