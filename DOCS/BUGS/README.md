@@ -21,6 +21,8 @@ Each bug gets its own file with the naming convention:
 | 009 | La Mesa Hub Not Visible After "Claim Your Seat" (Panel Scroll Jump) | FIXED | Jan 26, 2026 |
 | 010 | Full-Page Screenshot Shows Repeated Ticker/La Mesa UI (Stitching Artifact) | NOT A BUG | Jan 26, 2026 |
 | 011 | Loading Screen Never Dismisses (Inline Script SyntaxError) | FIXED | Jan 26, 2026 |
+| 012 | Supabase Magic Link Redirects to Site Root (`/#...`) | FIXED | Jan 27, 2026 |
+| 013 | Claim Seat Has No Clear Advance (Flag Picker + CTA) | FIXED | Jan 27, 2026 |
 
 ## Template
 When documenting a new bug, include:

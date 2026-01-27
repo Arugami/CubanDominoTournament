@@ -125,6 +125,16 @@ If La Mesa is **login-required**, it can’t feel like “account creation”.
 - Keep the on-site email field as a quiet fallback (“resend key / new device”), not the main path.
 - On the Claim Seat screen: don’t show “Show them where you’re from” until the seat is verified; let the flag moment lead directly into the CTA + hub-first entry.
 
+## Tobias Note: Claim Seat (Jan 27, 2026) — Flag Moment + Advance
+
+When the user is verified (signed in), the Claim Seat screen becomes a **ceremonial threshold**, not a settings panel:
+
+- The flag picker should feel like a runway: **scroll to choose**, with the centered flag reading as “yours”.
+- The CTA must always be visible (no hunting, no scrolling): **CLAIM YOUR SEAT** is the declaration moment.
+- After the declaration, land hub-first (Who’s Here / Board / Tonight) — never drop them into an “empty chat well”.
+
+If anything about this step feels like UI friction, it breaks the spell.
+
 ## Review Request (Jan 14, 2026)
 
 Design/UX items to sanity-check through a Tobias lens (weight, intention, “room” feel):

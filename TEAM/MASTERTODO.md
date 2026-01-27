@@ -19,6 +19,7 @@
 - [ ] La Mesa login-required rollout (Table Key): allow redirect URLs in Supabase Auth settings (`https://cubandominoleague.com/mesa/callback`, `http://localhost:3005/mesa/callback`)
 - [ ] La Mesa login-required rollout (Table Key): apply migration `supabase/migrations/20260126_mesa_player_auth.sql`
 - [ ] Apps Script config: set Script Property `SPREADSHEET_ID` to the CDL registrations spreadsheet (prevents “seats left” lying if the script is bound to the wrong sheet)
+- [ ] Claim Seat (post-auth): ensure flag selection works + CTA advances into hub (DOCS/BUGS/013)
 - [x] Confirmation email: include one-click **“Claim Your Seat”** Table Key button (ADR-003)
 - [x] Apps Script deploy: enable `mesa_lookup_player` + `mesa_send_table_key` actions and updated confirmation email CTA (ADR-003)
 - [ ] Local full-stack test: run Pages Functions via Wrangler (Astro dev alone won’t serve `/functions/*`)

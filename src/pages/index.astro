@@ -8087,7 +8087,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	      .chat-identity {
 	        padding: 40px 24px;
 	        padding-top: 80px; /* Push content down from header */
-	        padding-bottom: max(48px, calc(env(safe-area-inset-bottom) + 32px));
+	        /* Reserve room for the fixed CTA so it never covers content. */
+	        padding-bottom: max(140px, calc(env(safe-area-inset-bottom) + 120px));
 	        display: flex;
 	        flex-direction: column;
 	        align-items: center;
@@ -9001,7 +9002,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        margin-top: 24px; /* Fixed spacing, not auto */
 	        width: 100%;
 	        max-width: 280px;
-	        position: sticky;
+	        /* Always visible (the "declaration moment") */
+	        position: absolute;
+	        left: 0;
+	        right: 0;
+	        margin-left: auto;
+	        margin-right: auto;
 	        bottom: max(12px, calc(env(safe-area-inset-bottom) + 12px));
 	        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
 	        border: none;
@@ -17667,6 +17673,22 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        // Safari can land a pixel or two off the ring even after scroll-snap; nudge to perfection.
 	        centerAvatarOption(closest, 'instant');
 	        setTimeout(() => centerAvatarOption(closest, 'instant'), 80);
+
+	        // UX: selecting via scroll should feel like choosing (not “it looks clickable but isn’t”).
+	        // When the user settles on a new centered flag, treat it as the selection.
+	        if (!closest.classList.contains('selected')) {
+	          avatarOptions.forEach(o => {
+	            if (o !== closest) o.classList.remove('selected');
+	            o.classList.remove('is-slamming');
+	          });
+	          closest.classList.add('selected');
+	          selectedAvatar = closest.dataset.avatar;
+	          isCountryConfirmed = true;
+	          try { updateJoinReadyState(); } catch {}
+	          const countryName = closest.getAttribute('title') || selectedAvatar;
+	          updateCountryDisplay(countryName, true);
+	          suppressSettleHapticUntil = Date.now() + 250;
+	        }
 
 	        if (shouldHaptic) vibrate(6);
 	      }

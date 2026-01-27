@@ -218,3 +218,18 @@ Add new entries as we go:
   - `/api/register` now best-effort upserts the registering player into Supabase `players` (Sheets remains the primary source of truth).
 - Security:
   - Added a migration to require authenticated + registered players for message inserts (and tightened team invite writes where applicable).
+
+### 2026-01-27 - Table Key Redirect Fix + Claim Seat Flag Advance
+
+- **Bug (Critical):** confirmation email “Claim Your Seat” magic link redirected to site root (`https://cubandominoleague.com/#...`) instead of `/mesa/callback`, causing failed seat entry and occasional `access_denied` on re-click.
+  - Fix:
+    - Hardened magic-link generation to always request `/mesa/callback` (canonical site URL + broader `redirect_to` compatibility across Supabase API variants).
+    - Added a root safety net: if Supabase still lands on `/#access_token=...` (or `/?code=...`), auto-forward payload to `/mesa/callback` so the callback page can establish the session and verify the seat.
+  - Docs: `DOCS/BUGS/012-supabase-magic-link-redirect-root.md`
+
+- **Bug (High):** post-auth Claim Seat had no clear way to advance (CTA could be offscreen; flag carousel felt unselectable).
+  - Fix:
+    - Pinned the CTA to the bottom of the identity overlay (always visible).
+    - Reserved extra bottom padding to prevent overlap.
+    - Made “scroll settle” (centered flag) become the selection so choosing works via scrolling, not only tapping.
+  - Docs: `DOCS/BUGS/013-claim-seat-no-advance-after-auth.md`
