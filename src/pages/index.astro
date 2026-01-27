@@ -9012,6 +9012,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        left: 50%;
 	        transform: translateX(-50%);
 	        bottom: max(12px, calc(env(safe-area-inset-bottom) + 12px));
+	        /* The identity screen uses a staggered animation on `.chat-identity > *`.
+	           This button is often revealed later via JS (after auth), so we must not
+	           leave it at `opacity: 0` waiting on an animation that already elapsed. */
+	        opacity: 1;
+	        animation: none;
 	        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
 	        border: none;
 	        border-radius: 12px;

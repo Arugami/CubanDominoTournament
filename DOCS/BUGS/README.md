@@ -24,6 +24,7 @@ Each bug gets its own file with the naming convention:
 | 012 | Supabase Magic Link Redirects to Site Root (`/#...`) | FIXED | Jan 27, 2026 |
 | 013 | Claim Seat Has No Clear Advance (Flag Picker + CTA) | FIXED | Jan 27, 2026 |
 | 014 | Flag Ring Not Perfectly Centered (Claim Seat Selector) | FIXED | Jan 27, 2026 |
+| 015 | Claim Seat CTA Hidden (Opacity 0 From Staggered Animation) | FIXED | Jan 27, 2026 |
 
 ## Template
 When documenting a new bug, include:
