@@ -9008,12 +9008,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        width: 100%;
 	        max-width: 280px;
 	        /* Always visible (the "declaration moment") */
-	        position: absolute;
-	        left: 0;
-	        right: 0;
-	        margin-left: auto;
-	        margin-right: auto;
-	        /* Stay above the ticker (46px desktop / 40px mobile) + safe areas */
+	        position: sticky;
 	        bottom: calc(46px + 12px + env(safe-area-inset-bottom));
 	        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
 	        border: none;
@@ -13923,13 +13918,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <button class="mesa-auth__signout" id="mesaSignOutBtn" type="button">Sign out</button>
             </div>
 
-		          <p class="chat-identity__subtitle" id="chatIdentitySubtitle" style="display:none;">Show them where you're from.</p>
-
           <!-- Live player count for FOMO -->
           <div class="mesa-live-indicator" id="mesaLiveIndicator">
             <span class="mesa-live-dot"></span>
             <span class="mesa-live-text"><span id="mesaPlayerCount">0</span> active today</span>
           </div>
+
+		          <p class="chat-identity__subtitle" id="chatIdentitySubtitle" style="display:none;">Show them where you're from.</p>
 
 	          <div class="avatar-selector-frame" id="mesaFlagPickerFrame" style="display:none;">
             <div class="avatar-selector">
@@ -14627,6 +14622,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <p class="mesa-identity-locked__name" id="mesaLockedName">—</p>
           </div>
 
+	          <button class="chat-identity__btn" id="chatJoinBtn" disabled style="display:none;">CLAIM YOUR SEAT</button>
+
           <!-- Custom Dropdown -->
 	          <div class="custom-select" id="customSelect" style="display: none;">
             <button class="custom-select__trigger" id="selectTrigger" type="button">
@@ -14654,7 +14651,6 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="chat-identity__register-hint" id="chatRegisterHint">
             Not registered yet? <a href="#signup" class="chat-identity__register-link" id="chatRegisterLink">Register first</a>
           </p>
-	          <button class="chat-identity__btn" id="chatJoinBtn" disabled style="display:none;">CLAIM YOUR SEAT</button>
         </div>
 
         <!-- Chat Screen Area -->
@@ -16530,8 +16526,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	        const chatRegisterHint = document.getElementById('chatRegisterHint');
 	        if (chatRegisterHint) {
-	          chatRegisterHint.textContent = 'Pick your flag. Then tap CLAIM YOUR SEAT.';
-	          chatRegisterHint.style.display = 'block';
+	          // Keep the CTA as the primary object, not instruction copy.
+	          chatRegisterHint.style.display = 'none';
 	        }
 
 	        // No name list once authenticated (prevents impersonation).

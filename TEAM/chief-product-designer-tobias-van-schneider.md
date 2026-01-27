@@ -131,6 +131,7 @@ When the user is verified (signed in), the Claim Seat screen becomes a **ceremon
 
 - The flag picker should feel like a runway: **scroll to choose**, with the centered flag reading as “yours”.
 - The CTA must always be visible (no hunting, no scrolling): **CLAIM YOUR SEAT** is the declaration moment.
+- Do not use helper copy as a faux CTA. The button must be visually obvious and carry the weight.
 - After the declaration, land hub-first (Who’s Here / Board / Tonight) — never drop them into an “empty chat well”.
 
 If anything about this step feels like UI friction, it breaks the spell.
