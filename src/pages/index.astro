@@ -17242,6 +17242,21 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         // Reduced debounce: 100ms prevents accidental double-taps while staying snappy
         if (now - lastTickerActivateAt < 100) return;
         lastTickerActivateAt = now;
+
+        // If they haven't registered on this device and haven't ever tried to claim a seat,
+        // treat the chat button as a "Register" shortcut (teleport + tooltip).
+        // This keeps true first-time visitors out of the auth gate while still letting returning
+        // players on new devices use "Resend Table Key" once they've entered an email at least once.
+        try {
+          const isRegisteredLocal = localStorage.getItem('cdl_registered') === 'true';
+          const hasTriedMesaLogin = !!localStorage.getItem(MESA_LAST_EMAIL_KEY);
+          const isChatOpen = chatPanel?.classList.contains('is-open');
+          if (!isChatOpen && !isRegisteredLocal && !hasTriedMesaLogin) {
+            routeUnregisteredToRegistration();
+            return;
+          }
+        } catch {}
+
         toggleChat();
       }
 
