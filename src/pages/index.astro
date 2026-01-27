@@ -9008,8 +9008,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        width: 100%;
 	        max-width: 280px;
 	        /* Always visible (the "declaration moment") */
-	        position: sticky;
-	        bottom: calc(46px + 12px + env(safe-area-inset-bottom));
+	        position: absolute;
+	        left: 50%;
+	        transform: translateX(-50%);
+	        bottom: max(12px, calc(env(safe-area-inset-bottom) + 12px));
 	        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
 	        border: none;
 	        border-radius: 12px;
@@ -9089,7 +9091,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       @media (max-width: 768px) {
         .chat-identity__btn {
-          bottom: calc(40px + 10px + env(safe-area-inset-bottom));
+          bottom: max(10px, calc(env(safe-area-inset-bottom) + 10px));
         }
       }
 
