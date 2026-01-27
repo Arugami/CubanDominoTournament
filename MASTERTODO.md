@@ -138,6 +138,7 @@
 - [x] La Mesa pre-merge regression checklist added to `DOCS/PLANS/la-mesa-plan.md` (prevents hub hiding regressions)
 - [x] BUG-011: Loader stuck on page load (inline script SyntaxError) — fixed and documented in `DOCS/BUGS/011-loading-screen-stuck-inline-script-syntax-error.md`
 - [x] BUG-014: Flag ring not perfectly centered (Claim Seat selector) — fixed and documented in `DOCS/BUGS/014-flag-ring-not-centered.md`
+- [x] BUG-015: Claim Seat CTA hidden (opacity 0 / ticker overlap) — fixed and documented in `DOCS/BUGS/015-claim-seat-cta-hidden-by-stagger.md`
 - [x] La Mesa auth rollout: set Cloudflare env vars `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (server-side)
 - [x] La Mesa auth rollout: allow redirect URLs `/mesa/callback` + `/admin/callback` in Supabase Auth settings
 - [ ] La Mesa auth rollout: apply migration `supabase/migrations/20260126_mesa_player_auth.sql`

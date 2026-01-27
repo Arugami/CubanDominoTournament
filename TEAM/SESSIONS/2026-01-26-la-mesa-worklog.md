@@ -239,3 +239,9 @@ Add new entries as we go:
     - Standardized `.avatar-option` to a true square and centered its contents so ring + flag share the same center reference.
     - Kept the ring as a pseudo-element on the option container (not the `<img>`), with correct layering.
   - Docs: `DOCS/BUGS/014-flag-ring-not-centered.md`
+
+- **Bug (High):** post-auth Claim Seat CTA existed but looked “missing” (invisible / covered).
+  - Fix:
+    - Excluded `#chatJoinBtn` from the `.chat-identity > *` stagger so it can’t inherit `opacity: 0` when revealed later.
+    - Pinned the CTA above the ticker (fixed positioning + dedicated z-index) so it can’t be covered by the broadcast bar.
+  - Docs: `DOCS/BUGS/015-claim-seat-cta-hidden-by-stagger.md`
