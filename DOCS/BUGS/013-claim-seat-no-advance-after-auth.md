@@ -20,6 +20,7 @@
 
 - Pin the **CLAIM YOUR SEAT** CTA to the bottom of the identity overlay so it is always visible.
 - Reserve extra bottom padding so content never sits underneath the CTA.
+- Ensure the CTA sits **above the fixed ticker** (desktop: 46px, mobile: 40px) so it can’t be covered on small viewports.
 - Treat “scroll settle” (the centered flag) as the selection so choosing works via scrolling, not only tapping.
 
 ## Files Changed
@@ -32,6 +33,6 @@
 2) Open La Mesa → Claim Seat screen
 3) Expected:
    - CTA is visible at the bottom
+   - CTA is not covered by the ticker on mobile/desktop
    - Scrolling the flag strip updates the selected flag
    - Tapping **CLAIM YOUR SEAT** runs the entry ritual and lands hub-first (Who’s Here / Board / Tonight)
-

@@ -233,3 +233,9 @@ Add new entries as we go:
     - Reserved extra bottom padding to prevent overlap.
     - Made “scroll settle” (centered flag) become the selection so choosing works via scrolling, not only tapping.
   - Docs: `DOCS/BUGS/013-claim-seat-no-advance-after-auth.md`
+
+- **Bug (Medium):** the gold selector ring was not perfectly centered around the flag circle (looked “off” and reduced the weight of the country moment).
+  - Fix:
+    - Standardized `.avatar-option` to a true square and centered its contents so ring + flag share the same center reference.
+    - Kept the ring as a pseudo-element on the option container (not the `<img>`), with correct layering.
+  - Docs: `DOCS/BUGS/014-flag-ring-not-centered.md`

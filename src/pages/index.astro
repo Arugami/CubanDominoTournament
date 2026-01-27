@@ -9013,7 +9013,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        right: 0;
 	        margin-left: auto;
 	        margin-right: auto;
-	        bottom: max(12px, calc(env(safe-area-inset-bottom) + 12px));
+	        /* Stay above the ticker (46px desktop / 40px mobile) + safe areas */
+	        bottom: calc(46px + 12px + env(safe-area-inset-bottom));
 	        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
 	        border: none;
 	        border-radius: 12px;
@@ -9089,6 +9090,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Tobias: "The declaration moment" - glow pulse when ready */
       .chat-identity__btn.is-ready {
         animation: enterButtonReady 2s ease-in-out infinite;
+      }
+
+      @media (max-width: 768px) {
+        .chat-identity__btn {
+          bottom: calc(40px + 10px + env(safe-area-inset-bottom));
+        }
       }
 
       @keyframes enterButtonReady {
