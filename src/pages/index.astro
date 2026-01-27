@@ -13229,6 +13229,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     </style>
   </head>
   <body class="is-loading">
+    <script>
+      // Supabase sometimes falls back to redirecting magic links to the site root (e.g. `/#access_token=...`).
+      // If that happens, forward the auth payload to `/mesa/callback` so the session can be established.
+      (function () {
+        try {
+          const hash = window.location.hash || '';
+          const search = window.location.search || '';
+
+          const isSupabaseAuthHash =
+            /(^#|&)access_token=/.test(hash)
+            || /(^#|&)refresh_token=/.test(hash)
+            || /(^#|&)error=/.test(hash)
+            || /(^#|&)error_code=/.test(hash);
+
+          const isSupabaseAuthCode = /(^\\?|&)code=/.test(search);
+
+          if (isSupabaseAuthHash || isSupabaseAuthCode) {
+            const target = `/mesa/callback${search}${hash}`;
+            window.location.replace(target);
+          }
+        } catch {
+          // no-op
+        }
+      })();
+    </script>
     <!-- Loading Screen - "The Ritual Before The Game" -->
     <div class="loading-screen" id="loadingScreen">
       <!-- Atmospheric fog - breathing warmth -->

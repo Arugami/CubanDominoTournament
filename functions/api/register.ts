@@ -84,6 +84,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         body: JSON.stringify({
           type: "magiclink",
           email: email.toLowerCase(),
+          // Some Supabase Auth API routes accept `redirect_to` at the top-level.
+          // Include it here as well as inside `options` to avoid falling back to the Site URL.
+          redirect_to: redirectTo,
           // Supabase Auth HTTP API has historically used `redirect_to` (snake_case) while some SDKs use `redirectTo`.
           // Sending both is harmless and ensures redirects always land on `/mesa/callback`.
           options: { redirectTo, redirect_to: redirectTo },
