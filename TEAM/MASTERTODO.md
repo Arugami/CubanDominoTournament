@@ -8,17 +8,24 @@
 ## 🔴 CRITICAL — Before Tournament I (Jan 31)
 
 ### Registration & Teams
-- [ ] Get first team registered (proof of concept)
-- [ ] Reach 5 teams (halfway)
-- [ ] Reach 10 teams (full tournament)
+- [x] Verify first player registration + roster sync (Google Sheet → Admin) ✅
+- [ ] Get first team formed in La Mesa + imported into tournament teams (proof of concept)
+- [ ] Reach 4 teams (halfway)
+- [ ] Reach 8 teams (full tournament)
 - [ ] Create waitlist system if we exceed capacity
 - [ ] Confirm all registered teams 48 hours before
+- [ ] La Mesa login-required rollout (Table Key): set Cloudflare env vars `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (server-side)
+- [ ] La Mesa login-required rollout (Table Key): allow redirect URL `/mesa/callback` in Supabase Auth settings
+- [ ] La Mesa login-required rollout (Table Key): apply migration `supabase/migrations/20260126_mesa_player_auth.sql`
+- [ ] Confirmation email: include one-click **“Claim Your Seat”** Table Key button (ADR-003)
+- [ ] Apps Script deploy: enable `mesa_lookup_player` + `mesa_send_table_key` actions and updated confirmation email CTA (ADR-003)
+- [ ] Local full-stack test: run Pages Functions via Wrangler (Astro dev alone won’t serve `/functions/*`)
 
 ### Venue & Logistics
 - [ ] Confirm Stefan's Lounge booking
 - [ ] Site visit — measure space, plan layout
 - [ ] Determine table setup (how many games simultaneously?)
-- [ ] Plan bracket/tournament flow
+- [ ] Plan bracket/tournament flow (ADR-004: Group Stage A/B → Semis → Final)
 - [ ] Equipment list (tables, dominoes, scoreboards)
 - [ ] Source quality domino sets
 - [ ] Backup dominoes
@@ -121,6 +128,9 @@
 - [ ] Bracket management tool
 - [ ] Player registration database
 - [x] Mobile-friendly improvements (90% of users are mobile - optimized chat, ticker, safe areas)
+- [ ] Apply migration `supabase/migrations/20260127194500_group_stage_system.sql` (ADR-004)
+- [ ] Verify `/admin/round-robin` builds groups and `/admin/bracket` seeds finals from groups
+- [ ] La Mesa login-required rollout (Table Key): deploy Apps Script updates + Cloudflare env vars (ADR-003)
 
 ---
 
@@ -150,6 +160,10 @@
 - [ ] Bracket management
 - [ ] Prize distribution plan
 - [ ] Venue layout diagram
+- [ ] Pace policy (suggested): 10-second move clock / shot clock
+- [ ] Matchday cadence: 3 group matchdays → seed semis → final
+- [ ] Pace policy (suggested): 10-second move clock / shot clock
+- [ ] Matchday cadence: 3 group matchdays → seed semis → final
 
 ### Herb Lubalin (Brand Identity)
 - [ ] **CDL logo concepts** — Priority! Needed for hero page and all branding

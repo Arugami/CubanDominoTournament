@@ -4,6 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "astro dev",
+    "dev:pages": "sh -c 'mkdir -p .wrangler-logs && WRANGLER_LOG_PATH=./.wrangler-logs npx wrangler pages dev dist --port 3005 --env-file .dev.vars --compatibility-date 2026-01-27'",
+    "dev:pages:proxy": "sh -c 'mkdir -p .wrangler-logs && WRANGLER_LOG_PATH=./.wrangler-logs npx wrangler pages dev --proxy 3005 --port 3006 --env-file .dev.vars --compatibility-date 2026-01-27'",
     "build": "astro build",
     "preview": "astro preview"
   },

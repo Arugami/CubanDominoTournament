@@ -41,7 +41,7 @@ const { isAdmin = false } = Astro.props;
               </div>
               <div class="match-card__teams">
                 <div class="team-row" data-team-row="1">
-                  <span class="team-seed" data-team1-seed>#{matchNum === 1 ? '1' : '2'}</span>
+                  <span class="team-seed" data-team1-seed>{matchNum === 1 ? 'A1' : 'B1'}</span>
                   <span class="team-name" data-team1-name>TBD</span>
                   {isAdmin ? (
                     <input
@@ -58,7 +58,7 @@ const { isAdmin = false } = Astro.props;
                   )}
                 </div>
                 <div class="team-row" data-team-row="2">
-                  <span class="team-seed" data-team2-seed>#{matchNum === 1 ? '4' : '3'}</span>
+                  <span class="team-seed" data-team2-seed>{matchNum === 1 ? 'B2' : 'A2'}</span>
                   <span class="team-name" data-team2-name>TBD</span>
                   {isAdmin ? (
                     <input
@@ -177,7 +177,7 @@ const { isAdmin = false } = Astro.props;
               <span class="desktop-match__status" data-status-indicator></span>
             </div>
             <div class="desktop-match__team" data-team-row="1">
-              <span class="desktop-team__seed" data-team1-seed>#{matchNum === 1 ? '1' : '2'}</span>
+              <span class="desktop-team__seed" data-team1-seed>{matchNum === 1 ? 'A1' : 'B1'}</span>
               <span class="desktop-team__name" data-team1-name>TBD</span>
               {isAdmin ? (
                 <input type="number" class="desktop-score-input" data-team1-score min="0" max="200" placeholder="-" />
@@ -186,7 +186,7 @@ const { isAdmin = false } = Astro.props;
               )}
             </div>
             <div class="desktop-match__team" data-team-row="2">
-              <span class="desktop-team__seed" data-team2-seed>#{matchNum === 1 ? '4' : '3'}</span>
+              <span class="desktop-team__seed" data-team2-seed>{matchNum === 1 ? 'B2' : 'A2'}</span>
               <span class="desktop-team__name" data-team2-name>TBD</span>
               {isAdmin ? (
                 <input type="number" class="desktop-score-input" data-team2-score min="0" max="200" placeholder="-" />

@@ -29,6 +29,18 @@ AS $$
   LIMIT 1;
 $$;
 
+-- Helper: Current player's id (by auth email)
+CREATE OR REPLACE FUNCTION public.cdl_current_player_id()
+RETURNS uuid
+LANGUAGE sql
+STABLE
+AS $$
+  SELECT p.id
+  FROM public.players p
+  WHERE lower(p.email) = lower(auth.jwt() ->> 'email')
+  LIMIT 1;
+$$;
+
 -- =========================
 -- MESSAGES (safe)
 -- =========================
@@ -45,38 +57,52 @@ BEGIN
 END $$;
 
 -- =========================
--- TEAM INVITES (safe)
+-- MESA TEAM INVITES (safe)
 -- =========================
 DO $$
 BEGIN
-  IF to_regclass('public.team_invites') IS NOT NULL THEN
-    EXECUTE 'DROP POLICY IF EXISTS "Anyone can send team invites" ON public.team_invites';
-    EXECUTE 'DROP POLICY IF EXISTS "Recipients can update invite status" ON public.team_invites';
+  IF to_regclass('public.mesa_team_invites') IS NOT NULL THEN
+    EXECUTE 'DROP POLICY IF EXISTS "Authenticated users can view mesa invites" ON public.mesa_team_invites';
+    EXECUTE 'DROP POLICY IF EXISTS "Authenticated users can send mesa invites" ON public.mesa_team_invites';
+    EXECUTE 'DROP POLICY IF EXISTS "Authenticated users can update mesa invites" ON public.mesa_team_invites';
 
     EXECUTE $policy$
-      CREATE POLICY "Registered players can send team invites"
-        ON public.team_invites FOR INSERT
+      CREATE POLICY "Registered players can view mesa invites"
+        ON public.mesa_team_invites FOR SELECT
+        USING (
+          public.cdl_is_registered_player()
+          AND (
+            public.cdl_current_player_id() = from_player_id
+            OR public.cdl_current_player_id() = to_player_id
+          )
+        )
+    $policy$;
+
+    EXECUTE $policy$
+      CREATE POLICY "Registered players can send mesa invites"
+        ON public.mesa_team_invites FOR INSERT
         WITH CHECK (
           public.cdl_is_registered_player()
+          AND public.cdl_current_player_id() = from_player_id
           AND public.cdl_current_player_name() = from_player
         )
     $policy$;
 
     EXECUTE $policy$
-      CREATE POLICY "Invite participants can update status"
-        ON public.team_invites FOR UPDATE
+      CREATE POLICY "Mesa invite participants can update status"
+        ON public.mesa_team_invites FOR UPDATE
         USING (
           public.cdl_is_registered_player()
           AND (
-            public.cdl_current_player_name() = from_player
-            OR public.cdl_current_player_name() = to_player
+            public.cdl_current_player_id() = from_player_id
+            OR public.cdl_current_player_id() = to_player_id
           )
         )
         WITH CHECK (
           status IN ('accepted', 'declined', 'expired')
           AND (
-            public.cdl_current_player_name() = from_player
-            OR public.cdl_current_player_name() = to_player
+            public.cdl_current_player_id() = from_player_id
+            OR public.cdl_current_player_id() = to_player_id
           )
         )
     $policy$;
@@ -84,28 +110,20 @@ BEGIN
 END $$;
 
 -- =========================
--- TEAMS (safe; only applies to the La Mesa teams schema)
+-- MESA TEAMS (safe)
 -- =========================
 DO $$
 BEGIN
-  IF to_regclass('public.teams') IS NOT NULL
-     AND EXISTS (
-       SELECT 1
-       FROM information_schema.columns
-       WHERE table_schema = 'public'
-         AND table_name = 'teams'
-         AND column_name = 'player1_name'
-     )
-  THEN
-    EXECUTE 'DROP POLICY IF EXISTS "Anyone can create teams" ON public.teams';
+  IF to_regclass('public.mesa_teams') IS NOT NULL THEN
+    EXECUTE 'DROP POLICY IF EXISTS "Authenticated users can create mesa teams" ON public.mesa_teams';
     EXECUTE $policy$
-      CREATE POLICY "Registered players can create teams"
-        ON public.teams FOR INSERT
+      CREATE POLICY "Registered players can create mesa teams"
+        ON public.mesa_teams FOR INSERT
         WITH CHECK (
           public.cdl_is_registered_player()
           AND (
-            public.cdl_current_player_name() = player1_name
-            OR public.cdl_current_player_name() = player2_name
+            public.cdl_current_player_id() = player1_id
+            OR public.cdl_current_player_id() = player2_id
           )
         )
     $policy$;

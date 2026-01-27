@@ -243,6 +243,97 @@ function doPost(e) {
       return json({ ok: true, players: players }, 200);
     }
 
+    // La Mesa actions (server-to-server only; protected by shared secret)
+    if (body.action === "mesa_lookup_player") {
+      const email = String(body.email || "").trim().toLowerCase();
+      if (!email) return json({ ok: false, error: "missing_email" }, 400);
+
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const sheetName = getSheetName();
+      const sh = ss.getSheetByName(sheetName);
+      if (!sh || sh.getLastRow() < 2) return json({ ok: true, found: false }, 200);
+
+      const headers = ensureSheetHeaders(sh);
+      const playerNameIdx = headers.indexOf("playerName");
+      const emailIdx = headers.indexOf("email");
+      const statusIdx = headers.indexOf("status");
+
+      const dataRange = sh.getRange(2, 1, sh.getLastRow() - 1, headers.length);
+      const rows = dataRange.getValues();
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const rowEmail = emailIdx >= 0 ? String(row[emailIdx] || "").trim().toLowerCase() : "";
+        if (!rowEmail || rowEmail !== email) continue;
+
+        const status = statusIdx >= 0 ? String(row[statusIdx] || "").trim().toLowerCase() : "registered";
+        const playerName = playerNameIdx >= 0 ? String(row[playerNameIdx] || "").trim() : "";
+        return json({ ok: true, found: true, player: { playerName, email: rowEmail, status } }, 200);
+      }
+
+      return json({ ok: true, found: false }, 200);
+    }
+
+    if (body.action === "mesa_send_table_key") {
+      const email = String(body.email || "").trim().toLowerCase();
+      const playerName = String(body.playerName || "").trim();
+      const mesaLoginLink = String(body.mesaLoginLink || "").trim();
+      const venueUrl = String(body.venueUrl || "").trim() || "https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ";
+
+      if (!email) return json({ ok: false, error: "missing_email" }, 400);
+      if (!mesaLoginLink) return json({ ok: false, error: "missing_key" }, 400);
+
+      // Verify registration (Sheets is the source of truth).
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const sheetName = getSheetName();
+      const sh = ss.getSheetByName(sheetName);
+      if (!sh || sh.getLastRow() < 2) return json({ ok: false, error: "not_registered" }, 404);
+
+      const headers = ensureSheetHeaders(sh);
+      const playerNameIdx = headers.indexOf("playerName");
+      const emailIdx = headers.indexOf("email");
+      const statusIdx = headers.indexOf("status");
+
+      const dataRange = sh.getRange(2, 1, sh.getLastRow() - 1, headers.length);
+      const rows = dataRange.getValues();
+
+      let found = false;
+      let foundStatus = "";
+      let foundName = "";
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const rowEmail = emailIdx >= 0 ? String(row[emailIdx] || "").trim().toLowerCase() : "";
+        if (!rowEmail || rowEmail !== email) continue;
+
+        found = true;
+        foundStatus = statusIdx >= 0 ? String(row[statusIdx] || "").trim().toLowerCase() : "registered";
+        foundName = playerName || (playerNameIdx >= 0 ? String(row[playerNameIdx] || "").trim() : "");
+        break;
+      }
+
+      if (!found) return json({ ok: false, error: "not_registered" }, 404);
+      if (foundStatus && foundStatus !== "registered" && foundStatus !== "confirmed") {
+        return json({ ok: false, error: "not_registered" }, 404);
+      }
+
+      const subject = "CDL:1 • Your Table Key";
+      const htmlBody = buildMesaTableKeyEmailHTML({
+        playerName: foundName,
+        mesaLoginLink,
+        venueUrl,
+      });
+
+      try {
+        sendEmail(email, subject, htmlBody);
+      } catch (emailErr) {
+        console.error("Failed to send Table Key email:", email, emailErr);
+        return json({ ok: false, error: "email_failed" }, 500);
+      }
+
+      return json({ ok: true }, 200);
+    }
+
     // Validate required fields - individual player registration
     const required = ["playerName", "email", "phone", "ruleConfirm"];
     for (const k of required) {
@@ -289,6 +380,51 @@ function doPost(e) {
     console.error(err);
     return json({ ok: false, error: String(err) }, 500);
   }
+}
+
+function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
+  const safeName = String(playerName || "").trim() || "Player";
+  const safeLink = String(mesaLoginLink || "").trim();
+  const safeVenue = String(venueUrl || "").trim() || "https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ";
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #1c130f; color: #f8efe6; padding: 40px 20px; margin: 0;">
+  <div style="max-width: 500px; margin: 0 auto; background: linear-gradient(135deg, #2a1f1a 0%, #1c130f 100%); border-radius: 16px; padding: 40px; border: 1px solid #3d2e26;">
+
+    <div style="text-align: center; margin-bottom: 26px;">
+      <p style="color: #b76a3b; margin: 0 0 4px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 3px;">CDL:1</p>
+      <h1 style="font-size: 30px; color: #d4a574; margin: 0 0 8px 0; font-style: italic;">La Mesa</h1>
+      <p style="color: rgba(248, 239, 230, 0.85); margin: 0; font-size: 14px;">Your Table Key is ready.</p>
+    </div>
+
+    <div style="background: rgba(212, 165, 116, 0.08); border-radius: 12px; padding: 18px; margin-bottom: 22px; border: 1px solid rgba(212, 165, 116, 0.18);">
+      <p style="margin: 0; font-size: 16px; line-height: 1.5;">
+        <span style="color: #b76a3b;">${safeName}</span>, click below to claim your seat at the table.
+      </p>
+    </div>
+
+    <div style="text-align: center; margin: 0 0 22px 0;">
+      <a href="${safeLink}" style="display: inline-block; background: linear-gradient(135deg, #b76a3b 0%, #d4a574 100%); color: #1c130f; text-decoration: none; padding: 14px 22px; border-radius: 10px; font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;">
+        Claim Your Seat
+      </a>
+      <p style="margin: 10px 0 0 0; font-size: 12px; color: #888;">This link is your Table Key.</p>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; padding-top: 22px; border-top: 1px solid #3d2e26;">
+      <p style="margin: 0 0 16px 0; color: #888; font-size: 14px;">Questions? Email us at <a href="mailto:Erik@cubandominoleague.com" style="color: #d4a574;">Erik@cubandominoleague.com</a></p>
+      <a href="${safeVenue}" style="display: inline-block; background: rgba(0, 0, 0, 0.26); color: #f8efe6; text-decoration: none; padding: 12px 18px; border-radius: 10px; border: 1px solid rgba(212, 165, 116, 0.18); font-weight: 600; font-size: 14px;">View Venue</a>
+    </div>
+
+    <p style="text-align: center; margin-top: 28px; font-size: 18px;">La mesa te espera.</p>
+  </div>
+</body>
+</html>`;
 }
 
 function sendEmail(to, subject, html) {
@@ -343,6 +479,8 @@ function sendEmailViaResend({ apiKey, from, to, subject, html }) {
 function buildConfirmationEmailHTML(body) {
   const venueUrl = body.venueUrl || "https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ";
   const mesaLoginLink = String(body.mesaLoginLink || "").trim();
+  const siteUrl = String(body.siteUrl || "").trim();
+  const mesaEntryUrl = mesaLoginLink || (siteUrl ? (siteUrl.replace(/\/+$/, "") + "/?mesa=1") : "");
 
   return `
 <!DOCTYPE html>
@@ -382,25 +520,27 @@ function buildConfirmationEmailHTML(body) {
       </p>
     </div>
 
-    <div style="background: rgba(212, 165, 116, 0.1); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #d4a574;"><strong>How it works:</strong></p>
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">1. Register solo</p>
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">2. Enter La Mesa (the table)</p>
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">3. Team up in La Mesa</p>
-      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">4. Play to 150 points</p>
-      <p style="margin: 0; font-size: 14px; color: #d4a574;"><strong>🏆 Winning team takes the pot!</strong></p>
-    </div>
+	    <div style="background: rgba(212, 165, 116, 0.1); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+	      <p style="margin: 0 0 8px 0; font-size: 14px; color: #d4a574;"><strong>How it works:</strong></p>
+	      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">1. Register solo</p>
+	      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">2. Claim your seat in La Mesa (the table)</p>
+	      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">3. Team up in La Mesa</p>
+	      <p style="margin: 0 0 8px 0; font-size: 14px; color: #f8efe6;">4. Play to 150 points</p>
+	      <p style="margin: 0; font-size: 14px; color: #d4a574;"><strong>🏆 Winning team takes the pot!</strong></p>
+	    </div>
 
-    ${body.notes ? `<p style="font-size: 14px; color: #888;">Notes: ${body.notes}</p>` : ''}
+	    ${body.notes ? `<p style="font-size: 14px; color: #888;">Notes: ${body.notes}</p>` : ''}
 
-    ${mesaLoginLink ? `
-      <div style="text-align: center; margin: 0 0 22px 0;">
-        <a href="${mesaLoginLink}" style="display: inline-block; background: linear-gradient(135deg, #b76a3b 0%, #d4a574 100%); color: #1c130f; text-decoration: none; padding: 14px 22px; border-radius: 10px; font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;">
-          Enter La Mesa
-        </a>
-        <p style="margin: 10px 0 0 0; font-size: 12px; color: #888;">This link is your door key.</p>
-      </div>
-    ` : ''}
+	    ${mesaEntryUrl ? `
+	      <div style="text-align: center; margin: 0 0 22px 0;">
+	        <a href="${mesaEntryUrl}" style="display: inline-block; background: linear-gradient(135deg, #b76a3b 0%, #d4a574 100%); color: #1c130f; text-decoration: none; padding: 14px 22px; border-radius: 10px; font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;">
+	          Claim Your Seat
+	        </a>
+	        <p style="margin: 10px 0 0 0; font-size: 12px; color: #888;">
+	          ${mesaLoginLink ? "This link is your Table Key." : "Head to La Mesa. If you need a Table Key, tap “Resend Table Key” on the site."}
+	        </p>
+	      </div>
+	    ` : ''}
 
     <div style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid #3d2e26;">
       <p style="margin: 0 0 16px 0; color: #888; font-size: 14px;">Questions? Email us at <a href="mailto:Erik@cubandominoleague.com" style="color: #d4a574;">Erik@cubandominoleague.com</a></p>

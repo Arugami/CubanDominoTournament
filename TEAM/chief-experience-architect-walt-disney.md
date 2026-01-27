@@ -205,6 +205,14 @@ Walt oversees the continuous experience design + execution of **La Mesa** end-to
 
 ---
 
+## Walt Note: Claim Seat Ritual (Jan 27, 2026)
+
+The Claim Seat screen is a **threshold**, not a settings page.
+
+- When **signed out**, the only story beat is: *“Your Table Key is in your email.”* (Resend is a quiet fallback).
+- The **flag moment** should happen only after the seat is verified—then it becomes a proud, earned ceremony.
+- After the flag is chosen, there must be a clear “weenie” to the next step: **Claim Your Seat** → hub-first entry (Tonight + Who’s Here).
+
 ## Day One Priorities
 
 1. Full site UX audit from first touch to La Mesa entry

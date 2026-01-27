@@ -1,10 +1,10 @@
 ---
-// Admin Round Robin - Round Robin Tournament Management
-// Manages 28 round robin matches across 7 rounds
+// Admin Group Stage - Group Stage Tournament Management
+// 8 teams -> Group A + Group B (3 matchdays each) -> seed finals
 import AdminLayout from '../../components/admin/AdminLayout.astro';
 ---
 
-<AdminLayout title="Round Robin" activeNav="round-robin">
+<AdminLayout title="Group Stage" activeNav="round-robin">
   <div class="rr-page">
     <!-- Header Actions -->
     <div class="page-actions">
@@ -18,7 +18,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
             <circle cx="8.5" cy="7" r="4" />
             <polyline points="17 11 19 13 23 9" />
           </svg>
-          Assign Teams
+          <span class="btn__label">Build Groups</span>
         </button>
         <button class="btn btn--primary btn-slam" id="seedFinalsBtn" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
@@ -29,41 +29,63 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       </div>
     </div>
 
-    <!-- Standings Card -->
-    <div class="card standings-card">
-      <div class="card__header">
-        <h2 class="card__title">Standings</h2>
-        <span class="standings-subtitle" id="standingsSubtitle">Round Robin Results</span>
+    <!-- Standings Grid -->
+    <div class="standings-grid">
+      <div class="card standings-card">
+        <div class="card__header">
+          <h2 class="card__title">Group A</h2>
+          <span class="standings-subtitle" id="standingsSubtitleA">0/6 matches</span>
+        </div>
+        <div class="standings-table-wrapper">
+          <table class="standings-table" aria-label="Group A standings">
+            <thead>
+              <tr>
+                <th class="col-rank">#</th>
+                <th class="col-team">Team</th>
+                <th class="col-record">W-L</th>
+                <th class="col-diff">+/-</th>
+              </tr>
+            </thead>
+            <tbody id="standingsBodyA">
+              <tr class="loading-row">
+                <td colspan="4">Loading…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="standings-table-wrapper">
-        <table class="standings-table" id="standingsTable">
-          <thead>
-            <tr>
-              <th class="col-rank">#</th>
-              <th class="col-team">Team</th>
-              <th class="col-record">W-L</th>
-              <th class="col-diff">+/-</th>
-            </tr>
-          </thead>
-          <tbody id="standingsBody">
-            <tr class="loading-row">
-              <td colspan="4">Loading standings...</td>
-            </tr>
-          </tbody>
-        </table>
+
+      <div class="card standings-card">
+        <div class="card__header">
+          <h2 class="card__title">Group B</h2>
+          <span class="standings-subtitle" id="standingsSubtitleB">0/6 matches</span>
+        </div>
+        <div class="standings-table-wrapper">
+          <table class="standings-table" aria-label="Group B standings">
+            <thead>
+              <tr>
+                <th class="col-rank">#</th>
+                <th class="col-team">Team</th>
+                <th class="col-record">W-L</th>
+                <th class="col-diff">+/-</th>
+              </tr>
+            </thead>
+            <tbody id="standingsBodyB">
+              <tr class="loading-row">
+                <td colspan="4">Loading…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <!-- Round Selector Pills -->
+    <!-- Matchday Selector Pills -->
     <div class="round-pills">
       <button class="round-pill active" data-round="all">All</button>
-      <button class="round-pill" data-round="1">R1</button>
-      <button class="round-pill" data-round="2">R2</button>
-      <button class="round-pill" data-round="3">R3</button>
-      <button class="round-pill" data-round="4">R4</button>
-      <button class="round-pill" data-round="5">R5</button>
-      <button class="round-pill" data-round="6">R6</button>
-      <button class="round-pill" data-round="7">R7</button>
+      <button class="round-pill" data-round="1">Day 1</button>
+      <button class="round-pill" data-round="2">Day 2</button>
+      <button class="round-pill" data-round="3">Day 3</button>
     </div>
 
     <!-- Matches Container -->
@@ -79,18 +101,18 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         <h2 class="modal__title">Seed Finals Bracket</h2>
       </div>
       <div class="modal__body">
-        <p>This will assign the top 4 teams to the Finals bracket:</p>
+        <p>Semifinals will be seeded from group results:</p>
         <div class="seeding-preview" id="seedingPreview">
           <div class="seeding-match">
             <span class="seeding-label">Semi 1:</span>
-            <span class="seeding-teams">#1 <span id="seed1Name">-</span> vs #4 <span id="seed4Name">-</span></span>
+            <span class="seeding-teams">A1 <span id="a1Name">-</span> vs B2 <span id="b2Name">-</span></span>
           </div>
           <div class="seeding-match">
             <span class="seeding-label">Semi 2:</span>
-            <span class="seeding-teams">#2 <span id="seed2Name">-</span> vs #3 <span id="seed3Name">-</span></span>
+            <span class="seeding-teams">B1 <span id="b1Name">-</span> vs A2 <span id="a2Name">-</span></span>
           </div>
         </div>
-        <p class="warning-text">Make sure all round robin matches are complete.</p>
+        <p class="warning-text">Make sure all 12 group stage matches are complete.</p>
       </div>
       <div class="modal__actions">
         <button type="button" class="btn btn--secondary" id="cancelSeed">Cancel</button>
@@ -138,6 +160,26 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     cursor: not-allowed;
   }
 
+  .action-buttons .btn.is-loading {
+    opacity: 0.75;
+    pointer-events: none;
+  }
+
+  .action-buttons .btn.is-loading svg {
+    animation: spin 0.9s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Standings Grid */
+  .standings-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
   /* Standings Card */
   .standings-card {
     padding: 0;
@@ -149,12 +191,14 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     margin-bottom: 0;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
+    gap: 12px;
   }
 
   .standings-subtitle {
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.4);
+    white-space: nowrap;
   }
 
   .standings-table-wrapper {
@@ -217,11 +261,11 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     background: rgba(255, 255, 255, 0.02);
   }
 
-  .standings-row--playoff {
+  .standings-row--qualifier {
     background: rgba(212, 165, 116, 0.05);
   }
 
-  .standings-row--playoff:hover {
+  .standings-row--qualifier:hover {
     background: rgba(212, 165, 116, 0.08);
   }
 
@@ -232,7 +276,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     text-align: center;
   }
 
-  .rank-cell--top4 {
+  .rank-cell--top2 {
     color: var(--gold);
   }
 
@@ -272,7 +316,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     padding: 24px;
   }
 
-  /* Round Pills */
+  /* Matchday Pills */
   .round-pills {
     display: flex;
     gap: 6px;
@@ -327,33 +371,66 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     padding: 40px 20px;
   }
 
-  /* Round Group */
-  .round-group {
+  .matchday-group {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
 
-  .round-group__header {
+  .matchday-group__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 8px 4px;
   }
 
-  .round-group__title {
+  .matchday-group__title {
     font-family: "Bodoni Moda", serif;
     font-size: 1rem;
     font-weight: 700;
     color: var(--brass);
   }
 
-  .round-group__progress {
+  .matchday-group__progress {
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.4);
     padding: 4px 10px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 12px;
+  }
+
+  .group-slice {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .group-slice__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(212, 165, 116, 0.12);
+  }
+
+  .group-slice__title {
+    font-family: "IBM Plex Sans Condensed", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .group-slice__meta {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.35);
+    white-space: nowrap;
   }
 
   /* Match Card - Domino Tile Feel */
@@ -512,6 +589,11 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     pointer-events: none;
   }
 
+  .save-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
   /* Modal Styles */
   .modal-backdrop {
     position: fixed;
@@ -652,6 +734,11 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       max-width: none;
     }
 
+    .standings-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
     .standings-card .card__header {
       padding: 20px 24px;
     }
@@ -675,22 +762,13 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       font-size: 0.75rem;
     }
 
-    /* Match cards in grid */
-    .round-group {
-      gap: 16px;
-    }
-
-    .matches-grid {
+    .matchday-groups-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 16px;
+      align-items: start;
     }
 
-    .match-card {
-      padding: 16px;
-    }
-
-    /* Modal - centered on desktop */
     .modal-backdrop {
       align-items: center;
     }
@@ -715,10 +793,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 </style>
 
 <script>
-  // Admin Round Robin Controller
+  // Admin Group Stage Controller
   let teams = [];
   let matches = [];
-  let standings = [];
+  let groupStandings = [];
   let selectedRound = 'all';
 
   window.addEventListener('adminReady', async ({ detail: { supabase } }) => {
@@ -730,116 +808,166 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   async function loadData(supabase) {
     const [teamsRes, matchesRes, standingsRes] = await Promise.all([
       supabase.from('teams').select('*').order('seed'),
-      supabase.from('matches').select('*').eq('phase', 'round_robin').order('round_robin_round').order('match_number'),
-      supabase.from('standings').select('*')
+      supabase.from('matches').select('*').eq('phase', 'group').order('group_code').order('round_robin_round').order('match_number'),
+      supabase.from('group_standings').select('*')
     ]);
 
     teams = teamsRes.data || [];
     matches = matchesRes.data || [];
-    standings = standingsRes.data || [];
+    groupStandings = standingsRes.data || [];
 
     renderStandings();
     renderMatches();
     updateStatus();
   }
 
-  function renderStandings() {
-    const tbody = document.getElementById('standingsBody');
-    const subtitle = document.getElementById('standingsSubtitle');
+  function getGroupTeams(groupCode) {
+    return teams.filter(t => t.group_code === groupCode).sort((a, b) => (a.seed || 99) - (b.seed || 99));
+  }
 
-    if (standings.length === 0) {
-      tbody.innerHTML = '<tr class="loading-row"><td colspan="4">No matches completed yet</td></tr>';
-      subtitle.textContent = 'Round Robin Results';
+  function getGroupStandingsRows(groupCode) {
+    const groupTeams = getGroupTeams(groupCode);
+
+    const statsByTeam = new Map(
+      groupStandings
+        .filter(s => s.group_code === groupCode)
+        .map(s => [s.team_id, s])
+    );
+
+    const rows = groupTeams.map(team => {
+      const stats = statsByTeam.get(team.id) || {};
+      return {
+        team,
+        team_id: team.id,
+        wins: stats.wins || 0,
+        losses: stats.losses || 0,
+        point_diff: stats.point_diff || 0,
+        points_for: stats.points_for || 0,
+        games_played: stats.games_played || 0
+      };
+    });
+
+    rows.sort((a, b) => {
+      if (b.wins !== a.wins) return b.wins - a.wins;
+      if (b.point_diff !== a.point_diff) return b.point_diff - a.point_diff;
+      if (b.points_for !== a.points_for) return b.points_for - a.points_for;
+      return (a.team.seed || 99) - (b.team.seed || 99);
+    });
+
+    return rows;
+  }
+
+  function renderStandings() {
+    renderGroupStandings('A');
+    renderGroupStandings('B');
+
+    const seedFinalsBtn = document.getElementById('seedFinalsBtn');
+    const seed = getSeedPreview();
+    seedFinalsBtn.disabled = !seed.canSeed;
+
+    document.getElementById('a1Name').textContent = seed.a1?.team?.name || '-';
+    document.getElementById('a2Name').textContent = seed.a2?.team?.name || '-';
+    document.getElementById('b1Name').textContent = seed.b1?.team?.name || '-';
+    document.getElementById('b2Name').textContent = seed.b2?.team?.name || '-';
+  }
+
+  function renderGroupStandings(groupCode) {
+    const tbody = document.getElementById(groupCode === 'A' ? 'standingsBodyA' : 'standingsBodyB');
+    const subtitle = document.getElementById(groupCode === 'A' ? 'standingsSubtitleA' : 'standingsSubtitleB');
+
+    const groupMatches = matches.filter(m => m.group_code === groupCode);
+    const completed = groupMatches.filter(m => m.status === 'completed').length;
+
+    subtitle.textContent = `${completed}/6 matches`;
+
+    const rows = getGroupStandingsRows(groupCode);
+    if (rows.length === 0) {
+      tbody.innerHTML = '<tr class="loading-row"><td colspan="4">Groups not built yet</td></tr>';
       return;
     }
 
-    // Sort standings: wins DESC, point_diff DESC
-    const sorted = [...standings].sort((a, b) => {
-      if (b.wins !== a.wins) return b.wins - a.wins;
-      return b.point_diff - a.point_diff;
-    });
-
-    // Attach team data
-    const withTeams = sorted.map(s => ({
-      ...s,
-      team: teams.find(t => t.id === s.team_id)
-    })).filter(s => s.team);
-
-    // Update subtitle with games played
-    const totalCompleted = matches.filter(m => m.status === 'completed').length;
-    subtitle.textContent = `${totalCompleted}/28 matches • ${withTeams[0]?.games_played || 0} games per team`;
-
-    // Render rows
-    tbody.innerHTML = withTeams.map((s, idx) => {
+    tbody.innerHTML = rows.map((r, idx) => {
       const rank = idx + 1;
-      const isPlayoff = rank <= 4;
-      const diffClass = s.point_diff > 0 ? 'diff-cell--positive' :
-                        s.point_diff < 0 ? 'diff-cell--negative' : 'diff-cell--neutral';
-      const diffPrefix = s.point_diff > 0 ? '+' : '';
+      const isQualifier = rank <= 2;
+      const diffClass = r.point_diff > 0 ? 'diff-cell--positive' :
+                        r.point_diff < 0 ? 'diff-cell--negative' : 'diff-cell--neutral';
+      const diffPrefix = r.point_diff > 0 ? '+' : '';
 
       return `
-        <tr class="standings-row ${isPlayoff ? 'standings-row--playoff' : ''}">
-          <td class="rank-cell ${isPlayoff ? 'rank-cell--top4' : ''}">${rank}</td>
-          <td class="team-cell">${s.team?.name || 'Unknown'}</td>
-          <td class="record-cell">${s.wins}-${s.losses}</td>
-          <td class="diff-cell ${diffClass}">${diffPrefix}${s.point_diff}</td>
+        <tr class="standings-row ${isQualifier ? 'standings-row--qualifier' : ''}">
+          <td class="rank-cell ${isQualifier ? 'rank-cell--top2' : ''}">${rank}</td>
+          <td class="team-cell">${r.team?.name || 'Unknown'}</td>
+          <td class="record-cell">${r.wins}-${r.losses}</td>
+          <td class="diff-cell ${diffClass}">${diffPrefix}${r.point_diff}</td>
         </tr>
       `;
     }).join('');
+  }
 
-    // Update Seed Finals button state
-    const seedFinalsBtn = document.getElementById('seedFinalsBtn');
-    seedFinalsBtn.disabled = withTeams.length < 4;
+  function getSeedPreview() {
+    const groupA = getGroupStandingsRows('A');
+    const groupB = getGroupStandingsRows('B');
 
-    // Update seeding preview
-    if (withTeams.length >= 4) {
-      document.getElementById('seed1Name').textContent = withTeams[0].team?.name || '-';
-      document.getElementById('seed2Name').textContent = withTeams[1].team?.name || '-';
-      document.getElementById('seed3Name').textContent = withTeams[2].team?.name || '-';
-      document.getElementById('seed4Name').textContent = withTeams[3].team?.name || '-';
-    }
+    const a1 = groupA[0];
+    const a2 = groupA[1];
+    const b1 = groupB[0];
+    const b2 = groupB[1];
+
+    const completed = matches.filter(m => m.status === 'completed').length;
+    const canSeed = Boolean(a1 && a2 && b1 && b2 && completed === 12);
+
+    return { canSeed, a1, a2, b1, b2 };
   }
 
   function renderMatches() {
     const container = document.getElementById('matchesContainer');
 
     if (matches.length === 0) {
-      container.innerHTML = '<div class="loading-matches">No round robin matches found. Run the database migration first.</div>';
+      container.innerHTML = '<div class="loading-matches">No group-stage matches yet. Press “Build Groups”.</div>';
       return;
     }
 
-    // Group matches by round
-    const roundGroups = {};
-    for (let r = 1; r <= 7; r++) {
-      roundGroups[r] = matches.filter(m => m.round_robin_round === r);
-    }
-
-    // Filter by selected round
     const roundsToShow = selectedRound === 'all'
-      ? [1, 2, 3, 4, 5, 6, 7]
+      ? [1, 2, 3]
       : [parseInt(selectedRound)];
 
-    container.innerHTML = roundsToShow.map(round => {
-      const roundMatches = roundGroups[round] || [];
-      const completed = roundMatches.filter(m => m.status === 'completed').length;
+    container.innerHTML = roundsToShow.map(day => {
+      const dayMatches = matches.filter(m => m.round_robin_round === day);
+      const completed = dayMatches.filter(m => m.status === 'completed').length;
+
+      const groupA = dayMatches.filter(m => m.group_code === 'A');
+      const groupB = dayMatches.filter(m => m.group_code === 'B');
 
       return `
-        <div class="round-group" data-round-group="${round}">
-          <div class="round-group__header">
-            <span class="round-group__title">Round ${round}</span>
-            <span class="round-group__progress">${completed}/${roundMatches.length} complete</span>
+        <div class="matchday-group" data-round-group="${day}">
+          <div class="matchday-group__header">
+            <span class="matchday-group__title">Day ${day}</span>
+            <span class="matchday-group__progress">${completed}/${dayMatches.length} complete</span>
           </div>
-          <div class="matches-grid">
-            ${roundMatches.map(match => renderMatchCard(match)).join('')}
+          <div class="matchday-groups-grid">
+            ${renderGroupSlice('A', groupA)}
+            ${renderGroupSlice('B', groupB)}
           </div>
         </div>
       `;
     }).join('');
 
-    // Attach save handlers
     container.querySelectorAll('[data-save-match]').forEach(btn => {
       btn.addEventListener('click', handleSaveMatch);
     });
+  }
+
+  function renderGroupSlice(groupCode, groupMatches) {
+    const completed = groupMatches.filter(m => m.status === 'completed').length;
+    return `
+      <div class="group-slice" data-group="${groupCode}">
+        <div class="group-slice__header">
+          <span class="group-slice__title">Group ${groupCode}</span>
+          <span class="group-slice__meta">${completed}/${groupMatches.length} complete</span>
+        </div>
+        ${groupMatches.map(match => renderMatchCard(match)).join('')}
+      </div>
+    `;
   }
 
   function renderMatchCard(match) {
@@ -851,11 +979,16 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     const statusClass = match.status === 'completed' ? 'match-card--completed' :
                         match.status === 'in_progress' ? 'match-card--in-progress' : '';
 
+    const statusDotClass = match.status === 'completed' ? 'match-card__status--completed' :
+                           match.status === 'in_progress' ? 'match-card__status--in_progress' : '';
+
+    const label = `Group ${match.group_code} • Match ${match.match_number}`;
+
     return `
       <div class="match-card ${statusClass}" data-match-id="${match.id}">
         <div class="match-card__header">
-          <span class="match-card__label">Match ${match.match_number}</span>
-          <span class="match-card__status match-card__status--${match.status}"></span>
+          <span class="match-card__label">${label}</span>
+          <span class="match-card__status ${statusDotClass}"></span>
         </div>
         <div class="match-card__teams">
           <div class="team-row ${isWinner1 ? 'winner' : ''}">
@@ -897,15 +1030,20 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
   function updateStatus() {
     const statusEl = document.getElementById('rrStatus');
     const completed = matches.filter(m => m.status === 'completed').length;
-    const teamsAssigned = matches.filter(m => m.team1_id && m.team2_id).length;
+    const haveMatches = matches.length > 0;
+    const groupTeams = teams.filter(t => t.group_code === 'A' || t.group_code === 'B').length;
 
-    if (teamsAssigned === 0) {
-      statusEl.textContent = 'Teams not assigned yet';
-    } else if (teamsAssigned < 28) {
-      statusEl.textContent = `${teamsAssigned}/28 matches have teams`;
-    } else {
-      statusEl.textContent = `${completed}/28 matches complete`;
+    if (!haveMatches) {
+      statusEl.textContent = 'Group stage not built yet';
+      return;
     }
+
+    if (groupTeams < 8) {
+      statusEl.textContent = `Groups incomplete (${groupTeams}/8 teams assigned)`;
+      return;
+    }
+
+    statusEl.textContent = `${completed}/12 matches complete`;
   }
 
   async function handleSaveMatch(e) {
@@ -922,12 +1060,10 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
     const match = matches.find(m => m.id === matchId);
     if (!match) return;
 
-    // Add saving state
     card.classList.add('saving');
     btn.classList.add('saving');
     btn.textContent = 'Saving...';
 
-    // Determine winner
     let winnerId = null;
     let status = 'pending';
 
@@ -983,8 +1119,12 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       });
     });
 
-    // Assign teams button
-    document.getElementById('assignTeamsBtn').addEventListener('click', async () => {
+    // Build groups button
+    const buildBtn = document.getElementById('assignTeamsBtn');
+    const buildLabel = buildBtn.querySelector('.btn__label');
+    const originalLabel = buildLabel?.textContent || 'Build Groups';
+
+    buildBtn.addEventListener('click', async () => {
       const seededTeams = teams.filter(t => t.seed).sort((a, b) => a.seed - b.seed);
 
       if (seededTeams.length < 8) {
@@ -994,21 +1134,27 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
         return;
       }
 
-      try {
-        // Call the database function to assign teams
-        const { error } = await supabase.rpc('assign_teams_to_round_robin');
+      buildBtn.classList.add('is-loading');
+      buildBtn.disabled = true;
+      if (buildLabel) buildLabel.textContent = 'Building…';
 
+      try {
+        const { error } = await supabase.rpc('assign_teams_to_group_stage');
         if (error) throw error;
 
         await loadData(supabase);
         if (window.showToast) {
-          window.showToast('Teams assigned to round robin', 'success');
+          window.showToast('Groups built. Matches generated.', 'success');
         }
       } catch (err) {
-        console.error('Assign teams error:', err);
+        console.error('Build groups error:', err);
         if (window.showToast) {
-          window.showToast('Failed to assign teams', 'default');
+          window.showToast('Failed to build groups', 'default');
         }
+      } finally {
+        buildBtn.classList.remove('is-loading');
+        buildBtn.disabled = false;
+        if (buildLabel) buildLabel.textContent = originalLabel;
       }
     });
 
@@ -1029,20 +1175,17 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
     document.getElementById('confirmSeed').addEventListener('click', async () => {
       try {
-        const { error } = await supabase.rpc('seed_finals_from_standings');
-
+        const { error } = await supabase.rpc('seed_finals_from_group_standings');
         if (error) throw error;
 
         modal.classList.remove('open');
-
         if (window.showToast) {
           window.showToast('Finals bracket seeded!', 'success');
         }
 
-        // Redirect to bracket page
         setTimeout(() => {
           window.location.href = '/admin/bracket';
-        }, 1000);
+        }, 900);
       } catch (err) {
         console.error('Seed finals error:', err);
         if (window.showToast) {
@@ -1054,7 +1197,7 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
 
   function setupRealtimeSubscription(supabase) {
     supabase
-      .channel('admin-rr-changes')
+      .channel('admin-group-stage-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'matches' }, () => {
         loadData(supabase);
       })
@@ -1064,3 +1207,4 @@ import AdminLayout from '../../components/admin/AdminLayout.astro';
       .subscribe();
   }
 </script>
+

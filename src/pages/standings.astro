@@ -1,6 +1,6 @@
 ---
 // Public Standings Page - "Wall of Honor"
-// Displays live round robin standings with tournament aesthetic
+// Displays live group-stage standings with tournament aesthetic
 
 const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
@@ -229,6 +229,19 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         box-shadow:
           inset 0 1px 0 rgba(212, 165, 116, 0.05),
           0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .standings-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      @media (min-width: 769px) {
+        .standings-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 18px;
+        }
       }
 
       /* Standings Header */
@@ -512,7 +525,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       <main class="main">
         <div class="page-title">
-          <h1 class="page-title__main">Round Robin</h1>
+          <h1 class="page-title__main">Group Stage</h1>
           <p class="page-title__sub">Tournament Standings</p>
           <div class="live-indicator" id="liveIndicator" style="display: none;">
             <span class="live-dot"></span>
@@ -520,10 +533,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
         </div>
 
-        <div class="standings-wall" id="standingsWall">
-          <div class="loading-state">
-            <div class="loading-spinner"></div>
-            <p>Loading standings...</p>
+        <div class="standings-grid">
+          <div class="standings-wall" id="standingsWallA" aria-label="Group A standings">
+            <div class="loading-state">
+              <div class="loading-spinner"></div>
+              <p>Loading Group A...</p>
+            </div>
+          </div>
+          <div class="standings-wall" id="standingsWallB" aria-label="Group B standings">
+            <div class="loading-state">
+              <div class="loading-spinner"></div>
+              <p>Loading Group B...</p>
+            </div>
           </div>
         </div>
       </main>
@@ -540,7 +561,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
     <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
       let teams = [];
-      let standings = [];
+      let groupStandings = [];
       let matches = [];
 
       async function init() {
@@ -559,12 +580,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       async function loadData(supabase) {
         const [teamsRes, standingsRes, matchesRes] = await Promise.all([
           supabase.from('teams').select('*').order('seed'),
-          supabase.from('standings').select('*'),
-          supabase.from('matches').select('*').eq('phase', 'round_robin')
+          supabase.from('group_standings').select('*'),
+          supabase.from('matches').select('*').eq('phase', 'group')
         ]);
 
         teams = teamsRes.data || [];
-        standings = standingsRes.data || [];
+        groupStandings = standingsRes.data || [];
         matches = matchesRes.data || [];
 
         renderStandings();
@@ -572,73 +593,92 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       function renderStandings() {
-        const wall = document.getElementById('standingsWall');
+        renderGroup('A');
+        renderGroup('B');
+      }
 
-        if (standings.length === 0) {
+      function renderGroup(groupCode) {
+        const wall = document.getElementById(groupCode === 'A' ? 'standingsWallA' : 'standingsWallB');
+        const groupTeams = teams
+          .filter(t => t.group_code === groupCode)
+          .sort((a, b) => (a.seed || 99) - (b.seed || 99));
+
+        if (groupTeams.length === 0) {
           wall.innerHTML = `
             <div class="empty-state">
               <svg class="empty-state__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 6v6l4 2" />
               </svg>
-              <p class="empty-state__text">Round robin matches haven't started yet.</p>
+              <p class="empty-state__text">Groups haven’t been built yet.</p>
             </div>
           `;
           return;
         }
 
-        // Sort standings
-        const sorted = [...standings].sort((a, b) => {
-          if (b.wins !== a.wins) return b.wins - a.wins;
-          return b.point_diff - a.point_diff;
+        const statsByTeam = new Map(
+          groupStandings
+            .filter(s => s.group_code === groupCode)
+            .map(s => [s.team_id, s])
+        );
+
+        const rows = groupTeams.map(team => {
+          const stats = statsByTeam.get(team.id) || {};
+          return {
+            team,
+            wins: stats.wins || 0,
+            losses: stats.losses || 0,
+            point_diff: stats.point_diff || 0,
+            points_for: stats.points_for || 0,
+            games_played: stats.games_played || 0
+          };
         });
 
-        // Attach team data
-        const withTeams = sorted.map(s => ({
-          ...s,
-          team: teams.find(t => t.id === s.team_id)
-        })).filter(s => s.team);
+        rows.sort((a, b) => {
+          if (b.wins !== a.wins) return b.wins - a.wins;
+          if (b.point_diff !== a.point_diff) return b.point_diff - a.point_diff;
+          if (b.points_for !== a.points_for) return b.points_for - a.points_for;
+          return (a.team.seed || 99) - (b.team.seed || 99);
+        });
 
-        // Render
         let html = `
           <div class="standings-header">
             <span>#</span>
-            <span>Team</span>
+            <span>Group ${groupCode}</span>
             <span>W-L</span>
             <span>+/-</span>
           </div>
         `;
 
-        withTeams.forEach((s, idx) => {
+        rows.forEach((r, idx) => {
           const rank = idx + 1;
-          const isPlayoff = rank <= 4;
-          const diffClass = s.point_diff > 0 ? 'diff__value--positive' :
-                            s.point_diff < 0 ? 'diff__value--negative' : 'diff__value--neutral';
-          const diffPrefix = s.point_diff > 0 ? '+' : '';
+          const isQualifier = rank <= 2;
+          const diffClass = r.point_diff > 0 ? 'diff__value--positive' :
+                            r.point_diff < 0 ? 'diff__value--negative' : 'diff__value--neutral';
+          const diffPrefix = r.point_diff > 0 ? '+' : '';
 
-          // Add playoff divider after rank 4
-          if (rank === 5) {
+          if (rank === 3) {
             html += `
               <div class="playoff-divider">
                 <span class="playoff-divider__line"></span>
-                <span class="playoff-divider__text">Playoff cutoff</span>
+                <span class="playoff-divider__text">Advances</span>
                 <span class="playoff-divider__line"></span>
               </div>
             `;
           }
 
           html += `
-            <div class="team-plaque ${isPlayoff ? 'team-plaque--playoff' : ''}">
-              <span class="rank ${isPlayoff ? 'rank--top4' : ''}">${rank}</span>
+            <div class="team-plaque ${isQualifier ? 'team-plaque--playoff' : ''}">
+              <span class="rank ${isQualifier ? 'rank--top4' : ''}">${rank}</span>
               <div class="team-info">
-                <div class="team-name">${s.team?.name || 'Unknown'}</div>
-                <div class="team-games">${s.games_played} games played</div>
+                <div class="team-name">${r.team?.name || 'Unknown'}</div>
+                <div class="team-games">${r.games_played}/3 games</div>
               </div>
               <div class="record">
-                <span class="record__main">${s.wins}-${s.losses}</span>
+                <span class="record__main">${r.wins}-${r.losses}</span>
               </div>
               <div class="diff">
-                <span class="diff__value ${diffClass}">${diffPrefix}${s.point_diff}</span>
+                <span class="diff__value ${diffClass}">${diffPrefix}${r.point_diff}</span>
               </div>
             </div>
           `;
@@ -657,19 +697,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (inProgress > 0) {
           indicator.style.display = 'inline-flex';
           statusEl.textContent = `${inProgress} match${inProgress > 1 ? 'es' : ''} in progress`;
-        } else if (completed > 0 && completed < 28) {
+        } else if (completed > 0 && completed < 12) {
           indicator.style.display = 'inline-flex';
-          statusEl.textContent = `${completed}/28 complete`;
-        } else if (completed === 28) {
+          statusEl.textContent = `${completed}/12 complete`;
+        } else if (completed === 12) {
           indicator.style.display = 'inline-flex';
-          statusEl.textContent = 'Round robin complete';
+          statusEl.textContent = 'Group stage complete';
         } else {
           indicator.style.display = 'none';
         }
       }
 
       function showError() {
-        document.getElementById('standingsWall').innerHTML = `
+        document.getElementById('standingsWallA').innerHTML = `
+          <div class="empty-state">
+            <p class="empty-state__text">Failed to load standings. Please refresh.</p>
+          </div>
+        `;
+        document.getElementById('standingsWallB').innerHTML = `
           <div class="empty-state">
             <p class="empty-state__text">Failed to load standings. Please refresh.</p>
           </div>

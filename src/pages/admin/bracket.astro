@@ -19,7 +19,7 @@ import Bracket from '../../components/Bracket.astro';
             <circle cx="8.5" cy="7" r="4" />
             <polyline points="17 11 19 13 23 9" />
           </svg>
-          Auto-Assign
+          <span class="btn__label">Seed from Groups</span>
         </button>
         <button class="btn btn--secondary btn-slam" id="resetBracketBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
@@ -89,6 +89,19 @@ import Bracket from '../../components/Bracket.astro';
   .action-buttons .btn svg {
     width: 16px;
     height: 16px;
+  }
+
+  .action-buttons .btn.is-loading {
+    opacity: 0.75;
+    pointer-events: none;
+  }
+
+  .action-buttons .btn.is-loading svg {
+    animation: spin 0.9s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 
   /* Modal Styles */
@@ -229,6 +242,7 @@ import Bracket from '../../components/Bracket.astro';
   // Finals bracket: 2 Semifinals (Round 1) + 1 Championship (Round 2)
   let teams = [];
   let matches = [];
+  let groupProgress = { total: 0, completed: 0 };
 
   window.addEventListener('adminReady', async ({ detail: { supabase } }) => {
     await loadData(supabase);
@@ -237,16 +251,23 @@ import Bracket from '../../components/Bracket.astro';
   });
 
   async function loadData(supabase) {
-    const [teamsRes, matchesRes] = await Promise.all([
+    const [teamsRes, matchesRes, groupRes] = await Promise.all([
       supabase.from('teams').select('*').order('seed'),
       // Only load finals matches (phase = 'finals')
-      supabase.from('matches').select('*').eq('phase', 'finals').order('round').order('match_number')
+      supabase.from('matches').select('*').eq('phase', 'finals').order('round').order('match_number'),
+      supabase.from('matches').select('status').eq('phase', 'group')
     ]);
 
     teams = teamsRes.data || [];
     matches = matchesRes.data || [];
+    const groupMatches = groupRes.data || [];
+    groupProgress = {
+      total: groupMatches.length,
+      completed: groupMatches.filter(m => m.status === 'completed').length
+    };
     renderBracket();
     updateStatus();
+    updateSeedButtonState();
   }
 
   function renderBracket() {
@@ -268,8 +289,8 @@ import Bracket from '../../components/Bracket.astro';
         if (team1) {
           team1NameEl.textContent = team1.name;
         } else if (match.round === 1) {
-          // Semifinals - show seed position
-          team1NameEl.textContent = match.match_number === 1 ? 'Seed #1' : 'Seed #2';
+          // Semifinals: A1 vs B2, B1 vs A2
+          team1NameEl.textContent = match.match_number === 1 ? 'Awaiting A1' : 'Awaiting B1';
         } else {
           // Championship
           team1NameEl.textContent = 'Winner Semi 1';
@@ -278,8 +299,8 @@ import Bracket from '../../components/Bracket.astro';
         if (team2) {
           team2NameEl.textContent = team2.name;
         } else if (match.round === 1) {
-          // Semifinals - show seed position
-          team2NameEl.textContent = match.match_number === 1 ? 'Seed #4' : 'Seed #3';
+          // Semifinals: A1 vs B2, B1 vs A2
+          team2NameEl.textContent = match.match_number === 1 ? 'Awaiting B2' : 'Awaiting A2';
         } else {
           // Championship
           team2NameEl.textContent = 'Winner Semi 2';
@@ -356,33 +377,54 @@ import Bracket from '../../components/Bracket.astro';
       ...matches.map(m => m.team2_id).filter(Boolean)
     ]).size;
 
-    if (teamsInBracket < 4) {
-      statusEl.textContent = `${teamsInBracket}/4 teams seeded | ${completed}/3 matches`;
-    } else {
-      statusEl.textContent = `Finals ready | ${completed}/3 matches`;
+    const base =
+      teamsInBracket < 4
+        ? `${teamsInBracket}/4 teams seeded | ${completed}/3 matches`
+        : `Finals ready | ${completed}/3 matches`;
+
+    if (groupProgress.total > 0 && groupProgress.completed < 12) {
+      statusEl.textContent = `${base} • Groups ${groupProgress.completed}/12`;
+      return;
     }
+
+    statusEl.textContent = base;
+  }
+
+  function updateSeedButtonState() {
+    const seedBtn = document.getElementById('assignTeamsBtn');
+    const seedLabel = seedBtn?.querySelector('.btn__label');
+    if (!seedBtn || !seedLabel) return;
+
+    if (groupProgress.total === 0 || groupProgress.completed < 12) {
+      seedLabel.textContent = 'Go to Group Stage';
+      return;
+    }
+
+    seedLabel.textContent = 'Seed from Groups';
   }
 
   function setupEventListeners(supabase) {
-    // Auto-assign redirects to Round Robin for seeding
-    document.getElementById('assignTeamsBtn').addEventListener('click', async () => {
-      // Check if round robin has at least 4 teams with standings
-      try {
-        const { data: standings } = await supabase.from('standings').select('*');
+    const seedBtn = document.getElementById('assignTeamsBtn');
+    const seedLabel = seedBtn.querySelector('.btn__label');
 
-        if (!standings || standings.length < 4) {
+    // Seed finals from Group Stage results
+    seedBtn.addEventListener('click', async () => {
+      seedBtn.classList.add('is-loading');
+      seedBtn.disabled = true;
+      if (seedLabel) seedLabel.textContent = groupProgress.completed < 12 ? 'Opening…' : 'Seeding…';
+
+      try {
+        if (groupProgress.total === 0 || groupProgress.completed < 12) {
           if (window.showToast) {
-            window.showToast('Complete Round Robin first to seed finals', 'default');
+            window.showToast(`Complete Group Stage first (${groupProgress.completed}/12 matches)`, 'default');
           }
-          // Redirect to round robin
           setTimeout(() => {
             window.location.href = '/admin/round-robin';
-          }, 1500);
+          }, 900);
           return;
         }
 
-        // Call seed finals function
-        const { error } = await supabase.rpc('seed_finals_from_standings');
+        const { error } = await supabase.rpc('seed_finals_from_group_standings');
 
         if (error) throw error;
 
@@ -395,6 +437,10 @@ import Bracket from '../../components/Bracket.astro';
         if (window.showToast) {
           window.showToast(err.message || 'Failed to seed finals', 'default');
         }
+      } finally {
+        seedBtn.classList.remove('is-loading');
+        seedBtn.disabled = false;
+        updateSeedButtonState();
       }
     });
 

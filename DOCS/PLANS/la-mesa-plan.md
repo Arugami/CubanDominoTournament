@@ -340,6 +340,10 @@ Goal: the "Claim Your Seat" screen should feel like a **threshold ritual** (earn
 
 ### 2) UX/Craft Cleanup (Should Fix)
 
+- **Claim Seat scene clarity (auth vs identity):**
+  - When **signed out**, remove the “Show them where you’re from” beat (it reads like a non sequitur above Table Key copy).
+  - Keep the **flag moment** and **CTA** hidden until the seat is verified (sign-in complete).
+  - Once verified: “Show them where you’re from.” → flag pick → CTA pulses → hub-first entry.
 - **Dropdown keyboard focus:** keyboard navigation exists; add a visible `.is-focused` state so it feels intentional (and accessible).
 - **Remove JS-based hover styling** in dropdown options; prefer CSS-only states to prevent drift.
 - **Deduplicate styles** (avoid multiple competing definitions for the same class).

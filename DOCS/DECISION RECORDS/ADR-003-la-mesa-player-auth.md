@@ -28,7 +28,9 @@ La Mesa is not a throwaway tournament widget. It is a foundational surface for t
 
 Authentication method: **email magic link (passwordless)** using Supabase Auth.
 
-Verification rule: a logged-in user may enter La Mesa only if their auth email exists in Supabase `players` with status `registered` or `confirmed`.
+Verification rule: a logged-in user may enter La Mesa only if their auth email exists in **CDL registrations (Google Sheet)**.
+
+Supabase `players` remains a best-effort mirror for chat/realtime + future league features, but Sheets is the current source of truth.
 
 ---
 
@@ -41,10 +43,10 @@ Passwordless magic link is:
 - **Low-friction** (no passwords, no “create account” mental load)
 - **Cross-device** by design
 - **Anti-impersonation** (your email is your seat)
-- **Club 33 aligned** (you “earn the door”, then you get a key)
+- **Club 33 aligned** (you earn your seat, then you get a Table Key)
 
-**Primary entry path:** confirmation email contains a single CTA (“Enter La Mesa”) that signs them in and returns them to the room.  
-**Secondary path:** La Mesa has a “Send link” field for re-entry (new device / cleared session).
+**Primary entry path:** registration confirmation email contains a single CTA (“Claim Your Seat”) that signs them in and returns them to La Mesa.  
+**Secondary path:** La Mesa includes a **slow-disclosed** “Resend Table Key” fallback for re-entry (new device / cleared session / lost email).
 
 ---
 
@@ -67,7 +69,10 @@ Passwordless magic link is:
 ## Implementation Notes (Current)
 
 - Auth callback: `src/pages/mesa/callback.astro`
-- Registration sync: `/api/register` best-effort upserts into Supabase `players`
+- Seat verification (preferred): `functions/api/mesa/verify.ts` (checks Sheets via Apps Script action `mesa_lookup_player`)
+- Registration sync: `functions/api/register.ts` best-effort upserts into Supabase `players`
+- Confirmation email includes **Claim Your Seat**; includes the **Table Key** link when server env is configured (`SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`)
+- Resend Table Key (preferred): `functions/api/mesa/table-key.ts` (Apps Script action `mesa_send_table_key` + Supabase admin link)
 - La Mesa gate: `src/pages/index.astro` requires verified auth session before “Claim Your Seat” can complete
 - RLS hardening: `supabase/migrations/20260126_mesa_player_auth.sql` restricts chat/team writes to registered players
 
@@ -82,14 +87,14 @@ Passwordless magic link is:
 - Matches “earned seat” ritual language
 
 **Cons**
-- Adds one extra step if the user tries to enter La Mesa immediately after registering (they must open email)
-- Requires ops setup (Supabase Auth redirect allowlist + env vars + migration)
+- Adds one extra step if the user tries to enter La Mesa immediately after registering (they must open the email Table Key)
+- Requires ops setup (Supabase Auth redirect allowlist + Pages env vars + Apps Script deploy + migration)
 
 ---
 
 ## Follow-ups (P0 UX)
 
-1) Ensure the registration confirmation email includes the actual La Mesa door key link (one-email flow).
-2) Keep the in-room gate copy ceremonial: “Your seat’s waiting. Open your door key.”
-3) Move all presence/messaging identity over time from `playerName` to a stable `player_id` (auth-bound) for integrity.
-
+1) Ensure the registration confirmation email includes the actual La Mesa **Table Key** link (one-email flow).
+2) Keep the in-room gate copy ceremonial: “Your Table Key is in your email.”
+3) Keep “Resend Table Key” slow-disclosed (fallback only; avoid “login screen” vibes).
+4) Move all presence/messaging identity over time from `playerName` to a stable `player_id` (auth-bound) for integrity.

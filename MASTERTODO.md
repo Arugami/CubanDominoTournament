@@ -8,9 +8,10 @@
 ## 🔴 CRITICAL — Before Tournament I (Jan 31)
 
 ### Registration & Teams
-- [x] Get first team registered (proof of concept) ✅
-- [ ] Reach 5 teams (halfway)
-- [ ] Reach 10 teams (full tournament)
+- [x] Verify first player registration + roster sync (Google Sheet → Admin) ✅
+- [ ] Get first team formed in La Mesa + imported into tournament teams (proof of concept)
+- [ ] Reach 4 teams (halfway)
+- [ ] Reach 8 teams (full tournament)
 - [ ] Create waitlist system if we exceed capacity
 - [ ] Confirm all registered teams 48 hours before
 
@@ -139,7 +140,7 @@
 - [ ] La Mesa auth rollout: set Cloudflare env vars `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` (server-side)
 - [ ] La Mesa auth rollout: allow redirect URL `/mesa/callback` in Supabase Auth settings
 - [ ] La Mesa auth rollout: apply migration `supabase/migrations/20260126_mesa_player_auth.sql`
-- [ ] La Mesa auth UX: confirmation email includes one-click “Enter La Mesa” door key (ADR-003)
+- [ ] La Mesa auth UX: confirmation email includes one-click “Claim Your Seat” Table Key (ADR-003)
 
 ---
 

@@ -64,7 +64,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const serviceKey = clean(env.SUPABASE_SERVICE_ROLE_KEY);
   const origin = new URL(request.url).origin;
 
-  // Optional: create a one-click "door key" link for La Mesa that can be embedded in the registration confirmation email.
+  // Optional: create a one-click "Table Key" link for La Mesa that can be embedded in the registration confirmation email.
   // This keeps the flow to a single email: register -> receive confirmation (with key) -> enter La Mesa.
   let mesaLoginLink = "";
   if (supabaseUrl && serviceKey) {
@@ -86,10 +86,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       });
 
       const linkJson = await res.json().catch(() => null);
-      mesaLoginLink =
-        (linkJson && typeof linkJson === "object" && (linkJson as any).action_link)
-          ? String((linkJson as any).action_link)
-          : "";
+      if (linkJson && typeof linkJson === "object") {
+        const direct =
+          (linkJson as any).action_link
+          || (linkJson as any)?.data?.action_link
+          || (linkJson as any)?.properties?.action_link
+          || (linkJson as any)?.data?.properties?.action_link;
+        if (direct) mesaLoginLink = String(direct);
+      }
     } catch {
       mesaLoginLink = "";
     }
@@ -104,6 +108,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     notes: clean(body.notes),
     ruleConfirm: clean(body.ruleConfirm),
     venueUrl: env.VENUE_URL || "https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ",
+    siteUrl: origin,
     mesaLoginLink,
   };
 

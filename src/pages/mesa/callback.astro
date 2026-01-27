@@ -203,30 +203,62 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         }
       }
 
-      async function verifyPlayer(supabase, session) {
-        const userEmail = String(session?.user?.email || '').toLowerCase();
-        if (!userEmail) {
-          await supabase.auth.signOut();
-          return showDenied();
-        }
+	      async function verifyPlayer(supabase, session) {
+	        const accessToken = String(session?.access_token || '').trim();
+	        const userEmail = String(session?.user?.email || '').toLowerCase();
+	        if (!accessToken) {
+	          await supabase.auth.signOut();
+	          return showError('No session token found. Please try again.');
+	        }
 
-        const { data: player, error } = await supabase
-          .from('players')
-          .select('id, status')
-          .eq('email', userEmail)
-          .in('status', ['registered', 'confirmed'])
-          .maybeSingle();
+	        // Preferred: verify against Sheets via server (prevents impersonation; Sheets stays source-of-truth).
+	        // Fallback (local/dev): direct players-table check if the server endpoint is unavailable.
+	        try {
+	          const res = await fetch('/api/mesa/verify', {
+	            method: 'GET',
+	            headers: { authorization: `Bearer ${accessToken}` },
+	          });
 
-        if (error || !player) {
-          await supabase.auth.signOut();
-          return showDenied();
-        }
+	          if (res.ok) {
+	            window.location.href = '/?mesa=1';
+	            return;
+	          }
 
-        window.location.href = '/?mesa=1';
-      }
+	          if (res.status !== 404) {
+	            const payload = await res.json().catch(() => null);
+	            const errCode = payload && typeof payload === 'object' ? String(payload.error || '') : '';
+	            if (errCode === 'not_registered') {
+	              await supabase.auth.signOut();
+	              return showDenied();
+	            }
+	            await supabase.auth.signOut();
+	            return showError('Could not verify your seat. Please try again.');
+	          }
+	        } catch {
+	          // fall through to local fallback
+	        }
+
+	        if (!userEmail) {
+	          await supabase.auth.signOut();
+	          return showDenied();
+	        }
+
+	        const { data: player, error } = await supabase
+	          .from('players')
+	          .select('id, status')
+	          .eq('email', userEmail)
+	          .in('status', ['registered', 'confirmed'])
+	          .maybeSingle();
+
+	        if (error || !player) {
+	          await supabase.auth.signOut();
+	          return showDenied();
+	        }
+
+	        window.location.href = '/?mesa=1';
+	      }
 
       handleCallback();
     </script>
   </body>
 </html>
-

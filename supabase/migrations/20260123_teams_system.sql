@@ -1,34 +1,42 @@
 -- ===========================================
--- TEAMS SYSTEM - La Mesa Team Formation
--- "Dominoes is about teams. Make it a BIG moment."
+-- LA MESA TEAM FORMATION (NAMESPACED)
+-- Avoid collision with tournament `teams` table.
 -- ===========================================
 
--- Teams table - stores formed teams with their identity
-CREATE TABLE IF NOT EXISTS teams (
+-- Teams formed in La Mesa (two registered players)
+CREATE TABLE IF NOT EXISTS mesa_teams (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL UNIQUE,
   archetype TEXT NOT NULL CHECK (archetype IN (
-    'los_viejos',     -- The Wise Ones
-    'los_venenos',    -- The Poisoners
-    'la_tranca',      -- The Blockers
-    'la_carreta',     -- The Rollers
-    'los_capicuas',   -- The Precision
-    'los_pesados',    -- The Heavy Hitters
-    'los_amarradores', -- The Trappers
-    'la_mula'         -- The Mules
+    'los_viejos',
+    'los_venenos',
+    'la_tranca',
+    'la_carreta',
+    'los_capicuas',
+    'los_pesados',
+    'los_amarradores',
+    'la_mula'
   )),
+  player1_id UUID NOT NULL REFERENCES players(id) ON DELETE RESTRICT,
+  player2_id UUID NOT NULL REFERENCES players(id) ON DELETE RESTRICT,
   player1_name TEXT NOT NULL,
   player2_name TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
 
-  -- Ensure no duplicate team memberships
-  CONSTRAINT unique_player1 UNIQUE (player1_name),
-  CONSTRAINT unique_player2 UNIQUE (player2_name)
+  -- Deterministic ordering: enforce player1_id < player2_id (text compare)
+  CONSTRAINT mesa_team_order CHECK (player1_id::text < player2_id::text),
+
+  -- Ensure no duplicate memberships
+  CONSTRAINT mesa_unique_player1 UNIQUE (player1_id),
+  CONSTRAINT mesa_unique_player2 UNIQUE (player2_id),
+  CONSTRAINT mesa_unique_pair UNIQUE (player1_id, player2_id)
 );
 
--- Team invites table - tracks pending/accepted/declined invitations
-CREATE TABLE IF NOT EXISTS team_invites (
+-- Invites sent in La Mesa (pending/accepted/declined/expired)
+CREATE TABLE IF NOT EXISTS mesa_team_invites (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  from_player_id UUID NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+  to_player_id UUID NOT NULL REFERENCES players(id) ON DELETE CASCADE,
   from_player TEXT NOT NULL,
   to_player TEXT NOT NULL,
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'declined', 'expired')),
@@ -36,111 +44,91 @@ CREATE TABLE IF NOT EXISTS team_invites (
   responded_at TIMESTAMPTZ,
 
   -- Prevent duplicate pending invites
-  CONSTRAINT unique_pending_invite UNIQUE (from_player, to_player, status)
+  CONSTRAINT mesa_unique_pending_invite UNIQUE (from_player_id, to_player_id, status)
     DEFERRABLE INITIALLY DEFERRED
 );
 
--- Add team-related columns to messages table for whispers
-ALTER TABLE messages
-ADD COLUMN IF NOT EXISTS is_team_whisper BOOLEAN DEFAULT false,
-ADD COLUMN IF NOT EXISTS team_id UUID REFERENCES teams(id);
-
--- Create index for team whispers (filtered queries)
-CREATE INDEX IF NOT EXISTS idx_messages_team_whisper
-  ON messages(team_id, is_team_whisper)
-  WHERE is_team_whisper = true;
-
--- Index for team invites by player
-CREATE INDEX IF NOT EXISTS idx_team_invites_to_player
-  ON team_invites(to_player, status)
+-- Indexes for common queries
+CREATE INDEX IF NOT EXISTS idx_mesa_invites_to_player
+  ON mesa_team_invites(to_player_id, status)
   WHERE status = 'pending';
 
-CREATE INDEX IF NOT EXISTS idx_team_invites_from_player
-  ON team_invites(from_player);
+CREATE INDEX IF NOT EXISTS idx_mesa_invites_from_player
+  ON mesa_team_invites(from_player_id);
+
+CREATE INDEX IF NOT EXISTS idx_mesa_teams_player1
+  ON mesa_teams(player1_id);
+
+CREATE INDEX IF NOT EXISTS idx_mesa_teams_player2
+  ON mesa_teams(player2_id);
 
 -- ===========================================
--- ROW LEVEL SECURITY
+-- ROW LEVEL SECURITY (baseline; tightened later)
 -- ===========================================
 
--- Teams: Everyone can view, only team members can create/manage
-ALTER TABLE teams ENABLE ROW LEVEL SECURITY;
+ALTER TABLE mesa_teams ENABLE ROW LEVEL SECURITY;
+ALTER TABLE mesa_team_invites ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Teams are viewable by everyone"
-  ON teams FOR SELECT
-  USING (true);
+-- Teams are viewable (names are already public-facing in the room)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = 'mesa_teams' AND policyname = 'Mesa teams are viewable by everyone'
+  ) THEN
+    EXECUTE 'CREATE POLICY "Mesa teams are viewable by everyone" ON mesa_teams FOR SELECT USING (true)';
+  END IF;
+END $$;
 
-CREATE POLICY "Anyone can create teams"
-  ON teams FOR INSERT
-  WITH CHECK (true);
+-- Baseline: only authenticated users can create teams/invites (tightened in 20260126_mesa_player_auth.sql)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = 'mesa_teams' AND policyname = 'Authenticated users can create mesa teams'
+  ) THEN
+    EXECUTE 'CREATE POLICY "Authenticated users can create mesa teams" ON mesa_teams FOR INSERT WITH CHECK (auth.role() = ''authenticated'')';
+  END IF;
+END $$;
 
--- Team invites: View own invites, create invites
-ALTER TABLE team_invites ENABLE ROW LEVEL SECURITY;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = 'mesa_team_invites' AND policyname = 'Authenticated users can view mesa invites'
+  ) THEN
+    EXECUTE 'CREATE POLICY "Authenticated users can view mesa invites" ON mesa_team_invites FOR SELECT USING (auth.role() = ''authenticated'')';
+  END IF;
+END $$;
 
-CREATE POLICY "Team invites viewable by participants"
-  ON team_invites FOR SELECT
-  USING (true);  -- For La Mesa public announcements
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = 'mesa_team_invites' AND policyname = 'Authenticated users can send mesa invites'
+  ) THEN
+    EXECUTE 'CREATE POLICY "Authenticated users can send mesa invites" ON mesa_team_invites FOR INSERT WITH CHECK (auth.role() = ''authenticated'')';
+  END IF;
+END $$;
 
-CREATE POLICY "Anyone can send team invites"
-  ON team_invites FOR INSERT
-  WITH CHECK (true);
-
-CREATE POLICY "Recipients can update invite status"
-  ON team_invites FOR UPDATE
-  USING (true)
-  WITH CHECK (status IN ('accepted', 'declined', 'expired'));
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = 'mesa_team_invites' AND policyname = 'Authenticated users can update mesa invites'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Authenticated users can update mesa invites"
+        ON mesa_team_invites FOR UPDATE
+        USING (auth.role() = 'authenticated')
+        WITH CHECK (status IN ('accepted', 'declined', 'expired'))
+    $policy$;
+  END IF;
+END $$;
 
 -- ===========================================
 -- REALTIME SUBSCRIPTIONS
 -- ===========================================
 
--- Enable realtime for team-related events
-ALTER PUBLICATION supabase_realtime ADD TABLE teams;
-ALTER PUBLICATION supabase_realtime ADD TABLE team_invites;
-
--- ===========================================
--- HELPER FUNCTIONS
--- ===========================================
-
--- Function to get a player's team (if any)
-CREATE OR REPLACE FUNCTION get_player_team(player_name_param TEXT)
-RETURNS TABLE (
-  team_id UUID,
-  team_name TEXT,
-  archetype TEXT,
-  teammate_name TEXT
-) AS $$
-BEGIN
-  RETURN QUERY
-  SELECT
-    t.id,
-    t.name,
-    t.archetype,
-    CASE
-      WHEN t.player1_name = player_name_param THEN t.player2_name
-      ELSE t.player1_name
-    END as teammate_name
-  FROM teams t
-  WHERE t.player1_name = player_name_param
-     OR t.player2_name = player_name_param;
-END;
-$$ LANGUAGE plpgsql;
-
--- Function to check if player has pending invites
-CREATE OR REPLACE FUNCTION get_pending_invites(player_name_param TEXT)
-RETURNS TABLE (
-  invite_id UUID,
-  from_player TEXT,
-  created_at TIMESTAMPTZ
-) AS $$
-BEGIN
-  RETURN QUERY
-  SELECT
-    ti.id,
-    ti.from_player,
-    ti.created_at
-  FROM team_invites ti
-  WHERE ti.to_player = player_name_param
-    AND ti.status = 'pending'
-    AND ti.created_at > NOW() - INTERVAL '24 hours';  -- Invites expire after 24h
-END;
-$$ LANGUAGE plpgsql;
+ALTER PUBLICATION supabase_realtime ADD TABLE mesa_teams;
+ALTER PUBLICATION supabase_realtime ADD TABLE mesa_team_invites;

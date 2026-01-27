@@ -1,5 +1,5 @@
 -- ============================================
--- ROUND ROBIN + FINALS TOURNAMENT SYSTEM
+-- ROUND ROBIN + FINALS TOURNAMENT SYSTEM (LEGACY)
 -- Extends matches table for two-phase tournament
 -- ============================================
 
@@ -24,6 +24,32 @@ ALTER TABLE matches ADD COLUMN IF NOT EXISTS round_robin_round INTEGER
 -- Add index for phase-based queries
 CREATE INDEX IF NOT EXISTS idx_matches_phase ON matches(phase);
 CREATE INDEX IF NOT EXISTS idx_matches_rr_round ON matches(round_robin_round) WHERE phase = 'round_robin';
+
+-- ============================================
+-- IMPORTANT: Fix match uniqueness for two-phase tournaments
+--
+-- The original schema used UNIQUE(round, match_number), which
+-- conflicts once we store BOTH finals matches (round 1, match 1..2)
+-- AND round robin matches (round 1, match 1..28).
+--
+-- We replace it with phase-scoped uniqueness.
+-- ============================================
+
+-- Drop the original uniqueness (created in 20260117_admin_and_tournament.sql)
+ALTER TABLE matches
+  DROP CONSTRAINT IF EXISTS matches_round_match_number_key;
+
+DROP INDEX IF EXISTS matches_round_match_number_key;
+
+-- Finals: unique by (phase, round, match_number)
+CREATE UNIQUE INDEX IF NOT EXISTS matches_finals_unique
+  ON matches(phase, round, match_number)
+  WHERE phase = 'finals';
+
+-- Round robin: unique by (phase, match_number)
+CREATE UNIQUE INDEX IF NOT EXISTS matches_round_robin_unique
+  ON matches(phase, match_number)
+  WHERE phase = 'round_robin';
 
 -- ============================================
 -- PHASE 2: CREATE STANDINGS VIEW

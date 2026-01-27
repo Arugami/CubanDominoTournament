@@ -116,6 +116,15 @@ Before any design ships, ask:
 
 ---
 
+## Tobias Note: Table Key (Jan 26, 2026)
+
+If La Mesa is **login-required**, it can’t feel like “account creation”.
+
+- Make the confirmation email the primary entry: one CTA — `Claim Your Seat` — that drops you into La Mesa.
+- Call it a **Table Key** (not a “door key”) so the metaphor stays true to *La Mesa = the table*.
+- Keep the on-site email field as a quiet fallback (“resend key / new device”), not the main path.
+- On the Claim Seat screen: don’t show “Show them where you’re from” until the seat is verified; let the flag moment lead directly into the CTA + hub-first entry.
+
 ## Review Request (Jan 14, 2026)
 
 Design/UX items to sanity-check through a Tobias lens (weight, intention, “room” feel):

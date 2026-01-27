@@ -81,7 +81,7 @@ La Oficina owns:
 ### Before the event (setup + trust)
 - Add/verify players, resolve duplicates, capture notes.
 - Form teams, assign players, set seeding.
-- Generate round robin schedule and/or seed finals.
+- Build group stage (Group A/B) and seed finals.
 - Prepare “Tonight” details and publish pre-event announcements.
 
 ### During the event (run the room)
@@ -167,7 +167,7 @@ Acceptance:
 - Team formation speed (quick assign; prevent invalid team states).
 - Score entry speed (keyboard-first on desktop; thumb-first on mobile).
 
-**Deliverable:** acceptance criteria per page (players/teams/round robin/finals).
+**Deliverable:** acceptance criteria per page (players/teams/group stage/finals).
 
 ### Phase 2: Pulse (real-time + broadcast)
 - Live updates without refresh where it matters (counts, match status, standings).

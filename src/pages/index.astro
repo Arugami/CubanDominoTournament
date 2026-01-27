@@ -8822,22 +8822,55 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         z-index: 1;
       }
 
-      .mesa-auth__copy {
-        margin: 0 0 10px 0;
-        font-size: 0.8rem;
-        letter-spacing: 0.03em;
-        color: rgba(255, 255, 255, 0.62);
-        font-family: "IBM Plex Sans", sans-serif;
-        text-align: center;
-      }
+		      .mesa-auth__copy {
+		        margin: 0 0 10px 0;
+		        font-size: 0.8rem;
+		        letter-spacing: 0.03em;
+		        color: rgba(255, 255, 255, 0.62);
+		        font-family: "IBM Plex Sans", sans-serif;
+		        text-align: center;
+		      }
 
-      .mesa-auth__row {
-        display: flex;
-        gap: 10px;
-        align-items: stretch;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
+		      .mesa-auth__subcopy {
+		        display: block;
+		        margin-top: 6px;
+		        color: rgba(255, 255, 255, 0.48);
+		        font-size: 0.76rem;
+		      }
+
+	      .mesa-auth__reveal {
+	        display: inline-flex;
+	        align-items: center;
+	        justify-content: center;
+	        margin: 0 auto 10px;
+	        padding: 0;
+	        border: 0;
+	        background: transparent;
+	        font-family: "IBM Plex Sans", sans-serif;
+	        font-size: 0.78rem;
+	        letter-spacing: 0.02em;
+	        color: rgba(212, 165, 116, 0.9);
+	        cursor: pointer;
+	        text-decoration: underline;
+	        text-underline-offset: 3px;
+	      }
+
+	      .mesa-auth__reveal:hover {
+	        color: rgba(212, 165, 116, 1);
+	      }
+
+	      .mesa-auth__row {
+	        display: flex;
+	        gap: 10px;
+	        align-items: stretch;
+	        justify-content: center;
+	        flex-wrap: wrap;
+	      }
+
+	      /* Author CSS overrides UA [hidden] — re-assert hidden for slow-disclose. */
+	      .mesa-auth__row[hidden] {
+	        display: none !important;
+	      }
 
       .mesa-auth__input {
         flex: 1 1 220px;
@@ -13633,7 +13666,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       <!-- Headlines -->
       <h2 class="success-headline">You're <span>In</span></h2>
-      <p class="success-subheadline">Your door key is in your email</p>
+      <p class="success-subheadline">Your Table Key is in your email</p>
 
       <!-- Event Details -->
       <div class="event-details">
@@ -13651,7 +13684,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       <!-- La Mesa CTA -->
       <button class="success-mesa-cta" id="successMesaCta">
-        Enter La Mesa →
+        Claim Your Seat →
       </button>
 
       <!-- Email reminder -->
@@ -13812,26 +13845,30 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	
           <div class="chat-content">
 	        <!-- Identity selection -->
-	        <div class="chat-identity" id="chatIdentity">
-	          <p class="chat-identity__title">Claim Your Seat</p>
-	          <p class="chat-identity__subtitle">Show them where you're from.</p>
+		        <div class="chat-identity" id="chatIdentity">
+		          <p class="chat-identity__title">Claim Your Seat</p>
+		          <p class="chat-identity__subtitle" id="chatIdentitySubtitle" style="display:none;">Show them where you're from.</p>
 
             <!-- Auth gate: La Mesa is login-required -->
-            <div class="mesa-auth" id="mesaAuthGate">
-              <p class="mesa-auth__copy">Enter the email you registered with.</p>
-              <div class="mesa-auth__row">
-                <input
-                  class="mesa-auth__input"
-                  id="mesaLoginEmail"
-                  type="email"
+		            <div class="mesa-auth" id="mesaAuthGate">
+		              <p class="mesa-auth__copy">
+		                Your Table Key is in your email.
+		                <span class="mesa-auth__subcopy">Open it to enter La Mesa. Then plant your flag.</span>
+		              </p>
+		              <button class="mesa-auth__reveal" id="mesaLoginReveal" type="button" aria-expanded="false">Resend Table Key</button>
+			              <div class="mesa-auth__row" id="mesaLoginRow" hidden style="display:none;">
+	                <input
+	                  class="mesa-auth__input"
+	                  id="mesaLoginEmail"
+	                  type="email"
                   inputmode="email"
                   autocomplete="email"
-                  placeholder="you@example.com"
+                  placeholder="you@domain.com"
                 />
-                <button class="mesa-auth__btn" id="mesaLoginBtn" type="button">Send link</button>
-              </div>
-              <p class="mesa-auth__status" id="mesaLoginStatus"></p>
-            </div>
+	                <button class="mesa-auth__btn" id="mesaLoginBtn" type="button">Send Table Key</button>
+	              </div>
+	              <p class="mesa-auth__status" id="mesaLoginStatus"></p>
+	            </div>
 
             <div class="mesa-auth mesa-auth--signed" id="mesaAuthSigned" style="display: none;">
               <p class="mesa-auth__copy">
@@ -13846,7 +13883,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <span class="mesa-live-text"><span id="mesaPlayerCount">0</span> active today</span>
           </div>
 
-          <div class="avatar-selector-frame">
+	          <div class="avatar-selector-frame" id="mesaFlagPickerFrame" style="display:none;">
             <div class="avatar-selector">
 	              <!-- Spacer for scroll centering -->
 	              <div class="avatar-selector__spacer" aria-hidden="true"></div>
@@ -14531,10 +14568,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
 
           <!-- Country Name Display - Olympic ceremony style -->
-          <div class="country-display" id="countryDisplay">
-            <p class="country-display__name" id="countryName">Cuba</p>
-            <p class="country-display__hint" id="countryHint">Tap to represent</p>
-          </div>
+	          <div class="country-display" id="mesaCountryDisplay" style="display:none;">
+	            <p class="country-display__name" id="countryName">Cuba</p>
+	            <p class="country-display__hint" id="countryHint">Tap to represent</p>
+	          </div>
 
           <!-- Locked identity: after login we show your registered name (no list-picking / no impersonation) -->
           <div class="mesa-identity-locked" id="mesaIdentityLocked" style="display: none;">
@@ -14543,7 +14580,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           </div>
 
           <!-- Custom Dropdown -->
-          <div class="custom-select" id="customSelect">
+	          <div class="custom-select" id="customSelect" style="display: none;">
             <button class="custom-select__trigger" id="selectTrigger" type="button">
               <span class="custom-select__value" id="selectValue">Select Your Name...</span>
               <span class="custom-select__arrow">
@@ -14569,7 +14606,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <p class="chat-identity__register-hint" id="chatRegisterHint">
             Not registered yet? <a href="#signup" class="chat-identity__register-link" id="chatRegisterLink">Register first</a>
           </p>
-          <button class="chat-identity__btn" id="chatJoinBtn" disabled>CLAIM YOUR SEAT</button>
+	          <button class="chat-identity__btn" id="chatJoinBtn" disabled style="display:none;">CLAIM YOUR SEAT</button>
         </div>
 
         <!-- Chat Screen Area -->
@@ -15721,17 +15758,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	          }));
 
 	          // Broadcast to ticker
-	          if (supabase && playerName) {
-	            supabase.channel('registrations').send({
-	              type: 'broadcast',
-	              event: 'new-registration',
-	              payload: { playerName, clientId: CLIENT_ID }
-	            });
-	          }
+		          if (supabase && playerName) {
+		            supabase.channel('registrations').send({
+		              type: 'broadcast',
+		              event: 'new-registration',
+		              payload: { playerName, clientId: CLIENT_ID }
+		            });
+		          }
+		
+		          // Post-register: drop them straight into La Mesa (no extra click).
+		          // This triggers the same flow as the success screen CTA.
+		          try {
+		            const cta = document.getElementById('successMesaCta');
+		            if (cta) cta.click();
+		          } catch {}
 
-          // Hide everything for clean full-screen takeover
-          document.querySelector(".panel--form .panel-headline").style.display = "none";
-          document.querySelector(".progress-tracker").style.display = "none";
+	          // Hide everything for clean full-screen takeover
+	          document.querySelector(".panel--form .panel-headline").style.display = "none";
+	          document.querySelector(".progress-tracker").style.display = "none";
           const footer = document.querySelector(".footer-note");
           if (footer) footer.style.display = "none";
         }, 600); // Warm wash timing - success appears during wash clearing
@@ -15913,39 +15957,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           updateSpotsRemaining(PLAYERS_GOAL - registeredPlayers.length);
           if (progressFill) progressFill.style.width = `${(registeredPlayers.length / 16) * 100}%`;
 
-          // Populate chat player selector
-          const chatNameInput = document.getElementById('chatNameInput');
-          const chatRegisterHint = document.getElementById('chatRegisterHint');
+	          // Populate chat player selector
+	          const chatNameInput = document.getElementById('chatNameInput');
 
-          if (registeredPlayers.length > 0) {
-            // Show custom dropdown with registered players
-            populateCustomDropdown(registeredPlayers);
-            if (customSelect) customSelect.style.display = 'block';
-            if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
-            if (chatNameInput) chatNameInput.style.display = 'none';
-            if (chatRegisterHint) chatRegisterHint.innerHTML = 'Not registered yet? <a href="#signup" class="chat-identity__register-link">Register first</a>';
-          } else {
-            // No players - show text input instead
-            if (customSelect) customSelect.style.display = 'none';
-            if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
-            if (chatNameInput) chatNameInput.style.display = 'block';
-            if (chatRegisterHint) chatRegisterHint.textContent = 'Enter the name you registered with';
-          }
-	        } catch (err) {
+		          // La Mesa is login-required: never expose a name picker (prevents impersonation).
+		          if (customSelect) customSelect.style.display = 'none';
+		          if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
+		          if (chatNameInput) chatNameInput.style.display = 'none';
+		        } catch (err) {
 	          console.error('Failed to load players, using mock data:', err);
 	          // On error, use mock data for local dev testing
 	          registeredPlayers = MOCK_PLAYERS;
 	          livePlayerCount = registeredPlayers.length;
-	          const chatNameInput = document.getElementById('chatNameInput');
-	          const chatRegisterHint = document.getElementById('chatRegisterHint');
-	          // Show custom dropdown with mock players
-	          populateCustomDropdown(registeredPlayers);
-          if (customSelect) customSelect.style.display = 'block';
-          if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
-          if (chatNameInput) chatNameInput.style.display = 'none';
-          if (chatRegisterHint) chatRegisterHint.innerHTML = 'Not registered yet? <a href="#signup" class="chat-identity__register-link">Register first</a>';
-        }
-      }
+		          const chatNameInput = document.getElementById('chatNameInput');
+			          // Keep name pickers hidden (La Mesa is login-required).
+		          if (customSelect) customSelect.style.display = 'none';
+		          if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
+		          if (chatNameInput) chatNameInput.style.display = 'none';
+		        }
+		      }
 
       function escapeHtml(text) {
         const div = document.createElement('div');
@@ -16279,10 +16309,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       let mesaAuthEmail = null;
       let mesaAuthPlayer = null;
 
-      const mesaAuthGate = document.getElementById('mesaAuthGate');
-      const mesaLoginEmail = document.getElementById('mesaLoginEmail');
-      const mesaLoginBtn = document.getElementById('mesaLoginBtn');
-      const mesaLoginStatus = document.getElementById('mesaLoginStatus');
+	      const mesaAuthGate = document.getElementById('mesaAuthGate');
+	      const mesaLoginReveal = document.getElementById('mesaLoginReveal');
+	      const mesaLoginRow = document.getElementById('mesaLoginRow');
+	      const mesaLoginEmail = document.getElementById('mesaLoginEmail');
+	      const mesaLoginBtn = document.getElementById('mesaLoginBtn');
+	      const mesaLoginStatus = document.getElementById('mesaLoginStatus');
       const mesaAuthSigned = document.getElementById('mesaAuthSigned');
       const mesaAuthedEmailEl = document.getElementById('mesaAuthedEmail');
       const mesaSignOutBtn = document.getElementById('mesaSignOutBtn');
@@ -16369,47 +16401,97 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (mesaLoginEmail && lastEmail && !mesaLoginEmail.value) mesaLoginEmail.value = lastEmail;
       } catch {}
 
-      function setMesaLoginStatus(text = '') {
-        if (mesaLoginStatus) mesaLoginStatus.textContent = text;
-      }
+	      function setMesaLoginStatus(text = '') {
+	        if (mesaLoginStatus) mesaLoginStatus.textContent = text;
+	      }
 
-      function showMesaAuthGate({ message = '' } = {}) {
-        mesaAuthVerified = false;
-        mesaAuthUserId = null;
-        mesaAuthEmail = null;
-        mesaAuthPlayer = null;
+		      function setMesaLoginRowVisible(visible) {
+		        if (!mesaLoginRow) return;
+		        if (visible) {
+		          mesaLoginRow.hidden = false;
+		          mesaLoginRow.style.display = 'flex';
+		          mesaLoginReveal?.setAttribute('aria-expanded', 'true');
+		          try { mesaLoginEmail?.focus(); } catch {}
+		        } else {
+		          mesaLoginRow.hidden = true;
+		          mesaLoginRow.style.display = 'none';
+		          mesaLoginReveal?.setAttribute('aria-expanded', 'false');
+		        }
+		      }
 
-        if (mesaAuthGate) mesaAuthGate.style.display = 'block';
-        if (mesaAuthSigned) mesaAuthSigned.style.display = 'none';
-        if (mesaIdentityLocked) mesaIdentityLocked.style.display = 'none';
+	      function showMesaAuthGate({ message = '' } = {}) {
+	        mesaAuthVerified = false;
+	        mesaAuthUserId = null;
+	        mesaAuthEmail = null;
+	        mesaAuthPlayer = null;
 
-        // Keep legacy name pickers hidden by default (La Mesa is login-required now).
-        if (customSelect) customSelect.style.display = 'none';
-        const chatPlayerSelect = document.getElementById('chatPlayerSelect');
-        const chatNameInput = document.getElementById('chatNameInput');
-        if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
-        if (chatNameInput) chatNameInput.style.display = 'none';
+	        if (mesaAuthGate) mesaAuthGate.style.display = 'block';
+	        if (mesaAuthSigned) mesaAuthSigned.style.display = 'none';
+	        if (mesaIdentityLocked) mesaIdentityLocked.style.display = 'none';
 
-        setMesaLoginStatus(message);
-        try {
-          if (typeof updateJoinReadyState === 'function') updateJoinReadyState();
-        } catch {}
-      }
+	        // Keep "Show them where you're from" and the flag moment for after the seat is verified.
+	        const chatIdentitySubtitle = document.getElementById('chatIdentitySubtitle');
+	        if (chatIdentitySubtitle) {
+	          chatIdentitySubtitle.textContent = '';
+	          chatIdentitySubtitle.style.display = 'none';
+	        }
+	        const mesaFlagPickerFrame = document.getElementById('mesaFlagPickerFrame');
+	        if (mesaFlagPickerFrame) mesaFlagPickerFrame.style.display = 'none';
+	        if (countryDisplay) countryDisplay.style.display = 'none';
+	        const joinBtn = document.getElementById('chatJoinBtn');
+	        if (joinBtn) joinBtn.style.display = 'none';
 
-      function showMesaAuthed({ email, playerName } = {}) {
-        if (mesaAuthGate) mesaAuthGate.style.display = 'none';
-        if (mesaAuthSigned) mesaAuthSigned.style.display = 'block';
-        if (mesaAuthedEmailEl) mesaAuthedEmailEl.textContent = email || '—';
+	        // Keep legacy name pickers hidden by default (La Mesa is login-required now).
+	        if (customSelect) customSelect.style.display = 'none';
+	        const chatPlayerSelect = document.getElementById('chatPlayerSelect');
+	        const chatNameInput = document.getElementById('chatNameInput');
+	        if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
+	        if (chatNameInput) chatNameInput.style.display = 'none';
 
-        if (mesaIdentityLocked) mesaIdentityLocked.style.display = 'block';
-        if (mesaLockedName) mesaLockedName.textContent = playerName || '—';
+	        const chatRegisterHint = document.getElementById('chatRegisterHint');
+	        if (chatRegisterHint) {
+	          chatRegisterHint.innerHTML = 'Not registered yet? <a href="#signup" class="chat-identity__register-link" id="chatRegisterLink">Register first</a>';
+	          chatRegisterHint.style.display = 'block';
+	        }
 
-        // No name list once authenticated (prevents impersonation).
-        if (customSelect) customSelect.style.display = 'none';
-        const chatPlayerSelect = document.getElementById('chatPlayerSelect');
-        const chatNameInput = document.getElementById('chatNameInput');
-        if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
-        if (chatNameInput) chatNameInput.style.display = 'none';
+	        setMesaLoginRowVisible(false);
+	        setMesaLoginStatus(message);
+	        try {
+	          if (typeof updateJoinReadyState === 'function') updateJoinReadyState();
+	        } catch {}
+	      }
+
+	      function showMesaAuthed({ email, playerName } = {}) {
+	        if (mesaAuthGate) mesaAuthGate.style.display = 'none';
+	        if (mesaAuthSigned) mesaAuthSigned.style.display = 'block';
+	        if (mesaAuthedEmailEl) mesaAuthedEmailEl.textContent = email || '—';
+
+	        if (mesaIdentityLocked) mesaIdentityLocked.style.display = 'block';
+	        if (mesaLockedName) mesaLockedName.textContent = playerName || '—';
+
+	        const chatIdentitySubtitle = document.getElementById('chatIdentitySubtitle');
+	        if (chatIdentitySubtitle) {
+	          chatIdentitySubtitle.textContent = "Show them where you're from.";
+	          chatIdentitySubtitle.style.display = '';
+	        }
+	        const mesaFlagPickerFrame = document.getElementById('mesaFlagPickerFrame');
+	        if (mesaFlagPickerFrame) mesaFlagPickerFrame.style.display = '';
+	        if (countryDisplay) countryDisplay.style.display = '';
+	        const joinBtn = document.getElementById('chatJoinBtn');
+	        if (joinBtn) joinBtn.style.display = '';
+
+	        const chatRegisterHint = document.getElementById('chatRegisterHint');
+	        if (chatRegisterHint) {
+	          chatRegisterHint.textContent = 'Pick your flag. Then claim your seat.';
+	          chatRegisterHint.style.display = 'block';
+	        }
+
+	        // No name list once authenticated (prevents impersonation).
+	        if (customSelect) customSelect.style.display = 'none';
+	        const chatPlayerSelect = document.getElementById('chatPlayerSelect');
+	        const chatNameInput = document.getElementById('chatNameInput');
+	        if (chatPlayerSelect) chatPlayerSelect.style.display = 'none';
+	        if (chatNameInput) chatNameInput.style.display = 'none';
 
         try {
           if (typeof updateJoinReadyState === 'function') updateJoinReadyState();
@@ -16442,18 +16524,55 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           return false;
         }
 
-        const { data: player, error } = await supabase
-          .from('players')
-          .select('id, name, email, status')
-          .eq('email', mesaAuthEmail)
-          .in('status', ['registered', 'confirmed'])
-          .maybeSingle();
+	        // Preferred: verify against Sheets via server (Sheets is source-of-truth).
+	        // Fallback: local/dev direct check against Supabase `players`.
+	        let player = null;
+	        let verifyHit = false;
+	        try {
+	          const res = await fetch('/api/mesa/verify', {
+	            method: 'GET',
+	            headers: { authorization: `Bearer ${session.access_token}` },
+	          });
+	          verifyHit = true;
+	          if (res.ok) {
+	            const payload = await res.json().catch(() => null);
+	            if (payload && typeof payload === 'object' && payload.player) player = payload.player;
+	          } else if (res.status === 403) {
+	            const payload = await res.json().catch(() => null);
+	            const errCode = payload && typeof payload === 'object' ? String(payload.error || '') : '';
+	            if (errCode === 'not_registered') {
+	              try { await supabase.auth.signOut(); } catch {}
+	              if (!silent) showMesaAuthGate({ message: 'Seat not found. Register first.' });
+	              return false;
+	            }
+	          } else if (res.status !== 404) {
+	            try { await supabase.auth.signOut(); } catch {}
+	            if (!silent) showMesaAuthGate({ message: 'Could not verify your seat. Try again.' });
+	            return false;
+	          }
+	        } catch {
+	          // fall through to fallback
+	        }
 
-        if (error || !player) {
-          try { await supabase.auth.signOut(); } catch {}
-          if (!silent) showMesaAuthGate({ message: 'Seat not found. Register first.' });
-          return false;
-        }
+	        if (!player && !verifyHit) {
+	          // If the endpoint isn't available, skip immediately to fallback.
+	        }
+
+	        if (!player) {
+	          const { data, error } = await supabase
+	            .from('players')
+	            .select('id, name, email, status')
+	            .eq('email', mesaAuthEmail)
+	            .in('status', ['registered', 'confirmed'])
+	            .maybeSingle();
+	          if (!error) player = data;
+	        }
+
+	        if (!player) {
+	          try { await supabase.auth.signOut(); } catch {}
+	          if (!silent) showMesaAuthGate({ message: 'Seat not found. Register first.' });
+	          return false;
+	        }
 
         mesaAuthPlayer = player;
         mesaAuthVerified = true;
@@ -16472,47 +16591,94 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         return true;
       }
 
-      async function startMesaLogin(email) {
-        const cleaned = String(email || '').trim().toLowerCase();
-        if (!cleaned) return;
+	      async function startMesaLogin(email) {
+	        const cleaned = String(email || '').trim().toLowerCase();
+	        if (!cleaned) return;
 
-        const supabaseOk = await supabaseReady;
-        if (!supabaseOk || !supabase) {
-          showMesaAuthGate({ message: 'La Mesa is offline right now.' });
-          return;
-        }
+	        const supabaseOk = await supabaseReady;
+	        if (!supabaseOk || !supabase) {
+	          showMesaAuthGate({ message: 'La Mesa is offline right now.' });
+	          return;
+	        }
 
-        if (mesaLoginBtn) mesaLoginBtn.disabled = true;
-        setMesaLoginStatus('Sending link…');
+	        if (mesaLoginBtn) mesaLoginBtn.disabled = true;
+		        setMesaLoginStatus('Sending Table Key…');
 
-        try {
-          try { localStorage.setItem(MESA_LAST_EMAIL_KEY, cleaned); } catch {}
-          const redirectTo = `${window.location.origin}/mesa/callback`;
-          const { error } = await supabase.auth.signInWithOtp({
-            email: cleaned,
-            options: { emailRedirectTo: redirectTo },
-          });
-          if (error) {
-            setMesaLoginStatus(error.message || 'Could not send link.');
-          } else {
-            setMesaLoginStatus('Check your email to finish.');
-          }
-        } catch (err) {
-          console.error('[MESA_AUTH] signInWithOtp error:', err);
-          setMesaLoginStatus('Could not send link. Try again.');
-        } finally {
-          if (mesaLoginBtn) mesaLoginBtn.disabled = false;
-        }
-      }
+	        try {
+	          try { localStorage.setItem(MESA_LAST_EMAIL_KEY, cleaned); } catch {}
+		          // Preferred: send a branded Table Key email via server (Apps Script + Supabase admin link).
+		          // Only fall back to Supabase OTP when running locally (dev convenience).
+		          const isLocal =
+		            window.location.hostname === 'localhost'
+		            || window.location.hostname === '127.0.0.1'
+		            || window.location.hostname.endsWith('.local');
 
-      mesaLoginBtn?.addEventListener('click', async () => {
-        await startMesaLogin(mesaLoginEmail?.value);
-      });
+		          try {
+		            const res = await fetch('/api/mesa/table-key', {
+		              method: 'POST',
+		              headers: { 'content-type': 'application/json' },
+		              body: JSON.stringify({ email: cleaned }),
+		            });
 
-      mesaLoginEmail?.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          void startMesaLogin(mesaLoginEmail?.value);
+		            if (res.ok) {
+		              setMesaLoginStatus('Check your email for your Table Key.');
+		              return;
+		            }
+
+		            if (!isLocal) {
+		              const payload = await res.json().catch(() => null);
+		              const errCode = payload && typeof payload === 'object' ? String(payload.error || '') : '';
+		              if (errCode === 'not_registered') {
+		                setMesaLoginStatus('Seat not found. Register first.');
+		              } else {
+		                setMesaLoginStatus('Could not send Table Key. Try again.');
+		              }
+		              return;
+		            }
+		          } catch {
+		            if (!isLocal) {
+		              setMesaLoginStatus('Could not send Table Key. Try again.');
+		              return;
+		            }
+		          }
+
+		          const redirectOrigin = (() => {
+		            const host = String(window.location.hostname || '');
+		            const isLocalHost = host === 'localhost' || host === '127.0.0.1';
+		            // Keep local Table Key redirects stable even if the browser is on a different loopback origin.
+		            // (Prevents “link opens but localhost refuses” when ports drift during testing.)
+		            if (isLocalHost) return `${window.location.protocol}//localhost:3005`;
+		            return window.location.origin;
+		          })();
+		          const redirectTo = `${redirectOrigin}/mesa/callback`;
+	          const { error } = await supabase.auth.signInWithOtp({
+	            email: cleaned,
+	            options: { emailRedirectTo: redirectTo },
+	          });
+	          if (error) setMesaLoginStatus(error.message || 'Could not send Table Key.');
+	          else setMesaLoginStatus('Check your email for your Table Key.');
+	        } catch (err) {
+	          console.error('[MESA_AUTH] signInWithOtp error:', err);
+	          setMesaLoginStatus('Could not send Table Key. Try again.');
+	        } finally {
+	          if (mesaLoginBtn) mesaLoginBtn.disabled = false;
+	        }
+	      }
+
+	      mesaLoginBtn?.addEventListener('click', async () => {
+	        await startMesaLogin(mesaLoginEmail?.value);
+	      });
+
+	      mesaLoginReveal?.addEventListener('click', () => {
+	        const isHidden = !!mesaLoginRow?.hidden;
+	        setMesaLoginRowVisible(isHidden);
+	        if (isHidden) setMesaLoginStatus('');
+	      });
+
+	      mesaLoginEmail?.addEventListener('keydown', (e) => {
+	        if (e.key === 'Enter') {
+	          e.preventDefault();
+	          void startMesaLogin(mesaLoginEmail?.value);
         }
       });
 
@@ -16733,8 +16899,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         successMesaCta.addEventListener('click', () => {
           successEl.classList.remove('is-visible');
           void openMesa();
-          // The "success" email is the primary door key. Don't spam more OTP emails here.
-          showMesaAuthGate({ message: 'Check your email for your door key.' });
+          // The confirmation email is the primary Table Key. Don't spam more OTP emails here.
+          showMesaAuthGate({ message: 'Check your email for your Table Key.' });
         });
       }
 
@@ -17209,17 +17375,18 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         showLeaveModal();
       });
 
-      // Register link in chat - close chat and scroll to registration
-      const chatRegisterLink = document.getElementById('chatRegisterLink');
-      chatRegisterLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        closeMesa();
-        // Scroll to registration form
-        const signupForm = document.getElementById('signup');
-        if (signupForm) {
-          signupForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      });
+	      // Register link in chat - close chat and scroll to registration
+	      // (delegated so the hint can swap between "Register first" and "Pick your flag…" without breaking)
+	      document.addEventListener('click', (e) => {
+	        const target = e.target;
+	        const link = target?.closest?.('#chatRegisterHint a[href="#signup"]');
+	        if (!link) return;
+	        e.preventDefault();
+	        closeMesa();
+	        // Scroll to registration form
+	        const signupForm = document.getElementById('signup');
+	        if (signupForm) signupForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+	      });
 
       // Swipe to Close (Mobile)
       let touchStartY = 0;
@@ -17275,7 +17442,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	      const avatarSelector = document.querySelector('.avatar-selector');
 
       // Country display elements - Olympic ceremony style
-      const countryDisplay = document.getElementById('countryDisplay');
+      const countryDisplay = document.getElementById('mesaCountryDisplay');
       const countryNameEl = document.getElementById('countryName');
       const countryHintEl = document.getElementById('countryHint');
       let isCountryConfirmed = false;
@@ -18568,6 +18735,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       let currentTeam = null;
       let pendingInvite = null;
       let selectedArchetype = null;
+      let teamPartner1Id = null;
+      let teamPartner2Id = null;
 
       const teamInviteToast = document.getElementById('teamInviteToast');
       const inviteFromPlayer = document.getElementById('inviteFromPlayer');
@@ -18587,26 +18756,40 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         los_amarradores: 'Los Amarradores', la_mula: 'La Mula'
       };
 
-      async function checkPlayerTeam(playerName) {
+      async function checkPlayerTeam(playerId, { store = true } = {}) {
         if (!supabase) return null;
         try {
-          const { data, error } = await supabase.from('teams').select('*')
-            .or(`player1_name.eq.${playerName},player2_name.eq.${playerName}`).maybeSingle();
+          const { data, error } = await supabase.from('mesa_teams').select('*')
+            .or(`player1_id.eq.${playerId},player2_id.eq.${playerId}`).maybeSingle();
           if (error) throw error;
           if (data) {
-            currentTeam = { id: data.id, name: data.name, archetype: data.archetype,
-              teammate: data.player1_name === playerName ? data.player2_name : data.player1_name };
-            return currentTeam;
+            const team = {
+              id: data.id,
+              name: data.name,
+              archetype: data.archetype,
+              teammate: String(data.player1_id) === String(playerId) ? data.player2_name : data.player1_name
+            };
+
+            if (store) {
+              currentTeam = team;
+              if (chatIdentity) {
+                chatIdentity.teamName = data.name;
+                chatIdentity.status = 'teamed';
+                try { localStorage.setItem('cdl_chat_identity', JSON.stringify(chatIdentity)); } catch {}
+              }
+            }
+
+            return team;
           }
         } catch (err) { console.error('Failed to check team:', err); }
         return null;
       }
 
-      async function checkPendingInvites(playerName) {
+      async function checkPendingInvites(playerId) {
         if (!supabase) return;
         try {
-          const { data, error } = await supabase.from('team_invites').select('*')
-            .eq('to_player', playerName).eq('status', 'pending')
+          const { data, error } = await supabase.from('mesa_team_invites').select('*')
+            .eq('to_player_id', playerId).eq('status', 'pending')
             .order('created_at', { ascending: false }).limit(1);
           if (error) throw error;
           if (data && data.length > 0) showInviteToast(data[0]);
@@ -18627,17 +18810,44 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         pendingInvite = null;
       }
 
+      async function lookupPlayerByName(playerName) {
+        const name = String(playerName || '').trim();
+        if (!name) return null;
+
+        const { data, error } = await supabase
+          .from('players')
+          .select('id, name, status')
+          .eq('name', name)
+          .in('status', ['registered', 'confirmed'])
+          .maybeSingle();
+
+        if (error) throw error;
+        return data || null;
+      }
+
       async function sendTeamInvite(toPlayer) {
         if (!supabase || !chatIdentity || currentTeam) return;
         try {
-          const existingTeam = await checkPlayerTeam(toPlayer);
+          if (toPlayer === chatIdentity.playerName) return;
+
+          const toRecord = await lookupPlayerByName(toPlayer);
+          if (!toRecord?.id) {
+            alert(`Could not find "${toPlayer}". They may not be registered yet.`);
+            return;
+          }
+
+          const existingTeam = await checkPlayerTeam(toRecord.id, { store: false });
           if (existingTeam) { alert(`${toPlayer} is already on a team.`); return; }
-          const { data: existing } = await supabase.from('team_invites').select('id')
-            .eq('from_player', chatIdentity.playerName).eq('to_player', toPlayer)
+          const { data: existing } = await supabase.from('mesa_team_invites').select('id')
+            .eq('from_player_id', chatIdentity.playerId).eq('to_player_id', toRecord.id)
             .eq('status', 'pending').maybeSingle();
           if (existing) { alert('You already sent an invite to this player.'); return; }
-          const { error } = await supabase.from('team_invites').insert({
-            from_player: chatIdentity.playerName, to_player: toPlayer });
+          const { error } = await supabase.from('mesa_team_invites').insert({
+            from_player_id: chatIdentity.playerId,
+            to_player_id: toRecord.id,
+            from_player: chatIdentity.playerName,
+            to_player: toPlayer
+          });
           if (error) throw error;
           alert(`Invite sent to ${toPlayer}!`);
         } catch (err) { console.error('Failed to send invite:', err); alert('Failed to send invite.'); }
@@ -18646,28 +18856,35 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       async function acceptTeamInvite() {
         if (!supabase || !pendingInvite || !chatIdentity) return;
         try {
-          const { error } = await supabase.from('team_invites').update({
+          const { error } = await supabase.from('mesa_team_invites').update({
             status: 'accepted', responded_at: new Date().toISOString()
           }).eq('id', pendingInvite.id);
           if (error) throw error;
           hideInviteToast();
-          openTeamModal(pendingInvite.from_player, chatIdentity.playerName);
+          openTeamModal(pendingInvite);
         } catch (err) { console.error('Failed to accept invite:', err); }
       }
 
       async function declineTeamInvite() {
         if (!supabase || !pendingInvite) return;
         try {
-          await supabase.from('team_invites').update({
+          await supabase.from('mesa_team_invites').update({
             status: 'declined', responded_at: new Date().toISOString()
           }).eq('id', pendingInvite.id);
           hideInviteToast();
         } catch (err) { console.error('Failed to decline invite:', err); }
       }
 
-      function openTeamModal(player1, player2) {
-        if (teamPartner1) teamPartner1.textContent = player1;
-        if (teamPartner2) teamPartner2.textContent = player2;
+      function openTeamModal(invite) {
+        const fromName = invite?.from_player;
+        const toName = invite?.to_player;
+        const fromId = invite?.from_player_id;
+        const toId = invite?.to_player_id;
+
+        if (teamPartner1) teamPartner1.textContent = fromName;
+        if (teamPartner2) teamPartner2.textContent = toName;
+        teamPartner1Id = fromId || null;
+        teamPartner2Id = toId || null;
         if (teamNameInput) teamNameInput.value = '';
         selectedArchetype = null;
         document.querySelectorAll('.team-archetype').forEach(btn => btn.classList.remove('selected'));
@@ -18686,13 +18903,31 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (!teamName) { alert('Please enter a team name.'); return; }
         const partner1 = teamPartner1?.textContent;
         const partner2 = teamPartner2?.textContent;
+        if (!teamPartner1Id || !teamPartner2Id) { alert('Missing team members.'); return; }
+
+        // Deterministic ordering: mesa_teams enforces player1_id::text < player2_id::text
+        const aId = String(teamPartner1Id);
+        const bId = String(teamPartner2Id);
+        const ordered = aId.localeCompare(bId) < 0
+          ? { p1Id: aId, p1Name: partner1, p2Id: bId, p2Name: partner2 }
+          : { p1Id: bId, p1Name: partner2, p2Id: aId, p2Name: partner1 };
         try {
-          const { data: team, error } = await supabase.from('teams').insert({
-            name: teamName, archetype: selectedArchetype, player1_name: partner1, player2_name: partner2
+          const { data: team, error } = await supabase.from('mesa_teams').insert({
+            name: teamName,
+            archetype: selectedArchetype,
+            player1_id: ordered.p1Id,
+            player2_id: ordered.p2Id,
+            player1_name: ordered.p1Name,
+            player2_name: ordered.p2Name
           }).select().single();
           if (error) throw error;
           currentTeam = { id: team.id, name: team.name, archetype: team.archetype,
             teammate: partner1 === chatIdentity.playerName ? partner2 : partner1 };
+
+          chatIdentity.teamName = team.name;
+          chatIdentity.status = 'teamed';
+          try { localStorage.setItem('cdl_chat_identity', JSON.stringify(chatIdentity)); } catch {}
+
           closeTeamModal();
           await postTeamAnnouncement(partner1, partner2, teamName, selectedArchetype);
         } catch (err) {
@@ -18736,9 +18971,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       if (teamModal) teamModal.querySelector('.team-modal__backdrop')?.addEventListener('click', closeTeamModal);
 
       function subscribeToTeamInvites(playerName) {
-        if (!supabase) return;
+        if (!supabase || !chatIdentity?.playerId) return;
         supabase.channel('team-invites').on('postgres_changes', {
-          event: 'INSERT', schema: 'public', table: 'team_invites', filter: `to_player=eq.${playerName}`
+          event: 'INSERT', schema: 'public', table: 'mesa_team_invites', filter: `to_player_id=eq.${chatIdentity?.playerId}`
         }, (payload) => { if (payload.new.status === 'pending') showInviteToast(payload.new); }).subscribe();
       }
 
@@ -18746,8 +18981,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         chatJoinBtn.addEventListener('click', async () => {
           setTimeout(async () => {
             if (chatIdentity) {
-              await checkPlayerTeam(chatIdentity.playerName);
-              await checkPendingInvites(chatIdentity.playerName);
+              await checkPlayerTeam(chatIdentity.playerId);
+              await checkPendingInvites(chatIdentity.playerId);
               subscribeToTeamInvites(chatIdentity.playerName);
             }
           }, 100);

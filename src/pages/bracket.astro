@@ -390,25 +390,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             const team1NameEl = matchEl.querySelector('[data-team1-name]');
             const team2NameEl = matchEl.querySelector('[data-team2-name]');
 
-            if (team1) {
-              team1NameEl.textContent = team1.name;
-            } else if (match.round === 1) {
-              // Semifinals - show seed position
-              team1NameEl.textContent = match.match_number === 1 ? 'Seed #1' : 'Seed #2';
-            } else {
-              // Championship
-              team1NameEl.textContent = 'Winner Semi 1';
-            }
+          if (team1) {
+            team1NameEl.textContent = team1.name;
+          } else if (match.round === 1) {
+            // Semifinals: A1 vs B2, B1 vs A2
+            team1NameEl.textContent = match.match_number === 1 ? 'Awaiting A1' : 'Awaiting B1';
+          } else {
+            // Championship
+            team1NameEl.textContent = 'Winner Semi 1';
+          }
 
-            if (team2) {
-              team2NameEl.textContent = team2.name;
-            } else if (match.round === 1) {
-              // Semifinals - show seed position
-              team2NameEl.textContent = match.match_number === 1 ? 'Seed #4' : 'Seed #3';
-            } else {
-              // Championship
-              team2NameEl.textContent = 'Winner Semi 2';
-            }
+          if (team2) {
+            team2NameEl.textContent = team2.name;
+          } else if (match.round === 1) {
+            // Semifinals: A1 vs B2, B1 vs A2
+            team2NameEl.textContent = match.match_number === 1 ? 'Awaiting B2' : 'Awaiting A2';
+          } else {
+            // Championship
+            team2NameEl.textContent = 'Winner Semi 2';
+          }
 
             // Update scores (read-only display)
             const score1El = matchEl.querySelector('[data-team1-score-display]');
@@ -490,7 +490,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         } else if (teamsInBracket > 0) {
           statusEl.textContent = `${teamsInBracket}/4 teams seeded`;
         } else {
-          statusEl.textContent = 'Waiting for Round Robin to complete';
+          statusEl.textContent = 'Waiting for Group Stage to complete';
         }
       }
 

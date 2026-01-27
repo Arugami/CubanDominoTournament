@@ -17,9 +17,10 @@ We have:
 - ✅ One tournament scheduled (Tournament I)
 - ✅ A venue (Stefan's Lounge)
 - ✅ A registration form that works
+ - ✅ Roster pipeline verified (Google Sheet → Admin)
 
 We don't have:
-- ❌ A single registered team yet
+- ❌ 8 teams registered yet
 - ❌ Broadcast deals
 - ❌ Sponsors
 - ❌ Social media presence
@@ -42,9 +43,9 @@ We don't have:
 | **Venue** | Stefan's Lounge (333 Bergenline Blvd, Fairview, NJ) |
 | **Entry** | $50 per team ($25/person) |
 | **Format** | Play to 150 points |
-| **Teams** | Target: 10 teams (0 registered) |
+| **Teams** | Target: 8 teams |
 | **Prize** | Winner takes all |
-| **Playoffs** | Top 4 advance |
+| **Playoffs** | Top 2 per group advance (4 total) |
 
 ---
 
@@ -97,7 +98,7 @@ This is a cigar shop tournament with $500 on the line. We treat it like the Worl
 
 ## North Star
 
-**Phase 1 Goal:** Fill 10 teams for Tournament I (January 31)
+**Phase 1 Goal:** Fill 8 teams for Tournament I (January 31)
 
 **Phase 2 Goal:** Make Tournament I unforgettable — even if only 40 people see it
 
