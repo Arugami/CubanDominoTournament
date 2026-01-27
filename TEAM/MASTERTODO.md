@@ -20,6 +20,7 @@
 - [ ] Confirmation email: include one-click **“Claim Your Seat”** Table Key button (ADR-003)
 - [ ] Apps Script deploy: enable `mesa_lookup_player` + `mesa_send_table_key` actions and updated confirmation email CTA (ADR-003)
 - [ ] Local full-stack test: run Pages Functions via Wrangler (Astro dev alone won’t serve `/functions/*`)
+- [ ] Email deliverability: stop Supabase bouncebacks (configure custom SMTP like Resend/Postmark; use valid test emails only)
 
 ### Venue & Logistics
 - [ ] Confirm Stefan's Lounge booking

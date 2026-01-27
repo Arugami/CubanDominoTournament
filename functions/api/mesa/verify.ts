@@ -22,6 +22,65 @@ function bearerToken(value: string | null) {
   return match ? match[1] : "";
 }
 
+type SheetLookupResult =
+  | { ok: true; found: true; playerName: string; status: string }
+  | { ok: true; found: false }
+  | { ok: false; error: string };
+
+async function lookupPlayerInSheet(appScriptUrl: string, secret: string, email: string): Promise<SheetLookupResult> {
+  // Preferred: direct lookup endpoint
+  try {
+    const lookupRes = await fetch(appScriptUrl, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ secret, action: "mesa_lookup_player", email }),
+    });
+    const lookupJson = await lookupRes.json().catch(() => null);
+
+    const okFlag = !!(lookupJson && typeof lookupJson === "object" && (lookupJson as any).ok === true);
+    if (!okFlag) {
+      const err = lookupJson && typeof lookupJson === "object" ? String((lookupJson as any).error || "") : "";
+      if (err === "unauthorized") return { ok: false, error: "upstream_unauthorized" };
+    } else {
+      const found = !!(lookupJson && typeof lookupJson === "object" && (lookupJson as any).found === true);
+      if (found) {
+        const playerName = clean((lookupJson as any)?.player?.playerName);
+        const status = clean((lookupJson as any)?.player?.status).toLowerCase();
+        return { ok: true, found: true, playerName, status };
+      }
+    }
+  } catch {
+    // fall through to admin_list_players
+  }
+
+  // Fallback: list all players and match by email
+  try {
+    const listRes = await fetch(appScriptUrl, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ secret, action: "admin_list_players" }),
+    });
+    const listJson = await listRes.json().catch(() => null);
+
+    const ok = !!(listJson && typeof listJson === "object" && (listJson as any).ok === true);
+    if (!ok) {
+      const err = listJson && typeof listJson === "object" ? String((listJson as any).error || "") : "";
+      if (err === "unauthorized") return { ok: false, error: "upstream_unauthorized" };
+      return { ok: false, error: "upstream_error" };
+    }
+
+    const players = Array.isArray((listJson as any).players) ? (listJson as any).players : [];
+    const match = players.find((p: any) => String(p?.email || "").trim().toLowerCase() === email);
+    if (!match) return { ok: true, found: false };
+
+    const playerName = clean(match?.playerName);
+    const status = clean(match?.status).toLowerCase();
+    return { ok: true, found: true, playerName, status };
+  } catch {
+    return { ok: false, error: "upstream_network_error" };
+  }
+}
+
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const appScriptUrl = env.APP_SCRIPT_URL;
   const secret = env.APP_SCRIPT_SECRET;
@@ -57,22 +116,13 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // Verify registration against Google Sheet (source of truth).
   let playerName = "";
   let status = "";
-  try {
-    const lookupRes = await fetch(appScriptUrl, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ secret, action: "mesa_lookup_player", email }),
-    });
-    const lookupJson = await lookupRes.json().catch(() => null);
-    const found = !!(lookupJson && typeof lookupJson === "object" && (lookupJson as any).found === true);
-    if (!found) return json({ ok: false, error: "not_registered" }, { status: 403 });
-    playerName = clean((lookupJson as any)?.player?.playerName);
-    status = clean((lookupJson as any)?.player?.status).toLowerCase();
-    if (status && status !== "registered" && status !== "confirmed") {
-      return json({ ok: false, error: "not_registered" }, { status: 403 });
-    }
-  } catch {
-    return json({ ok: false, error: "upstream_network_error" }, { status: 502 });
+  const lookup = await lookupPlayerInSheet(appScriptUrl, secret, email);
+  if (!lookup.ok) return json({ ok: false, error: lookup.error }, { status: 502 });
+  if (!lookup.found) return json({ ok: false, error: "not_registered" }, { status: 403 });
+  playerName = lookup.playerName;
+  status = lookup.status;
+  if (status && status !== "registered" && status !== "confirmed") {
+    return json({ ok: false, error: "not_registered" }, { status: 403 });
   }
 
   // Best-effort: ensure Supabase has the player so La Mesa can lock identity + RLS can apply.
@@ -99,4 +149,3 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   return json({ ok: true, player: { email, name: playerName, status: status || "registered" } });
 };
-

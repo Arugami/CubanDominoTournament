@@ -8084,23 +8084,25 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Identity Screen - Centered Cluster Layout */
-      .chat-identity {
-        padding: 40px 24px;
-        padding-top: 80px; /* Push content down from header */
-        padding-bottom: max(48px, calc(env(safe-area-inset-bottom) + 32px));
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: 100%;
-        text-align: center;
-        justify-content: center; /* CENTER the whole cluster */
-        gap: 0;
-        overflow: hidden;
-        width: 100%;
-        box-sizing: border-box;
-        position: absolute; /* Cover entire chat-main */
-        top: 0;
-        left: 0;
+	      .chat-identity {
+	        padding: 40px 24px;
+	        padding-top: 80px; /* Push content down from header */
+	        padding-bottom: max(48px, calc(env(safe-area-inset-bottom) + 32px));
+	        display: flex;
+	        flex-direction: column;
+	        align-items: center;
+	        height: 100%;
+	        text-align: center;
+	        justify-content: center; /* CENTER the whole cluster */
+	        gap: 0;
+	        overflow-x: hidden;
+	        overflow-y: auto;
+	        -webkit-overflow-scrolling: touch;
+	        width: 100%;
+	        box-sizing: border-box;
+	        position: absolute; /* Cover entire chat-main */
+	        top: 0;
+	        left: 0;
         right: 0;
         bottom: 0;
         z-index: 10; /* Above header and seats */
@@ -8995,14 +8997,16 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Button - Bone Language - Tobias: "Needs weight, not floating" */
-      .chat-identity__btn {
-        margin-top: 24px; /* Fixed spacing, not auto */
-        width: 100%;
-        max-width: 280px;
-        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
-        border: none;
-        border-radius: 12px;
-        color: #0d0906;
+	      .chat-identity__btn {
+	        margin-top: 24px; /* Fixed spacing, not auto */
+	        width: 100%;
+	        max-width: 280px;
+	        position: sticky;
+	        bottom: max(12px, calc(env(safe-area-inset-bottom) + 12px));
+	        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
+	        border: none;
+	        border-radius: 12px;
+	        color: #0d0906;
         padding: 18px 44px;
         font-family: "IBM Plex Sans Condensed", sans-serif;
         font-size: 0.85rem;
@@ -16482,7 +16486,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	        const chatRegisterHint = document.getElementById('chatRegisterHint');
 	        if (chatRegisterHint) {
-	          chatRegisterHint.textContent = 'Pick your flag. Then claim your seat.';
+	          chatRegisterHint.textContent = 'Pick your flag. Then tap CLAIM YOUR SEAT.';
 	          chatRegisterHint.style.display = 'block';
 	        }
 
