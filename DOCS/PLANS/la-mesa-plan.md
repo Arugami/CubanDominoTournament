@@ -397,3 +397,76 @@ Goal: the "Claim Your Seat" screen should feel like a **threshold ritual** (earn
   - "who's here" / presence
   - seat strip / occupancy hints
 - Second-screen safety holds: no heavy effects, no jank, no unnecessary motion while docked.
+
+---
+
+## Email Design Spec (2026-01-28)
+
+### Confirmation Email (Post-Registration)
+
+**Goal:** Accomplishment moment, not a receipt. Single-screen on mobile.
+
+**Structure:**
+```
+┌─────────────────────────────┐
+│  CDL:1 La Salida            │  ← Small kicker (copper)
+│  You're In!                 │  ← Large headline (brass italic)
+│  Your seat is secured.      │  ← Subhead (muted cream)
+│                             │
+│  Jan 31, 2026 at Stefan's   │  ← One-line venue
+│  333 Bergenline Blvd...     │  ← Small address
+│                             │
+│  ┌─────────────────────┐    │
+│  │   ENTER LA MESA     │    │  ← CTA button (copper gradient)
+│  └─────────────────────┘    │
+│  Tap above to join table    │  ← Microcopy
+│                             │
+│  View Venue · Questions?    │  ← Minimal footer
+│                             │
+│  La mesa te espera.         │  ← Sign-off
+└─────────────────────────────┘
+```
+
+**Design System:**
+- Background: `linear-gradient(135deg, #2a1f1a 0%, #1c130f 100%)`
+- Border: `1px solid #3d2e26`
+- Border-radius: `12px` (card), `2px` (button)
+- Button gradient: `linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%)`
+- Button text: White, uppercase, 15px, 0.08em letter-spacing
+- Width: max-width 360px (mobile-first)
+- Padding: 32px 24px (compact)
+
+**Copy Principles:**
+- "You're In!" - accomplishment, not "Registration Complete"
+- "Enter La Mesa" - action, not "Claim Your Seat" (already registered)
+- No "Table Key" terminology - confusing, no actual key exists
+- No "How it works" steps - they're already registered
+- No registration details - keep it minimal
+
+### Table Key Email (Returning Players)
+
+**Goal:** Welcome back, threshold moment.
+
+**Structure:**
+```
+┌─────────────────────────────┐
+│  CDL:1 La Mesa              │
+│  The table is open.         │
+│                             │
+│  Welcome back, [Name].      │
+│                             │
+│  ┌─────────────────────┐    │
+│  │   ENTER LA MESA     │    │
+│  └─────────────────────┘    │
+│  Tap above to take seat     │
+│                             │
+│  View Venue · Questions?    │
+│                             │
+│  La mesa te espera.         │
+└─────────────────────────────┘
+```
+
+**Key Difference:**
+- Confirmation: "You're In!" (accomplishment)
+- Table Key: "The table is open." (welcome back)
+

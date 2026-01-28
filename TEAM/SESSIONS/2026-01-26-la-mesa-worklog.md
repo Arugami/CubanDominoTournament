@@ -245,3 +245,45 @@ Add new entries as we go:
     - Excluded `#chatJoinBtn` from the `.chat-identity > *` stagger so it can’t inherit `opacity: 0` when revealed later.
     - Pinned the CTA above the ticker (fixed positioning + dedicated z-index) so it can’t be covered by the broadcast bar.
   - Docs: `DOCS/BUGS/015-claim-seat-cta-hidden-by-stagger.md`
+
+### 2026-01-28 - Email Redesign + Button Consistency (Tobias + Walt Review)
+
+**Issues Identified:**
+- Confirmation email was too long (2 pages on mobile) requiring scroll + "3 dots" to reveal CTA
+- "Table Key" terminology was confusing - users just press a button, no actual key exists
+- "Enter" button in La Mesa had gold gradient instead of matching form button copper gradient
+- Button centering was off on mobile
+
+**Changes Made:**
+
+1. **Confirmation Email Redesign** (`apps-script/Code.gs`):
+   - Minimal, single-screen design (max-width: 360px, compact padding)
+   - "You're In!" headline for accomplishment feel
+   - Single CTA: "Enter La Mesa" (removed "Table Key" confusion)
+   - Copper gradient button matching site design system
+   - Removed: event details box, registration details, "How it works" steps
+   - Kept: essential venue info, minimal footer with venue/questions links
+
+2. **Table Key Email Redesign** (`apps-script/Code.gs`):
+   - Same minimal approach for returning players
+   - "The table is open." headline
+   - "Enter La Mesa" CTA with copper gradient
+
+3. **La Mesa "Enter" Button Fix** (`src/pages/index.astro`):
+   - Changed gradient from gold/brass/copper to copper gradient: `linear-gradient(180deg, #c4784a 0%, var(--copper) 50%, #9a5a30 100%)`
+   - Changed border-radius from 12px to 2px (matches form button)
+   - Updated hover state to match form button
+   - Fixed centering with `margin-left: auto !important; margin-right: auto !important;`
+   - Text changed from "CLAIM YOUR SEAT" to "Enter" in Bodoni Moda italic
+
+**Tobias Principles Applied:**
+- "Details make the product" - button gradient consistency across all CTAs
+- "Rooms, not hallways" - email feels like an invitation, not a receipt
+- "Micro-moments" - "You're In!" creates accomplishment feeling
+- "Sound in silence" - minimal email, no noise
+
+**Walt Principles Applied:**
+- Journey continuity - button styling consistent from registration → email → La Mesa
+- Earned entry - email feels like a ticket, not a utility message
+- Single source of truth - copper gradient defined once, used everywhere
+

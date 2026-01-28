@@ -9045,11 +9045,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1 !important;
         animation: none !important;
 
-        /* Ceremonial threshold gradient - gold to brass to copper */
-        background: linear-gradient(180deg, var(--gold) 0%, var(--brass) 50%, var(--copper) 100%);
+        /* Copper gradient - matches form button for consistency */
+        background: linear-gradient(180deg, #c4784a 0%, var(--copper) 50%, #9a5a30 100%);
         border: none;
-        border-radius: 12px;
-        color: var(--ink);
+        border-radius: 2px;
+        color: #fff;
         padding: 20px 48px;
         /* Bodoni Moda - elegant serif for the threshold moment */
         font-family: "Bodoni Moda", "Didot", serif;
@@ -9064,10 +9064,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         min-height: 56px;
         overflow: hidden;
         box-shadow:
-          0 6px 24px rgba(0, 0, 0, 0.4),
-          0 2px 4px rgba(0, 0, 0, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.3),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+          0 1px 0 rgba(255, 255, 255, 0.15) inset,
+          0 -1px 0 rgba(0, 0, 0, 0.2) inset,
+          0 10px 30px rgba(0, 0, 0, 0.4),
+          0 0 0 0 rgba(183, 106, 59, 0);
         /* Tobias: The Lift - subtle elevation */
         transform: translateY(0);
       }
@@ -9095,13 +9095,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
       /* Tobias: The Lift - elements rise on hover, suggesting they can be picked up */
       .chat-identity__btn:not(:disabled):hover {
-        transform: translateY(-4px) scale(1.02);
+        transform: translateY(-3px);
+        background: linear-gradient(180deg, #d08555 0%, #c4784a 50%, #a86238 100%);
         box-shadow:
-          0 12px 32px rgba(212, 165, 116, 0.4),
-          0 6px 12px rgba(0, 0, 0, 0.25),
-          inset 0 1px 0 rgba(255, 255, 255, 0.35),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-        filter: brightness(1.08);
+          0 1px 0 rgba(255, 255, 255, 0.2) inset,
+          0 -1px 0 rgba(0, 0, 0, 0.15) inset,
+          0 15px 40px rgba(183, 106, 59, 0.35),
+          0 0 60px rgba(183, 106, 59, 0.2);
       }
 
       /* Tobias: The Slam - on click, quick scale-down + subtle shadow spread */
@@ -9354,15 +9354,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .chat-identity__btn {
           width: 100%;
           max-width: 260px;
-          padding: 16px 32px;
-          font-size: 0.85rem;
+          padding: 16px 24px;
+          font-size: 0.9rem;
           min-height: 48px;
           margin-top: 20px;
           margin-left: auto !important;
           margin-right: auto !important;
           align-self: center !important;
-          justify-self: center !important;
           display: block;
+          border-radius: 2px;
         }
       }
 

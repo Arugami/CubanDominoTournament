@@ -21,6 +21,7 @@
 - [ ] Apps Script config: set Script Property `SPREADSHEET_ID` to the CDL registrations spreadsheet (prevents “seats left” lying if the script is bound to the wrong sheet)
 - [ ] Claim Seat (post-auth): ensure flag selection works + CTA is visible + CTA advances into hub (DOCS/BUGS/013, DOCS/BUGS/015)
 - [x] Confirmation email: include one-click **“Claim Your Seat”** Table Key button (ADR-003)
+- [x] Redesign confirmation email - minimal, single-screen, accomplishment feel (copper gradient button, "Enter La Mesa" CTA, no "Table Key" confusion)
 - [x] Apps Script deploy: enable `mesa_lookup_player` + `mesa_send_table_key` actions and updated confirmation email CTA (ADR-003)
 - [ ] Local full-stack test: run Pages Functions via Wrangler (Astro dev alone won’t serve `/functions/*`)
 - [ ] Email deliverability: stop Supabase bouncebacks (configure custom SMTP like Resend/Postmark; use valid test emails only)
