@@ -393,7 +393,6 @@ function doPost(e) {
 }
 
 function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
-function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
   const safeName = String(playerName || "").trim() || "Player";
   const safeLink = String(mesaLoginLink || "").trim();
   const safeVenue = String(venueUrl || "").trim() || "https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ";
@@ -460,6 +459,9 @@ function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
 </body>
 </html>`;
 }
+
+function sendEmail(to, subject, html) {
+  const resendApiKey = getScriptProp("RESEND_API_KEY", "");
   if (resendApiKey) {
     return sendEmailViaResend({
       apiKey: resendApiKey,

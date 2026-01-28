@@ -23,6 +23,11 @@
 - [ ] Equipment list (tables, dominoes, scoreboards)
 - [ ] Source quality domino sets
 - [ ] Backup dominoes
+- [ ] Deploy updated email templates (Apps Script) — CDL badge, ESPN fonts, Club 33 copy
+- [ ] Deploy updated authenticating page (callback.astro) — broadcast styling
+- [ ] Test full flow: Registration → Email → Authenticating → Claim Seat → La Mesa
+
+- [ ] Backup dominoes
 - [ ] Printed brackets
 - [ ] Signage for venue
 

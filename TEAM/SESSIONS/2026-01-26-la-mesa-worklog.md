@@ -488,3 +488,49 @@ IS OPEN
 3. `src/pages/index.astro` - Claim Your Seat fonts
 4. `TEAM/SESSIONS/2026-01-26-la-mesa-worklog.md` - This documentation
 
+
+---
+
+## Summary: Complete Entry Experience Redesign (2026-01-28)
+
+### What Was Changed
+
+A complete redesign of the post-registration entry experience based on Tobias + Walt review:
+
+**Three Touchpoints Redesigned:**
+1. **Confirmation Email** — From utilitarian receipt to Club 33 induction
+2. **Authenticating Page** — From dull loading to threshold anticipation  
+3. **Claim Your Seat Page** — From repetitive UI to elegant entry
+
+### Key Design Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| CDL 1 Badge in email | Walt: "Club 33 has the plaque" — creates seal-of-entry |
+| "YOU'RE IN" in ESPN font | Tobias: "The KO moment needs broadcast punch" |
+| "La mesa te espera" in Bodoni | Brand voice consistency — warm, script-like |
+| Player name in sans serif | Tobias: "Human, not broadcast graphic" |
+| "The doors are opening" | Walt: "Threshold magic, not processing" |
+
+### Technical Implementation
+
+**Files Modified:**
+- `apps-script/Code.gs` — Email templates (confirmation + Table Key)
+- `src/pages/mesa/callback.astro` — Authenticating page
+- `src/pages/index.astro` — Claim Your Seat fonts
+- `MASTERTODO.md` — Deployment tasks added
+
+**Fonts Used:**
+- **Impact/Arial Black** — ESPN broadcast headlines
+- **Bodoni Moda** — Threshold elegance, brand voice
+- **IBM Plex Sans** — Human, approachable
+- **SF Sports Night** — Broadcast credentials (country)
+
+### Next Steps
+
+1. Deploy Apps Script changes
+2. Test full flow on mobile
+3. Verify font loading in email clients
+
+**Decision Record:** See `DOCS/DECISION RECORDS/ADR-005-email-entry-flow-redesign.md`
+
