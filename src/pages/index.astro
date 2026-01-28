@@ -9051,11 +9051,12 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-radius: 2px;
         color: #fff;
         padding: 20px 48px;
-        /* Bodoni Moda - elegant serif for the threshold moment */
+        /* Bodoni Moda - bold italic for the threshold moment */
         font-family: "Bodoni Moda", "Didot", serif;
         font-size: 1rem;
-        font-weight: 400;
-        letter-spacing: 0.08em;
+        font-weight: 700;
+        font-style: italic;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         cursor: pointer;
         transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -13944,10 +13945,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <!-- Auth gate: La Mesa is login-required -->
 		            <div class="mesa-auth" id="mesaAuthGate">
 		              <p class="mesa-auth__copy">
-		                Your Table Key is in your email.
-		                <span class="mesa-auth__subcopy">Open it to enter La Mesa. Then plant your flag.</span>
+		                Check your email to enter the table.
+		                <span class="mesa-auth__subcopy">One tap and you are in.</span>
 		              </p>
-		              <button class="mesa-auth__reveal" id="mesaLoginReveal" type="button" aria-expanded="false">Resend Table Key</button>
+		              <button class="mesa-auth__reveal" id="mesaLoginReveal" type="button" aria-expanded="false">Resend Email</button>
 			              <div class="mesa-auth__row" id="mesaLoginRow" hidden style="display:none;">
 	                <input
 	                  class="mesa-auth__input"
@@ -13957,7 +13958,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
                   autocomplete="email"
                   placeholder="you@domain.com"
                 />
-	                <button class="mesa-auth__btn" id="mesaLoginBtn" type="button">Send Table Key</button>
+	                <button class="mesa-auth__btn" id="mesaLoginBtn" type="button">Send Email</button>
 	              </div>
 	              <p class="mesa-auth__status" id="mesaLoginStatus"></p>
 	            </div>
@@ -17345,7 +17346,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         // If they haven't registered on this device and haven't ever tried to claim a seat,
         // treat the chat button as a "Register" shortcut (teleport + tooltip).
         // This keeps true first-time visitors out of the auth gate while still letting returning
-        // players on new devices use "Resend Table Key" once they've entered an email at least once.
+        // players on new devices use "Resend Email" once they've entered an email at least once.
         try {
           const isRegisteredLocal = localStorage.getItem('cdl_registered') === 'true';
           const hasTriedMesaLogin = !!localStorage.getItem(MESA_LAST_EMAIL_KEY);

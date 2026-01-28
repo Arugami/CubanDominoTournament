@@ -287,3 +287,51 @@ Add new entries as we go:
 - Earned entry - email feels like a ticket, not a utility message
 - Single source of truth - copper gradient defined once, used everywhere
 
+
+### 2026-01-28 (Later) - Tobias Design Review: Full Flow Polish
+
+**Screens Reviewed:**
+1. Auth Gate (post-registration)
+2. Confirmation Email  
+3. Callback Page (email click)
+4. La Mesa "Enter" Button
+
+**Tobias Principles Applied:**
+
+#### 1. Auth Gate Page Fixes
+**Before:** "Your Table Key is in your email. Open it to enter La Mesa. Then plant your flag."
+**After:** "Check your email to enter the table. One tap and you're in."
+
+**Why:** 
+- "Table Key" was confusing - no actual key exists
+- "Plant your flag" happens AFTER entry, not before
+- Keep copy immediate and clear
+
+**Button:** "Resend Table Key" → "Resend Email"
+
+#### 2. Email Design
+**Button Typography:** 
+- Email clients limit font choices, so system fonts with bold weight are used
+- "Enter La Mesa" in uppercase, bold, tight tracking
+
+**Sign-off:** "La mesa te espera." in italic (Bodoni Moda style)
+- This is our brand voice - keeps consistency with the site
+
+#### 3. La Mesa "Enter" Button
+**Typography:** Changed from Regular to **Bold Italic Bodoni Moda**
+- The threshold moment needs more weight
+- Creates visual hierarchy against the player name
+
+**Player Name (JORDAN PEREZ):** SF Sports Night font ✓
+- Tobias says: "PERFECT contrast - ESPN broadcast energy for the player credential against the elegant serif button"
+
+#### 4. Color Consistency
+All CTAs now use the copper gradient:
+```css
+linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%)
+```
+This creates visual continuity from:
+- Registration form button → Email CTA → La Mesa Enter button
+
+**Walt Disney Principle:** Journey continuity - the button styling tells you "you're on the right path" at every step.
+

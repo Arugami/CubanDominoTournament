@@ -409,7 +409,7 @@ function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
     
     <!-- Header -->
     <p style="color: #b76a3b; margin: 0 0 8px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 4px;">CDL:1 La Mesa</p>
-    <h1 style="font-size: 28px; color: #d4a574; margin: 0 0 16px 0; font-style: italic; font-weight: 400;">The table is open.</h1>
+    <h1 style="font-size: 28px; color: #d4a574; margin: 0 0 16px 0; font-style: italic; font-weight: 700;">The table is open.</h1>
     
     <!-- Personal greeting -->
     <p style="margin: 0 0 24px 0; font-size: 15px; color: rgba(248, 239, 230, 0.85);">
@@ -502,7 +502,7 @@ function buildConfirmationEmailHTML(body) {
     
     <!-- Header: You're In! -->
     <p style="color: #b76a3b; margin: 0 0 8px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 4px;">CDL:1 La Salida</p>
-    <h1 style="font-size: 36px; color: #d4a574; margin: 0 0 4px 0; font-style: italic; font-weight: 400;">You're In!</h1>
+    <h1 style="font-size: 36px; color: #d4a574; margin: 0 0 4px 0; font-style: italic; font-weight: 700;">You're In!</h1>
     <p style="color: rgba(248, 239, 230, 0.7); margin: 0 0 24px 0; font-size: 14px;">Your seat is secured.</p>
     
     <!-- One-line details -->
