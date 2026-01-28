@@ -247,7 +247,7 @@
 - [x] **Panel 2-4 animation timing fix** - Removed 1.5s mobile lock cap, compressed animation timings so climax moments ("Te toca", "SEAT") land before scroll unlock on iPhone Safari
 - [x] **Badge consistency pass** — Standardized CDL:1 domino tile badge across email (Code.gs), authentication screen (callback.astro), and website hero (index.astro) to pixel-identical spec
 - [x] **Loading animation refinement** — Improved "Pulling up a chair" entrance with weighted physics, staggered timing, fog atmosphere, and ceremonial flag reveal
-- [x] **Flag selection page refinement** — Changed title from "Claim Your Seat" to "Choose your flag", refined button styling (sentence case, more weight), relocated presence indicator below button
+- [x] **Flag selection page refinement** — Changed title to "CHOOSE YOUR FLAG" (ESPN font), refined button styling, replaced sad "0 at the table" with exciting "32 seats. 1 champion." tournament stakes
 
 ---
 

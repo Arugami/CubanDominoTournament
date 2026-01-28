@@ -696,13 +696,16 @@ Files modified:
 
 **Tobias:** *"The threshold moment needs elegance, not shouting."*
 
-**3. Presence Indicator Relocation**
-- Moved from above flag selector to below Enter button
-- Opacity: 60% (was 100%)
-- Scale: 92% (makes it recede)
-- Text: "at the table" (was "active today")
+**3. Tournament Stakes (Replaced "0 at the table")**
+- Removed sad/underwhelming "0 at the table" indicator
+- Added ESPN-style tournament stakes below button:
+  - "32 seats. 1 champion." (SF Sports Night, brass)
+  - "January 31st" (SF Sports Night, cream, smaller)
+- Always exciting regardless of current occupancy
+- Walt's "weenie" — the promise of competition
 
-**Tobias:** *"The flag comes first. Everything else is atmosphere."*
+**Tobias:** *"The promise of competition is the hook. Not who got there first."*
+**Walt:** *"The castle is the tournament. The flag is how you enter it."*
 
 #### New Page Structure
 

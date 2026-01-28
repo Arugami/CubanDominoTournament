@@ -42,25 +42,41 @@ After:  Bodoni Moda, 1.4rem, sentence case, italic, letter-spacing 0.04em
 
 ---
 
-### Issue 3: "0 active today" Placement
-**Problem:** The live player count appeared before the flag selector, breaking the ceremonial flow. It felt like FOMO pressure before the identity moment.
+### Issue 3: "0 at the table" — Tournament Stakes Instead
 
-**Solution:** 
-- Moved live indicator to below the Enter button
-- Reduced opacity: 0.6 (was 1.0)
-- Added subtle scale: 0.92 (makes it recede)
-- Changed text: "active today" → "at the table" (more contextual)
+**Problem:** When 0 people are present, "0 at the table" feels sad and underwhelming. It doesn't build hype.
 
-**Tobias Rationale:**
-> "The flag comes first. Everything else is atmosphere. If you want to show presence, make it a whisper, not an announcement."
+**Solution Chosen: Option 2 — Tournament Stakes**
+
+Replaced live indicator with ESPN-style tournament stakes:
+```
+32 seats. 1 champion.
+January 31st
+```
+
+**Why this works:**
+- Always relevant regardless of current occupancy
+- Builds stakes and anticipation (Walt's "weenie")
+- ESPN broadcast energy matches the title
+- Never feels "empty" — always exciting
+
+**Tobias:** *"The promise of competition is the hook. Not who got there first."*
+
+**Walt:** *"The castle is the tournament. The flag is how you enter it."*
+
+**Visual Design:**
+- Font: SF Sports Night (broadcast credential)
+- Primary line: "32 seats. 1 champion." — 0.9rem, brass, 95% opacity
+- Date line: "January 31st" — 0.75rem, cream, 70% opacity
+- Staggered fade-in animation (600ms delay, after button)
 
 **New Structure (Top to Bottom):**
-1. "Choose your flag" (title)
-2. "Show them where you're from" (subtitle)
+1. "CHOOSE YOUR FLAG" (title — ESPN font, uppercase)
+2. "Show them where you're from" (subtitle — Bodoni italic)
 3. Flag selector (centerpiece)
 4. Country display (above button)
 5. "Enter" button (threshold moment)
-6. "0 at the table" (subtle presence, below button)
+6. "32 seats. 1 champion." (stakes, below button)
 
 ---
 
@@ -69,13 +85,14 @@ After:  Bodoni Moda, 1.4rem, sentence case, italic, letter-spacing 0.04em
 ```
 ┌─────────────────────────────┐
 │                             │
-│   Choose your flag          │ ← Bodoni Moda italic, elegant
+│   CHOOSE YOUR FLAG          │ ← SF Sports Night (ESPN broadcast)
 │   ────────                  │
 │                             │
-│   Show them where           │
+│   Show them where           │ ← Bodoni Moda italic
 │   you're from.              │
 │                             │
 │   [Flag Selector]           │ ← Cuba → USA → Caribbean...
+│      🇨🇺  🇺🇸  🇵🇷             │
 │                             │
 │   CUBA                      │ ← Country display
 │   Tap to represent          │
@@ -84,7 +101,8 @@ After:  Bodoni Moda, 1.4rem, sentence case, italic, letter-spacing 0.04em
 │   │    Enter     │          │ ← Bodoni Bold Italic, sentence case
 │   └──────────────┘          │
 │                             │
-│   ● 0 at the table          │ ← Subtle, below button
+│   32 seats. 1 champion.     │ ← ESPN stakes (always exciting)
+│   January 31st              │
 │                             │
 └─────────────────────────────┘
 ```
@@ -134,13 +152,14 @@ The scroll through flags is part of the experience — "Which one represents me?
 
 | Element | Specification |
 |---------|--------------|
-| Title Font | Bodoni Moda, 1.4rem, weight 400, italic |
+| Title Font | SF Sports Night, 1.6rem, weight 400, uppercase |
 | Title Color | var(--brass) #d4a574 |
+| Subtitle Font | Bodoni Moda, italic |
 | Button Font | Bodoni Moda, 1.15rem, weight 700, italic |
 | Button Gradient | Copper: #c4784a → #b76a3b → #9a5a30 |
 | Button Radius | 2px (machined, not pill) |
-| Presence Indicator | 60% opacity, 92% scale, below button |
-| Animation | Staggered fade-up, 60-180ms delays |
+| Tournament Stakes | SF Sports Night, brass/cream, ESPN broadcast style |
+| Animation | Staggered fade-up, 60-600ms delays |
 
 ---
 
@@ -150,9 +169,9 @@ The scroll through flags is part of the experience — "Which one represents me?
 
 2. **Country display transition:** When scrolling, the country name updates. Should this have a "slam" animation or a gentle crossfade?
 
-3. **Empty state copy:** If no one is at the table, should we say something more evocative than "0 at the table"? Perhaps "The table is quiet" or "Be the first to arrive"?
+3. **Button disabled state:** When no flag is selected, the button is disabled. Should we show helper copy or let the visual state speak for itself?
 
-4. **Button disabled state:** When no flag is selected, the button is disabled. Should we show helper copy or let the visual state speak for itself?
+4. **Tournament stakes animation:** Currently fades in after button. Should it have a "broadcast graphic" slide-in effect instead?
 
 ---
 

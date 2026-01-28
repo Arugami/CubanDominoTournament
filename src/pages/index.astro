@@ -107,6 +107,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         pointer-events: none;
       }
 
+      /* Skippable state for returning users */
+      .loading-screen.is-skippable {
+        cursor: pointer;
+      }
+
       .loading-screen.is-hidden {
         opacity: 0;
         visibility: hidden;
@@ -8293,8 +8298,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Staggered, but fast: per design system guardrails */
       .chat-identity__title { animation-delay: 0ms; }
       .chat-identity__subtitle { animation-delay: 60ms; }
-      .mesa-live-indicator { animation-delay: 120ms; }
-      .avatar-selector-frame { animation-delay: 180ms; }
+      .avatar-selector-frame { animation-delay: 120ms; }
       .country-display { animation-delay: 180ms; }
       .custom-select { animation-delay: 180ms; }
       .chat-identity__select { animation-delay: 180ms; }
@@ -9247,6 +9251,65 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       /* Tobias: "The declaration moment" - glow pulse when ready */
       .chat-identity__btn.is-ready {
         animation: enterButtonReady 2s ease-in-out infinite;
+      }
+
+      /* Tournament Stakes - ESPN broadcast energy below button */
+      .tournament-stakes {
+        margin-top: 28px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        opacity: 0;
+        transform: translateY(10px);
+        animation: stakesFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s forwards;
+      }
+
+      @keyframes stakesFadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .stakes-line {
+        font-family: "SF Sports Night", "IBM Plex Sans Condensed", system-ui, sans-serif;
+        color: var(--brass);
+        text-shadow:
+          0 2px 4px rgba(0, 0, 0, 0.5),
+          0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .stakes-line--primary {
+        font-size: 0.9rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        opacity: 0.95;
+      }
+
+      .stakes-line--date {
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.7;
+        color: var(--cream);
+      }
+
+      @media (max-width: 768px) {
+        .tournament-stakes {
+          margin-top: 24px;
+          gap: 4px;
+        }
+
+        .stakes-line--primary {
+          font-size: 0.8rem;
+          letter-spacing: 0.08em;
+        }
+
+        .stakes-line--date {
+          font-size: 0.7rem;
+        }
       }
 
       @media (max-width: 768px) {
@@ -14799,10 +14862,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	          <button class="chat-identity__btn" id="chatJoinBtn" disabled style="display:none; margin-left:auto; margin-right:auto;">Enter</button>
 
-          <!-- Live player count - subtle presence indicator below button -->
-          <div class="mesa-live-indicator" id="mesaLiveIndicator" style="margin-top: 28px; opacity: 0.6; transform: scale(0.92);">
-            <span class="mesa-live-dot"></span>
-            <span class="mesa-live-text"><span id="mesaPlayerCount">0</span> at the table</span>
+          <!-- Tournament stakes - ESPN broadcast energy, always relevant -->
+          <div class="tournament-stakes" id="tournamentStakes">
+            <div class="stakes-line stakes-line--primary">32 seats. 1 champion.</div>
+            <div class="stakes-line stakes-line--date">January 31st</div>
           </div>
           <!-- Custom Dropdown -->
 	          <div class="custom-select" id="customSelect" style="display: none;">
@@ -15106,14 +15169,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         if (HAS_VISITED) {
           loadingScreen.classList.add('is-skippable');
           
-          // Allow skip after a brief moment to appreciate the animation
-          setTimeout(() => {
-            const skipHandler = () => {
-              loadingScreen.classList.add('is-exiting');
-            };
-            loadingScreen.addEventListener('click', skipHandler, { once: true });
-            loadingScreen.addEventListener('touchstart', skipHandler, { once: true });
-          }, 500);
+          // Allow skip immediately for returning users
+          const skipHandler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            loadingScreen.classList.add('is-exiting');
+            // Trigger the normal dismiss flow
+            setTimeout(() => {
+              loadingScreen.classList.add('is-hidden');
+            }, 100);
+          };
+          
+          // Add listeners immediately - returning users know the drill
+          loadingScreen.addEventListener('click', skipHandler, { once: true });
+          loadingScreen.addEventListener('touchstart', skipHandler, { once: true, passive: false });
         }
 
         // Mark as visited for next time
