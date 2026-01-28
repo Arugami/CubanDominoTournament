@@ -335,3 +335,156 @@ This creates visual continuity from:
 
 **Walt Disney Principle:** Journey continuity - the button styling tells you "you're on the right path" at every step.
 
+
+### 2026-01-28 (Evening) - Complete Flow Redesign: Tobias + Walt Review
+
+**Scope:** Email → Authenticating Page → Claim Your Seat Page
+
+**Tobias's Core Insight:**
+> "This isn't registration. This is induction. The ESPN font says 'You're in the league.' The Bodoni says 'You're in the club.'"
+
+**Walt's Core Insight:**
+> "Every threshold moment should feel like doors opening, not forms submitting."
+
+---
+
+## 1. Confirmation Email Redesign
+
+### Subject Line
+**Before:** `CDL:1 La Salida - You're Registered!`
+**After:** `🌴 YOU'RE IN — CDL:1 La Mesa`
+
+**Why:** The palm tree emoji creates visual distinction. "YOU'RE IN" is the ESPN broadcast moment.
+
+### Design Changes
+
+**Added CDL 1 Badge (CSS-crafted domino tile):**
+```
+┌─────┐
+│ CDL │
+│─────│
+│  1  │
+└─────┘
+```
+- Brass border (#d4a574)
+- Copper "CDL" text
+- Large "1" in Bodoni Moda
+- Creates brand recognition and Club 33 seal-of-entry feel
+
+**"YOU'RE IN" Headline:**
+- Font: Impact / Arial Black (ESPN broadcast energy)
+- Size: 42px
+- Shadow: Subtle brass glow
+- **Tobias:** "This is the KO moment. Make it hit."
+
+**Copy Rewrite (Club 33 Vibes):**
+**Before:** "Your seat is secured."
+**After:** 
+```
+Welcome to La Mesa, [Name].
+
+Your seat at the Cuban Domino League's 
+first tournament is secured.
+```
+
+**Why:** 
+- Personal greeting with name
+- "Welcome to" = club induction language
+- "First tournament" = historical moment
+
+**CTA Button:**
+- Font: Bodoni Moda Bold Italic
+- Text: "ENTER LA MESA" (not all caps in code, styled via CSS)
+- Gradient: Copper (#c4784a → #b76a3b → #9a5a30)
+- **Tobias:** "The threshold moment needs elegance, not shouting."
+
+**Sign-off:**
+- "La mesa te espera." in Bodoni Moda Italic
+- Google Fonts import ensures it renders correctly
+
+---
+
+## 2. Table Key Email (Returning Players)
+
+### Subject Line
+**Before:** `CDL:1 • Your Table Key`
+**After:** `🌴 THE TABLE IS OPEN — CDL:1 La Mesa`
+
+### Design
+Same CDL badge and styling as confirmation email.
+
+**Headline:**
+```
+THE TABLE
+IS OPEN
+```
+
+**Why:** For returning players, the moment is different. They've been here before. "The table is open" = welcome back to the club.
+
+---
+
+## 3. Authenticating Page (Callback)
+
+**Before:**
+- "La Mesa" title (generic)
+- "Verifying your seat…" (procedural)
+- "Authenticating" (bank app vibes)
+- Rounded corners, soft styling
+
+**After:**
+- CDL 1 Badge at top
+- **Title:** "WELCOME" in SF Sports Night (ESPN broadcast)
+- **Subtitle:** "The doors are opening…" (Walt: threshold moment)
+- **Status:** "VERIFYING YOUR SEAT" in small caps
+- **Sign-off:** "La mesa te espera." in Bodoni Moda
+- **Borders:** Sharper (2px radius buttons, 8px radius card)
+- **Animation:** Pulsing green dot
+
+**Tobias:** "The waiting moment is still part of the ritual. Make it feel like anticipation, not processing."
+
+---
+
+## 4. Claim Your Seat Page (Final Entry)
+
+### Font Changes
+
+**Player Name (JORDAN PEREZ):**
+**Before:** SF Sports Night (ESPN font)
+**After:** IBM Plex Sans (modern sans serif)
+
+**Tobias Rationale:**
+> "The ESPN font for the country (CUBA) creates the broadcast credential. The player name in clean sans serif keeps them human, approachable. It's the difference between a player card and a broadcast graphic."
+
+**Label Change:**
+**Before:** "Representing" (said twice - above country AND above name)
+**After:** "Playing as" (above name only)
+
+**Why:** No repetition. "Representing" = country. "Playing as" = your identity.
+
+**Enter Button:**
+- Already fixed to "Enter" (not all caps)
+- Font: Bodoni Moda Bold Italic
+- Gradient: Copper (matches form button)
+
+---
+
+## Font Strategy Summary
+
+| Element | Font | Purpose |
+|---------|------|---------|
+| "YOU'RE IN" / "WELCOME" | Impact/SF Sports Night | ESPN broadcast - the KO |
+| Country (CUBA) | SF Sports Night | Broadcast credential |
+| Player Name | IBM Plex Sans | Human, approachable |
+| "ENTER LA MESA" | Bodoni Moda Bold Italic | Threshold elegance |
+| "La mesa te espera." | Bodoni Moda Italic | Brand voice - warm, script-like |
+| CDL Badge | Bodoni Moda | Seal of the league |
+
+---
+
+## Files Modified
+
+1. `apps-script/Code.gs` - Both email templates
+2. `src/pages/mesa/callback.astro` - Authenticating page
+3. `src/pages/index.astro` - Claim Your Seat fonts
+4. `TEAM/SESSIONS/2026-01-26-la-mesa-worklog.md` - This documentation
+

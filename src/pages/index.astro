@@ -8998,11 +8998,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .mesa-identity-locked__name {
         margin: 0;
         color: var(--cream);
-        font-family: "SF Sports Night", "IBM Plex Sans Condensed", system-ui, sans-serif;
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
         font-size: 22px;
+        font-weight: 600;
         font-style: normal;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
+        letter-spacing: 0.02em;
       }
 
       /* Helper/hint text */
@@ -14670,7 +14670,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
           <!-- Locked identity: after login we show your registered name (no list-picking / no impersonation) -->
           <div class="mesa-identity-locked" id="mesaIdentityLocked" style="display: none;">
-            <p class="mesa-identity-locked__label">Representing</p>
+            <p class="mesa-identity-locked__label">Playing as</p>
             <p class="mesa-identity-locked__name" id="mesaLockedName">—</p>
           </div>
 

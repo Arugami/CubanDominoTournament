@@ -327,7 +327,7 @@ function doPost(e) {
         return json({ ok: false, error: "not_registered" }, 404);
       }
 
-      const subject = "CDL:1 • Your Table Key";
+      const subject = "🌴 THE TABLE IS OPEN — CDL:1 La Mesa";
       const htmlBody = buildMesaTableKeyEmailHTML({
         playerName: foundName,
         mesaLoginLink,
@@ -368,7 +368,7 @@ function doPost(e) {
     });
 
     // Send confirmation email to player
-    const subject = "CDL:1 La Salida - You're Registered!";
+    const subject = "🌴 YOU'RE IN — CDL:1 La Mesa";
     const htmlBody = buildConfirmationEmailHTML(body);
 
     try {
@@ -393,6 +393,7 @@ function doPost(e) {
 }
 
 function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
+function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
   const safeName = String(playerName || "").trim() || "Player";
   const safeLink = String(mesaLoginLink || "").trim();
   const safeVenue = String(venueUrl || "").trim() || "https://maps.google.com/?q=333+Bergenline+Blvd,+Fairview,+NJ";
@@ -403,39 +404,62 @@ function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #1c130f; color: #f8efe6; padding: 24px 16px; margin: 0;">
-  <div style="max-width: 360px; margin: 0 auto; background: linear-gradient(135deg, #2a1f1a 0%, #1c130f 100%); border-radius: 12px; padding: 32px 24px; border: 1px solid #3d2e26; text-align: center;">
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0a0705; color: #f8efe6; padding: 32px 16px; margin: 0;">
+  <div style="max-width: 380px; margin: 0 auto; background: linear-gradient(180deg, #1a120d 0%, #0d0906 100%); border: 1px solid #3d2e26; text-align: center;">
     
-    <!-- Header -->
-    <p style="color: #b76a3b; margin: 0 0 8px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 4px;">CDL:1 La Mesa</p>
-    <h1 style="font-size: 28px; color: #d4a574; margin: 0 0 16px 0; font-style: italic; font-weight: 700;">The table is open.</h1>
+    <!-- Top accent line -->
+    <div style="height: 3px; background: linear-gradient(90deg, transparent 0%, #b76a3b 50%, transparent 100%);"></div>
     
-    <!-- Personal greeting -->
-    <p style="margin: 0 0 24px 0; font-size: 15px; color: rgba(248, 239, 230, 0.85);">
-      Welcome back, <span style="color: #d4a574;">${safeName}</span>.
-    </p>
+    <div style="padding: 40px 28px 32px;">
+      
+      <!-- CDL 1 Badge -->
+      <div style="display: inline-block; margin-bottom: 24px;">
+        <div style="width: 56px; height: 80px; background: linear-gradient(145deg, #2a1f1a 0%, #1c130f 100%); border: 2px solid #d4a574; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 4px 20px rgba(183, 106, 59, 0.3);">
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 10px; color: #b76a3b; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 8px;">CDL</span>
+          <div style="width: 36px; height: 2px; background: linear-gradient(90deg, transparent 0%, #d4a574 50%, transparent 100%); margin: 6px 0;"></div>
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 28px; color: #d4a574; font-weight: 700; line-height: 1; margin-bottom: 8px;">1</span>
+        </div>
+      </div>
+      
+      <!-- Kicker -->
+      <p style="color: #b76a3b; margin: 0 0 12px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 5px; font-weight: 600;">CDL:1 La Mesa</p>
+      
+      <!-- THE TABLE IS OPEN -->
+      <h1 style="font-family: Impact, 'Arial Black', sans-serif; font-size: 36px; color: #d4a574; margin: 0 0 16px 0; font-weight: 900; letter-spacing: 0.02em; text-transform: uppercase; line-height: 1.1; text-shadow: 0 2px 20px rgba(212, 165, 116, 0.3);">THE TABLE<br>IS OPEN</h1>
+      
+      <!-- Personal welcome -->
+      <p style="color: rgba(248, 239, 230, 0.9); margin: 0 0 8px 0; font-size: 16px; font-weight: 500;">Welcome back, <span style="color: #d4a574;">${safeName}</span>.</p>
+      
+      <p style="color: rgba(248, 239, 230, 0.6); margin: 0 0 32px 0; font-size: 13px; line-height: 1.6; font-style: italic;">Your seat is waiting.</p>
+      
+      ${safeLink ? `
+        <!-- CTA Button -->
+        <a href="${safeLink}" style="display: block; background: linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%); color: #fff; text-decoration: none; padding: 20px 32px; border-radius: 2px; font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-style: italic; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; box-shadow: 0 8px 30px rgba(183, 106, 59, 0.4);">
+          Enter La Mesa
+        </a>
+        <p style="margin: 0 0 24px 0; font-size: 11px; color: #666; letter-spacing: 0.05em;">One tap to take your seat</p>
+      ` : ''}
+      
+      <!-- Footer links -->
+      <p style="margin: 24px 0 0 0; padding-top: 20px; border-top: 1px solid #3d2e26; font-size: 11px; color: #666;">
+        <a href="${safeVenue}" style="color: #b76a3b; text-decoration: none; margin: 0 8px;">View Venue</a>
+        <span style="color: #3d2e26;">·</span>
+        <a href="mailto:Erik@cubandominoleague.com" style="color: #b76a3b; text-decoration: none; margin: 0 8px;">Questions</a>
+      </p>
+      
+      <!-- Brand sign-off -->
+      <p style="font-family: 'Bodoni Moda', Georgia, serif; font-style: italic; text-align: center; margin-top: 20px; font-size: 18px; color: #d4a574; letter-spacing: 0.02em;">La mesa te espera.</p>
+      
+    </div>
     
-    <!-- Single CTA -->
-    <a href="${safeLink}" style="display: block; background: linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%); color: #fff; text-decoration: none; padding: 18px 32px; border-radius: 2px; font-weight: 700; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
-      Enter La Mesa
-    </a>
-    <p style="margin: 0 0 20px 0; font-size: 12px; color: #666;">Tap above to take your seat</p>
-    
-    <!-- Minimal footer -->
-    <p style="margin: 20px 0 0 0; padding-top: 20px; border-top: 1px solid #3d2e26; font-size: 12px; color: #666;">
-      <a href="${safeVenue}" style="color: #d4a574; text-decoration: none;">View Venue</a> · 
-      <a href="mailto:Erik@cubandominoleague.com" style="color: #d4a574; text-decoration: none;">Questions?</a>
-    </p>
-    
-    <p style="text-align: center; margin-top: 16px; font-size: 16px; color: #d4a574; font-style: italic;">La mesa te espera.</p>
+    <!-- Bottom accent line -->
+    <div style="height: 2px; background: linear-gradient(90deg, transparent 0%, #3d2e26 50%, transparent 100%);"></div>
   </div>
 </body>
 </html>`;
 }
-
-function sendEmail(to, subject, html) {
-  const resendApiKey = getScriptProp("RESEND_API_KEY", "");
   if (resendApiKey) {
     return sendEmailViaResend({
       apiKey: resendApiKey,
@@ -489,6 +513,7 @@ function buildConfirmationEmailHTML(body) {
   const siteUrl = String(body.siteUrl || "").trim();
   const canonicalSiteUrl = (siteUrl || "https://cubandominoleague.com").replace(/\/+$/, "");
   const mesaEntryUrl = mesaLoginLink || (canonicalSiteUrl ? (canonicalSiteUrl + "/?mesa=1") : "");
+  const playerName = body.playerName || "Player";
 
   return `
 <!DOCTYPE html>
@@ -496,36 +521,65 @@ function buildConfirmationEmailHTML(body) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #1c130f; color: #f8efe6; padding: 24px 16px; margin: 0;">
-  <div style="max-width: 360px; margin: 0 auto; background: linear-gradient(135deg, #2a1f1a 0%, #1c130f 100%); border-radius: 12px; padding: 32px 24px; border: 1px solid #3d2e26; text-align: center;">
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0a0705; color: #f8efe6; padding: 32px 16px; margin: 0;">
+  <div style="max-width: 380px; margin: 0 auto; background: linear-gradient(180deg, #1a120d 0%, #0d0906 100%); border: 1px solid #3d2e26; text-align: center; position: relative;">
     
-    <!-- Header: You're In! -->
-    <p style="color: #b76a3b; margin: 0 0 8px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 4px;">CDL:1 La Salida</p>
-    <h1 style="font-size: 36px; color: #d4a574; margin: 0 0 4px 0; font-style: italic; font-weight: 700;">You're In!</h1>
-    <p style="color: rgba(248, 239, 230, 0.7); margin: 0 0 24px 0; font-size: 14px;">Your seat is secured.</p>
+    <!-- Top accent line -->
+    <div style="height: 3px; background: linear-gradient(90deg, transparent 0%, #b76a3b 50%, transparent 100%);"></div>
     
-    <!-- One-line details -->
-    <p style="margin: 0 0 24px 0; font-size: 14px; line-height: 1.6; color: rgba(248, 239, 230, 0.85);">
-      <strong style="color: #d4a574;">Jan 31, 2026</strong> at Stefan's Lounge<br>
-      <span style="font-size: 12px; color: #888;">333 Bergenline Blvd, Fairview, NJ</span>
-    </p>
+    <div style="padding: 40px 28px 32px;">
+      
+      <!-- CDL 1 Badge -->
+      <div style="display: inline-block; margin-bottom: 24px;">
+        <div style="width: 56px; height: 80px; background: linear-gradient(145deg, #2a1f1a 0%, #1c130f 100%); border: 2px solid #d4a574; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 4px 20px rgba(183, 106, 59, 0.3);">
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 10px; color: #b76a3b; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 8px;">CDL</span>
+          <div style="width: 36px; height: 2px; background: linear-gradient(90deg, transparent 0%, #d4a574 50%, transparent 100%); margin: 6px 0;"></div>
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 28px; color: #d4a574; font-weight: 700; line-height: 1; margin-bottom: 8px;">1</span>
+        </div>
+      </div>
+      
+      <!-- Kicker -->
+      <p style="color: #b76a3b; margin: 0 0 12px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 5px; font-weight: 600;">CDL:1 La Salida</p>
+      
+      <!-- YOU'RE IN - ESPN Broadcast Energy -->
+      <h1 style="font-family: Impact, 'Arial Black', sans-serif; font-size: 42px; color: #d4a574; margin: 0 0 16px 0; font-weight: 900; letter-spacing: 0.02em; text-transform: uppercase; line-height: 1; text-shadow: 0 2px 20px rgba(212, 165, 116, 0.3);">YOU'RE IN</h1>
+      
+      <!-- Personal welcome -->
+      <p style="color: rgba(248, 239, 230, 0.9); margin: 0 0 8px 0; font-size: 16px; font-weight: 500;">Welcome to La Mesa, <span style="color: #d4a574;">${playerName}</span>.</p>
+      
+      <!-- Club 33 copy -->
+      <p style="color: rgba(248, 239, 230, 0.6); margin: 0 0 28px 0; font-size: 13px; line-height: 1.6; font-style: italic;">Your seat at the Cuban Domino League's first tournament is secured.</p>
+      
+      <!-- Event details - minimal -->
+      <div style="background: rgba(183, 106, 59, 0.08); border: 1px solid rgba(183, 106, 59, 0.2); padding: 16px; margin-bottom: 28px;">
+        <p style="margin: 0; font-size: 14px; color: #d4a574; font-weight: 500;">Saturday, January 31st, 2026</p>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: #888;">Stefan's Lounge · Fairview, NJ</p>
+      </div>
+      
+      ${mesaEntryUrl ? `
+        <!-- CTA Button -->
+        <a href="${mesaEntryUrl}" style="display: block; background: linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%); color: #fff; text-decoration: none; padding: 20px 32px; border-radius: 2px; font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-style: italic; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; box-shadow: 0 8px 30px rgba(183, 106, 59, 0.4);">
+          Enter La Mesa
+        </a>
+        <p style="margin: 0 0 24px 0; font-size: 11px; color: #666; letter-spacing: 0.05em;">One tap to join the table</p>
+      ` : ''}
+      
+      <!-- Footer links -->
+      <p style="margin: 24px 0 0 0; padding-top: 20px; border-top: 1px solid #3d2e26; font-size: 11px; color: #666;">
+        <a href="${venueUrl}" style="color: #b76a3b; text-decoration: none; margin: 0 8px;">View Venue</a>
+        <span style="color: #3d2e26;">·</span>
+        <a href="mailto:Erik@cubandominoleague.com" style="color: #b76a3b; text-decoration: none; margin: 0 8px;">Questions</a>
+      </p>
+      
+      <!-- Brand sign-off - Bodoni Moda Italic -->
+      <p style="font-family: 'Bodoni Moda', Georgia, serif; font-style: italic; text-align: center; margin-top: 20px; font-size: 18px; color: #d4a574; letter-spacing: 0.02em;">La mesa te espera.</p>
+      
+    </div>
     
-    ${mesaEntryUrl ? `
-      <!-- Single CTA -->
-      <a href="${mesaEntryUrl}" style="display: block; background: linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%); color: #fff; text-decoration: none; padding: 18px 32px; border-radius: 2px; font-weight: 700; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
-        Enter La Mesa
-      </a>
-      <p style="margin: 0 0 20px 0; font-size: 12px; color: #666;">Tap above to join the table</p>
-    ` : ''}
-    
-    <!-- Minimal footer -->
-    <p style="margin: 20px 0 0 0; padding-top: 20px; border-top: 1px solid #3d2e26; font-size: 12px; color: #666;">
-      <a href="${venueUrl}" style="color: #d4a574; text-decoration: none;">View Venue</a> · 
-      <a href="mailto:Erik@cubandominoleague.com" style="color: #d4a574; text-decoration: none;">Questions?</a>
-    </p>
-    
-    <p style="text-align: center; margin-top: 16px; font-size: 16px; color: #d4a574; font-style: italic;">La mesa te espera.</p>
+    <!-- Bottom accent line -->
+    <div style="height: 2px; background: linear-gradient(90deg, transparent 0%, #3d2e26 50%, transparent 100%);"></div>
   </div>
 </body>
 </html>`;

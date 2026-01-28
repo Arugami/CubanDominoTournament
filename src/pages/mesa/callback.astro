@@ -7,8 +7,20 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CDL • La Mesa</title>
+    <title>CDL:1 • La Mesa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
+      @font-face {
+        font-family: 'SF Sports Night';
+        src: url('/FONT/sf-sports-night/TrueType/SFSportsNight.woff2') format('woff2'),
+             url('/FONT/sf-sports-night/TrueType/SFSportsNight.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
       :root {
         color-scheme: dark;
         --ink: #1c130f;
@@ -25,48 +37,109 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         align-items: center;
         justify-content: center;
         padding: 24px;
-        background: radial-gradient(1200px 700px at 50% 20%, #2a1f1a 0%, var(--ink) 60%, #0a0705 100%);
+        background: 
+          radial-gradient(ellipse at 50% 0%, rgba(183, 106, 59, 0.15) 0%, transparent 50%),
+          radial-gradient(1200px 700px at 50% 20%, #2a1f1a 0%, var(--ink) 60%, #0a0705 100%);
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         color: var(--cream);
       }
 
       .card {
         width: 100%;
-        max-width: 520px;
-        border-radius: 16px;
-        padding: 34px;
+        max-width: 420px;
+        border-radius: 12px;
+        padding: 40px 32px;
         border: 1px solid var(--border);
-        background: linear-gradient(135deg, rgba(42, 31, 26, 0.92) 0%, rgba(28, 19, 15, 0.92) 100%);
-        box-shadow: 0 18px 45px rgba(20, 10, 6, 0.38);
+        background: linear-gradient(180deg, rgba(42, 31, 26, 0.95) 0%, rgba(28, 19, 15, 0.98) 100%);
+        box-shadow: 0 24px 60px rgba(20, 10, 6, 0.5);
+        text-align: center;
+        position: relative;
+      }
+
+      .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent 0%, var(--copper) 50%, transparent 100%);
+        border-radius: 12px 12px 0 0;
+      }
+
+      /* CDL Badge */
+      .badge {
+        width: 56px;
+        height: 80px;
+        background: linear-gradient(145deg, #2a1f1a 0%, #1c130f 100%);
+        border: 2px solid var(--brass);
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        box-shadow: 0 4px 20px rgba(183, 106, 59, 0.3);
+      }
+
+      .badge-top {
+        font-family: 'Bodoni Moda', Georgia, serif;
+        font-size: 10px;
+        color: var(--copper);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-top: 8px;
+      }
+
+      .badge-divider {
+        width: 36px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, var(--brass) 50%, transparent 100%);
+        margin: 6px 0;
+      }
+
+      .badge-num {
+        font-family: 'Bodoni Moda', Georgia, serif;
+        font-size: 28px;
+        color: var(--brass);
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 8px;
       }
 
       .kicker {
-        margin: 0 0 10px 0;
-        font-size: 12px;
-        letter-spacing: 0.28em;
+        margin: 0 0 12px 0;
+        font-size: 10px;
+        letter-spacing: 0.35em;
         text-transform: uppercase;
         color: var(--copper);
+        font-weight: 600;
       }
 
       .title {
-        margin: 0 0 10px 0;
-        font-size: 28px;
+        font-family: 'SF Sports Night', Impact, 'Arial Black', sans-serif;
+        margin: 0 0 8px 0;
+        font-size: 32px;
         line-height: 1.1;
         color: var(--brass);
-        font-style: italic;
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
       }
 
       .sub {
-        margin: 0 0 26px 0;
-        opacity: 0.9;
+        margin: 0 0 28px 0;
+        opacity: 0.7;
         color: var(--cream);
+        font-size: 14px;
+        font-style: italic;
       }
 
       .state {
-        border: 1px solid rgba(212, 165, 116, 0.18);
-        border-radius: 12px;
-        padding: 18px;
-        background: rgba(212, 165, 116, 0.06);
+        border: 1px solid rgba(183, 106, 59, 0.25);
+        border-radius: 8px;
+        padding: 20px;
+        background: rgba(183, 106, 59, 0.08);
       }
 
       .hidden {
@@ -77,6 +150,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         display: flex;
         gap: 12px;
         align-items: center;
+        justify-content: center;
       }
 
       .dot {
@@ -84,52 +158,83 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         height: 10px;
         border-radius: 50%;
         background: #4ade80;
-        box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.12);
+        box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.15);
         flex: 0 0 auto;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
       }
 
       .btn {
         display: inline-block;
         margin-top: 18px;
-        padding: 12px 16px;
-        border-radius: 10px;
+        padding: 16px 28px;
+        border-radius: 2px;
         text-decoration: none;
-        font-weight: 650;
-        background: linear-gradient(135deg, var(--copper) 0%, var(--brass) 100%);
-        color: #1c130f;
+        font-weight: 700;
+        background: linear-gradient(180deg, #c4784a 0%, var(--copper) 50%, #9a5a30 100%);
+        color: #fff;
+        font-family: 'Bodoni Moda', Georgia, serif;
+        font-style: italic;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        box-shadow: 0 8px 30px rgba(183, 106, 59, 0.3);
       }
 
       .btn--ghost {
         background: transparent;
-        border: 1px solid rgba(212, 165, 116, 0.22);
+        border: 1px solid rgba(212, 165, 116, 0.3);
         color: var(--cream);
-        font-weight: 600;
+        font-weight: 500;
+        font-style: normal;
+        box-shadow: none;
       }
 
       .actions {
         display: flex;
         gap: 12px;
         flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .sign-off {
+        font-family: 'Bodoni Moda', Georgia, serif;
+        font-style: italic;
+        margin-top: 24px;
+        font-size: 16px;
+        color: var(--brass);
+        opacity: 0.9;
       }
     </style>
   </head>
   <body>
     <div class="card">
-      <p class="kicker">CDL</p>
-      <h1 class="title">La Mesa</h1>
-      <p class="sub">Verifying your seat…</p>
+      <!-- CDL Badge -->
+      <div class="badge">
+        <span class="badge-top">CDL</span>
+        <div class="badge-divider"></div>
+        <span class="badge-num">1</span>
+      </div>
+
+      <p class="kicker">CDL:1 La Mesa</p>
+      <h1 class="title">WELCOME</h1>
+      <p class="sub">The doors are opening…</p>
 
       <div class="state" id="loadingState">
         <div class="row">
           <span class="dot" aria-hidden="true"></span>
-          <div>Authenticating</div>
+          <div style="font-size: 14px; letter-spacing: 0.05em;">VERIFYING YOUR SEAT</div>
         </div>
       </div>
 
       <div class="state hidden" id="deniedState">
-        <div style="color: var(--brass); font-weight: 700; margin-bottom: 6px;">Seat not found</div>
-        <div style="opacity: 0.9;">
-          This email isn’t registered for the tournament yet. Register first, then come back.
+        <div style="color: var(--brass); font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-style: italic; margin-bottom: 8px; font-size: 18px;">Seat not found</div>
+        <div style="opacity: 0.8; font-size: 14px; line-height: 1.5;">
+          This email isn't registered for the tournament yet.
         </div>
         <div class="actions">
           <a class="btn" href="/#signup">Register</a>
@@ -138,13 +243,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       </div>
 
       <div class="state hidden" id="errorState">
-        <div style="color: var(--brass); font-weight: 700; margin-bottom: 6px;">Authentication failed</div>
-        <div id="errorMessage" style="opacity: 0.9;"></div>
+        <div style="color: var(--brass); font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-style: italic; margin-bottom: 8px; font-size: 18px;">Authentication failed</div>
+        <div id="errorMessage" style="opacity: 0.8; font-size: 14px;"></div>
         <div class="actions">
           <a class="btn" href="/?mesa=1">Try again</a>
           <a class="btn btn--ghost" href="/">Back</a>
         </div>
       </div>
+
+      <p class="sign-off">La mesa te espera.</p>
     </div>
 
     <script define:vars={{ SUPABASE_URL, SUPABASE_ANON_KEY }}>
