@@ -534,3 +534,134 @@ A complete redesign of the post-registration entry experience based on Tobias + 
 
 **Decision Record:** See `DOCS/DECISION RECORDS/ADR-005-email-entry-flow-redesign.md`
 
+### 2026-01-28 (Evening) - Bug Fix: La Mesa Ticker Not Moving on First Load
+
+**Issue:** When users first loaded the page, the La Mesa ticker appeared empty or "stuck" — not moving, not showing content, feeling "dead."
+
+**Root Cause Analysis:**
+1. The ticker track started completely empty in HTML — animation had nothing to scroll
+2. When `updateTicker()` first ran, it replaced `innerHTML` which reset the CSS animation
+3. The `lastTickerContent` check didn't prevent updates because it started as empty string
+4. `initTicker()` waited for `playersReady` and `supabaseReady` promises before rendering
+
+**Fixes Applied:**
+
+1. **Default HTML Content** (`src/pages/index.astro`):
+   - Added default ticker content directly in HTML so it shows immediately on page load
+   - Content: "0 at the table", "16 seats left", "Be the first to join" (duplicated for seamless loop)
+
+2. **Initialize State Variables** (`src/pages/index.astro`):
+   - `tickerRendered = true` (since HTML already has content)
+   - `lastTickerContent` initialized with the exact default HTML string
+   - This prevents `updateTicker()` from resetting the animation when data hasn't changed
+
+3. **Improved Empty State Logic** (`src/pages/index.astro`):
+   - Changed from `items.length === 2` to `tickerAnnouncements.length === 0 && tickerRegistrations.length === 0`
+   - Properly shows "Be the first to join" when there's no data
+
+**Result:**
+- Users see a moving, alive ticker immediately on page load
+- Animation continues smoothly even as JavaScript initializes
+- When actual data arrives, the ticker updates seamlessly
+- No more "stuck" or empty ticker on first visit
+
+**Files Modified:** `src/pages/index.astro`
+
+
+
+---
+
+### 2026-01-28 (Night) - Badge Consistency + Loading Animation Refinement
+
+**Session Lead:** Tobias van Schneider (Chief Product Designer)  
+**Scope:** Brand consistency across Email, Authentication Screen, and Website Hero + La Mesa entry animation
+
+#### Issues Addressed
+
+1. **Email Logo Treatment** — Replaced problematic domino badge with elegant Bodoni Moda "CDL" wordmark
+2. **Authentication Screen Badge** — Callback page badge didn't match hero
+3. **Loading Animation** — "Pulling up a chair" animation needed more ceremony
+4. **CTA Copy** — Simplified "ENTER LA MESA" to "Enter"
+
+#### Changes Made
+
+**1. Email Logo Treatment**
+
+Removed the complex CSS badge (email clients were rendering it inconsistently) and replaced with clean typography:
+
+```
+CDL Logo Mark:
+- Font: Bodoni Moda, 42px, weight 900, italic
+- Color: #d4a574 (brass) with subtle text shadow glow
+- Letter-spacing: 0.12em
+- Pure typography — no container/badge
+```
+
+**Rationale:** Email clients struggle with complex CSS. The Bodoni Moda "CDL" wordmark is cleaner, more reliable, and still feels premium (Tobias's font choice).
+
+Files modified:
+- `apps-script/Code.gs` — Confirmation email (line ~532)
+- `apps-script/Code.gs` — Table Key email (line ~416)
+
+**CTA Button Copy Change:**
+- **Before:** "ENTER LA MESA" (all caps)
+- **After:** "Enter" (Bodoni Moda Bold Italic, 18px)
+
+**Rationale:** Cleaner, more elegant. The Bodoni Moda carries the weight. Context is already clear from email content. Tobias: "The threshold moment needs elegance, not shouting."
+
+**2. Loading Animation Enhancement**
+
+Enhanced the "Pulling up a chair" La Mesa entry animation with:
+
+| Element | Timing | Effect |
+|---------|--------|--------|
+| Fog Layer | 0ms → 1.4s | Atmospheric entrance (translateY + scale) |
+| Flag | 350ms → 0.75s | Ceremonial reveal with brightness flash |
+| Content Container | 200ms → 0.85s | Weighted settle physics (overshoot pattern) |
+| Seal/Glow | 250ms → 1.2s | Pulse + scale animation |
+| Kicker Text | 550ms → 0.6s | Letter-spacing breathes (0.3em → 0.22em) |
+| Player Name | 650ms → 0.7s | Scale settle with blur clear |
+
+**Key Animation Principles (Tobias):**
+- **Weighted Physics:** Content arrives with 40px → -6px overshoot → settle pattern
+- **Fog Atmosphere:** Extended to -30% inset, radial gradients create depth
+- **Ceremonial Flag:** Brightness flash (0.8 → 1.1) at 40% keyframe mimics spotlight
+- **Typography Animation:** Kicker letter-spacing "breathes" into place
+- **Staggered Timing:** Total ~1.2s sequence tells story: atmosphere → identity → action
+
+Files modified:
+- `src/pages/index.astro` — Mesa entry styles (lines ~5322, ~5340, ~5388, ~5398)
+
+#### Tobias Review Notes
+
+**The Test:**
+1. ✓ Does the badge feel like it belongs on the table?
+2. ✓ Would someone screenshot this entrance?
+3. ✓ Is there weight in the animation, or is it floating?
+4. ✓ Does the room feel alive during entry?
+
+**Principles Applied:**
+- **The Lift:** Elements rise with anticipation, not appear instantly
+- **The Slam:** Content settles with compression physics
+- **Depth Gradients:** Fog layer creates atmospheric distance
+- **Breath Spacing:** Staggered timing creates rhythm and ceremony
+- **Micro-Moments:** Flag brightness flash creates the "felt" moment
+
+#### Documentation Created
+
+- `TEAM/SESSIONS/2026-01-28-branding-consistency-review.md` — Full Tobias review notes
+- `DOCS/DECISION RECORDS/ADR-005-email-entry-flow-redesign.md` — Updated with badge standardization spec
+
+#### Files Modified Summary
+
+| File | Changes |
+|------|---------|
+| `apps-script/Code.gs` | Email badge standardization (confirmation + Table Key) |
+| `src/pages/mesa/callback.astro` | Authentication screen badge CSS |
+| `src/pages/index.astro` | Mesa entry animation refinement |
+| `TEAM/SESSIONS/2026-01-28-branding-consistency-review.md` | New: Tobias review documentation |
+| `DOCS/DECISION RECORDS/ADR-005-email-entry-flow-redesign.md` | Updated: Badge spec added |
+
+**Status:** Complete — Ready for deployment
+
+---

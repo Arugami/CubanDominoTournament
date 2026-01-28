@@ -52,10 +52,8 @@ Redesign the complete entry experience (Email → Authenticating → Claim Seat)
 #### Structure
 ```
 ┌─────────────────────────────────────┐
-│  ┌─────┐                            │
-│  │ CDL │  ← Badge (Bodoni text)      │
-│  │  1  │                            │
-│  └─────┘                            │
+│                                     │
+│           CDL                       │ ← Bodoni Moda logo mark
 │                                     │
 │  CDL:1 La Mesa                      │
 │  YOU'RE IN ← ESPN/Impact font       │
@@ -69,7 +67,7 @@ Redesign the complete entry experience (Email → Authenticating → Claim Seat)
 │  Stefan's Lounge · Fairview, NJ     │
 │                                     │
 │  ┌─────────────────────────┐        │
-│  │    Enter La Mesa        │ ← Bodoni Bold Italic
+│  │         Enter           │ ← Bodoni Bold Italic
 │  └─────────────────────────┘        │
 │                                     │
 │  La mesa te espera.                 │ ← Bodoni Italic
@@ -77,10 +75,10 @@ Redesign the complete entry experience (Email → Authenticating → Claim Seat)
 ```
 
 #### Key Changes
-- **Added CDL 1 Badge:** CSS-crafted domino tile (brass border, copper text)
+- **CDL Logo:** Bodoni Moda 42px italic wordmark (clean, elegant, email-client safe)
 - **"YOU'RE IN":** Impact/Arial Black for ESPN broadcast energy
 - **Personal copy:** "Welcome to La Mesa, [Name]." + historical context
-- **CTA:** Bodoni Moda Bold Italic (threshold elegance)
+- **CTA:** "Enter" in Bodoni Moda Bold Italic (threshold elegance, no shouting)
 - **Sign-off:** Bodoni Moda Italic (brand voice)
 
 ---
@@ -152,22 +150,39 @@ IS OPEN
 | `TEAM/SESSIONS/2026-01-26-la-mesa-worklog.md` | Documentation |
 | `TEAM/SESSIONS/2026-01-28-branding-consistency-review.md` | Tobias review notes |
 
-### Badge Standardization (Jan 28, 2026)
+### Logo & Badge Standardization (Jan 28, 2026)
 
-**Decision:** All CDL:1 badges must be pixel-identical across:
-- Email templates (Code.gs)
-- Authentication screen (callback.astro)
-- Website hero (index.astro)
+**Decision:** Different logo treatments for different contexts:
 
-**Rationale:** Brand consistency creates trust. When a user sees the same domino tile badge in their email, on the auth screen, and on the website, they know they're in the right place.
+**Website & Authentication Screen:**
+- CDL:1 domino tile badge (52×72px)
+- Full styling with gradients, shadows, brass border
 
-**Badge Specification:**
+**Email Templates:**
+- Bodoni Moda "CDL" wordmark only (42px, 900 italic)
+- No container/badge (email client compatibility)
+
+**Rationale:** 
+- Brand consistency creates trust
+- Email clients render complex CSS inconsistently
+- The Bodoni Moda wordmark is elegant, reliable, and still on-brand
+- Users see the same core identity (Bodoni Moda "CDL") across all touchpoints
+
+**Badge Specification (Web/Auth):**
 ```
 Dimensions: 52px × 72px
 Background: linear-gradient(145deg, rgba(20, 14, 10, 0.9) 0%, rgba(12, 8, 5, 0.95) 100%)
 Border: 2px solid #d4a574
 Border Radius: 10px
 Typography: Bodoni Moda, weight 900, italic, brass-to-copper gradient text
+```
+
+**Email Logo Specification:**
+```
+Font: Bodoni Moda, 42px, weight 900, italic
+Color: #d4a574 (brass) with subtle text shadow
+Letter-spacing: 0.12em
+No container — pure typography
 ```
 
 ### Loading Animation Refinement (Jan 28, 2026)

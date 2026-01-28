@@ -62,6 +62,7 @@
 - [x] P0 La Mesa (Tobias): countdown display format (no `122:..` hours); prefer `XD YH ZM` readability + calm update rate
 - [x] P0 La Mesa (Tobias): add subtle hub-to-chat cue (divider + "CHAT" label + pip) so chat is discoverable without feeling app-y
 - [x] P0 La Mesa (Tobias): reduce "Invite" visual noise in Who's Here; row-tap = @mention, invite becomes secondary
+- [x] P0 La Mesa: Fix ticker not moving on first load — added default HTML content, initialized state variables to prevent animation reset, improved empty state logic
 
 ---
 

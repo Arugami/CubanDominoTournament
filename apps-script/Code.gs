@@ -413,15 +413,9 @@ function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
     
     <div style="padding: 40px 28px 32px;">
       
-      <!-- CDL 1 Badge - Standardized to match website hero -->
-      <div style="display: inline-block; margin-bottom: 24px;">
-        <div style="width: 52px; height: 72px; background: linear-gradient(145deg, rgba(20, 14, 10, 0.9) 0%, rgba(12, 8, 5, 0.95) 100%); border: 2px solid #d4a574; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 0 20px rgba(212, 165, 116, 0.25), 0 0 40px rgba(212, 165, 116, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 24px rgba(0, 0, 0, 0.5); position: relative;">
-          <!-- Subtle highlight overlay -->
-          <div style="position: absolute; inset: 0; border-radius: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%); pointer-events: none;"></div>
-          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 13px; font-weight: 900; font-style: italic; color: #d4a574; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 10px; background: linear-gradient(180deg, #d4a574 0%, #b76a3b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CDL</span>
-          <div style="width: 32px; height: 2px; background: linear-gradient(90deg, transparent 0%, #d4a574 20%, #d4a574 80%, transparent 100%); margin: 5px 0; opacity: 0.6;"></div>
-          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 22px; font-weight: 900; font-style: italic; color: #d4a574; line-height: 1; margin-bottom: 8px; background: linear-gradient(180deg, #d4a574 0%, #b76a3b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">1</span>
-        </div>
+      <!-- CDL Logo - Bodoni Moda elegant mark -->
+      <div style="margin-bottom: 28px;">
+        <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 42px; font-weight: 900; font-style: italic; color: #d4a574; letter-spacing: 0.12em; text-shadow: 0 2px 20px rgba(212, 165, 116, 0.3);">CDL</span>
       </div>
       
       <!-- Kicker -->
@@ -437,8 +431,8 @@ function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
       
       ${safeLink ? `
         <!-- CTA Button -->
-        <a href="${safeLink}" style="display: block; background: linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%); color: #fff; text-decoration: none; padding: 20px 32px; border-radius: 2px; font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-style: italic; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; box-shadow: 0 8px 30px rgba(183, 106, 59, 0.4);">
-          Enter La Mesa
+        <a href="${safeLink}" style="display: block; background: linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%); color: #fff; text-decoration: none; padding: 20px 32px; border-radius: 2px; font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-style: italic; font-size: 18px; letter-spacing: 0.05em; margin-bottom: 12px; box-shadow: 0 8px 30px rgba(183, 106, 59, 0.4);">
+          Enter
         </a>
         <p style="margin: 0 0 24px 0; font-size: 11px; color: #666; letter-spacing: 0.05em;">One tap to take your seat</p>
       ` : ''}
@@ -535,15 +529,9 @@ function buildConfirmationEmailHTML(body) {
     
     <div style="padding: 40px 28px 32px;">
       
-      <!-- CDL 1 Badge - Standardized to match website hero -->
-      <div style="display: inline-block; margin-bottom: 24px;">
-        <div style="width: 52px; height: 72px; background: linear-gradient(145deg, rgba(20, 14, 10, 0.9) 0%, rgba(12, 8, 5, 0.95) 100%); border: 2px solid #d4a574; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 0 20px rgba(212, 165, 116, 0.25), 0 0 40px rgba(212, 165, 116, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 24px rgba(0, 0, 0, 0.5); position: relative;">
-          <!-- Subtle highlight overlay -->
-          <div style="position: absolute; inset: 0; border-radius: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%); pointer-events: none;"></div>
-          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 13px; font-weight: 900; font-style: italic; color: #d4a574; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 10px; background: linear-gradient(180deg, #d4a574 0%, #b76a3b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CDL</span>
-          <div style="width: 32px; height: 2px; background: linear-gradient(90deg, transparent 0%, #d4a574 20%, #d4a574 80%, transparent 100%); margin: 5px 0; opacity: 0.6;"></div>
-          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 22px; font-weight: 900; font-style: italic; color: #d4a574; line-height: 1; margin-bottom: 8px; background: linear-gradient(180deg, #d4a574 0%, #b76a3b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">1</span>
-        </div>
+      <!-- CDL Logo - Bodoni Moda elegant mark -->
+      <div style="margin-bottom: 28px;">
+        <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 42px; font-weight: 900; font-style: italic; color: #d4a574; letter-spacing: 0.12em; text-shadow: 0 2px 20px rgba(212, 165, 116, 0.3);">CDL</span>
       </div>
       
       <!-- Kicker -->
@@ -566,8 +554,8 @@ function buildConfirmationEmailHTML(body) {
       
       ${mesaEntryUrl ? `
         <!-- CTA Button -->
-        <a href="${mesaEntryUrl}" style="display: block; background: linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%); color: #fff; text-decoration: none; padding: 20px 32px; border-radius: 2px; font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-style: italic; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; box-shadow: 0 8px 30px rgba(183, 106, 59, 0.4);">
-          Enter La Mesa
+        <a href="${mesaEntryUrl}" style="display: block; background: linear-gradient(180deg, #c4784a 0%, #b76a3b 50%, #9a5a30 100%); color: #fff; text-decoration: none; padding: 20px 32px; border-radius: 2px; font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-style: italic; font-size: 18px; letter-spacing: 0.05em; margin-bottom: 12px; box-shadow: 0 8px 30px rgba(183, 106, 59, 0.4);">
+          Enter
         </a>
         <p style="margin: 0 0 24px 0; font-size: 11px; color: #666; letter-spacing: 0.05em;">One tap to join the table</p>
       ` : ''}

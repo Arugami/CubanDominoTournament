@@ -52,12 +52,23 @@ Divider:
 
 #### Files Modified
 
-| File | Badge Location | Changes |
-|------|----------------|---------|
-| `apps-script/Code.gs` | Confirmation email (line ~537) | Updated to match hero badge spec |
-| `apps-script/Code.gs` | Table Key email (line ~416) | Updated to match hero badge spec |
+| File | Badge/Logo Location | Changes |
+|------|---------------------|---------|
+| `apps-script/Code.gs` | Confirmation email (line ~532) | Removed badge, added Bodoni Moda "CDL" wordmark |
+| `apps-script/Code.gs` | Table Key email (line ~416) | Removed badge, added Bodoni Moda "CDL" wordmark |
 | `src/pages/mesa/callback.astro` | Authentication screen (line ~71) | Updated CSS to match hero badge |
 | `src/pages/index.astro` | Hero section (line ~1497) | Reference standard (unchanged) |
+
+#### CTA Button Copy
+
+**Changed from:** "ENTER LA MESA" / "Enter La Mesa"  
+**Changed to:** "Enter"
+
+**Rationale:** 
+- Cleaner, more elegant
+- Bodoni Moda Bold Italic carries the weight
+- Context (La Mesa) is already clear from the email content
+- Tobias: "The threshold moment needs elegance, not shouting"
 
 **Tobias Review Notes:**
 - The email badge uses inline styles (email client compatibility)

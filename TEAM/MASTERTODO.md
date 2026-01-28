@@ -245,6 +245,8 @@
 - [x] **Pip tooltip** - First touch shows "Chat here" above domino button, guiding chat discovery
 - [x] **Admin announcements UI redesign** - Color-coded type badges (cyan info, red alert, purple hype, gold winner), visual priority system (orange glow for high, red pulse for urgent), improved card contrast and button styling
 - [x] **Panel 2-4 animation timing fix** - Removed 1.5s mobile lock cap, compressed animation timings so climax moments ("Te toca", "SEAT") land before scroll unlock on iPhone Safari
+- [x] **Badge consistency pass** — Standardized CDL:1 domino tile badge across email (Code.gs), authentication screen (callback.astro), and website hero (index.astro) to pixel-identical spec
+- [x] **Loading animation refinement** — Improved "Pulling up a chair" entrance with weighted physics, staggered timing, fog atmosphere, and ceremonial flag reveal
 
 ---
 
@@ -311,6 +313,6 @@ Key principles applied:
 
 ---
 
-**Last Updated:** January 19, 2026 (panel animation timing fix for mobile)
+**Last Updated:** January 28, 2026 (badge consistency + loading animation refinement)
 
 *"Your seat's waiting."*

@@ -18592,8 +18592,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	      let presenceChannel = null;
 	      let tickerAnnouncements = []; // Admin-controlled messages (Supabase)
 	      let tickerRegistrations = []; // Recent signups (Google Sheets via /api/players)
-	      let tickerRendered = false;
-	      let lastTickerContent = ''; // Track content changes to skip unnecessary updates
+	      // Set to true since HTML already has default content rendered
+	      let tickerRendered = true;
+	      // Initialize with default HTML content to prevent unnecessary first render
+	      // This ensures the CSS animation isn't reset when updateTicker runs with the same content
+	      let lastTickerContent = '<span class="ticker-item ticker-live"><span class="ticker-live-dot"></span>0 at the table</span><span class="ticker-item ticker-spots">16 seats left</span><span class="ticker-item ticker-waiting">Be the first to join</span><span class="ticker-spacer"></span><span class="ticker-item ticker-live"><span class="ticker-live-dot"></span>0 at the table</span><span class="ticker-item ticker-spots">16 seats left</span><span class="ticker-item ticker-waiting">Be the first to join</span><span class="ticker-spacer"></span>';
 
 	      function normalizeTickerName(name) {
 	        return String(name ?? '').trim().split(' ')[0];
@@ -18795,6 +18798,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
 	      function updateTicker(state, forceUpdate = false) {
+	        if (!tickerTrack) return;
 	        const users = [];
 
 	        // Collect all users from presence state
@@ -18828,8 +18832,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	          items.push(`<span class="ticker-item ticker-name">${escapeHtml(name)}<span class="ticker-action">just joined</span></span>`);
 	        });
 
-	        // If no registrations yet
-	        if (items.length === 2) {
+	        // If no announcements AND no registrations yet, show waiting message
+	        if (tickerAnnouncements.length === 0 && tickerRegistrations.length === 0) {
 	          items.push(`<span class="ticker-item ticker-waiting">Be the first to join</span>`);
 	        }
 
