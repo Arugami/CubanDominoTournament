@@ -403,7 +403,7 @@ function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0a0705; color: #f8efe6; padding: 32px 16px; margin: 0;">
   <div style="max-width: 380px; margin: 0 auto; background: linear-gradient(180deg, #1a120d 0%, #0d0906 100%); border: 1px solid #3d2e26; text-align: center;">
@@ -413,12 +413,14 @@ function buildMesaTableKeyEmailHTML({ playerName, mesaLoginLink, venueUrl }) {
     
     <div style="padding: 40px 28px 32px;">
       
-      <!-- CDL 1 Badge -->
+      <!-- CDL 1 Badge - Standardized to match website hero -->
       <div style="display: inline-block; margin-bottom: 24px;">
-        <div style="width: 56px; height: 80px; background: linear-gradient(145deg, #2a1f1a 0%, #1c130f 100%); border: 2px solid #d4a574; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 4px 20px rgba(183, 106, 59, 0.3);">
-          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 10px; color: #b76a3b; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 8px;">CDL</span>
-          <div style="width: 36px; height: 2px; background: linear-gradient(90deg, transparent 0%, #d4a574 50%, transparent 100%); margin: 6px 0;"></div>
-          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 28px; color: #d4a574; font-weight: 700; line-height: 1; margin-bottom: 8px;">1</span>
+        <div style="width: 52px; height: 72px; background: linear-gradient(145deg, rgba(20, 14, 10, 0.9) 0%, rgba(12, 8, 5, 0.95) 100%); border: 2px solid #d4a574; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 0 20px rgba(212, 165, 116, 0.25), 0 0 40px rgba(212, 165, 116, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 24px rgba(0, 0, 0, 0.5); position: relative;">
+          <!-- Subtle highlight overlay -->
+          <div style="position: absolute; inset: 0; border-radius: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%); pointer-events: none;"></div>
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 13px; font-weight: 900; font-style: italic; color: #d4a574; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 10px; background: linear-gradient(180deg, #d4a574 0%, #b76a3b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CDL</span>
+          <div style="width: 32px; height: 2px; background: linear-gradient(90deg, transparent 0%, #d4a574 20%, #d4a574 80%, transparent 100%); margin: 5px 0; opacity: 0.6;"></div>
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 22px; font-weight: 900; font-style: italic; color: #d4a574; line-height: 1; margin-bottom: 8px; background: linear-gradient(180deg, #d4a574 0%, #b76a3b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">1</span>
         </div>
       </div>
       
@@ -523,7 +525,7 @@ function buildConfirmationEmailHTML(body) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0a0705; color: #f8efe6; padding: 32px 16px; margin: 0;">
   <div style="max-width: 380px; margin: 0 auto; background: linear-gradient(180deg, #1a120d 0%, #0d0906 100%); border: 1px solid #3d2e26; text-align: center; position: relative;">
@@ -533,12 +535,14 @@ function buildConfirmationEmailHTML(body) {
     
     <div style="padding: 40px 28px 32px;">
       
-      <!-- CDL 1 Badge -->
+      <!-- CDL 1 Badge - Standardized to match website hero -->
       <div style="display: inline-block; margin-bottom: 24px;">
-        <div style="width: 56px; height: 80px; background: linear-gradient(145deg, #2a1f1a 0%, #1c130f 100%); border: 2px solid #d4a574; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 4px 20px rgba(183, 106, 59, 0.3);">
-          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 10px; color: #b76a3b; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 8px;">CDL</span>
-          <div style="width: 36px; height: 2px; background: linear-gradient(90deg, transparent 0%, #d4a574 50%, transparent 100%); margin: 6px 0;"></div>
-          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 28px; color: #d4a574; font-weight: 700; line-height: 1; margin-bottom: 8px;">1</span>
+        <div style="width: 52px; height: 72px; background: linear-gradient(145deg, rgba(20, 14, 10, 0.9) 0%, rgba(12, 8, 5, 0.95) 100%); border: 2px solid #d4a574; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 0 20px rgba(212, 165, 116, 0.25), 0 0 40px rgba(212, 165, 116, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 24px rgba(0, 0, 0, 0.5); position: relative;">
+          <!-- Subtle highlight overlay -->
+          <div style="position: absolute; inset: 0; border-radius: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%); pointer-events: none;"></div>
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 13px; font-weight: 900; font-style: italic; color: #d4a574; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 10px; background: linear-gradient(180deg, #d4a574 0%, #b76a3b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">CDL</span>
+          <div style="width: 32px; height: 2px; background: linear-gradient(90deg, transparent 0%, #d4a574 20%, #d4a574 80%, transparent 100%); margin: 5px 0; opacity: 0.6;"></div>
+          <span style="font-family: 'Bodoni Moda', Georgia, serif; font-size: 22px; font-weight: 900; font-style: italic; color: #d4a574; line-height: 1; margin-bottom: 8px; background: linear-gradient(180deg, #d4a574 0%, #b76a3b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">1</span>
         </div>
       </div>
       

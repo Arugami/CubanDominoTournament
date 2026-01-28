@@ -67,44 +67,71 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-radius: 12px 12px 0 0;
       }
 
-      /* CDL Badge */
+      /* CDL Badge - Standardized to match website hero */
       .badge {
-        width: 56px;
-        height: 80px;
-        background: linear-gradient(145deg, #2a1f1a 0%, #1c130f 100%);
+        width: 52px;
+        height: 72px;
+        background: linear-gradient(145deg, rgba(20, 14, 10, 0.9) 0%, rgba(12, 8, 5, 0.95) 100%);
         border: 2px solid var(--brass);
-        border-radius: 8px;
+        border-radius: 10px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         margin: 0 auto 24px;
-        box-shadow: 0 4px 20px rgba(183, 106, 59, 0.3);
+        box-shadow:
+          0 0 20px rgba(212, 165, 116, 0.25),
+          0 0 40px rgba(212, 165, 116, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          0 6px 24px rgba(0, 0, 0, 0.5);
+        position: relative;
+      }
+
+      /* Subtle highlight overlay */
+      .badge::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%);
+        pointer-events: none;
       }
 
       .badge-top {
         font-family: 'Bodoni Moda', Georgia, serif;
-        font-size: 10px;
-        color: var(--copper);
-        letter-spacing: 0.15em;
+        font-size: 13px;
+        font-weight: 900;
+        font-style: italic;
+        color: var(--brass);
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        margin-top: 8px;
+        margin-top: 10px;
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
       .badge-divider {
-        width: 36px;
+        width: 32px;
         height: 2px;
-        background: linear-gradient(90deg, transparent 0%, var(--brass) 50%, transparent 100%);
-        margin: 6px 0;
+        background: linear-gradient(90deg, transparent 0%, var(--brass) 20%, var(--brass) 80%, transparent 100%);
+        margin: 5px 0;
+        opacity: 0.6;
       }
 
       .badge-num {
         font-family: 'Bodoni Moda', Georgia, serif;
-        font-size: 28px;
+        font-size: 22px;
+        font-weight: 900;
+        font-style: italic;
         color: var(--brass);
-        font-weight: 700;
         line-height: 1;
         margin-bottom: 8px;
+        background: linear-gradient(180deg, var(--brass) 0%, var(--copper) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
       .kicker {

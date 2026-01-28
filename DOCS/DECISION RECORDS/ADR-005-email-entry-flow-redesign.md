@@ -145,11 +145,43 @@ IS OPEN
 
 | File | Changes |
 |------|---------|
-| `apps-script/Code.gs` | Email templates (confirmation + Table Key), subject lines |
+| `apps-script/Code.gs` | Email templates (confirmation + Table Key), subject lines, standardized badges |
 | `src/pages/mesa/callback.astro` | Authenticating page styling, fonts, badge |
-| `src/pages/index.astro` | Claim Your Seat fonts, labels |
+| `src/pages/index.astro` | Claim Your Seat fonts, labels, improved loading animation |
 | `MASTERTODO.md` | Deployment tasks |
 | `TEAM/SESSIONS/2026-01-26-la-mesa-worklog.md` | Documentation |
+| `TEAM/SESSIONS/2026-01-28-branding-consistency-review.md` | Tobias review notes |
+
+### Badge Standardization (Jan 28, 2026)
+
+**Decision:** All CDL:1 badges must be pixel-identical across:
+- Email templates (Code.gs)
+- Authentication screen (callback.astro)
+- Website hero (index.astro)
+
+**Rationale:** Brand consistency creates trust. When a user sees the same domino tile badge in their email, on the auth screen, and on the website, they know they're in the right place.
+
+**Badge Specification:**
+```
+Dimensions: 52px × 72px
+Background: linear-gradient(145deg, rgba(20, 14, 10, 0.9) 0%, rgba(12, 8, 5, 0.95) 100%)
+Border: 2px solid #d4a574
+Border Radius: 10px
+Typography: Bodoni Moda, weight 900, italic, brass-to-copper gradient text
+```
+
+### Loading Animation Refinement (Jan 28, 2026)
+
+**Decision:** The "Pulling up a chair" animation should use weighted physics with staggered timing.
+
+**Sequence:**
+1. Fog clears (0ms) — atmosphere establishes
+2. Flag reveals (350ms) — identity arrives
+3. Seal pulses (250ms) — energy gathers
+4. "Pulling up a chair" text (550ms) — action declared
+5. Player name (650ms) — presence confirmed
+
+**Rationale:** Tobias: "Every threshold should feel like doors opening, not forms submitting." Walt: "The queue earns the ride."
 
 ### Font Loading
 
