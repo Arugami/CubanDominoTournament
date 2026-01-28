@@ -534,6 +534,41 @@ A complete redesign of the post-registration entry experience based on Tobias + 
 
 **Decision Record:** See `DOCS/DECISION RECORDS/ADR-005-email-entry-flow-redesign.md`
 
+### 2026-01-28 (Evening) - Comprehensive La Mesa Audit (Tobias + Walt)
+
+**Full audit document:** `TEAM/SESSIONS/2026-01-28-la-mesa-audit-tobias-walt.md`
+
+**Participants:** Tobias van Schneider (Chief Product Designer) + Walt Disney (Chief Experience Architect)
+
+**Purpose:** Analyze everything built in La Mesa, identify gaps between vision (ADR-002) and reality, prioritize fixes before Tournament I.
+
+**Key Findings:**
+
+| Status | Finding | Priority |
+|--------|---------|----------|
+| ✅ Working | Hub architecture (3 modules), entry ritual, ticker, second-screen protection, team formation UI | — |
+| 🔴 Critical | Reactions system (🔥😂👏💪🌴🀱) NOT implemented | P0 |
+| 🔴 Critical | The Board is hardcoded HTML (not connected to Supabase) | P0 |
+| 🟡 Important | Domino button pulse animation missing (11 days overdue) | P1 |
+| 🟡 Important | Regional tags not implemented | P1 |
+| 🟢 Future | Challenge button, player cards, spectator mode (Phase 2+) | P2+ |
+
+**Tobias's Verdict:** *"The room is real. But it's missing the micro-moments that make people screenshot. We need reactions. We need The Board to feel alive, not static."*
+
+**Walt's Verdict:** *"The journey works—queue to entry to hub. But the 'locker room' energy is quiet. We need the domino button to pulse. We need people to feel the anticipation."*
+
+**Action Items:**
+1. Implement reactions system (🀱 domino reaction is signature moment)
+2. Connect The Board to Supabase announcements table
+3. Add La Oficina admin publishing for announcements
+4. Add domino button idle pulse animation
+5. Update ADR-002 to reflect actual implementation status
+
+**Before Tournament I Must-Haves:**
+- Reactions on every message
+- Live Board content (admin-publishable)
+- Breathing domino button
+
 ### 2026-01-28 (Evening) - Bug Fix: La Mesa Ticker Not Moving on First Load
 
 **Issue:** When users first loaded the page, the La Mesa ticker appeared empty or "stuck" — not moving, not showing content, feeling "dead."

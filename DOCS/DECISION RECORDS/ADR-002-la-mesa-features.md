@@ -2,7 +2,7 @@
 
 **Status:** Active
 **Date Created:** 2026-01-23
-**Last Updated:** 2026-01-23
+**Last Updated:** 2026-01-28 (Comprehensive audit completed — see bottom of document)
 **Owners:** Tobias van Schneider (Chief Product Designer) + Walt Disney (Chief Experience Architect)
 **Related:** [ADR-001-mesa-ticker.md](./ADR-001-mesa-ticker.md)
 
@@ -446,7 +446,7 @@ While the ENERGY is competition-first, the STRUCTURE borrows from Club 33:
 |---------|-------------|--------|----------|
 | Earned entry | Domino button only after registration | ✅ Implemented | — |
 | "DEAL ME IN" button | Active language, not passive "Enter" | ❌ Not implemented | **P0** |
-| Entrance announcements | "X pulled up a chair" | ❌ Not implemented | **P0** |
+| Entrance announcements | "X pulled up a chair" | ✅ IMPLEMENTED | — |
 | Panel open animation | 0.35s overshoot easing | ✅ Implemented | — |
 | Panel close animation | 0.25s ease-out | ✅ Implemented | — |
 | Background dim on open | 5% dim when chat panel opens | ❌ Not implemented | P2 |
@@ -470,6 +470,8 @@ While the ENERGY is competition-first, the STRUCTURE borrows from Club 33:
 | Send button slam | Scale(0.92) on press | ✅ Implemented | — |
 | Send button scale test | Try 0.88 for more weight | ❌ Not tested | P3 |
 | Rotating placeholder | "Habla...", "Tu turno...", "Dilo...", "Speak..." | ✅ Implemented | — |
+| Reactions (🔥😂👏💪🌴) | Message reactions | ❌ NOT IMPLEMENTED | **P0** |
+| 🀱 Domino reaction | The SLAM reaction | ❌ NOT IMPLEMENTED | **P0** |
 
 ---
 
@@ -524,25 +526,33 @@ While the ENERGY is competition-first, the STRUCTURE borrows from Club 33:
 
 ## Implementation Status Tracker
 
-### ✅ Recently Implemented (Jan 23, 2026)
+### ✅ Recently Implemented (Jan 23-28, 2026)
 
 | # | Item | Status | Notes |
 |---|------|--------|-------|
 | 1 | Change "Enter" → "TAKE YOUR SEAT" | ✅ Done | Updated from "DEAL ME IN" per UX review |
-| 4 | Add LA MESA button pulse animation | ✅ Done | Heartbeat pulse when idle |
+| 4 | Add LA MESA button pulse animation | ❌ NOT DONE | Still pending (was incorrectly marked done) |
 | 5 | Complete flag selection pulse animation | ✅ Done | flagClaim animation on select |
 | 7 | Change empty state to "The calm before the storm." | ✅ Done | Anticipation, not absence |
-| 10 | Background dim effect on panel open | ✅ Done | 5% brightness filter on .story |
+| 10 | Background dim effect on panel open | ❌ NOT DONE | Still pending |
+| 11 | Entrance announcements | ✅ Done | "X pulled up a chair" implemented |
+| 12 | Hub stack (Who's Here / The Board / Tonight) | ✅ Done | Three-module layout working |
+| 13 | Tonight countdown human format | ✅ Done | No more `122:` hours display |
+| 14 | Hub-to-chat cue | ✅ Done | Brass divider + CHAT label |
+| 15 | LFG toggle UI | ✅ Done | Looking for partner button exists |
 
 ### ⚠️ P1: High Priority (This Week)
 
 | # | Item | Notes |
 |---|------|-------|
-| 2 | Add entrance announcements ("X pulled up a chair") | Still pending |
-| 3 | Add 🀱 domino reaction | Still pending |
+| 2 | Add entrance announcements ("X pulled up a chair") | ✅ Done (Jan 28) |
+| 3 | Add 🀱 domino reaction | ❌ Still pending - CRITICAL |
+| 4 | Add all reactions (🔥😂👏💪🌴🀱) | ❌ Still pending - CRITICAL |
+| 5 | Connect The Board to Supabase | ❌ Still pending - CRITICAL |
 | 6 | Show seated player flags in identity screen | Decided against (show count instead) |
+| 7 | Add LA MESA button pulse animation | ❌ Still pending - 11 days overdue |
 | 8 | Add regional pride tags (North Jersey, Miami, etc.) | Future - wait for bigger community |
-| 9 | Enhance player presence display | Who's online, clear and visible |
+| 9 | Enhance player presence display | ✅ Done - Who's Here module working |
 
 ### 🔜 P2: Polish (Next Sprint)
 
@@ -643,12 +653,12 @@ The OGs are the Cast Members. They show the discoverers how it's done. The room 
 
 | Reaction | Meaning | Status |
 |----------|---------|--------|
-| 🔥 | Fuego / Fire / Heat | ✅ Implemented |
-| 😂 | Jaja / Laughter | ✅ Implemented |
-| 👏 | Respeto / Respect | ✅ Implemented |
-| 💪 | Fuerza / Strength | ✅ Implemented |
-| 🌴 | Cuba / Island pride | ✅ Implemented |
-| 🀱 | La Ficha / The Slam | ❌ NOT YET (P0) |
+| 🔥 | Fuego / Fire / Heat | ❌ NOT IMPLEMENTED |
+| 😂 | Jaja / Laughter | ❌ NOT IMPLEMENTED |
+| 👏 | Respeto / Respect | ❌ NOT IMPLEMENTED |
+| 💪 | Fuerza / Strength | ❌ NOT IMPLEMENTED |
+| 🌴 | Cuba / Island pride | ❌ NOT IMPLEMENTED |
+| 🀱 | La Ficha / The Slam | ❌ NOT IMPLEMENTED (P0) |
 
 ---
 
@@ -657,10 +667,10 @@ The OGs are the Cast Members. They show the discoverers how it's done. The room 
 | Element | Before | After | Status |
 |---------|--------|-------|--------|
 | Input placeholder | "Speak..." | "Habla..." (rotating) | ✅ |
-| Enter button | "ENTER" | "DEAL ME IN" | ❌ P0 |
-| Entrance announcement | None | "X pulled up a chair" | ❌ P0 |
-| Empty state | "The table is quiet." | "The calm before the storm." | ❌ P1 |
-| Exit confirmation | "Are you sure?" | "Walk away from the table?" | ❌ P3 |
+| Enter button | "ENTER" | "Enter" (used instead of "DEAL ME IN") | ✅ Acceptable |
+| Entrance announcement | None | "X pulled up a chair" | ✅ IMPLEMENTED |
+| Empty state | "The table is quiet." | "The calm before the storm." | ✅ IMPLEMENTED |
+| Exit confirmation | "Are you sure?" | "Leave the Table?" (close enough) | ✅ Acceptable |
 
 ---
 
@@ -733,7 +743,53 @@ The OGs are the Cast Members. They show the discoverers how it's done. The room 
 
 ---
 
-*Document Created: January 23, 2026*
-*Last Updated: January 23, 2026*
+## Audit Notes (January 28, 2026)
 
-*"La mesa te espera. And the people will handle the rest."*
+**Comprehensive audit conducted by:** Tobias van Schneider + Walt Disney  
+**Full audit document:** `TEAM/SESSIONS/2026-01-28-la-mesa-audit-tobias-walt.md`
+
+### Critical Findings
+
+This document was found to have significant drift between "planned" and "implemented":
+
+1. **Reactions were marked implemented—they are not.** The entire reactions system (🔥😂👏💪🌴🀱) needs to be built.
+
+2. **The Board is static HTML.** It appears live but is hardcoded. This is misleading and must connect to Supabase.
+
+3. **Button pulse was marked done—it's not.** The domino button idle animation is still missing (now 12+ days overdue).
+
+### What Actually Works (Verified)
+
+- ✅ Hub stack architecture (Who's Here / The Board / Tonight)
+- ✅ Entry ritual (Claim Your Seat → flag → hub-first)
+- ✅ Entrance announcements ("pulled up a chair")
+- ✅ Ticker with live content
+- ✅ Chat with stagger animation, brass tints for self
+- ✅ Second-screen protection (Peek/Full modes)
+- ✅ Team formation UI (modal, archetypes, toasts)
+- ✅ Tonight countdown (human-readable format)
+- ✅ Hub-to-chat cue (divider + CHAT label)
+
+### What Must Ship Before Tournament I
+
+| Priority | Feature | ETA |
+|----------|---------|-----|
+| P0 | Reactions system (all 6) | Jan 29 |
+| P0 | The Board Supabase integration | Jan 29 |
+| P1 | Domino button pulse | Jan 28 |
+| P1 | La Oficina announcement publishing | Jan 29 |
+
+### Tobias + Walt Summary
+
+> **Tobias:** *"La Mesa is 85% there. But that last 15% is the difference between 'functional' and 'magical.' Reactions. The Board being live. The button breathing. These aren't features. They're the room's heartbeat."*
+
+> **Walt:** *"The journey from scroll to entry to hub is working. But once they're inside, the room needs to stay alive. We promised a locker room before the fight—it needs to feel like there's a fight coming."*
+
+> **Both:** *"Ship reactions. Ship The Board live. Make the button pulse. Then we've got something special."*
+
+---
+
+*Document Created: January 23, 2026*  
+*Last Updated: January 28, 2026 (post-audit reality check)*
+
+*"La mesa te espera. But the room needs a heartbeat."*

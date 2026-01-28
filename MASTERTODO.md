@@ -63,6 +63,10 @@
 - [x] P0 La Mesa (Tobias): add subtle hub-to-chat cue (divider + "CHAT" label + pip) so chat is discoverable without feeling app-y
 - [x] P0 La Mesa (Tobias): reduce "Invite" visual noise in Who's Here; row-tap = @mention, invite becomes secondary
 - [x] P0 La Mesa: Fix ticker not moving on first load — added default HTML content, initialized state variables to prevent animation reset, improved empty state logic
+- [ ] **P0 CRITICAL:** La Mesa reactions system (🔥😂👏💪🌴🀱) — message reactions on every message; 🀱 domino reaction is signature moment
+- [ ] **P0 CRITICAL:** La Mesa The Board — connect to Supabase announcements table (currently hardcoded HTML); add La Oficina admin publishing
+- [ ] **P1:** La Mesa domino button pulse animation — idle heartbeat pulse (overdue from Jan 23)
+- [ ] **P1:** La Mesa regional tags — "North Jersey", "Miami" badges for player regions
 
 ---
 
