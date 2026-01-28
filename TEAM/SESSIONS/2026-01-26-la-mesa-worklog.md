@@ -665,3 +665,86 @@ Files modified:
 **Status:** Complete — Ready for deployment
 
 ---
+
+
+---
+
+### 2026-01-28 (Late Night) - Flag Selection Page Refinement
+
+**Session Lead:** Tobias van Schneider (Chief Product Designer)  
+**Scope:** Post-auth flag picking experience (Claim Your Seat → Choose your flag)
+
+#### User Feedback Addressed
+
+1. **"Claim Your Seat" didn't make sense contextually** — User already got "YOU'RE IN" email and passed "Verifying your seat" screen
+2. **Button felt too light** — "Enter" was in all-caps like broadcast graphic, not threshold moment
+3. **"0 active today" placement broke ceremony** — FOMO indicator appeared before identity moment
+
+#### Changes Made
+
+**1. Title Change**
+- **Before:** "Claim Your Seat" (SF Sports Night, uppercase, transactional)
+- **After:** "Choose your flag" (Bodoni Moda, italic, sentence case, ceremonial)
+
+**Tobias:** *"The flag moment is the ceremony. Don't rush it."*
+
+**2. Button Refinement**
+- Removed `text-transform: uppercase`
+- Font size: 1rem → 1.15rem
+- Letter-spacing: 0.12em → 0.05em (tighter, elegant)
+- Keeps Bodoni Moda Bold Italic weight
+
+**Tobias:** *"The threshold moment needs elegance, not shouting."*
+
+**3. Presence Indicator Relocation**
+- Moved from above flag selector to below Enter button
+- Opacity: 60% (was 100%)
+- Scale: 92% (makes it recede)
+- Text: "at the table" (was "active today")
+
+**Tobias:** *"The flag comes first. Everything else is atmosphere."*
+
+#### New Page Structure
+
+```
+Choose your flag              ← Bodoni Moda italic
+divider line
+
+Show them where you're from.  ← Subtitle
+
+[Flag Selector]               ← Gold ring, scroll-snap
+
+CUBA                          ← Country display
+Tap to represent
+
+┌──────────────┐
+│    Enter     │              ← Bodoni Bold Italic
+└──────────────┘
+
+● 0 at the table              ← Subtle presence (60% opacity)
+```
+
+#### Files Modified
+
+| File | Changes |
+|------|---------|
+| `src/pages/index.astro` | Title styling (line ~8336) — Bodoni Moda, italic, no uppercase |
+| `src/pages/index.astro` | Button styling (line ~9193) — sentence case, larger size, tighter tracking |
+| `src/pages/index.astro` | Title text — "Claim Your Seat" → "Choose your flag" |
+| `src/pages/index.astro` | DOM reorder — moved live indicator below button |
+| `src/pages/index.astro` | Live indicator styling — reduced opacity, added scale |
+
+#### Documentation Created
+
+- `TEAM/SESSIONS/2026-01-28-flag-selection-audit-tobias.md` — Full audit with Tobias + Walt principles
+
+#### Open Questions for Tobias
+
+1. Flag selector scroll hint — animation to show more flags exist?
+2. Country display transition — slam or crossfade when scrolling?
+3. Empty state copy — "0 at the table" vs "The table is quiet"?
+4. Button disabled state — helper copy or let visual state speak?
+
+**Status:** Implemented, pending Tobias review
+
+---

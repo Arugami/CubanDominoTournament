@@ -574,7 +574,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         animation: letterReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
       }
 
-      /* Subtler letter entrance - emerge, don't crash */
+      /* Original letter reveal — pop with blur snap at 60% */
       @keyframes letterReveal {
         0% {
           opacity: 0;
@@ -9170,13 +9170,13 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         border-radius: 2px;
         color: #fff;
         padding: 20px 48px;
-        /* Bodoni Moda - bold italic for the threshold moment */
+        /* Bodoni Moda - elegant threshold moment, not shouting */
         font-family: "Bodoni Moda", "Didot", serif;
-        font-size: 1rem;
+        font-size: 1.15rem;
         font-weight: 700;
         font-style: italic;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-transform: none;
         cursor: pointer;
         transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                     filter 0.25s ease,
@@ -14067,7 +14067,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
           <div class="chat-content">
 	        <!-- Identity selection -->
 		        <div class="chat-identity" id="chatIdentity">
-		          <p class="chat-identity__title">Claim Your Seat</p>
+		          <p class="chat-identity__title">Choose your flag</p>
 
             <!-- Auth gate: La Mesa is login-required -->
 		            <div class="mesa-auth" id="mesaAuthGate">
@@ -14097,13 +14097,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
               <button class="mesa-auth__signout" id="mesaSignOutBtn" type="button">Sign out</button>
             </div>
 
-          <!-- Live player count for FOMO -->
-          <div class="mesa-live-indicator" id="mesaLiveIndicator">
-            <span class="mesa-live-dot"></span>
-            <span class="mesa-live-text"><span id="mesaPlayerCount">0</span> active today</span>
-          </div>
-
+          <!-- Subtitle appears after auth verification -->
 		          <p class="chat-identity__subtitle" id="chatIdentitySubtitle" style="display:none;">Show them where you're from.</p>
+
 
 	          <div class="avatar-selector-frame" id="mesaFlagPickerFrame" style="display:none;">
             <div class="avatar-selector">
@@ -14803,6 +14799,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 	          <button class="chat-identity__btn" id="chatJoinBtn" disabled style="display:none; margin-left:auto; margin-right:auto;">Enter</button>
 
+          <!-- Live player count - subtle presence indicator below button -->
+          <div class="mesa-live-indicator" id="mesaLiveIndicator" style="margin-top: 28px; opacity: 0.6; transform: scale(0.92);">
+            <span class="mesa-live-dot"></span>
+            <span class="mesa-live-text"><span id="mesaPlayerCount">0</span> at the table</span>
+          </div>
           <!-- Custom Dropdown -->
 	          <div class="custom-select" id="customSelect" style="display: none;">
             <button class="custom-select__trigger" id="selectTrigger" type="button">
@@ -15072,33 +15073,51 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	          return;
 	        }
 
-	        // Let the loading screen breathe, but stop blocking scroll/taps quickly.
-	        // The ritual takes ~3s, then heartbeat begins. Hold for one full breath.
-	        const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-	        const INTERACTION_RELEASE_MS = 180;
-	        const BREATHING_START_MS = REDUCED_MOTION ? 500 : 2700;  // Entrance completes, room starts breathing
-	        const ANTICIPATION_MS = REDUCED_MOTION ? 1000 : 3300;     // Final breath before release (700ms held breath)
-	        const VISUAL_HOLD_MS = REDUCED_MOTION ? 1500 : 4000;      // Shortened for reduced motion users
-	        const EXIT_ANIMATION_MS = 200;    // Start exit animation before fade
+        // Let the loading screen breathe, but stop blocking scroll/taps quickly.
+        // The ritual takes ~3s, then heartbeat begins. Hold for one full breath.
+        const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const HAS_VISITED = localStorage.getItem('cdl_visited');
+        const INTERACTION_RELEASE_MS = 180;
+        const BREATHING_START_MS = REDUCED_MOTION ? 500 : 2700;  // Entrance completes, room starts breathing
+        const ANTICIPATION_MS = REDUCED_MOTION ? 1000 : 3300;     // Final breath before release (700ms held breath)
+        const VISUAL_HOLD_MS = REDUCED_MOTION ? 1500 : 4000;      // Shortened for reduced motion users
+        const EXIT_ANIMATION_MS = 200;    // Start exit animation before fade
 
-	        setTimeout(() => {
-	          loadingScreen.classList.add('is-passive');
-	        }, INTERACTION_RELEASE_MS);
+        setTimeout(() => {
+          loadingScreen.classList.add('is-passive');
+        }, INTERACTION_RELEASE_MS);
 
-	        // "The Room Breathes" — entrance complete, begin meditative pulse
-	        setTimeout(() => {
-	          loadingScreen.classList.add('is-breathing');
-	        }, BREATHING_START_MS);
+        // "The Room Breathes" — entrance complete, begin meditative pulse
+        setTimeout(() => {
+          loadingScreen.classList.add('is-breathing');
+        }, BREATHING_START_MS);
 
-	        // "The Final Breath" — glow intensifies before release
-	        setTimeout(() => {
-	          loadingScreen.classList.add('is-anticipating');
-	        }, ANTICIPATION_MS);
+        // "The Final Breath" — glow intensifies before release
+        setTimeout(() => {
+          loadingScreen.classList.add('is-anticipating');
+        }, ANTICIPATION_MS);
 
-		        // "The Smoke Clears" — start exit animation (embers accelerate, tile recedes)
-		        setTimeout(() => {
-		          loadingScreen.classList.add('is-exiting');
-		        }, VISUAL_HOLD_MS - EXIT_ANIMATION_MS);
+        // "The Smoke Clears" — start exit animation (embers accelerate, tile recedes)
+        setTimeout(() => {
+          loadingScreen.classList.add('is-exiting');
+        }, VISUAL_HOLD_MS - EXIT_ANIMATION_MS);
+
+        // Returning users can tap to skip after seeing the ritual once
+        if (HAS_VISITED) {
+          loadingScreen.classList.add('is-skippable');
+          
+          // Allow skip after a brief moment to appreciate the animation
+          setTimeout(() => {
+            const skipHandler = () => {
+              loadingScreen.classList.add('is-exiting');
+            };
+            loadingScreen.addEventListener('click', skipHandler, { once: true });
+            loadingScreen.addEventListener('touchstart', skipHandler, { once: true });
+          }, 500);
+        }
+
+        // Mark as visited for next time
+        localStorage.setItem('cdl_visited', 'true');
 
 		        const getMaxTransitionMs = (el) => {
 		          const style = window.getComputedStyle(el);
@@ -15166,8 +15185,8 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 	        document.addEventListener('DOMContentLoaded', dismissLoadingScreen, { once: true });
 	      }
 
-	      // Fallback: Force dismissal after 6 seconds (ritual ~4s + buffer)
-	      setTimeout(dismissLoadingScreen, 6000);
+      // Fallback: Force dismissal after 7 seconds (ritual ~4.5s + buffer)
+      setTimeout(dismissLoadingScreen, 7000);
 
       // Panel parallax and content animations
       const allPanels = document.querySelectorAll('.panel');
