@@ -6300,8 +6300,9 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         font-family: "Bodoni Moda", serif;
         font-size: 0.9rem;
         color: var(--brass);
-        letter-spacing: 0.08em;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
+        font-style: italic;
       }
 
       .mesa-presence__close {
@@ -8157,6 +8158,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1 !important;
         transform: translateY(0) !important;
         animation: none !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        align-self: center !important;
+        display: block;
       }
 
       @keyframes identityFadeUp {
@@ -8993,9 +8998,11 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       .mesa-identity-locked__name {
         margin: 0;
         color: var(--cream);
-        font-family: "IBM Plex Serif", "IBM Plex Sans", serif;
-        font-size: 18px;
-        font-style: italic;
+        font-family: "SF Sports Night", "IBM Plex Sans Condensed", system-ui, sans-serif;
+        font-size: 22px;
+        font-style: normal;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
       }
 
       /* Helper/hint text */
@@ -9011,42 +9018,58 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
 
       /* Button - Bone Language - Tobias: "Make it a declaration, not helper text" */
+      /* SF Sports Night for broadcast energy - the ceremonial threshold moment */
       .chat-identity__btn {
         --mesa-ticker-height: 46px;
         margin-top: 24px;
+        margin-left: auto !important;
+        margin-right: auto !important;
         width: 100%;
-        max-width: 280px;
+        max-width: 320px;
 
-        /* Keep above the ticker; always reachable (mobile + desktop). */
-        position: fixed;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: calc(var(--mesa-ticker-height) + env(safe-area-inset-bottom) + 12px);
-        z-index: 10006; /* Above ticker (10002/10005) */
+        /* Centered in the identity cluster, not fixed to bottom */
+        position: relative;
+        left: 0 !important;
+        right: auto !important;
+        bottom: auto;
+        z-index: 1;
+
+        /* Ensure button is centered in flex container */
+        align-self: center !important;
+        display: block;
+        
+        /* Additional centering safeguard */
+        text-align: center;
 
         /* Never allow the stagger system to hide this (revealed later via JS). */
         opacity: 1 !important;
         animation: none !important;
 
-        background: linear-gradient(135deg, var(--brass) 0%, var(--copper) 100%);
+        /* Ceremonial threshold gradient - gold to brass to copper */
+        background: linear-gradient(180deg, var(--gold) 0%, var(--brass) 50%, var(--copper) 100%);
         border: none;
         border-radius: 12px;
-        color: #0d0906;
-        padding: 18px 44px;
-        font-family: "IBM Plex Sans Condensed", sans-serif;
-        font-size: 0.85rem;
-        font-weight: 700;
-        letter-spacing: 0.14em;
+        color: var(--ink);
+        padding: 20px 48px;
+        /* Bodoni Moda - elegant serif for the threshold moment */
+        font-family: "Bodoni Moda", "Didot", serif;
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
         cursor: pointer;
-        transition: transform 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease;
-        min-height: 52px;
+        transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    filter 0.25s ease,
+                    box-shadow 0.25s ease;
+        min-height: 56px;
         overflow: hidden;
         box-shadow:
-          0 4px 16px rgba(0, 0, 0, 0.3),
+          0 6px 24px rgba(0, 0, 0, 0.4),
           0 2px 4px rgba(0, 0, 0, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3),
           inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+        /* Tobias: The Lift - subtle elevation */
+        transform: translateY(0);
       }
 
       /* Shimmer effect on hover */
@@ -9070,21 +9093,24 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         opacity: 1;
       }
 
+      /* Tobias: The Lift - elements rise on hover, suggesting they can be picked up */
       .chat-identity__btn:not(:disabled):hover {
-        transform: translateX(-50%) translateY(-2px) scale(1.02);
+        transform: translateY(-4px) scale(1.02);
         box-shadow:
-          0 8px 24px rgba(212, 165, 116, 0.35),
-          0 4px 8px rgba(0, 0, 0, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.25),
+          0 12px 32px rgba(212, 165, 116, 0.4),
+          0 6px 12px rgba(0, 0, 0, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.35),
           inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-        filter: brightness(1.05);
+        filter: brightness(1.08);
       }
 
-      /* SLAM effect on click - like slamming a domino */
+      /* Tobias: The Slam - on click, quick scale-down + subtle shadow spread */
       .chat-identity__btn:not(:disabled):active {
-        transform: translateX(-50%) translateY(2px) scale(0.95);
-        transition: transform 0.08s ease-out;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        transform: translateY(2px) scale(0.96);
+        transition: transform 0.08s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow:
+          0 2px 8px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
       }
 
       .chat-identity__btn:disabled {
@@ -9106,7 +9132,10 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       @media (max-width: 768px) {
         .chat-identity__btn {
           --mesa-ticker-height: 40px;
-          bottom: calc(var(--mesa-ticker-height) + env(safe-area-inset-bottom) + 10px);
+          max-width: 280px;
+          padding: 18px 40px;
+          font-size: 0.9rem;
+          min-height: 52px;
         }
       }
 
@@ -9325,10 +9354,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
         .chat-identity__btn {
           width: 100%;
           max-width: 260px;
-          padding: 16px 36px;
-          font-size: 0.8rem;
+          padding: 16px 32px;
+          font-size: 0.85rem;
           min-height: 48px;
-          margin-top: 20px; /* Fixed spacing */
+          margin-top: 20px;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          align-self: center !important;
+          justify-self: center !important;
+          display: block;
         }
       }
 
@@ -14639,7 +14673,7 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
             <p class="mesa-identity-locked__name" id="mesaLockedName">—</p>
           </div>
 
-	          <button class="chat-identity__btn" id="chatJoinBtn" disabled style="display:none;">CLAIM YOUR SEAT</button>
+	          <button class="chat-identity__btn" id="chatJoinBtn" disabled style="display:none; margin-left:auto; margin-right:auto;">Enter</button>
 
           <!-- Custom Dropdown -->
 	          <div class="custom-select" id="customSelect" style="display: none;">
