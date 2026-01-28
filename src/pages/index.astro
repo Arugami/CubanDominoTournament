@@ -8371,16 +8371,15 @@ const SUPABASE_ANON_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
       }
       .avatar-selector::-webkit-scrollbar { display: none; }
 
-      /* Scrollable spacers so edge flags can reach center */
-      /* Use viewport width since percentage doesn't work in scroll context */
-	      .avatar-selector__spacer {
-	        flex-shrink: 0;
-	        width: calc(50vw - 36px); /* Half viewport minus (half option width + gap) */
-	        max-width: calc(250px - 36px); /* Cap at half of max-width (500px) */
-	        height: 1px;
-	        pointer-events: none;
-	      }
-
+            /* Scrollable spacers so edge flags can reach center */
+            /* Use fixed width for desktop (400px panel) */
+            .avatar-selector__spacer {
+              flex-shrink: 0;
+              width: calc(200px - 36px); /* Half of 400px panel minus offset */
+              max-width: none;
+              height: 1px;
+              pointer-events: none;
+            }
       /* Country name display - Olympic ceremony style */
       .country-display {
         text-align: center;
